@@ -1,0 +1,35 @@
+test_cleanup_after_leader_exit (__main__.ReviewFixtureTests.test_cleanup_after_leader_exit) ... FAIL
+test_setup_action_standalone_layout (__main__.ReviewFixtureTests.test_setup_action_standalone_layout) ... FAIL
+
+======================================================================
+FAIL: test_cleanup_after_leader_exit (__main__.ReviewFixtureTests.test_cleanup_after_leader_exit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage6-review-20261112/fixture-probes.py.txt", line 41, in test_cleanup_after_leader_exit
+    self.assertFalse(alive,'owned descendant survives fixture cleanup after group leader exits')
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false : owned descendant survives fixture cleanup after group leader exits
+
+======================================================================
+FAIL: test_setup_action_standalone_layout (__main__.ReviewFixtureTests.test_setup_action_standalone_layout)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage6-review-20261112/fixture-probes.py.txt", line 22, in test_setup_action_standalone_layout
+    try: cdc_fixture.main(['synthetic-child'])
+         ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/cdc_fixture.py", line 49, in main
+    raise RuntimeError('MariaDB server/client binaries are required for isolated CDC checks')
+RuntimeError: MariaDB server/client binaries are required for isolated CDC checks
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage6-review-20261112/fixture-probes.py.txt", line 24, in test_setup_action_standalone_layout
+    self.fail('CI standalone layout is rejected before initialization: '+str(error))
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: CI standalone layout is rejected before initialization: MariaDB server/client binaries are required for isolated CDC checks
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.347s
+
+FAILED (failures=2)

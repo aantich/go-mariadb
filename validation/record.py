@@ -352,6 +352,8 @@ def main():
            'method':{'process_repetitions':7,'benchtime':'200ms','gomaxprocs':4,'warmups':'original forty added serial profiles: two explicit warmups; native bulk, Stage 4 and inherited/parallel profiles: Go benchmark calibration','profile':PROFILE}}
     if env.get('GO_MARIADB_AUTH_RECEIPT'):
         state['external_auth'] = json.loads(env['GO_MARIADB_AUTH_RECEIPT'])
+    if env.get('GO_MARIADB_CDC_RECEIPT'):
+        state['cdc_fixture'] = json.loads(env['GO_MARIADB_CDC_RECEIPT'])
     def server_snapshot(phase):
         try:
             snapshot, output = read_server(cfg, env, server_argv)

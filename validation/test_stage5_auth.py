@@ -14,7 +14,7 @@ import external_auth_evidence
 import record
 import correctness
 import full_capture
-from test_ci_policy import external_auth_receipt
+from test_ci_policy import external_auth_receipt, cdc_receipt
 
 
 class ExternalAuthTests(unittest.TestCase):
@@ -121,7 +121,8 @@ class ExternalAuthTests(unittest.TestCase):
                 output=events() if '-json' in command else 'success\n'
                 return subprocess.CompletedProcess(command,0,output,'')
             with mock.patch.dict('os.environ',{'MARIADB_VALIDATION_CONFIG':str(config),
-                    'GO_MARIADB_AUTH_RECEIPT':json.dumps(external_auth_receipt())},clear=True), \
+                    'GO_MARIADB_AUTH_RECEIPT':json.dumps(external_auth_receipt()),
+                    'GO_MARIADB_CDC_RECEIPT':json.dumps(cdc_receipt())},clear=True), \
                  mock.patch.object(ci.shutil,'which',return_value='mariadb'), \
                  mock.patch.object(ci,'read_server',return_value=(server,json.dumps(server))), \
                  mock.patch.object(ci,'revision_info',return_value={'commit':None}), \

@@ -1,0 +1,32 @@
+=== RUN   TestCDCFileCoordinates
+=== RUN   TestCDCFileCoordinates/below_requested_start
+    review_fixes_test.go:70: backward/equal coordinate accepted &{2 2 0 17 bin.000001 900 0 {0 0 0 d [] [67 82 69 65 84 69 32 84 65 66 76 69 32 116 40 105 100 32 73 78 84 41]} 0xc000136410 true} <nil>
+=== RUN   TestCDCFileCoordinates/equal_to_previous_event
+    review_fixes_test.go:70: backward/equal coordinate accepted &{2 2 0 17 bin.000001 1050 0 {0 0 0 d [] [67 82 69 65 84 69 32 84 65 66 76 69 32 116 40 105 100 32 73 78 84 41]} 0xc000136730 true} <nil>
+=== RUN   TestCDCFileCoordinates/below_completed_group
+    review_fixes_test.go:70: backward/equal coordinate accepted &{162 162 0 17 bin.000001 1099 0 {1 17 2} <nil> true} <nil>
+=== RUN   TestCDCFileCoordinates/equal_completed_group
+    review_fixes_test.go:70: backward/equal coordinate accepted &{162 162 0 17 bin.000001 1100 0 {1 17 2} <nil> true} <nil>
+=== RUN   TestCDCFileCoordinates/rollover_inside_group
+    review_fixes_test.go:88: uint32 rollover produced a checkpoint &{16 16 0 17 bin.000001 100 0 0 0xc000137090 true} <nil>
+=== RUN   TestCDCFileCoordinates/artificial_completion
+=== RUN   TestCDCFileCoordinates/cached_intermediate_events
+=== RUN   TestCDCFileCoordinates/cached_bytes_cannot_hide_rollover
+    review_fixes_test.go:120: cached event hid rollover &{160 160 0 17 bin.000001 0 0 [73 78 83 69 82 84] <nil> false} <nil>
+=== RUN   TestCDCFileCoordinates/rotate_resets_only_for_another_file
+    review_fixes_test.go:130: same-file bootstrap lowered progress
+=== RUN   TestCDCFileCoordinates/GTID_ignores_stale_diagnostic_file_offset
+--- FAIL: TestCDCFileCoordinates (0.00s)
+    --- FAIL: TestCDCFileCoordinates/below_requested_start (0.00s)
+    --- FAIL: TestCDCFileCoordinates/equal_to_previous_event (0.00s)
+    --- FAIL: TestCDCFileCoordinates/below_completed_group (0.00s)
+    --- FAIL: TestCDCFileCoordinates/equal_completed_group (0.00s)
+    --- FAIL: TestCDCFileCoordinates/rollover_inside_group (0.00s)
+    --- PASS: TestCDCFileCoordinates/artificial_completion (0.00s)
+    --- PASS: TestCDCFileCoordinates/cached_intermediate_events (0.00s)
+    --- FAIL: TestCDCFileCoordinates/cached_bytes_cannot_hide_rollover (0.00s)
+    --- FAIL: TestCDCFileCoordinates/rotate_resets_only_for_another_file (0.00s)
+    --- PASS: TestCDCFileCoordinates/GTID_ignores_stale_diagnostic_file_offset (0.00s)
+FAIL
+FAIL	github.com/aantich/go-mariadb/cdc	0.351s
+FAIL

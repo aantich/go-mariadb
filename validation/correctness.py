@@ -14,6 +14,7 @@ from contracts import verified_checks
 from provenance import validate_server
 import pass_history
 import external_auth_evidence
+import cdc_evidence
 
 
 def leaves(records):
@@ -47,6 +48,7 @@ def validate(capture, directory):
     if issues or records != capture['stages']['correctness']['cases']:
         raise ValueError('Raw correctness events do not match the captured assertions.')
     external_auth_evidence.validate(capture, (directory/'correctness.log').read_text())
+    cdc_evidence.validate(capture, (directory/'correctness.log').read_text())
     pass_history.validate(capture, directory, {name:case.get('status') for name,case in records.items()})
     return records
 

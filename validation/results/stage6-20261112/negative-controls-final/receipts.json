@@ -1,0 +1,97 @@
+[
+  {
+    "name": "crc",
+    "source": "cdc/decoder.go",
+    "replaced": "if verifyCRC && crc32.ChecksumIEEE",
+    "with": "if false && verifyCRC && crc32.ChecksumIEEE",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "-overlay",
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage6-20261112/negative-controls-final/crc.json",
+      "-run",
+      "^TestCDCIntegrityAndLimits/CRC$",
+      "-count=1",
+      "./cdc"
+    ],
+    "exit_code": 1,
+    "regression_detected": true
+  },
+  {
+    "name": "premature-checkpoint",
+    "source": "cdc/decoder.go",
+    "replaced": "if d.active != nil && d.groupFlags&1 != 0 {",
+    "with": "if d.active != nil {",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "-overlay",
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage6-20261112/negative-controls-final/premature-checkpoint.json",
+      "-run",
+      "^TestCDCTransactions$",
+      "-count=1",
+      "./cdc"
+    ],
+    "exit_code": 1,
+    "regression_detected": true
+  },
+  {
+    "name": "ack-buffer",
+    "source": "replication.go",
+    "replaced": "if r.mc.compress {\n\t\t\tr.mc.compIO = newCompIO(r.mc)",
+    "with": "if false && r.mc.compress {\n\t\t\tr.mc.compIO = newCompIO(r.mc)",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "-overlay",
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage6-20261112/negative-controls-final/ack-buffer.json",
+      "-run",
+      "^TestReplicationACKPreservesBufferedCompression$",
+      "-count=1",
+      "."
+    ],
+    "exit_code": 1,
+    "regression_detected": true
+  },
+  {
+    "name": "time-reserved",
+    "source": "cdc/values.go",
+    "replaced": "t.Hour = int(v >> 12)",
+    "with": "t.Hour = int(v >> 12 & 1023)",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "-overlay",
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage6-20261112/negative-controls-final/time-reserved.json",
+      "-run",
+      "^TestCDCScalarValidationBeforeCheckpoint/TIME2_reserved_bits$",
+      "-count=1",
+      "./cdc"
+    ],
+    "exit_code": 1,
+    "regression_detected": true
+  },
+  {
+    "name": "table-overflow",
+    "source": "cdc/rows.go",
+    "replaced": "if wireBytes > (math.MaxInt-overhead)/2 {",
+    "with": "if false && wireBytes > (math.MaxInt-overhead)/2 {",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "-overlay",
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage6-20261112/negative-controls-final/table-overflow.json",
+      "-run",
+      "^TestCDCIntegrityAndLimits/table_accounting_overflow$",
+      "-count=1",
+      "./cdc"
+    ],
+    "exit_code": 1,
+    "regression_detected": true
+  }
+]

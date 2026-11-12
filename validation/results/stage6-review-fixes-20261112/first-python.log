@@ -1,0 +1,43 @@
+test_actual_publishers_reject_joint_metadata_and_event_omission (test_stage6_cdc.CDCEvidenceTests.test_actual_publishers_reject_joint_metadata_and_event_omission) ... ok
+test_correctness_children_use_only_their_owned_process_group (test_stage6_cdc.CDCEvidenceTests.test_correctness_children_use_only_their_owned_process_group) ... ok
+test_fixture_uses_only_owned_socket_server_and_waits_for_cleanup (test_stage6_cdc.CDCEvidenceTests.test_fixture_uses_only_owned_socket_server_and_waits_for_cleanup) ... ok
+test_owned_descendants_stop_after_leader_exit_or_ignored_term (test_stage6_cdc.CDCEvidenceTests.test_owned_descendants_stop_after_leader_exit_or_ignored_term) ... ok
+test_receipt_requires_matching_source_and_exactly_one_event (test_stage6_cdc.CDCEvidenceTests.test_receipt_requires_matching_source_and_exactly_one_event) ... ok
+test_server_cleanup_runs_even_when_child_cleanup_raises (test_stage6_cdc.CDCEvidenceTests.test_server_cleanup_runs_even_when_child_cleanup_raises) ... ok
+test_stop_kills_and_reaps_only_the_supplied_process_after_timeout (test_stage6_cdc.CDCEvidenceTests.test_stop_kills_and_reaps_only_the_supplied_process_after_timeout) ... ok
+test_explicit_basedir_selects_complete_matching_installation (test_stage6_cdc.CDCToolchainTests.test_explicit_basedir_selects_complete_matching_installation) ... FAIL
+test_incomplete_installation_does_not_fall_back_to_path (test_stage6_cdc.CDCToolchainTests.test_incomplete_installation_does_not_fall_back_to_path) ... ok
+test_standalone_initializer_uses_server_prefix_not_unrelated_path (test_stage6_cdc.CDCToolchainTests.test_standalone_initializer_uses_server_prefix_not_unrelated_path) ... FAIL
+test_system_layout_and_server_symlink (test_stage6_cdc.CDCToolchainTests.test_system_layout_and_server_symlink) ... FAIL
+
+======================================================================
+FAIL: test_explicit_basedir_selects_complete_matching_installation (test_stage6_cdc.CDCToolchainTests.test_explicit_basedir_selects_complete_matching_installation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_stage6_cdc.py", line 213, in test_explicit_basedir_selects_complete_matching_installation
+    self.assertEqual(basedir,root)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: PosixPath('/private/var/folders/w4/0_95kdj51l35cqyg07[45 chars]ion') != PosixPath('/var/folders/w4/0_95kdj51l35cqyg07_w5v5r00[37 chars]ion')
+
+======================================================================
+FAIL: test_standalone_initializer_uses_server_prefix_not_unrelated_path (test_stage6_cdc.CDCToolchainTests.test_standalone_initializer_uses_server_prefix_not_unrelated_path)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_stage6_cdc.py", line 192, in test_standalone_initializer_uses_server_prefix_not_unrelated_path
+    self.assertEqual(basedir,root)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: PosixPath('/private/var/folders/w4/0_95kdj51l35cqyg07[32 chars]ted') != PosixPath('/var/folders/w4/0_95kdj51l35cqyg07_w5v5r00[24 chars]ted')
+
+======================================================================
+FAIL: test_system_layout_and_server_symlink (test_stage6_cdc.CDCToolchainTests.test_system_layout_and_server_symlink)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_stage6_cdc.py", line 203, in test_system_layout_and_server_symlink
+    self.assertEqual(basedir,root)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+AssertionError: PosixPath('/private/var/folders/w4/0_95kdj51l35cqyg07[27 chars]usr') != PosixPath('/var/folders/w4/0_95kdj51l35cqyg07_w5v5r00[19 chars]usr')
+
+----------------------------------------------------------------------
+Ran 11 tests in 1.057s
+
+FAILED (failures=3)

@@ -1,0 +1,16 @@
+--- FAIL: TestCDCTransactions (0.00s)
+    --- FAIL: TestCDCTransactions/X (0.00s)
+        decoder_test.go:113: row or metadata ownership
+    --- FAIL: TestCDCTransactions/Y (0.00s)
+        decoder_test.go:113: row or metadata ownership
+    --- FAIL: TestCDCTransactions/Z (0.00s)
+        decoder_test.go:113: row or metadata ownership
+    --- FAIL: TestCDCTransactions/_ (0.00s)
+        decoder_test.go:113: row or metadata ownership
+    --- FAIL: TestCDCTransactions/` (0.00s)
+        decoder_test.go:113: row or metadata ownership
+    --- FAIL: TestCDCTransactions/a (0.00s)
+        decoder_test.go:113: row or metadata ownership
+FAIL
+FAIL	github.com/aantich/go-mariadb/cdc	0.332s
+FAIL

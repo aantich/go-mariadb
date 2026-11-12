@@ -1,0 +1,6 @@
+=== RUN   TestReviewCDCServerCursorConfiguration
+    stage6_cdc_test.go:567: SQL cursor policy leaked into the dedicated replication setup: driver: skip fast-path; continue as if unimplemented
+--- FAIL: TestReviewCDCServerCursorConfiguration (0.00s)
+FAIL
+FAIL	github.com/aantich/go-mariadb/validation	0.368s
+FAIL

@@ -1,0 +1,29 @@
+// MariaDB/server b439f350ce3a8306c77e64bc1679681320244d17, sql/protocol.cc:320-346
+// GPL-2.0; see ../stage6-review-20261112/server-12.3.3-COPYING.txt.
+  NET *net= &thd->net;
+  bool error= FALSE;
+  DBUG_ENTER("Protocol::net_send_eof");
+  DBUG_PRINT("enter", ("status: %u  warn_count: %u",
+                       server_status, statement_warn_count));
+
+  /*
+    Check if client understand new format packets (OK instead of EOF)
+
+    Normally end of statement reply is signaled by OK packet, but in case
+    of binlog dump request an EOF packet is sent instead. Also, old clients
+    expect EOF packet instead of OK
+  */
+  if ((thd->client_capabilities & CLIENT_DEPRECATE_EOF) &&
+      (thd->get_command() != COM_BINLOG_DUMP ))
+  {
+    error= net_send_ok(thd, server_status, statement_warn_count, 0, 0, NULL,
+                       true);
+    DBUG_RETURN(error);
+  }
+
+  /* Set to TRUE if no active vio, to work well in case of --init-file */
+  if (net->vio != 0)
+  {
+    thd->get_stmt_da()->set_overwrite_status(true);
+    error= write_eof_packet(thd, net, server_status, statement_warn_count);
+    if (likely(!error))

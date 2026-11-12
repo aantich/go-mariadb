@@ -1,0 +1,60 @@
+test_explicit_basedir_selects_complete_matching_installation (test_stage6_cdc.CDCToolchainTests.test_explicit_basedir_selects_complete_matching_installation) ... ERROR
+test_incomplete_installation_does_not_fall_back_to_path (test_stage6_cdc.CDCToolchainTests.test_incomplete_installation_does_not_fall_back_to_path) ... FAIL
+test_standalone_initializer_uses_server_prefix_not_unrelated_path (test_stage6_cdc.CDCToolchainTests.test_standalone_initializer_uses_server_prefix_not_unrelated_path) ... FAIL
+test_system_layout_and_server_symlink (test_stage6_cdc.CDCToolchainTests.test_system_layout_and_server_symlink) ... ERROR
+
+======================================================================
+ERROR: test_explicit_basedir_selects_complete_matching_installation (test_stage6_cdc.CDCToolchainTests.test_explicit_basedir_selects_complete_matching_installation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_stage6_cdc.py", line 232, in test_explicit_basedir_selects_complete_matching_installation
+    basedir,programs=cdc_fixture.toolchain()
+                     ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage6-review-fixes-20261112/restore-path-only-toolchain.py.txt", line 63, in toolchain
+    if not all(programs.values()):raise RuntimeError('MariaDB server/client binaries are required')
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: MariaDB server/client binaries are required
+
+======================================================================
+ERROR: test_system_layout_and_server_symlink (test_stage6_cdc.CDCToolchainTests.test_system_layout_and_server_symlink)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_stage6_cdc.py", line 222, in test_system_layout_and_server_symlink
+    basedir,programs=cdc_fixture.toolchain()
+                     ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage6-review-fixes-20261112/restore-path-only-toolchain.py.txt", line 63, in toolchain
+    if not all(programs.values()):raise RuntimeError('MariaDB server/client binaries are required')
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: MariaDB server/client binaries are required
+
+======================================================================
+FAIL: test_incomplete_installation_does_not_fall_back_to_path (test_stage6_cdc.CDCToolchainTests.test_incomplete_installation_does_not_fall_back_to_path)
+----------------------------------------------------------------------
+RuntimeError: MariaDB server/client binaries are required
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_stage6_cdc.py", line 242, in test_incomplete_installation_does_not_fall_back_to_path
+    with self.assertRaisesRegex(RuntimeError,'Incomplete MariaDB CDC toolchain'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "Incomplete MariaDB CDC toolchain" does not match "MariaDB server/client binaries are required"
+
+======================================================================
+FAIL: test_standalone_initializer_uses_server_prefix_not_unrelated_path (test_stage6_cdc.CDCToolchainTests.test_standalone_initializer_uses_server_prefix_not_unrelated_path)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_stage6_cdc.py", line 213, in test_standalone_initializer_uses_server_prefix_not_unrelated_path
+    self.assertEqual(programs['mariadb-install-db'],str(root.resolve()/'scripts/mariadb-install-db'))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '/var/folders/w4/0_95kdj51l35cqyg07_w5v5r00[43 chars]l-db' != '/private/var/folders/w4/0_95kdj51l35cqyg07[58 chars]l-db'
+- /var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmp82cs9tu2/other/bin/mariadb-install-db
+?                                                              ^ -  -- ^
++ /private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmp82cs9tu2/selected/scripts/mariadb-install-db
+? ++++++++                                                             ^^^^^  ++++  ^^^
+
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.008s
+
+FAILED (failures=2, errors=2)

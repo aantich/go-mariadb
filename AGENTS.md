@@ -1,5 +1,46 @@
 # Current authorization, 12 November 2026
 
+Stage 6 review corrections are complete under Anton's subsequent “fix all”
+instruction. `docs/STAGE6_REVIEW_FIXES.md` and
+`validation/results/stage6-review-fixes-confirmation.json` record corrected
+source `69f760d5…03c043`: 1,588 Mac / 1,591 Linux passing leaves, zero failures,
+8/5 skips, race/vet/89 harness tests passing, and 84 added passes per profile.
+The seven findings below are historical, now resolved. Keep all changes
+uncommitted on `master`. No benchmarks, smoke benchmarks or profiling workloads
+ran; do not run them or commit/push without a new instruction. Original review,
+receipts and timing/baseline bytes are preserved; changed public documents have
+hash-matched historical copies under the review-fix evidence directory.
+
+Stage 6 review, later on 12 November: Anton requested a review pass. See
+`docs/STAGE6_CODE_REVIEW.md` and `validation/results/stage6-review-20261112`.
+Six correctness/validation findings remain pending: CI initializer resolution,
+cursor-enabled Config reuse, backward file checkpoints, malformed EOF acceptance,
+orphaned fixture descendants and unreachable GTID/row payload fuzz paths. A
+seventh finding is redundant full-payload allocation/copy during expansion.
+Live/overlay/Python probes reproduce the new cases; existing focused race and
+82 harness checks still pass. Source `f1ae6b97…2e5370b` and all 100 Stage 6
+artifacts remain unchanged. No implementation/permanent-test fixes, full-suite
+rerun, benchmark/smoke/profile execution, commit or push occurred. Preserve all
+counterexamples and prior receipts; fixes need a subsequent instruction.
+
+Stage 6 authorization, later on 12 November: Anton requested implementing the
+complete optional MariaDB CDC/binlog stage. Use a dedicated replication connection,
+bounded event/table/row decoding, complete-group checkpoints, consumer-controlled
+acknowledgements, GTID resume, isolated live/fault tests and public documentation.
+Work directly on existing `master`, preserve earlier changes/evidence/references,
+and leave this stage uncommitted. Correctness/race/static checks only: no benchmark,
+smoke or profiling workloads. No commit, push or package release is authorized.
+
+Stage 6 implementation is complete and uncommitted. `docs/STAGE6_CDC.md` and
+`validation/results/stage6-confirmation.json` record final source `f1ae6b97…2e5370b`:
+1,504 Mac / 1,507 Linux PASS, zero failures, 8/5 skips; all 1,398/1,401 Stage 5
+passes preserved with 106 new leaves per profile. Race/vet/82 harness checks,
+two correctness fuzz campaigns, five defect-restoration controls, CGO-disabled
+checks and Windows/386 cross-compilation pass. CDC is a separate Alpha package;
+XA/two-phase ALTER/engine-specific replication and production topology pilots
+remain explicit scope limits. Live correctness is updated; timing/reference
+bytes are unchanged. Do not rerun benchmarks or commit/push without instruction.
+
 Stage 5 publication authorization, later on 12 November: Anton requested commit
 and push of the full current Go driver work to the fork's existing `master`,
 including Stage 5, its three review corrections, measurement-preparation docs
@@ -210,6 +251,15 @@ source-unchanged/rename restriction described the initial review only.
 Use `validation/record.py` for current captures and `validation/verify.py` for
 freshness. Original `run.py` and `check.py` remain frozen historical workloads.
 The exact inverse identity adapter must reproduce original workload hashes.
+
+# Stage 6 review corrections
+
+User authorization, 12 November 2026: Anton requested fixing all seven findings
+in `docs/STAGE6_CODE_REVIEW.md`. Implement permanent regressions and repeat
+correctness/race/static/fuzz checks on Mac and isolated Linux. Do not run any
+benchmark, smoke benchmark or profiling workload. Preserve earlier receipts and
+timing/baseline artifacts. Keep all changes uncommitted on `master`; no push or
+release is authorized.
 
 # MariaDB Go driver work
 

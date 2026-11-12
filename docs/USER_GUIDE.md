@@ -559,6 +559,155 @@ table declaration. The driver does not infer identity from a value's length.
 An explicitly requested capability missing from the greeting returns
 `ErrUnsupportedCapability` during connection setup.
 
+## Change-data capture (CDC)
+
+Import `github.com/aantich/go-mariadb/cdc` when you need a binlog consumer.
+Ordinary `database/sql` users do not need it. `cdc.Open` creates a **new dedicated
+connection**, using the same `mariadb.Config` authentication, TLS, compression and
+receive policies. No SQL-pool connection is held or reused. A compiled
+[audit-reader example](../cdc/example_test.go) shows connection and event handling.
+
+The source needs binlogging, `binlog_format=ROW` for row CDC, retained history and
+an account with `REPLICATION SLAVE`. Administrative status/snapshot operations
+may require additional privileges such as `BINLOG MONITOR`. Allocate a unique,
+nonzero replica `ServerID` for each consumer. `binlog_row_metadata=FULL` supplies
+column names and signedness; with reduced metadata the driver preserves unknown
+signedness rather than guessing. The library changes only session settings.
+
+Choose an explicit starting point:
+
+```go
+gtids, err := mariadb.ParseGTIDSet("0-1-42,7-9-100")
+if err != nil { return err }
+start := cdc.Resume{UseGTID: true, GTIDs: gtids}
+// Alternatively: cdc.Resume{File: "mariadb-bin.000042", Position: 12345}.
+
+cfg.ReadTimeout = 0 // Idle streaming is controlled by Next's context.
+stream, err := cdc.Open(ctx, cfg, cdc.Options{
+    ServerID: 74001,
+    Start: start,
+    Heartbeat: time.Second,
+    Limits: cdc.Limits{MaxEventBytes: 64 << 20},
+})
+if err != nil { return err }
+defer stream.Close()
+```
+
+For TCP, use the verified `cfg.TLS` policy described above. `NonBlocking: true`
+returns `io.EOF` at the current source end; the default waits for new events.
+Cancellation during network I/O retires the stream. Concurrent `Next` and
+`Acknowledge` calls serialize and their ownership waits honor context cancellation;
+`Close` interrupts a blocked operation. Progress getters do not wait for network
+I/O. There is no background read-ahead, reconnect or automatic acknowledgement.
+
+An empty GTID set with `UseGTID: true` requests available history, **not now**.
+The zero `Resume` is invalid in file mode. Obtain a new file coordinate from
+`SHOW MASTER STATUS` only when deliberately choosing that boundary. Coordinating
+an initial consistent snapshot and a binlog position is the application's job;
+reading a current coordinate alone does not make a snapshot consistent. Resume
+from the last durable checkpoint, not the furthest event observed.
+
+`Next` returns an owned `*cdc.Event`. Its `Data` contains typed format, rotation,
+GTID, query, table and row values, or raw statement context. An insert has
+`Change.After`, a delete `Before`, and an update both. `Cell.Present == false`
+means absent from a sparse image; it differs from `Cell.Null`. `Cell.Raw` and
+table metadata remain valid across later reads. Mutating a returned table or
+checkpoint copy does not alter the stream's retained state.
+
+```go
+if rows, ok := event.Data.(cdc.Rows); ok {
+    for _, change := range rows.Changes {
+        for i, cell := range change.After {
+            if !cell.Present { continue }
+            value, err := cell.Decode(rows.Table.Columns[i])
+            if err != nil { return err }
+            // Bind value using the destination's schema/type policies.
+            _ = value
+        }
+    }
+}
+```
+
+Conversion is lazy: known integers return `int64`/`uint64`, unknown signedness
+returns `cdc.Integer`, DECIMAL returns an exact string, and dates/times return
+`cdc.Temporal` (including zero dates and negative TIME). Text, binary, JSON,
+UUID/INET, VECTOR and geometry remain exact `[]byte`; charset conversion,
+application JSON/vector/spatial decoding and ENUM/SET label lookup are explicit
+consumer decisions. Invalid packed scalar encodings fail during `Next`, before
+a checkpoint, even if `Decode` is never called. Binlog metadata represents its
+own generation; the driver never queries the current catalog to decode history.
+
+### Durable progress and semisync
+
+Events are streamed within a group. `event.Checkpoint` is present only when that
+group completes. `LatestCheckpoint()` is observed progress;
+`AcknowledgedCheckpoint()` is consumer-reported durable progress. Neither writes
+to disk or commits destination work. The application should stage events in its
+destination transaction, then commit **destination changes and `Resume` together**:
+
+```go
+for {
+    event, err := stream.Next(ctx)
+    if err == io.EOF { return nil }
+    if err != nil { return err } // Roll back the unfinished destination group.
+    if err := stageDestinationEvent(ctx, event); err != nil { return err }
+    if checkpoint := event.Checkpoint; checkpoint != nil {
+        // Application hook: atomically commit the staged writes AND resume state.
+        if err := commitDestinationAndResume(ctx, checkpoint.Resume()); err != nil {
+            return err
+        }
+        if err := stream.Acknowledge(ctx, checkpoint); err != nil { return err }
+    }
+}
+```
+
+`stageDestinationEvent` and `commitDestinationAndResume` are application hooks,
+not driver functions. Handle source rollback/statement/DDL events according to
+destination semantics; source SQL is untrusted text, not an instruction to
+execute it. Abort unfinished destination work on any error. `Resume` marshals
+to JSON (GTIDs encode as canonical MariaDB text); load it into a new `cdc.Open`
+after failure. Tokens are opaque, belong to one stream, and cannot be fabricated
+from persisted state. Repeated ACK of the same token is harmless; foreign or
+decreasing tokens fail.
+
+`SemiSync: true` requires the source semisync plugin to be enabled. `Next` never
+ACKs merely because it read bytes. After external persistence, `Acknowledge`
+sends a file/position receipt and advances local acknowledged progress only on
+success. ACK at the checkpoint before reading onward to EOF or another blocked
+read. Heartbeats and intermediate rows are not safe acknowledgement boundaries.
+Semisync confirms source receipt; it does not prove destination durability or
+exactly-once delivery. A crash after destination commit but before ACK requires
+resuming from that committed state, with destination idempotency/atomicity.
+
+Defaults bound an event/expansion to 64 MiB, retained tables to 4096 and 16 MiB,
+columns to 4096 and cells to 1,048,576 per event (absent columns count too).
+`Config` receive limits may impose a smaller wire budget. The driver buffers one
+event or fragmented row event, not an entire transaction. Application-retained
+events and destination transaction memory need their own limits.
+
+The same `Config` can be reused with SQL server cursors enabled; CDC's internal
+setup queries do not change that SQL policy. File checkpoints must advance past
+the requested start and earlier groups in that file. Artificial bootstrap events
+cannot lower progress. Cached transaction events may legitimately report a zero
+header position, but only an explicit complete-group position becomes a
+checkpoint. File rotation starts a new coordinate range; 32-bit rollover fails
+before invalid progress can be published. Malformed/truncated source terminators
+are errors, including at a complete-group boundary. MariaDB binlog dumps use the
+classic five-byte EOF even when ordinary SQL results negotiate OK terminators.
+
+This Alpha implementation supports MariaDB format-4 classic binlogs, CRC32/OFF,
+v1/v2 row images, MariaDB zlib events and bounded partial-row reassembly. XA,
+two-phase ALTER, unknown critical events/types and engine-specific binlog/GTID
+protocols fail closed. Traditional file starts use the protocol's 32-bit offset;
+prefer GTID resume. Purged history or missing privileges produce terminal errors,
+never an implicit jump to now. MariaDB 13.2 partial-row formats have synthetic
+tests; current real-server validation uses 12.3.3. See [Stage 6](STAGE6_CDC.md)
+for source receipts and remaining topology/version validation work.
+The [review correction record](STAGE6_REVIEW_FIXES.md) describes additional fault,
+fuzz and fixture coverage. Compressed payloads inflate directly into one bounded
+final event buffer, with exact length and complete zlib checksum validation;
+no measured CDC speedup is claimed.
+
 ## Migration and readiness
 
 Change the module import and SQL registration name from the original driver to

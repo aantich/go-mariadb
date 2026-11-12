@@ -1,0 +1,39 @@
+=== RUN   TestMariaDBCDC
+    stage6_cdc_test.go:108: CDC_FIXTURE {"binlog_format": "ROW", "checksum": "CRC32", "contract": "cdc-v1", "fixture_sha256": "ce19dfa92382a8bfc192a1fb185ca27af4043c090a854fd11eaa4f3425428720", "semisync_available": true, "server_id": 621129, "server_version": "12.3.3-MariaDB-log", "transport": "private-unix-socket"}
+=== RUN   TestMariaDBCDC/cursor_config_remains_reusable
+=== RUN   TestMariaDBCDC/plain
+=== RUN   TestMariaDBCDC/compressed
+=== RUN   TestMariaDBCDC/TLS
+=== RUN   TestMariaDBCDC/TLS_compressed
+=== RUN   TestMariaDBCDC/minimal
+=== RUN   TestMariaDBCDC/event_compression
+=== RUN   TestMariaDBCDC/MariaDB_value_families
+=== RUN   TestMariaDBCDC/checksum_OFF_transition
+=== RUN   TestMariaDBCDC/large_logical_event_and_receive_limit
+=== RUN   TestMariaDBCDC/GTID_resume_and_DDL_rotation
+=== RUN   TestMariaDBCDC/cancellation_and_close
+=== RUN   TestMariaDBCDC/semisync_manual_acknowledgement
+=== RUN   TestMariaDBCDC/restart_from_durable_GTID
+[mariadb] 2026/11/12 21:24:22 connection.go:872 closing bad idle connection: EOF
+[mariadb] 2026/11/12 21:24:22 packets.go:177 write unix @->/tmp/go-mariadb-cdc-3nur5bc6/server.sock: write: broken pipe
+[mariadb] 2026/11/12 21:24:22 connection.go:872 closing bad idle connection: EOF
+[mariadb] 2026/11/12 21:24:22 packets.go:177 write unix @->/tmp/go-mariadb-cdc-3nur5bc6/server.sock: write: broken pipe
+=== RUN   TestMariaDBCDC/purged_file_and_missing_privilege
+--- PASS: TestMariaDBCDC (1.49s)
+    --- PASS: TestMariaDBCDC/cursor_config_remains_reusable (0.00s)
+    --- PASS: TestMariaDBCDC/plain (0.00s)
+    --- PASS: TestMariaDBCDC/compressed (0.00s)
+    --- PASS: TestMariaDBCDC/TLS (0.01s)
+    --- PASS: TestMariaDBCDC/TLS_compressed (0.01s)
+    --- PASS: TestMariaDBCDC/minimal (0.00s)
+    --- PASS: TestMariaDBCDC/event_compression (0.00s)
+    --- PASS: TestMariaDBCDC/MariaDB_value_families (0.00s)
+    --- PASS: TestMariaDBCDC/checksum_OFF_transition (0.01s)
+    --- PASS: TestMariaDBCDC/large_logical_event_and_receive_limit (1.00s)
+    --- PASS: TestMariaDBCDC/GTID_resume_and_DDL_rotation (0.02s)
+    --- PASS: TestMariaDBCDC/cancellation_and_close (0.06s)
+    --- PASS: TestMariaDBCDC/semisync_manual_acknowledgement (0.01s)
+    --- PASS: TestMariaDBCDC/restart_from_durable_GTID (0.35s)
+    --- PASS: TestMariaDBCDC/purged_file_and_missing_privilege (0.01s)
+PASS
+ok  	github.com/aantich/go-mariadb/validation	2.505s

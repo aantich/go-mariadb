@@ -1,0 +1,6 @@
+--- FAIL: TestCDCScalarValidationBeforeCheckpoint (0.00s)
+    --- FAIL: TestCDCScalarValidationBeforeCheckpoint/TIME2_reserved_bits (0.00s)
+        decoder_test.go:265: corrupt scalar advanced progress &{23 23 0 17 bin.000001 137 0 {{1 0   [{19 0 0 false  false false}] []} 1 [{[] [{true false [192 0 0]}]}]} 0xc0000bc730 false} <nil>
+FAIL
+FAIL	github.com/aantich/go-mariadb/cdc	0.409s
+FAIL

@@ -1,0 +1,204 @@
+// Copyright 2026 Anton Antich. SPDX-License-Identifier: MPL-2.0
+
+package cdc
+
+import (
+	"bytes"
+	"compress/zlib"
+	"encoding/binary"
+	"fmt"
+	"testing"
+)
+
+type fuzzEvent struct {
+	typ  byte
+	body []byte
+}
+
+func compressedBody(body []byte, prefix int) []byte {
+	var compressed bytes.Buffer
+	w := zlib.NewWriter(&compressed)
+	w.Write(body[prefix:])
+	w.Close()
+	size := uint32(len(body) - prefix)
+	width := 1
+	for size>>(8*width) != 0 && width < 4 {
+		width++
+	}
+	result := append([]byte(nil), body[:prefix]...)
+	result = append(result, 0x80|byte(width))
+	for shift := 8 * (width - 1); shift >= 0; shift -= 8 {
+		result = append(result, byte(size>>shift))
+	}
+	return append(result, compressed.Bytes()...)
+}
+
+func fragmentSeeds() (first, last []byte) {
+	embedded := wireEvent(WriteRowsV1, rowBody(WriteRowsV1), false)
+	first = make([]byte, 17)
+	binary.LittleEndian.PutUint32(first, 2)
+	binary.LittleEndian.PutUint32(first[4:], 1)
+	first[8] = 1
+	binary.LittleEndian.PutUint64(first[9:], uint64(len(embedded)))
+	first = append(first, embedded[:20]...)
+	last = make([]byte, 9)
+	binary.LittleEndian.PutUint32(last, 2)
+	binary.LittleEndian.PutUint32(last[4:], 2)
+	return first, append(last, embedded[20:]...)
+}
+
+func decoderSeeds() []fuzzEvent {
+	// Keep the original four seeds and add each row version/compression family.
+	seeds := []fuzzEvent{{TableMapEvent, tableBody()}, {WriteRowsV1, rowBody(WriteRowsV1)}, {GTIDEvent, gtidBody(1, 4)}, {QueryEvent, queryBody("BEGIN")}}
+	for _, typ := range []byte{WriteRowsV1, UpdateRowsV1, DeleteRowsV1, WriteRowsV2, UpdateRowsV2, DeleteRowsV2} {
+		body := rowBody(typ)
+		seeds = append(seeds, fuzzEvent{typ, body})
+		prefix := 10 // Table ID, flags, column count and one presence bitmap.
+		compressed := byte(166 + typ - WriteRowsV1)
+		if typ >= WriteRowsV2 {
+			prefix += 2 // V2's extra-data-length field.
+			compressed = 169 + typ - WriteRowsV2
+		}
+		if typ == UpdateRowsV1 || typ == UpdateRowsV2 {
+			prefix++ // Updates have before and after presence bitmaps.
+		}
+		seeds = append(seeds, fuzzEvent{compressed, compressedBody(body, prefix)})
+	}
+	first, _ := fragmentSeeds()
+	return append(seeds, fuzzEvent{165, compressedBody(queryBody("COMMIT"), 15)}, fuzzEvent{172, first}, fuzzEvent{FormatEvent, formatBody(true)})
+}
+
+func boundedFuzzDecoder(t testing.TB) *decoder {
+	d := testDecoder(t)
+	d.limits = Limits{MaxEventBytes: 65536, MaxTables: 16, MaxTableBytes: 65536, MaxColumns: 64, MaxCells: 1024}
+	return d
+}
+
+func familyFuzzDecoder(t testing.TB, typ byte) *decoder {
+ d := boundedFuzzDecoder(t)
+ d.active = &GTID{Domain: 1, Server: 17, Sequence: 1}
+ return d
+}
+
+func FuzzCDCDecode(f *testing.F) {
+	for _, seed := range decoderSeeds() {
+		f.Add(seed.typ, seed.body)
+	}
+	f.Fuzz(func(t *testing.T, typ byte, body []byte) {
+		if len(body) > 65536-23 {
+			return
+		}
+		d := familyFuzzDecoder(t, typ)
+		_, _ = d.decode(wireAfter(d, typ, body, true), false)
+		// Retain invalid-state coverage in addition to the reachable parser
+		// state: nested GTIDs and rows without a matching generation must fail.
+		if typ == GTIDEvent || d.active != nil {
+			d = familyFuzzDecoder(t, typ)
+			if typ == GTIDEvent {
+				decodeEvent(t, d, GTIDEvent, gtidBody(1, 4))
+			} else {
+				d.clearTables()
+			}
+			_, _ = d.decode(wireAfter(d, typ, body, true), false)
+		}
+	})
+}
+
+func sequenceBytes(events []fuzzEvent) []byte {
+	var result []byte
+	for _, event := range events {
+		result = append(result, event.typ, byte(len(event.body)), byte(len(event.body)>>8))
+		result = append(result, event.body...)
+	}
+	return result
+}
+
+func sequenceSeeds() [][]byte {
+	first, last := fragmentSeeds()
+	prefix := []fuzzEvent{{GTIDEvent, gtidBody(1, 4)}, {QueryEvent, queryBody("BEGIN")}, {TableMapEvent, tableBody()}}
+	seeds := [][]byte{sequenceBytes([]fuzzEvent{
+		{GTIDEvent, gtidBody(1, 1)}, {165, compressedBody(queryBody("CREATE TABLE t(id INT)"), 15)},
+		{RotateEvent, rotateBody("bin.000002", 4)}, {FormatEvent, formatBody(true)},
+		{GTIDEvent, gtidBody(2, 1)}, {QueryEvent, queryBody("DROP TABLE t")},
+	})}
+	for _, events := range [][]fuzzEvent{
+		{{WriteRowsV1, rowBody(WriteRowsV1)}},
+		{{166, compressedBody(rowBody(WriteRowsV1), 10)}},
+		{{172, first}, {172, last}},
+	} {
+		sequence := append(append([]fuzzEvent(nil), prefix...), events...)
+		sequence = append(sequence, fuzzEvent{XIDEvent, make([]byte, 8)})
+		seeds = append(seeds, sequenceBytes(sequence))
+	}
+	return seeds
+}
+
+// decodeFuzzSequence bounds both bytes and transitions. The decoder persists
+// between frames so table generations, fragments and group boundaries interact.
+func decodeFuzzSequence(t testing.TB, data []byte) ([]*Event, error) {
+	d := boundedFuzzDecoder(t)
+	var events []*Event
+	for count := 0; len(data) != 0 && count < 128; count++ {
+		if len(data) < 3 {
+			return events, ErrMalformed
+		}
+		typ, size := data[0], int(binary.LittleEndian.Uint16(data[1:]))
+		data = data[3:]
+		if size > len(data) {
+			return events, ErrMalformed
+		}
+		event, err := d.decode(wireAfter(d, typ, data[:size], true), false)
+		if err != nil {
+			return events, err
+		}
+		if event != nil {
+			events = append(events, event)
+		}
+		data = data[size:]
+	}
+	if len(data) != 0 {
+		return events, ErrLimit
+	}
+	return events, d.end()
+}
+
+func FuzzCDCSequence(f *testing.F) {
+	for _, seed := range sequenceSeeds() {
+		f.Add(seed)
+	}
+	f.Fuzz(func(t *testing.T, data []byte) {
+		if len(data) <= 65536 {
+			_, _ = decodeFuzzSequence(t, data)
+		}
+	})
+}
+
+func TestCDCFuzzSeedReachability(t *testing.T) {
+	for index, seed := range decoderSeeds() {
+		t.Run(fmt.Sprintf("family/%d/type=%d", index, seed.typ), func(t *testing.T) {
+			d := familyFuzzDecoder(t, seed.typ)
+			event, err := d.decode(wireAfter(d, seed.typ, seed.body, true), false)
+			if err != nil {
+				t.Fatal("positive seed did not reach its payload parser", err)
+			}
+			if seed.typ == 172 {
+				if d.fragment == nil || event != nil {
+					t.Fatal("fragment seed did not start assembly")
+				}
+			} else if event == nil || event.Data == nil {
+				t.Fatal("positive seed did not decode its payload")
+			}
+		})
+	}
+	for index, seed := range sequenceSeeds() {
+		t.Run(fmt.Sprintf("sequence/%d", index), func(t *testing.T) {
+			events, err := decodeFuzzSequence(t, seed)
+			if err != nil {
+				t.Fatal("positive sequence did not complete", err)
+			}
+			if len(events) == 0 || events[len(events)-1].Checkpoint == nil {
+				t.Fatal("sequence did not reach a complete group")
+			}
+		})
+	}
+}

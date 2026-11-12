@@ -1,0 +1,10 @@
+=== RUN   TestReviewCDCDecreasingFileCheckpoint
+    decoder_test.go:594: completed file progress regressed: bin.000001:1083 -> bin.000001:900
+--- FAIL: TestReviewCDCDecreasingFileCheckpoint (0.00s)
+=== RUN   TestReviewCDCFuzzStateRejectsValidSeeds
+    decoder_test.go:603: valid seed 162 cannot reach its intended parser under fuzz setup: mariadb/cdc: malformed event: nested GTID
+    decoder_test.go:603: valid seed 23 cannot reach its intended parser under fuzz setup: mariadb/cdc: malformed event: stale or unknown table ID
+--- FAIL: TestReviewCDCFuzzStateRejectsValidSeeds (0.00s)
+FAIL
+FAIL	github.com/aantich/go-mariadb/cdc	0.343s
+FAIL

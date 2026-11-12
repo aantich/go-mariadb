@@ -1,0 +1,56 @@
+"""Restore one defect at a time in isolated overlays; never edit working sources."""
+import hashlib,importlib.machinery,importlib.util,json,os,re,subprocess,sys,unittest
+from pathlib import Path
+from unittest import mock
+ROOT=Path.cwd();OUT=ROOT/'validation/results/stage6-review-fixes-20261112'
+ENV={**os.environ,'GOCACHE':'/private/tmp/go-mariadb-validation-20261111/go-cache','GOMAXPROCS':'2','GOFLAGS':'','GOWORK':'off','GOPROXY':'off','PYTHONDONTWRITEBYTECODE':'1'}
+results={}
+def control(name,file,change,package,pattern,expected,live=False):
+    source=(ROOT/file).read_text();changed=change(source)
+    if changed==source:raise RuntimeError('Control did not change source: '+name)
+    replacement=OUT/(name+'.go.txt');replacement.write_text(changed)
+    overlay=OUT/(name+'-overlay.json');overlay.write_text(json.dumps({'Replace':{str(ROOT/file):str(replacement)}})+'\n')
+    command=['go','test','-race','-overlay',str(overlay),package,'-run',pattern,'-count=1','-v']
+    if live:command=[sys.executable,'validation/cdc_fixture.py','--',*command]
+    r=subprocess.run(command,cwd=ROOT,env=ENV,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,timeout=180)
+    (OUT/(name+'.log')).write_text(r.stdout)
+    if r.returncode!=1 or expected not in r.stdout or '[build failed]' in r.stdout:
+        raise RuntimeError('Invalid negative control '+name+'\n'+r.stdout[-2000:])
+    results[name]={'exit_code':r.returncode,'expected_failure':expected,'command':command,'source':file,'replacement_sha256':hashlib.sha256(replacement.read_bytes()).hexdigest()}
+control('restore-cursor-routing','replication.go',lambda s:s.replace('mc.queryText(query, nil)','mc.query(query, nil)'), './validation','^TestMariaDBCDC/cursor_config_remains_reusable$','CDC setup inherited SQL cursor routing',True)
+control('restore-short-eof','replication.go',lambda s:s.replace('if len(message) == 5 {','if len(message) < 9 {'),'.','^TestReplicationEOFValidation$','terminator did not retire transport with expected status')
+def disable_positions(s):
+    s=s.replace('if !contextEvent && e.Flags&0x20 == 0 {','if false && !contextEvent && e.Flags&0x20 == 0 {')
+    return s.replace('e.Position <= d.boundary || e.Position != d.position || ','')
+control('restore-backward-coordinates','cdc/decoder.go',disable_positions,'./cdc','^TestCDCFileCoordinates$','backward/equal coordinate accepted')
+def old_fuzz_state(s):
+    return re.sub(r'func familyFuzzDecoder\(t testing.TB, typ byte\) \*decoder \{.*?\n\}', 'func familyFuzzDecoder(t testing.TB, typ byte) *decoder {\n d := boundedFuzzDecoder(t)\n d.active = &GTID{Domain: 1, Server: 17, Sequence: 1}\n return d\n}',s,count=1,flags=re.S)
+control('restore-unreachable-fuzz-state','cdc/fuzz_test.go',old_fuzz_state,'./cdc','^TestCDCFuzzSeedReachability/family/','positive seed did not reach its payload parser')
+def omit_footer(s):
+    return re.sub(r'\tvar extra \[1\]byte\n\tn, err := zr.Read\(extra\[:\]\).*?\n\treturn result, nil', '\treturn result, nil', s,count=1,flags=re.S)
+control('omit-expansion-completion','cdc/decoder.go',omit_footer,'./cdc','^TestCDCExpansionIntegrity$','bad expansion published progress')
+sys.path.insert(0,str(ROOT/'validation'))
+import test_stage6_cdc
+original=(ROOT/'validation/cdc_fixture.py').read_text()
+old_toolchain="""def toolchain():
+    programs={name:shutil.which(name) for name in ('mariadbd','mariadb','mariadb-install-db')}
+    if not all(programs.values()):raise RuntimeError('MariaDB server/client binaries are required')
+    return Path(programs['mariadbd']).resolve().parent.parent,programs
+
+
+def main"""
+variants={
+    'restore-path-only-toolchain':re.sub(r'def toolchain\(\):.*?\n\ndef main',old_toolchain,original,count=1,flags=re.S),
+    'restore-leader-only-cleanup':original.replace('if process is None:', 'if process is None or process.poll() is not None:')}
+for name,source in variants.items():
+    path=OUT/(name+'.py.txt');path.write_text(source)
+    loader=importlib.machinery.SourceFileLoader(name,str(path));spec=importlib.util.spec_from_loader(name,loader)
+    module=importlib.util.module_from_spec(spec);loader.exec_module(module)
+    if name=='restore-path-only-toolchain':suite=unittest.defaultTestLoader.loadTestsFromTestCase(test_stage6_cdc.CDCToolchainTests)
+    else:suite=unittest.TestSuite([test_stage6_cdc.CDCEvidenceTests('test_owned_descendants_stop_after_leader_exit_or_ignored_term')])
+    with (OUT/(name+'.log')).open('w') as log,mock.patch.object(test_stage6_cdc,'cdc_fixture',module):
+        result=unittest.TextTestRunner(stream=log,verbosity=2).run(suite)
+    if not result.failures:raise RuntimeError('Negative fixture control did not fail assertion: '+name)
+    results[name]={'failures':len(result.failures),'errors':len(result.errors),'replacement_sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
+(OUT/'negative-controls.json').write_text(json.dumps(results,indent=2)+'\n')
+print(json.dumps({name:value.get('exit_code',value.get('failures')) for name,value in results.items()},indent=2))

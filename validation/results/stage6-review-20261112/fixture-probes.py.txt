@@ -1,0 +1,46 @@
+import os
+from pathlib import Path
+import signal
+import subprocess
+import sys
+import tempfile
+import time
+import unittest
+from unittest import mock
+
+sys.path.insert(0, str(Path.cwd()/'validation'))
+import cdc_fixture
+
+class ReviewFixtureTests(unittest.TestCase):
+    def test_setup_action_standalone_layout(self):
+        with tempfile.TemporaryDirectory(prefix='go-mariadb-review-layout-') as temporary:
+            base=Path(temporary)
+            for directory,name in [('bin','mariadbd'),('bin','mariadb'),('scripts','mariadb-install-db')]:
+                path=base/directory/name;path.parent.mkdir(exist_ok=True)
+                path.write_text('#!/bin/sh\nexit 99\n');path.chmod(0o700)
+            with mock.patch.dict(os.environ,{'PATH':str(base/'bin')}):
+                try: cdc_fixture.main(['synthetic-child'])
+                except RuntimeError as error:
+                    self.fail('CI standalone layout is rejected before initialization: '+str(error))
+
+    def test_cleanup_after_leader_exit(self):
+        # The parent exits immediately; its explicitly owned grandchild retains
+        # the parent's new session/process group. No unrelated PID is signalled.
+        code="import subprocess,sys; child=subprocess.Popen([sys.executable,'-c','import time; time.sleep(60)']); print(child.pid,flush=True)"
+        leader=subprocess.Popen([sys.executable,'-c',code],start_new_session=True,stdout=subprocess.PIPE,text=True)
+        child=int(leader.stdout.readline());leader.stdout.close();leader.wait(timeout=5)
+        try:
+            cdc_fixture.stop(leader,group=True)
+            # An executed group cleanup would terminate the sleeping child.
+            deadline=time.monotonic()+0.3
+            alive=True
+            while time.monotonic()<deadline:
+                try: os.kill(child,0)
+                except ProcessLookupError: alive=False;break
+                time.sleep(0.01)
+            self.assertFalse(alive,'owned descendant survives fixture cleanup after group leader exits')
+        finally:
+            try: os.killpg(leader.pid,signal.SIGKILL)
+            except ProcessLookupError: pass
+
+if __name__=='__main__': unittest.main(verbosity=2)

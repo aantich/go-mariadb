@@ -20,8 +20,20 @@ def external_auth_event():
             'Action':'output', 'Output':'EXTERNAL_AUTH '+json.dumps(external_auth_receipt())+'\n'}
 
 
+def cdc_receipt():
+    return {'contract':'cdc-v1', 'server_version':'12.3.3-MariaDB', 'server_id':621129,
+            'transport':'private-unix-socket', 'binlog_format':'ROW', 'checksum':'CRC32',
+            'semisync_available':True,
+            'fixture_sha256':record.inputs()['workload']['validation/cdc_fixture.py']}
+
+
+def cdc_event():
+    return {'Package':ci.PACKAGE+'/validation', 'Test':'TestMariaDBCDC', 'Action':'output',
+            'Output':'CDC_FIXTURE '+json.dumps(cdc_receipt())+'\n'}
+
+
 def events(extra=()):
-    records = [external_auth_event()]
+    records = [external_auth_event(), cdc_event()]
     for name in ci.REQUIRED:
         package, _, test = name.rpartition('/Test')
         records.append({'Package':package, 'Test':'Test'+test, 'Action':'pass'})

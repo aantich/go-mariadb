@@ -2,6 +2,42 @@
 
 ## Current dedicated driver
 
+**Stage 6, correctness only:** Optional [CDC](../docs/STAGE6_CDC.md) has its own
+disposable, socket-only MariaDB with binlogging, TLS and semisync. Its globals,
+log rotations, purges and restart controls affect only that private datadir.
+The complete matching MariaDB installation must be available: the fixture derives
+its prefix from the resolved `mariadbd` on `PATH`, or uses
+`GO_MARIADB_CDC_BASEDIR` explicitly. It resolves initialization under that prefix's
+`scripts` or `bin`, including the legacy initializer alias, and passes the same
+`--basedir` to initialization and startup. It never borrows an unrelated PATH
+initializer. The feature workflow selects this prefix after the pinned setup
+action. The complete current
+command wraps authentication outside CDC so each fixture cleans up its own resources:
+
+```sh
+GOCACHE=/private/tmp/go-mariadb-validation-20261111/go-cache \
+  python3 validation/auth_fixture.py -- python3 validation/cdc_fixture.py -- \
+  python3 validation/correctness.py --output validation/results/unique-attempt --publish
+python3 validation/verify.py
+```
+
+The fixture is mandatory for current published receipts. Both correctness and
+full-capture validators match source-fingerprinted metadata to exactly one raw
+`CDC_FIXTURE` marker; dropping both is rejected. Linux's local-auth equivalent
+uses `auth_fixture.py --local -- cdc_fixture.py -- ci.py --correctness-only`.
+Future full captures use contract `full-v3` and include `./cdc`; historical
+receipts and timing references retain their original contracts and bytes.
+No CDC benchmark or profiling measurement has been run.
+
+The [Stage 6 review corrections](../docs/STAGE6_REVIEW_FIXES.md) add live cursor
+Config reuse, start/rotation/cache/rollover coordinate checks, strict five-byte
+binlog EOF validation, complete zlib/footer controls and real descendant-cleanup
+tests. Family-aware fuzz states reach all supported row/compression parsers;
+a bounded sequence fuzzer also exercises groups, maps, rotation and fragments.
+The full correctness gate requires these regressions. Historical receipts and
+failed development attempts remain preserved; current correctness is separate
+from the unchanged older benchmark samples.
+
 **Stage 5, correctness only:** Opt-in interactive PAM and principal-pinned mutual
 GSSAPI now use real isolated PAM/Kerberos services. See the
 [contracts and reproduction](../docs/STAGE5_AUTHENTICATION.md) and
@@ -46,8 +82,9 @@ executing any benchmark functions:
 
 ```sh
 python3 validation/prepare_sessions.py
-GOCACHE=/private/tmp/go-mariadb-validation-20261111/go-cache python3 validation/correctness.py \
-  --output validation/results/unique-correctness-attempt --publish
+GOCACHE=/private/tmp/go-mariadb-validation-20261111/go-cache \
+  python3 validation/auth_fixture.py -- python3 validation/cdc_fixture.py -- \
+  python3 validation/correctness.py --output validation/results/unique-correctness-attempt --publish
 python3 validation/verify.py
 ```
 

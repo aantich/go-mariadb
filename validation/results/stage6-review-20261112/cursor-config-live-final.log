@@ -1,0 +1,7 @@
+=== RUN   TestReviewCDCServerCursorConfiguration
+    stage6_cdc_test.go:564: CDC_FIXTURE {"binlog_format": "ROW", "checksum": "CRC32", "contract": "cdc-v1", "fixture_sha256": "0de39042b403af6a089a664f3364cb022546d175ff7a1dbe6667abda0e59ebe6", "semisync_available": true, "server_id": 621129, "server_version": "12.3.3-MariaDB-log", "transport": "private-unix-socket"}
+    stage6_cdc_test.go:568: SQL cursor policy leaked into the dedicated replication setup: driver: skip fast-path; continue as if unimplemented
+--- FAIL: TestReviewCDCServerCursorConfiguration (0.00s)
+FAIL
+FAIL	github.com/aantich/go-mariadb/validation	0.426s
+FAIL

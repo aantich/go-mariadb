@@ -91,8 +91,8 @@
   },
   {
     "name": "transaction-aware CDC/GTID resume",
-    "status": "UNSUPPORTED_API",
-    "evidence": "no binlog consumer API; separate optional extension scope beyond database/sql"
+    "status": "SUPPORTED",
+    "evidence": "Optional cdc package: dedicated bounded pull stream, owned row images, complete-group checkpoints, MariaDB domain GTID resume and explicit semisync receipts. Private real binlog/TLS/zlib/compression/rotation/restart fixtures and protocol faults; XA, two-phase ALTER and engine-specific replication modes fail closed. See docs/STAGE6_CDC.md."
   },
   {
     "name": "performance_schema instrumentation",

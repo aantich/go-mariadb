@@ -1,0 +1,16 @@
+test_owned_descendants_stop_after_leader_exit_or_ignored_term (test_stage6_cdc.CDCEvidenceTests.test_owned_descendants_stop_after_leader_exit_or_ignored_term) ... 
+  test_owned_descendants_stop_after_leader_exit_or_ignored_term (test_stage6_cdc.CDCEvidenceTests.test_owned_descendants_stop_after_leader_exit_or_ignored_term) (running=False) ... FAIL
+
+======================================================================
+FAIL: test_owned_descendants_stop_after_leader_exit_or_ignored_term (test_stage6_cdc.CDCEvidenceTests.test_owned_descendants_stop_after_leader_exit_or_ignored_term) (running=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_stage6_cdc.py", line 188, in test_owned_descendants_stop_after_leader_exit_or_ignored_term
+    self.assertEqual(marker.stat().st_mtime_ns,before,'owned worker survived cleanup')
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1794518567088511000 != 1794518566980963000 : owned worker survived cleanup
+
+----------------------------------------------------------------------
+Ran 1 test in 0.439s
+
+FAILED (failures=1)

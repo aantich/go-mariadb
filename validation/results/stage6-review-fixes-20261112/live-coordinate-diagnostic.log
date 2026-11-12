@@ -1,0 +1,9 @@
+=== RUN   TestMariaDBCDC
+    stage6_cdc_test.go:108: CDC_FIXTURE {"binlog_format": "ROW", "checksum": "CRC32", "contract": "cdc-v1", "fixture_sha256": "82814344d8fba1ff8ebde813c4c80ce11d7baa935e6c8f5f94f1c76365da4ebc", "semisync_available": true, "server_id": 621129, "server_version": "12.3.3-MariaDB-log", "transport": "private-unix-socket"}
+=== RUN   TestMariaDBCDC/cursor_config_remains_reusable
+    stage6_cdc_test.go:130: CDC read mariadb/cdc: malformed event: event 160 position 0 did not advance beyond 727 (32-bit rollover is unsupported)
+--- FAIL: TestMariaDBCDC (0.04s)
+    --- FAIL: TestMariaDBCDC/cursor_config_remains_reusable (0.00s)
+FAIL
+FAIL	github.com/aantich/go-mariadb/validation	0.404s
+FAIL

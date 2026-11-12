@@ -1,0 +1,9 @@
+{
+  "restore-cursor-routing": 1,
+  "restore-short-eof": 1,
+  "restore-backward-coordinates": 1,
+  "restore-unreachable-fuzz-state": 1,
+  "omit-expansion-completion": 1,
+  "restore-path-only-toolchain": 2,
+  "restore-leader-only-cleanup": 1
+}

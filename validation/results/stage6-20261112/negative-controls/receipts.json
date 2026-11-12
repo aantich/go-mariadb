@@ -1,0 +1,59 @@
+[
+  {
+    "name": "crc",
+    "source": "cdc/decoder.go",
+    "replaced": "if verifyCRC && crc32.ChecksumIEEE",
+    "with": "if false && verifyCRC && crc32.ChecksumIEEE",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "-overlay",
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage6-20261112/negative-controls/crc.json",
+      "-run",
+      "^TestCDCIntegrityAndLimits/CRC$",
+      "-count=1",
+      "./cdc"
+    ],
+    "exit_code": 1,
+    "regression_detected": true
+  },
+  {
+    "name": "premature-checkpoint",
+    "source": "cdc/decoder.go",
+    "replaced": "if d.active != nil && d.groupFlags&1 != 0 {",
+    "with": "if d.active != nil {",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "-overlay",
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage6-20261112/negative-controls/premature-checkpoint.json",
+      "-run",
+      "^TestCDCTransactions$",
+      "-count=1",
+      "./cdc"
+    ],
+    "exit_code": 1,
+    "regression_detected": true
+  },
+  {
+    "name": "ack-buffer",
+    "source": "replication.go",
+    "replaced": "if r.mc.compress {\n\t\t\tr.mc.compIO = newCompIO(r.mc)",
+    "with": "if false && r.mc.compress {\n\t\t\tr.mc.compIO = newCompIO(r.mc)",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "-overlay",
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage6-20261112/negative-controls/ack-buffer.json",
+      "-run",
+      "^TestReplicationACKPreservesBufferedCompression$",
+      "-count=1",
+      "."
+    ],
+    "exit_code": 1,
+    "regression_detected": true
+  }
+]

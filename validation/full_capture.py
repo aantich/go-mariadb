@@ -14,8 +14,9 @@ from provenance import validate_server
 from stage4_workloads import stage4_issues
 import pass_history
 import external_auth_evidence
+import cdc_evidence
 
-CONTRACT = 'full-v2'
+CONTRACT = 'full-v3'
 ORDINARY = ('upstream', 'protocol', 'mariadb')
 
 
@@ -51,6 +52,8 @@ def validate_checks(capture, outputs):
             raise ValueError('Required full-run coverage failed: '+', '.join(issues))
     external_auth_evidence.validate(capture, outputs['mariadb'])
     external_auth_evidence.validate(capture, outputs['race'])
+    cdc_evidence.validate(capture, outputs['mariadb'])
+    cdc_evidence.validate(capture, outputs['race'])
 
 
 def validate_provenance(capture, directory):

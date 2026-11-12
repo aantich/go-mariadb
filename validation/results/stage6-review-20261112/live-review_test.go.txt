@@ -1,0 +1,570 @@
+// Copyright 2026 Anton Antich. SPDX-License-Identifier: MPL-2.0
+
+package validation
+
+import (
+	"bytes"
+	"context"
+	"crypto/tls"
+	"crypto/x509"
+	"database/sql"
+	"errors"
+	"fmt"
+	"io"
+	"os"
+	"path/filepath"
+	"strings"
+	"testing"
+	"time"
+
+	mariadb "github.com/aantich/go-mariadb"
+	"github.com/aantich/go-mariadb/cdc"
+)
+
+func cdcConfig(t *testing.T, compressed, secure bool) *mariadb.Config {
+	t.Helper()
+	cfg := mariadb.NewConfig()
+	cfg.User = "root"
+	cfg.Net = "unix"
+	cfg.Addr = os.Getenv("GO_MARIADB_CDC_SOCKET")
+	cfg.DBName = "go_mariadb_cdc"
+	cfg.Timeout = 3 * time.Second
+	cfg.WriteTimeout = 3 * time.Second
+	if compressed {
+		if err := cfg.Apply(mariadb.EnableCompression(true)); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if secure {
+		pem, err := os.ReadFile(os.Getenv("GO_MARIADB_CDC_TLS_CA"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		roots := x509.NewCertPool()
+		if !roots.AppendCertsFromPEM(pem) {
+			t.Fatal("fixture CA")
+		}
+		cfg.TLS = &tls.Config{RootCAs: roots, ServerName: "localhost", MinVersion: tls.VersionTLS12}
+	}
+	return cfg
+}
+func cdcExec(t *testing.T, db *sql.DB, query string) {
+	t.Helper()
+	if _, err := db.ExecContext(t.Context(), query); err != nil {
+		t.Fatal(query, err)
+	}
+}
+func cdcStart(t *testing.T, db *sql.DB) cdc.Resume {
+	t.Helper()
+	rows, err := db.QueryContext(t.Context(), "SHOW MASTER STATUS")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer rows.Close()
+	cols, err := rows.Columns()
+	if err != nil || !rows.Next() {
+		t.Fatal("master status", err)
+	}
+	var file string
+	var pos uint64
+	values := make([]any, len(cols))
+	values[0] = &file
+	values[1] = &pos
+	for i := 2; i < len(values); i++ {
+		values[i] = new(any)
+	}
+	if err := rows.Scan(values...); err != nil {
+		t.Fatal(err)
+	}
+	return cdc.Resume{File: file, Position: pos}
+}
+func cdcReadAll(t *testing.T, s *cdc.Stream) []*cdc.Event {
+	t.Helper()
+	ctx, cancel := context.WithTimeout(t.Context(), 8*time.Second)
+	defer cancel()
+	var events []*cdc.Event
+	for {
+		event, err := s.Next(ctx)
+		if err == io.EOF {
+			return events
+		}
+		if err != nil {
+			t.Fatal("CDC read", err)
+		}
+		events = append(events, event)
+		if len(events) > 1000 {
+			t.Fatal("unexpected event count")
+		}
+	}
+}
+
+func TestMariaDBCDC(t *testing.T) {
+	if os.Getenv("GO_MARIADB_CDC_SOCKET") == "" {
+		if os.Getenv("MARIADB_VALIDATION_CONFIG") != "" {
+			t.Fatal("isolated CDC fixture required: use validation/cdc_fixture.py")
+		}
+		t.Skip("isolated CDC fixture not configured")
+	}
+	t.Log("CDC_FIXTURE " + os.Getenv("GO_MARIADB_CDC_RECEIPT"))
+	connector, err := mariadb.NewConnector(cdcConfig(t, false, false))
+	if err != nil {
+		t.Fatal(err)
+	}
+	db := sql.OpenDB(connector)
+	defer db.Close()
+	db.SetMaxOpenConns(4)
+	cdcExec(t, db, "CREATE TABLE changes(id BIGINT UNSIGNED PRIMARY KEY,v VARCHAR(100),b BLOB,n INT NULL)")
+	for index, mode := range []string{"plain", "compressed", "TLS", "TLS compressed", "minimal", "event compression"} {
+		t.Run(mode, func(t *testing.T) {
+			cdcExec(t, db, "TRUNCATE TABLE changes")
+			start := cdcStart(t, db)
+			conn, err := db.Conn(t.Context())
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer conn.Close()
+			if mode == "minimal" {
+				if _, err = conn.ExecContext(t.Context(), "SET SESSION binlog_row_image=MINIMAL"); err != nil {
+					t.Fatal(err)
+				}
+				defer func() {
+					if _, err := conn.ExecContext(t.Context(), "SET SESSION binlog_row_image=FULL"); err != nil {
+						t.Error(err)
+					}
+				}()
+			}
+			if mode == "event compression" {
+				var before, minLength int
+				if err = db.QueryRowContext(t.Context(), "SELECT @@global.log_bin_compress,@@global.log_bin_compress_min_len").Scan(&before, &minLength); err != nil {
+					t.Fatal(err)
+				}
+				if _, err = conn.ExecContext(t.Context(), "SET GLOBAL log_bin_compress=1,log_bin_compress_min_len=10"); err != nil {
+					t.Fatal(err)
+				}
+				defer cdcExec(t, db, fmt.Sprintf("SET GLOBAL log_bin_compress=%d,log_bin_compress_min_len=%d", before, minLength))
+			}
+			tx, err := conn.BeginTx(t.Context(), nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if _, err = tx.ExecContext(t.Context(), "INSERT INTO changes VALUES (18446744073709551615,'first',?,NULL)", []byte(strings.Repeat("x", 1024))); err != nil {
+				t.Fatal(err)
+			}
+			if err = tx.Commit(); err != nil {
+				t.Fatal(err)
+			}
+			if _, err = conn.ExecContext(t.Context(), "UPDATE changes SET v='second' WHERE id=18446744073709551615"); err != nil {
+				t.Fatal(err)
+			}
+			rollback, err := conn.BeginTx(t.Context(), nil)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if _, err = rollback.ExecContext(t.Context(), "INSERT INTO changes VALUES(42,'rollback','',1)"); err != nil {
+				t.Fatal(err)
+			}
+			if err = rollback.Rollback(); err != nil {
+				t.Fatal(err)
+			}
+			if _, err = conn.ExecContext(t.Context(), "DELETE FROM changes WHERE id=18446744073709551615"); err != nil {
+				t.Fatal(err)
+			}
+			cfg := cdcConfig(t, strings.Contains(mode, "compressed"), strings.Contains(mode, "TLS"))
+			s, err := cdc.Open(t.Context(), cfg, cdc.Options{ServerID: uint32(622000 + index), Start: start, NonBlocking: true})
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer s.Close()
+			var writes, updates, deletes, checkpoints int
+			compressedEvent := false
+			for _, event := range cdcReadAll(t, s) {
+				if event.Checkpoint != nil {
+					checkpoints++
+					if event.Checkpoint.Resume().UseGTID {
+						t.Fatal("file start invented GTID history")
+					}
+					if err := s.Acknowledge(t.Context(), event.Checkpoint); err != nil {
+						t.Fatal(err)
+					}
+				}
+				rows, ok := event.Data.(cdc.Rows)
+				if !ok {
+					continue
+				}
+				if event.WireType >= 166 && event.WireType <= 171 {
+					compressedEvent = true
+				}
+				switch event.Type {
+				case cdc.WriteRowsV1, cdc.WriteRowsV2:
+					writes += len(rows.Changes)
+					cell := rows.Changes[0].After[0]
+					value, err := cell.Decode(rows.Table.Columns[0])
+					if err != nil || value != uint64(^uint64(0)) {
+						t.Fatalf("unsigned integer: %#v %v", value, err)
+					}
+					if !rows.Changes[0].After[3].Null {
+						t.Fatal("NULL lost")
+					}
+				case cdc.UpdateRowsV1, cdc.UpdateRowsV2:
+					updates += len(rows.Changes)
+					if mode == "minimal" && rows.Changes[0].After[0].Present {
+						t.Fatal("minimal image invented unchanged key")
+					}
+				case cdc.DeleteRowsV1, cdc.DeleteRowsV2:
+					deletes += len(rows.Changes)
+				}
+			}
+			if writes != 1 || updates != 1 || deletes != 1 || checkpoints != 3 {
+				t.Fatalf("row/rollback/boundary counts: %d/%d/%d/%d", writes, updates, deletes, checkpoints)
+			}
+			if mode == "event compression" && !compressedEvent {
+				t.Fatal("compressed row event not exercised")
+			}
+		})
+	}
+	t.Run("MariaDB value families", func(t *testing.T) {
+		cdcExec(t, db, "CREATE TABLE typed(id INT PRIMARY KEY,s BIGINT,u BIGINT UNSIGNED,f FLOAT,d DOUBLE,decv DECIMAL(20,6),dt DATETIME(6),tm TIME(6),ts TIMESTAMP(6),day DATE,yr YEAR,bits BIT(10),en ENUM('a','b'),st SET('x','y'),geo POINT,js JSON,uid UUID,ipv4 INET4,ipv6 INET6,vec VECTOR(3),tail BIGINT UNSIGNED)")
+		start := cdcStart(t, db)
+		cdcExec(t, db, "INSERT INTO typed VALUES(1,-9,18446744073709551615,1.25,-2.5,-123456789.123456,'2026-11-12 01:02:03.123456','-01:02:03.120000','2026-11-12 01:02:03.456789','2026-11-12',2026,513,'b','x,y',ST_GeomFromText('POINT(1 2)'),'{\"n\":1}','00112233-4455-6677-8899-aabbccddeeff','127.0.0.1','2001:db8::1',VEC_FromText('[1,2,3]'),18446744073709551615)")
+		s, err := cdc.Open(t.Context(), cdcConfig(t, false, false), cdc.Options{ServerID: 622015, Start: start, NonBlocking: true})
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer s.Close()
+		seen := false
+		for _, event := range cdcReadAll(t, s) {
+			rows, ok := event.Data.(cdc.Rows)
+			if !ok {
+				continue
+			}
+			seen = true
+			values := make(map[string]any)
+			for i, cell := range rows.Changes[0].After {
+				column := rows.Table.Columns[i]
+				value, err := cell.Decode(column)
+				if err != nil {
+					t.Fatalf("column %s type %d metadata %d: %v", column.Name, column.Type, column.Metadata, err)
+				}
+				values[column.Name] = value
+			}
+			for name, want := range map[string]any{"id": int64(1), "s": int64(-9), "u": ^uint64(0), "tail": ^uint64(0), "f": float32(1.25), "d": float64(-2.5), "decv": "-123456789.123456", "en": uint64(2), "st": uint64(3), "bits": uint64(513), "yr": 2026} {
+				if values[name] != want {
+					t.Fatalf("%s: got %#v, want %#v", name, values[name], want)
+				}
+			}
+			for name, width := range map[string]int{"uid": 16, "ipv4": 4, "ipv6": 16, "vec": 12, "geo": 25} {
+				value, ok := values[name].([]byte)
+				if !ok || len(value) != width {
+					t.Fatal("binary value", name, values[name])
+				}
+			}
+			for name, micros := range map[string]int{"dt": 123456, "tm": 120000, "ts": 456789} {
+				value, ok := values[name].(cdc.Temporal)
+				if !ok || value.Microsecond != micros || (name == "tm" && !value.Negative) {
+					t.Fatal("temporal", name, values[name])
+				}
+			}
+		}
+		if !seen {
+			t.Fatal("typed row not delivered")
+		}
+	})
+	t.Run("checksum OFF transition", func(t *testing.T) {
+		cdcExec(t, db, "SET GLOBAL binlog_checksum='NONE'")
+		defer func() { cdcExec(t, db, "SET GLOBAL binlog_checksum='CRC32'"); cdcExec(t, db, "FLUSH LOGS") }()
+		cdcExec(t, db, "FLUSH LOGS")
+		start := cdcStart(t, db)
+		cdcExec(t, db, "INSERT INTO changes VALUES(99,'no checksum','',1)")
+		s, err := cdc.Open(t.Context(), cdcConfig(t, false, false), cdc.Options{ServerID: 622016, Start: start, NonBlocking: true})
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer s.Close()
+		rows := 0
+		for _, event := range cdcReadAll(t, s) {
+			if _, ok := event.Data.(cdc.Rows); ok {
+				rows++
+			}
+		}
+		if rows != 1 {
+			t.Fatal("checksum OFF rows", rows)
+		}
+	})
+	t.Run("large logical event and receive limit", func(t *testing.T) {
+		cdcExec(t, db, "CREATE TABLE large_data(id INT PRIMARY KEY,b LONGBLOB)")
+		start := cdcStart(t, db)
+		payload := []byte(strings.Repeat("bounded-cdc-", (17<<20)/12+1))
+		if _, err := db.ExecContext(t.Context(), "INSERT INTO large_data VALUES(1,?)", payload); err != nil {
+			t.Fatal(err)
+		}
+		for _, compressed := range []bool{false, true} {
+			s, err := cdc.Open(t.Context(), cdcConfig(t, compressed, false), cdc.Options{ServerID: 622017, Start: start, NonBlocking: true})
+			if err != nil {
+				t.Fatal(err)
+			}
+			rows := 0
+			for _, event := range cdcReadAll(t, s) {
+				if row, ok := event.Data.(cdc.Rows); ok {
+					rows++
+					if !bytes.Equal(row.Changes[0].After[1].Raw, payload) {
+						t.Fatal("split event bytes changed")
+					}
+				}
+			}
+			s.Close()
+			if rows != 1 {
+				t.Fatal("large row count", rows)
+			}
+		}
+		s, err := cdc.Open(t.Context(), cdcConfig(t, false, false), cdc.Options{ServerID: 622018, Start: start, Limits: cdc.Limits{MaxEventBytes: 1 << 20}, NonBlocking: true})
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer s.Close()
+		ctx, cancel := context.WithTimeout(t.Context(), 5*time.Second)
+		defer cancel()
+		for {
+			_, err = s.Next(ctx)
+			if err != nil {
+				break
+			}
+		}
+		if !errors.Is(err, mariadb.ErrPktTooLarge) && !errors.Is(err, cdc.ErrLimit) {
+			t.Fatal("oversized event accepted", err)
+		}
+		if s.LatestCheckpoint() != nil {
+			t.Fatal("failed transaction advanced checkpoint")
+		}
+	})
+	t.Run("GTID resume and DDL rotation", func(t *testing.T) {
+		var state string
+		if err := db.QueryRowContext(t.Context(), "SELECT @@global.gtid_binlog_pos").Scan(&state); err != nil {
+			t.Fatal(err)
+		}
+		gtids, err := mariadb.ParseGTIDSet(state)
+		if err != nil {
+			t.Fatal(err)
+		}
+		cdcExec(t, db, "INSERT INTO changes VALUES(1,'a','',1)")
+		cdcExec(t, db, "FLUSH LOGS")
+		cdcExec(t, db, "ALTER TABLE changes ADD COLUMN extra INT DEFAULT 7")
+		cdcExec(t, db, "INSERT INTO changes(id,v,b,n) VALUES(2,'b','',2)")
+		s, err := cdc.Open(t.Context(), cdcConfig(t, false, false), cdc.Options{ServerID: 622020, Start: cdc.Resume{GTIDs: gtids, UseGTID: true}, NonBlocking: true})
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer s.Close()
+		var checkpoint *cdc.Checkpoint
+		writes := 0
+		ctx, cancel := context.WithTimeout(t.Context(), 8*time.Second)
+		defer cancel()
+		for {
+			event, err := s.Next(ctx)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if _, ok := event.Data.(cdc.Rows); ok {
+				writes++
+			}
+			if event.Checkpoint != nil {
+				checkpoint = event.Checkpoint
+				break
+			}
+		}
+		if writes != 1 || checkpoint == nil || !checkpoint.Resume().UseGTID {
+			t.Fatal("GTID checkpoint missing")
+		}
+		if err = s.Acknowledge(t.Context(), checkpoint); err != nil {
+			t.Fatal(err)
+		}
+		s.Close()
+		resumed, err := cdc.Open(t.Context(), cdcConfig(t, true, false), cdc.Options{ServerID: 622021, Start: checkpoint.Resume(), NonBlocking: true})
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer resumed.Close()
+		remaining := 0
+		ddl := false
+		for _, event := range cdcReadAll(t, resumed) {
+			if rows, ok := event.Data.(cdc.Rows); ok {
+				remaining++
+				if len(rows.Table.Columns) != 5 {
+					t.Fatal("stale table-map generation")
+				}
+			}
+			if query, ok := event.Data.(cdc.Query); ok && strings.Contains(string(query.SQL), "ALTER TABLE") {
+				ddl = true
+			}
+		}
+		if remaining != 1 || !ddl {
+			t.Fatal("resume duplicated/skipped work", remaining, ddl)
+		}
+	})
+	t.Run("cancellation and close", func(t *testing.T) {
+		start := cdcStart(t, db)
+		s, err := cdc.Open(t.Context(), cdcConfig(t, false, false), cdc.Options{ServerID: 622030, Start: start, Heartbeat: 10 * time.Millisecond})
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer s.Close()
+		ctx, cancel := context.WithTimeout(t.Context(), 60*time.Millisecond)
+		defer cancel()
+		for {
+			_, err = s.Next(ctx)
+			if err != nil {
+				break
+			}
+		}
+		if !errors.Is(err, context.DeadlineExceeded) {
+			t.Fatal("cancellation identity", err)
+		}
+	})
+	t.Run("semisync manual acknowledgement", func(t *testing.T) {
+		cdcExec(t, db, "SET GLOBAL rpl_semi_sync_master_enabled=1")
+		defer cdcExec(t, db, "SET GLOBAL rpl_semi_sync_master_enabled=0")
+		start := cdcStart(t, db)
+		s, err := cdc.Open(t.Context(), cdcConfig(t, true, true), cdc.Options{ServerID: 622040, Start: start, SemiSync: true})
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer s.Close()
+		ctx, cancel := context.WithTimeout(t.Context(), 6*time.Second)
+		defer cancel()
+		status := func(name string) uint64 {
+			var key string
+			var value uint64
+			if err := db.QueryRowContext(ctx, "SHOW GLOBAL STATUS LIKE '"+name+"'").Scan(&key, &value); err != nil {
+				t.Fatal(err)
+			}
+			return value
+		}
+		for status("Rpl_semi_sync_master_clients") == 0 {
+			select {
+			case <-ctx.Done():
+				t.Fatal("replica did not register")
+			default:
+				time.Sleep(time.Millisecond)
+			}
+		}
+		before := status("Rpl_semi_sync_master_yes_tx")
+		for index := range 2 {
+			written := make(chan error, 1)
+			go func() {
+				_, err := db.ExecContext(ctx, "INSERT INTO changes(id,v,b,n) VALUES(?,'semisync','',1)", 50+index)
+				written <- err
+			}()
+			requested := false
+			var checkpoint *cdc.Checkpoint
+			for checkpoint == nil {
+				event, err := s.Next(ctx)
+				if err != nil {
+					t.Fatal(err)
+				}
+				requested = requested || event.AckRequested
+				checkpoint = event.Checkpoint
+			}
+			if !requested {
+				t.Fatal("source never requested a semisync receipt")
+			}
+			select {
+			case err := <-written:
+				t.Fatalf("source commit completed before consumer acknowledgement: %v", err)
+			default:
+			}
+			if err := s.Acknowledge(ctx, checkpoint); err != nil {
+				t.Fatal(err)
+			}
+			select {
+			case err := <-written:
+				if err != nil {
+					t.Fatal(err)
+				}
+			case <-ctx.Done():
+				t.Fatal("source did not receive ACK")
+			}
+			if s.AcknowledgedCheckpoint() == nil || status("Rpl_semi_sync_master_yes_tx") < before+uint64(index+1) {
+				t.Fatal("manual receipt not accepted by source")
+			}
+		}
+	})
+	t.Run("restart from durable GTID", func(t *testing.T) {
+		var state string
+		if err := db.QueryRowContext(t.Context(), "SELECT @@global.gtid_binlog_pos").Scan(&state); err != nil {
+			t.Fatal(err)
+		}
+		gtids, err := mariadb.ParseGTIDSet(state)
+		if err != nil {
+			t.Fatal(err)
+		}
+		control := os.Getenv("GO_MARIADB_CDC_CONTROL")
+		if err = os.WriteFile(filepath.Join(control, "restart.request"), []byte("owned fixture only"), 0o600); err != nil {
+			t.Fatal(err)
+		}
+		deadline := time.Now().Add(12 * time.Second)
+		for {
+			if _, err = os.Stat(filepath.Join(control, "restart.done")); err == nil {
+				break
+			}
+			if time.Now().After(deadline) {
+				t.Fatal("fixture restart deadline")
+			}
+			time.Sleep(25 * time.Millisecond)
+		}
+		if err = os.Remove(filepath.Join(control, "restart.done")); err != nil {
+			t.Fatal(err)
+		}
+		cdcExec(t, db, "INSERT INTO changes(id,v,b,n) VALUES(60,'restart','',1)")
+		s, err := cdc.Open(t.Context(), cdcConfig(t, false, false), cdc.Options{ServerID: 622050, Start: cdc.Resume{UseGTID: true, GTIDs: gtids}, NonBlocking: true})
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer s.Close()
+		rows := 0
+		for _, event := range cdcReadAll(t, s) {
+			if _, ok := event.Data.(cdc.Rows); ok {
+				rows++
+			}
+		}
+		if rows != 1 {
+			t.Fatal("restart resume rows", rows)
+		}
+	})
+	t.Run("purged file and missing privilege", func(t *testing.T) {
+		old := cdcStart(t, db)
+		cdcExec(t, db, "FLUSH LOGS")
+		current := cdcStart(t, db)
+		cdcExec(t, db, "PURGE BINARY LOGS TO '"+current.File+"'")
+		s, err := cdc.Open(t.Context(), cdcConfig(t, false, false), cdc.Options{ServerID: 622060, Start: old, NonBlocking: true})
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer s.Close()
+		_, err = s.Next(t.Context())
+		var server *mariadb.MySQLError
+		if !errors.As(err, &server) {
+			t.Fatal("purged history silently changed start", err)
+		}
+		cdcExec(t, db, "CREATE USER 'no_replication'@'localhost'")
+		cfg := cdcConfig(t, false, false)
+		cfg.User = "no_replication"
+		cfg.DBName = ""
+		denied, err := cdc.Open(t.Context(), cfg, cdc.Options{ServerID: 622061, Start: current, NonBlocking: true})
+		if err == nil {
+			defer denied.Close()
+			_, err = denied.Next(t.Context())
+		}
+		if !errors.As(err, &server) {
+			t.Fatal("replication privilege not enforced", err)
+		}
+	})
+}
+
+func TestReviewCDCServerCursorConfiguration(t *testing.T) {
+    if os.Getenv("GO_MARIADB_CDC_SOCKET")=="" {t.Skip("private fixture required")}
+    t.Log("CDC_FIXTURE "+os.Getenv("GO_MARIADB_CDC_RECEIPT"))
+    cfg:=cdcConfig(t,false,false)
+    if err:=cfg.Apply(mariadb.WithServerCursors(8));err!=nil{t.Fatal(err)}
+    stream,err:=cdc.Open(t.Context(),cfg,cdc.Options{ServerID:623001,Start:cdc.Resume{UseGTID:true},NonBlocking:true})
+    if err!=nil{t.Fatalf("SQL cursor policy leaked into the dedicated replication setup: %v",err)}
+    defer stream.Close()
+}

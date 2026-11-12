@@ -1,0 +1,28 @@
+=== RUN   TestCDCExpansionIntegrity
+=== RUN   TestCDCExpansionIntegrity/empty_SQL
+=== RUN   TestCDCExpansionIntegrity/multi-byte_expansion_length
+=== RUN   TestCDCExpansionIntegrity/valid
+=== RUN   TestCDCExpansionIntegrity/short_advertised
+    review_fixes_test.go:193: bad expansion published progress &{2 165 0 17 bin.000001 117 0 {0 0 0 d [] [67 82 69 65 84 69 32 84 65 66 76 69 32 116 40 105 100 32 73 78 84]} 0xc0000b8460 false} <nil>
+=== RUN   TestCDCExpansionIntegrity/long_advertised
+=== RUN   TestCDCExpansionIntegrity/truncated_footer
+    review_fixes_test.go:193: bad expansion published progress &{2 165 0 17 bin.000001 116 0 {0 0 0 d [] [67 82 69 65 84 69 32 84 65 66 76 69 32 116 40 105 100 32 73 78 84 41]} 0xc0000b8230 false} <nil>
+=== RUN   TestCDCExpansionIntegrity/corrupt_footer
+    review_fixes_test.go:193: bad expansion published progress &{2 165 0 17 bin.000001 117 0 {0 0 0 d [] [67 82 69 65 84 69 32 84 65 66 76 69 32 116 40 105 100 32 73 78 84 41]} 0xc0000b84b0 false} <nil>
+=== RUN   TestCDCExpansionIntegrity/trailing_bytes
+    review_fixes_test.go:193: bad expansion published progress &{2 165 0 17 bin.000001 118 0 {0 0 0 d [] [67 82 69 65 84 69 32 84 65 66 76 69 32 116 40 105 100 32 73 78 84 41]} 0xc0000b8780 false} <nil>
+=== RUN   TestCDCExpansionIntegrity/second_stream
+    review_fixes_test.go:193: bad expansion published progress &{2 165 0 17 bin.000001 152 0 {0 0 0 d [] [67 82 69 65 84 69 32 84 65 66 76 69 32 116 40 105 100 32 73 78 84 41]} 0xc0000b8230 false} <nil>
+--- FAIL: TestCDCExpansionIntegrity (0.01s)
+    --- PASS: TestCDCExpansionIntegrity/empty_SQL (0.00s)
+    --- PASS: TestCDCExpansionIntegrity/multi-byte_expansion_length (0.01s)
+    --- PASS: TestCDCExpansionIntegrity/valid (0.00s)
+    --- FAIL: TestCDCExpansionIntegrity/short_advertised (0.00s)
+    --- PASS: TestCDCExpansionIntegrity/long_advertised (0.00s)
+    --- FAIL: TestCDCExpansionIntegrity/truncated_footer (0.00s)
+    --- FAIL: TestCDCExpansionIntegrity/corrupt_footer (0.00s)
+    --- FAIL: TestCDCExpansionIntegrity/trailing_bytes (0.00s)
+    --- FAIL: TestCDCExpansionIntegrity/second_stream (0.00s)
+FAIL
+FAIL	github.com/aantich/go-mariadb/cdc	0.352s
+FAIL

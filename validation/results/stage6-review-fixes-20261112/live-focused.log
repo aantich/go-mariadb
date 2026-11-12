@@ -1,0 +1,49 @@
+=== RUN   TestMariaDBCDC
+    stage6_cdc_test.go:108: CDC_FIXTURE {"binlog_format": "ROW", "checksum": "CRC32", "contract": "cdc-v1", "fixture_sha256": "82814344d8fba1ff8ebde813c4c80ce11d7baa935e6c8f5f94f1c76365da4ebc", "semisync_available": true, "server_id": 621129, "server_version": "12.3.3-MariaDB-log", "transport": "private-unix-socket"}
+=== RUN   TestMariaDBCDC/cursor_config_remains_reusable
+    stage6_cdc_test.go:130: CDC read mariadb/cdc: malformed event: binlog position did not advance (32-bit rollover is unsupported)
+=== RUN   TestMariaDBCDC/plain
+    stage6_cdc_test.go:224: CDC read mariadb/cdc: malformed event: binlog position did not advance (32-bit rollover is unsupported)
+=== RUN   TestMariaDBCDC/compressed
+    stage6_cdc_test.go:224: CDC read mariadb/cdc: malformed event: binlog position did not advance (32-bit rollover is unsupported)
+=== RUN   TestMariaDBCDC/TLS
+    stage6_cdc_test.go:224: CDC read mariadb/cdc: malformed event: binlog position did not advance (32-bit rollover is unsupported)
+=== RUN   TestMariaDBCDC/TLS_compressed
+    stage6_cdc_test.go:224: CDC read mariadb/cdc: malformed event: binlog position did not advance (32-bit rollover is unsupported)
+=== RUN   TestMariaDBCDC/minimal
+    stage6_cdc_test.go:224: CDC read mariadb/cdc: malformed event: binlog position did not advance (32-bit rollover is unsupported)
+=== RUN   TestMariaDBCDC/event_compression
+    stage6_cdc_test.go:224: CDC read mariadb/cdc: malformed event: binlog position did not advance (32-bit rollover is unsupported)
+=== RUN   TestMariaDBCDC/MariaDB_value_families
+    stage6_cdc_test.go:279: CDC read mariadb/cdc: malformed event: binlog position did not advance (32-bit rollover is unsupported)
+=== RUN   TestMariaDBCDC/checksum_OFF_transition
+=== RUN   TestMariaDBCDC/large_logical_event_and_receive_limit
+=== RUN   TestMariaDBCDC/GTID_resume_and_DDL_rotation
+    stage6_cdc_test.go:408: mariadb/cdc: malformed event: binlog position did not advance (32-bit rollover is unsupported)
+=== RUN   TestMariaDBCDC/cancellation_and_close
+=== RUN   TestMariaDBCDC/semisync_manual_acknowledgement
+    stage6_cdc_test.go:505: mariadb/cdc: malformed event: binlog position did not advance (32-bit rollover is unsupported)
+=== RUN   TestMariaDBCDC/restart_from_durable_GTID
+[mariadb] 2026/11/12 22:17:40 connection.go:872 closing bad idle connection: EOF
+[mariadb] 2026/11/12 22:17:40 packets.go:177 write unix ->/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/go-mariadb-cdc-f55f8uax/server.sock: write: broken pipe
+    stage6_cdc_test.go:567: CDC read mariadb/cdc: malformed event: binlog position did not advance (32-bit rollover is unsupported)
+=== RUN   TestMariaDBCDC/purged_file_and_missing_privilege
+--- FAIL: TestMariaDBCDC (2.13s)
+    --- FAIL: TestMariaDBCDC/cursor_config_remains_reusable (0.00s)
+    --- FAIL: TestMariaDBCDC/plain (0.00s)
+    --- FAIL: TestMariaDBCDC/compressed (0.00s)
+    --- FAIL: TestMariaDBCDC/TLS (0.01s)
+    --- FAIL: TestMariaDBCDC/TLS_compressed (0.01s)
+    --- FAIL: TestMariaDBCDC/minimal (0.00s)
+    --- FAIL: TestMariaDBCDC/event_compression (0.00s)
+    --- FAIL: TestMariaDBCDC/MariaDB_value_families (0.03s)
+    --- PASS: TestMariaDBCDC/checksum_OFF_transition (0.10s)
+    --- PASS: TestMariaDBCDC/large_logical_event_and_receive_limit (0.77s)
+    --- FAIL: TestMariaDBCDC/GTID_resume_and_DDL_rotation (0.09s)
+    --- PASS: TestMariaDBCDC/cancellation_and_close (0.06s)
+    --- FAIL: TestMariaDBCDC/semisync_manual_acknowledgement (0.01s)
+    --- FAIL: TestMariaDBCDC/restart_from_durable_GTID (0.96s)
+    --- PASS: TestMariaDBCDC/purged_file_and_missing_privilege (0.04s)
+FAIL
+FAIL	github.com/aantich/go-mariadb/validation	2.499s
+FAIL

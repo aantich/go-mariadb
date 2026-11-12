@@ -1,0 +1,55 @@
+=== RUN   TestReplicationEOFValidation
+=== RUN   TestReplicationEOFValidation/deprecate=false/bytes=1
+    replication_test.go:161: terminator did not retire transport with expected status EOF
+=== RUN   TestReplicationEOFValidation/deprecate=false/bytes=2
+    replication_test.go:161: terminator did not retire transport with expected status EOF
+=== RUN   TestReplicationEOFValidation/deprecate=false/bytes=3
+    replication_test.go:161: terminator did not retire transport with expected status EOF
+=== RUN   TestReplicationEOFValidation/deprecate=false/bytes=4
+    replication_test.go:161: terminator did not retire transport with expected status EOF
+=== RUN   TestReplicationEOFValidation/deprecate=false/bytes=5
+=== RUN   TestReplicationEOFValidation/deprecate=false/bytes=6
+    replication_test.go:161: terminator did not retire transport with expected status EOF
+=== RUN   TestReplicationEOFValidation/deprecate=false/bytes=7
+    replication_test.go:161: terminator did not retire transport with expected status EOF
+=== RUN   TestReplicationEOFValidation/deprecate=false/bytes=8
+    replication_test.go:161: terminator did not retire transport with expected status EOF
+=== RUN   TestReplicationEOFValidation/deprecate=false/bytes=9
+=== RUN   TestReplicationEOFValidation/deprecate=true/bytes=1
+    replication_test.go:161: terminator did not retire transport with expected status EOF
+=== RUN   TestReplicationEOFValidation/deprecate=true/bytes=2
+    replication_test.go:161: terminator did not retire transport with expected status EOF
+=== RUN   TestReplicationEOFValidation/deprecate=true/bytes=3
+    replication_test.go:161: terminator did not retire transport with expected status EOF
+=== RUN   TestReplicationEOFValidation/deprecate=true/bytes=4
+    replication_test.go:161: terminator did not retire transport with expected status EOF
+=== RUN   TestReplicationEOFValidation/deprecate=true/bytes=5
+=== RUN   TestReplicationEOFValidation/deprecate=true/bytes=6
+    replication_test.go:161: terminator did not retire transport with expected status EOF
+=== RUN   TestReplicationEOFValidation/deprecate=true/bytes=7
+    replication_test.go:161: terminator did not retire transport with expected status EOF
+=== RUN   TestReplicationEOFValidation/deprecate=true/bytes=8
+    replication_test.go:161: terminator did not retire transport with expected status EOF
+=== RUN   TestReplicationEOFValidation/deprecate=true/bytes=9
+--- FAIL: TestReplicationEOFValidation (0.00s)
+    --- FAIL: TestReplicationEOFValidation/deprecate=false/bytes=1 (0.00s)
+    --- FAIL: TestReplicationEOFValidation/deprecate=false/bytes=2 (0.00s)
+    --- FAIL: TestReplicationEOFValidation/deprecate=false/bytes=3 (0.00s)
+    --- FAIL: TestReplicationEOFValidation/deprecate=false/bytes=4 (0.00s)
+    --- PASS: TestReplicationEOFValidation/deprecate=false/bytes=5 (0.00s)
+    --- FAIL: TestReplicationEOFValidation/deprecate=false/bytes=6 (0.00s)
+    --- FAIL: TestReplicationEOFValidation/deprecate=false/bytes=7 (0.00s)
+    --- FAIL: TestReplicationEOFValidation/deprecate=false/bytes=8 (0.00s)
+    --- PASS: TestReplicationEOFValidation/deprecate=false/bytes=9 (0.00s)
+    --- FAIL: TestReplicationEOFValidation/deprecate=true/bytes=1 (0.00s)
+    --- FAIL: TestReplicationEOFValidation/deprecate=true/bytes=2 (0.00s)
+    --- FAIL: TestReplicationEOFValidation/deprecate=true/bytes=3 (0.00s)
+    --- FAIL: TestReplicationEOFValidation/deprecate=true/bytes=4 (0.00s)
+    --- PASS: TestReplicationEOFValidation/deprecate=true/bytes=5 (0.00s)
+    --- FAIL: TestReplicationEOFValidation/deprecate=true/bytes=6 (0.00s)
+    --- FAIL: TestReplicationEOFValidation/deprecate=true/bytes=7 (0.00s)
+    --- FAIL: TestReplicationEOFValidation/deprecate=true/bytes=8 (0.00s)
+    --- PASS: TestReplicationEOFValidation/deprecate=true/bytes=9 (0.00s)
+FAIL
+FAIL	github.com/aantich/go-mariadb	0.404s
+FAIL

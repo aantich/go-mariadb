@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/work/validation/cdc_fixture.py", line 189, in <module>
+    raise SystemExit(main(sys.argv[1:]))
+                     ^^^^^^^^^^^^^^^^^^
+  File "/work/validation/cdc_fixture.py", line 102, in main
+    certificates(tls)
+  File "/work/validation/prepare_ci.py", line 25, in certificates
+    openssl('req', '-x509', '-newkey', 'rsa:2048', '-nodes', '-days', '2', '-subj', '/CN=Go MariaDB CI CA',
+  File "/work/validation/prepare_ci.py", line 24, in openssl
+    subprocess.run(['openssl', *args], cwd=directory, check=True, capture_output=True)
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['openssl', 'req', '-x509', '-newkey', 'rsa:2048', '-nodes', '-days', '2', '-subj', '/CN=Go MariaDB CI CA', '-addext', 'basicConstraints=critical,CA:TRUE', '-addext', 'keyUsage=critical,keyCertSign,cRLSign', '-keyout', 'ca-key.pem', '-out', 'ca.pem']' returned non-zero exit status 1.

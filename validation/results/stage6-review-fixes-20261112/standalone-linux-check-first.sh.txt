@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+export GO_MARIADB_CDC_BASEDIR=/selected
+export LD_LIBRARY_PATH=/selected/lib:/selected/lib/private
+export PATH=/selected/bin:$PATH
+export GOCACHE=/run/go-cache
+export GOMODCACHE=/go/pkg/mod
+export GOMAXPROCS=2 GOFLAGS= GOWORK=off GOPROXY=off
+export PYTHONDONTWRITEBYTECODE=1
+cd /work
+python3 validation/cdc_fixture.py -- go test -race ./validation -run '^TestMariaDBCDC$' -count=1 -v

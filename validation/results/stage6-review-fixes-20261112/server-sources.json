@@ -1,0 +1,20 @@
+{
+  "sql/log_event_server.cc": {
+    "checkout_commit": "b439f350ce3a8306c77e64bc1679681320244d17",
+    "full_file_sha256": "88bffef10000fcbafeb98d57a4e93fa938a3a15924a1e188844abdaa4d5345ba",
+    "excerpt": "server-cached-positions.cc.txt",
+    "lines": [
+      875,
+      912
+    ]
+  },
+  "sql/protocol.cc": {
+    "checkout_commit": "b439f350ce3a8306c77e64bc1679681320244d17",
+    "full_file_sha256": "84f3e4a71fc6a44caf3af80a8a0d9b155ce43e9466a55daafc5744c422aa5242",
+    "excerpt": "server-binlog-eof.cc.txt",
+    "lines": [
+      320,
+      346
+    ]
+  }
+}

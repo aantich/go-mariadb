@@ -1,0 +1,599 @@
+// Copyright 2026 Anton Antich. SPDX-License-Identifier: MPL-2.0
+
+package cdc
+
+import (
+	"bytes"
+	"compress/zlib"
+	"context"
+	"encoding/binary"
+	"errors"
+	"hash/crc32"
+	"io"
+	"math"
+	"sync"
+	"testing"
+	"time"
+
+	mariadb "github.com/aantich/go-mariadb"
+)
+
+func wireEvent(typ byte, body []byte, checksum bool) []byte {
+	n := 19 + len(body)
+	if checksum {
+		n += 4
+	}
+	raw := make([]byte, n)
+	raw[4] = typ
+	binary.LittleEndian.PutUint32(raw[5:], 17)
+	binary.LittleEndian.PutUint32(raw[9:], uint32(n))
+	binary.LittleEndian.PutUint32(raw[13:], uint32(n+100))
+	copy(raw[19:], body)
+	if checksum {
+		binary.LittleEndian.PutUint32(raw[n-4:], crc32.ChecksumIEEE(raw[:n-4]))
+	}
+	return raw
+}
+func formatBody(checksum bool) []byte {
+	body := make([]byte, 57+172+1)
+	binary.LittleEndian.PutUint16(body, 4)
+	copy(body[2:], "13.2.0-MariaDB")
+	body[56] = 19
+	for _, kind := range []byte{TableMapEvent, 23, 24, 25, 166, 167, 168} {
+		body[57+int(kind)-1] = 8
+	}
+	for _, kind := range []byte{30, 31, 32, 169, 170, 171} {
+		body[57+int(kind)-1] = 10
+	}
+	body[57+int(QueryEvent)-1] = 13
+	if checksum {
+		body[len(body)-1] = 1
+	}
+	return body
+}
+func testDecoder(t testing.TB) *decoder {
+	t.Helper()
+	limits, _ := (Limits{}).normalize()
+	d := newDecoder(limits, Resume{File: "bin.000001", Position: 4, UseGTID: true})
+	if _, err := d.decode(wireEvent(FormatEvent, formatBody(true), true), false); err != nil {
+		t.Fatal(err)
+	}
+	return d
+}
+func gtidBody(sequence uint64, flags byte) []byte {
+	body := make([]byte, 19)
+	binary.LittleEndian.PutUint64(body, sequence)
+	binary.LittleEndian.PutUint32(body[8:], 1)
+	body[12] = flags
+	return body
+}
+func queryBody(sql string) []byte {
+	body := make([]byte, 13)
+	body[8] = 1
+	return append(append(body, 'd', 0), sql...)
+}
+func tableBody() []byte {
+	body := []byte{1, 0, 0, 0, 0, 0, 0, 0, 1, 'd', 0, 1, 't', 0, 2, 3, 15, 2, 100, 0, 2}
+	body = append(body, 1, 1, 128) // One unsigned numeric column, most-significant bit first.
+	return append(body, 4, 8, 2, 'i', 'd', 4, 'n', 'a', 'm', 'e')
+}
+func rowBody(typ byte) []byte {
+	body := []byte{1, 0, 0, 0, 0, 0, 1, 0}
+	if typ >= 30 {
+		body = append(body, 2, 0)
+	}
+	body = append(body, 2)
+	if typ == 24 || typ == 31 {
+		return append(body, 1, 2, 0, 7, 0, 0, 0, 0, 3, 'n', 'e', 'w')
+	}
+	return append(body, 3, 0, 7, 0, 0, 0, 3, 'o', 'l', 'd')
+}
+func decodeEvent(t testing.TB, d *decoder, typ byte, body []byte) *Event {
+	t.Helper()
+	event, err := d.decode(wireEvent(typ, body, d.checksum || typ == FormatEvent), false)
+	if err != nil {
+		t.Fatal(typ, err)
+	}
+	return event
+}
+
+func TestCDCTransactions(t *testing.T) {
+	for _, rowType := range []byte{23, 24, 25, 30, 31, 32} {
+		t.Run(string(rune('A'+rowType)), func(t *testing.T) {
+			d := testDecoder(t)
+			decodeEvent(t, d, GTIDEvent, gtidBody(1, 4))
+			decodeEvent(t, d, QueryEvent, queryBody("BEGIN"))
+			table := decodeEvent(t, d, TableMapEvent, tableBody())
+			snapshot := table.Data.(Table)
+			snapshot.Columns[0].Type = 255
+			snapshot.Metadata[0].Data[0] = 0
+			event := decodeEvent(t, d, rowType, rowBody(rowType))
+			rows := event.Data.(Rows)
+			if event.Checkpoint != nil || len(rows.Changes) != 1 || rows.Table.Columns[0].Type != 3 || !rows.Table.Columns[0].Unsigned || rows.Table.Columns[0].Name != "id" {
+				t.Fatal("row or metadata ownership")
+			}
+			if rowType == 24 || rowType == 31 {
+				if rows.Changes[0].After[0].Present || rows.Changes[0].Before[1].Present {
+					t.Fatal("sparse presence lost")
+				}
+			}
+			commit := decodeEvent(t, d, XIDEvent, make([]byte, 8))
+			if commit.Checkpoint == nil || commit.Checkpoint.Resume().GTIDs.String() != "1-17-1" {
+				t.Fatal("checkpoint before complete GTID state")
+			}
+			if len(d.tables) != 0 {
+				t.Fatal("statement/table generation retained")
+			}
+			if err := d.end(); err != nil {
+				t.Fatal(err)
+			}
+		})
+	}
+	t.Run("standalone and rollback", func(t *testing.T) {
+		d := testDecoder(t)
+		decodeEvent(t, d, GTIDEvent, gtidBody(1, 1))
+		ddl := decodeEvent(t, d, QueryEvent, queryBody("CREATE TABLE t(id INT)"))
+		if ddl.Checkpoint == nil {
+			t.Fatal("DDL boundary missing")
+		}
+		decodeEvent(t, d, GTIDEvent, gtidBody(2, 4))
+		decodeEvent(t, d, QueryEvent, queryBody("BEGIN"))
+		rollback := decodeEvent(t, d, QueryEvent, queryBody("ROLLBACK"))
+		if rollback.Checkpoint == nil || rollback.Checkpoint.Resume().GTIDs.String() != "1-17-2" {
+			t.Fatal("rollback progress")
+		}
+	})
+	t.Run("file progress does not invent GTIDs", func(t *testing.T) {
+		d := testDecoder(t)
+		d.useGTID = false
+		decodeEvent(t, d, GTIDEvent, gtidBody(1, 1))
+		event := decodeEvent(t, d, QueryEvent, queryBody("DDL"))
+		if event.Checkpoint.Resume().UseGTID || event.Checkpoint.Resume().GTIDs.String() != "" {
+			t.Fatal("invented preceding history")
+		}
+	})
+}
+
+func TestCDCIntegrityAndLimits(t *testing.T) {
+	t.Run("table accounting overflow", func(t *testing.T) {
+		if _, err := tableCharge(math.MaxInt/2, 1, 1); !errors.Is(err, ErrLimit) {
+			t.Fatal("overflow bypassed table budget", err)
+		}
+	})
+	for _, failure := range []string{"CRC", "size", "unknown event", "XA", "two phase ALTER", "nested GTID", "truncated group", "stale table", "column budget", "cell budget", "table budget", "metadata budget", "nonadvancing GTID", "rotation inside group"} {
+		t.Run(failure, func(t *testing.T) {
+			d := testDecoder(t)
+			var err error
+			switch failure {
+			case "CRC":
+				raw := wireEvent(3, nil, true)
+				raw[len(raw)-1] ^= 1
+				_, err = d.decode(raw, false)
+			case "size":
+				raw := wireEvent(3, nil, true)
+				raw[9]++
+				_, err = d.decode(raw, false)
+			case "unknown event":
+				_, err = d.decode(wireEvent(200, nil, true), false)
+			case "XA":
+				_, err = d.decode(wireEvent(162, gtidBody(1, 64), true), false)
+			case "two phase ALTER":
+				body := gtidBody(1, 4)
+				body[13] = 2
+				_, err = d.decode(wireEvent(162, body, true), false)
+			case "nested GTID":
+				decodeEvent(t, d, 162, gtidBody(1, 4))
+				_, err = d.decode(wireEvent(162, gtidBody(2, 4), true), false)
+			case "truncated group":
+				decodeEvent(t, d, 162, gtidBody(1, 4))
+				err = d.end()
+			case "stale table":
+				decodeEvent(t, d, 162, gtidBody(1, 4))
+				_, err = d.decode(wireEvent(23, rowBody(23), true), false)
+			case "column budget":
+				d.limits.MaxColumns = 1
+				_, err = d.decode(wireEvent(19, tableBody(), true), false)
+			case "cell budget":
+				decodeEvent(t, d, 162, gtidBody(1, 4))
+				decodeEvent(t, d, 19, tableBody())
+				d.limits.MaxCells = 1
+				_, err = d.decode(wireEvent(23, rowBody(23), true), false)
+			case "table budget":
+				decodeEvent(t, d, 19, tableBody())
+				d.limits.MaxTables = 1
+				body := tableBody()
+				body[0] = 2
+				_, err = d.decode(wireEvent(19, body, true), false)
+			case "metadata budget":
+				d.limits.MaxTableBytes = 600
+				_, err = d.decode(wireEvent(19, tableBody(), true), false)
+			case "nonadvancing GTID":
+				decodeEvent(t, d, 162, gtidBody(1, 1))
+				decodeEvent(t, d, 2, queryBody("DDL"))
+				_, err = d.decode(wireEvent(162, gtidBody(1, 1), true), false)
+			case "rotation inside group":
+				decodeEvent(t, d, 162, gtidBody(1, 4))
+				body := append(make([]byte, 8), "bin.000002"...)
+				body[0] = 4
+				_, err = d.decode(wireEvent(4, body, true), false)
+			}
+			if err == nil {
+				t.Fatal("unsafe input accepted")
+			}
+		})
+	}
+	t.Run("checksum off and ignorable", func(t *testing.T) {
+		d := testDecoder(t)
+		rawFormat := wireEvent(15, formatBody(false), true)
+		rawFormat[13]++ // Source rewrites OFF FDE coordinates without updating CRC.
+		if _, err := d.decode(rawFormat, false); err != nil {
+			t.Fatal(err)
+		}
+		if d.checksum {
+			t.Fatal("checksum transition ignored")
+		}
+		raw := wireEvent(200, []byte("context"), false)
+		raw[17] = 128
+		if _, err := d.decode(raw, false); err != nil {
+			t.Fatal(err)
+		}
+		if _, err := d.decode(wireEvent(200, nil, false), false); !errors.Is(err, ErrUnsupported) {
+			t.Fatal(err)
+		}
+	})
+}
+
+func TestCDCScalarValidationBeforeCheckpoint(t *testing.T) {
+	for _, test := range []struct {
+		name   string
+		column Column
+		raw    []byte
+	}{
+		{"decimal group", Column{Type: 246, Metadata: 3<<8 | 1}, []byte{0xff, 0xff}},
+		{"temporal fraction", Column{Type: 17, Metadata: 1}, []byte{0, 0, 0, 0, 101}},
+		{"bit padding", Column{Type: 16, Metadata: 1}, []byte{2}},
+		{"TIME2 reserved bits", Column{Type: 19}, []byte{0xc0, 0, 0}},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			d := testDecoder(t)
+			decodeEvent(t, d, GTIDEvent, gtidBody(1, 1))
+			d.tables[1] = tableEntry{table: Table{ID: 1, Columns: []Column{test.column}}}
+			body := []byte{1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0}
+			body = append(body, test.raw...)
+			event, err := d.decode(wireEvent(WriteRowsV1, body, true), false)
+			if !errors.Is(err, ErrMalformed) || event != nil || d.sequence != 0 || d.completed.String() != "" {
+				t.Fatal("corrupt scalar advanced progress", event, err)
+			}
+		})
+	}
+}
+
+func compressedRows(body []byte) []byte {
+	prefix := 10
+	var b bytes.Buffer
+	w := zlib.NewWriter(&b)
+	w.Write(body[prefix:])
+	w.Close()
+	return append(append(append([]byte(nil), body[:prefix]...), 0x81, byte(len(body)-prefix)), b.Bytes()...)
+}
+func TestCDCCompressedAndFragments(t *testing.T) {
+	t.Run("inconsistent v2 post-header", func(t *testing.T) {
+		d := testDecoder(t)
+		decodeEvent(t, d, GTIDEvent, gtidBody(1, 4))
+		decodeEvent(t, d, TableMapEvent, tableBody())
+		d.format.HeaderLengths[WriteRowsV2-1] = 8
+		if _, err := d.decode(wireEvent(WriteRowsV2, rowBody(WriteRowsV2), true), false); !errors.Is(err, ErrUnsupported) {
+			t.Fatal("inconsistent v2 layout accepted", err)
+		}
+	})
+	t.Run("compressed rows", func(t *testing.T) {
+		d := testDecoder(t)
+		decodeEvent(t, d, 162, gtidBody(1, 4))
+		decodeEvent(t, d, 19, tableBody())
+		event := decodeEvent(t, d, 166, compressedRows(rowBody(23)))
+		if event.Type != 23 || event.WireType != 166 {
+			t.Fatal("compression type")
+		}
+	})
+	for _, fault := range []string{"valid", "expansion bound", "trailing bytes", "length mismatch"} {
+		t.Run(fault, func(t *testing.T) {
+			d := testDecoder(t)
+			decodeEvent(t, d, 162, gtidBody(1, 4))
+			decodeEvent(t, d, 19, tableBody())
+			body := compressedRows(rowBody(23))
+			switch fault {
+			case "expansion bound":
+				d.limits.MaxEventBytes = 64
+				body[11] = 255
+			case "trailing bytes":
+				body = append(body, 0)
+			case "length mismatch":
+				body[11]++
+			}
+			_, err := d.decode(wireEvent(166, body, true), false)
+			if (err == nil) != (fault == "valid") {
+				t.Fatal(err)
+			}
+		})
+	}
+	for _, fault := range []string{"valid", "order", "interleave", "truncated"} {
+		t.Run("fragments/"+fault, func(t *testing.T) {
+			d := testDecoder(t)
+			decodeEvent(t, d, 162, gtidBody(1, 4))
+			decodeEvent(t, d, 19, tableBody())
+			embedded := wireEvent(23, rowBody(23), false)
+			first := make([]byte, 17)
+			binary.LittleEndian.PutUint32(first, 2)
+			binary.LittleEndian.PutUint32(first[4:], 1)
+			first[8] = 1
+			binary.LittleEndian.PutUint64(first[9:], uint64(len(embedded)))
+			first = append(first, embedded[:20]...)
+			event, err := d.decode(wireEvent(172, first, true), true)
+			if err != nil || event != nil {
+				t.Fatal(err)
+			}
+			last := make([]byte, 9)
+			binary.LittleEndian.PutUint32(last, 2)
+			binary.LittleEndian.PutUint32(last[4:], 2)
+			last = append(last, embedded[20:]...)
+			if fault == "truncated" {
+				err = d.end()
+			} else if fault == "interleave" {
+				_, err = d.decode(wireEvent(27, nil, true), false)
+			} else {
+				if fault == "order" {
+					last[4] = 1
+				}
+				event, err = d.decode(wireEvent(172, last, true), false)
+			}
+			if fault == "valid" {
+				if err != nil || event == nil || event.Type != 23 || !event.AckRequested {
+					t.Fatal(err)
+				}
+			} else if err == nil {
+				t.Fatal("invalid fragments accepted")
+			}
+		})
+	}
+}
+
+type fakeTransport struct {
+	packets []mariadb.ReplicationPacket
+	acks    int
+	close   sync.Once
+	closed  chan struct{}
+	block   bool
+	ackErr  error
+	entered chan struct{}
+}
+
+func (f *fakeTransport) Read(ctx context.Context) (mariadb.ReplicationPacket, error) {
+	if len(f.packets) > 0 {
+		p := f.packets[0]
+		f.packets = f.packets[1:]
+		return p, nil
+	}
+	if f.block {
+		if f.entered != nil {
+			close(f.entered)
+			f.entered = nil
+		}
+		select {
+		case <-ctx.Done():
+			return mariadb.ReplicationPacket{}, ctx.Err()
+		case <-f.closed:
+			return mariadb.ReplicationPacket{}, io.ErrClosedPipe
+		}
+	}
+	return mariadb.ReplicationPacket{}, io.EOF
+}
+func (f *fakeTransport) Acknowledge(context.Context, string, uint64) error { f.acks++; return f.ackErr }
+func (f *fakeTransport) Close() error                                      { f.close.Do(func() { close(f.closed) }); return nil }
+func streamFixture(t testing.TB, semi bool) (*Stream, *fakeTransport) {
+	t.Helper()
+	limits, _ := (Limits{}).normalize()
+	f := &fakeTransport{closed: make(chan struct{})}
+	for _, p := range [][]byte{wireEvent(15, formatBody(true), true), wireEvent(162, gtidBody(1, 1), true), wireEvent(2, queryBody("DDL"), true), wireEvent(162, gtidBody(2, 1), true), wireEvent(2, queryBody("DDL"), true)} {
+		f.packets = append(f.packets, mariadb.ReplicationPacket{Data: p, AckRequested: true})
+	}
+	return newStream(f, limits, Resume{File: "bin.000001", UseGTID: true}, semi), f
+}
+func TestCDCCheckpointOwnership(t *testing.T) {
+	s, f := streamFixture(t, true)
+	defer s.Close()
+	other, _ := streamFixture(t, true)
+	defer other.Close()
+	var tokens []*Checkpoint
+	for range 5 {
+		event, err := s.Next(t.Context())
+		if err != nil {
+			t.Fatal(err)
+		}
+		if event.Checkpoint != nil {
+			tokens = append(tokens, event.Checkpoint)
+		}
+	}
+	if f.acks != 0 || s.AcknowledgedCheckpoint() != nil {
+		t.Fatal("read acknowledged")
+	}
+	if err := other.Acknowledge(t.Context(), tokens[0]); !errors.Is(err, ErrCheckpoint) {
+		t.Fatal("foreign token", err)
+	}
+	if err := s.Acknowledge(t.Context(), &Checkpoint{}); !errors.Is(err, ErrCheckpoint) {
+		t.Fatal("fabricated token", err)
+	}
+	if err := s.Acknowledge(t.Context(), tokens[1]); err != nil {
+		t.Fatal(err)
+	}
+	if err := s.Acknowledge(t.Context(), tokens[1]); err != nil {
+		t.Fatal(err)
+	}
+	if f.acks != 1 {
+		t.Fatal("duplicate receipt sent")
+	}
+	if err := s.Acknowledge(t.Context(), tokens[0]); !errors.Is(err, ErrCheckpoint) {
+		t.Fatal("backward receipt", err)
+	}
+	if s.LatestCheckpoint().sequence != tokens[1].sequence || s.AcknowledgedCheckpoint().sequence != tokens[1].sequence {
+		t.Fatal("progress differs")
+	}
+	observed := s.LatestCheckpoint()
+	*observed = Checkpoint{}
+	acknowledged := s.AcknowledgedCheckpoint()
+	*acknowledged = *tokens[0]
+	if s.LatestCheckpoint().sequence != tokens[1].sequence || s.AcknowledgedCheckpoint().sequence != tokens[1].sequence {
+		t.Fatal("returned token aliases stream progress")
+	}
+	*tokens[1] = *tokens[0]
+	if err := s.Acknowledge(t.Context(), tokens[1]); !errors.Is(err, ErrCheckpoint) {
+		t.Fatal("mutated event rolled back private progress", err)
+	}
+}
+func TestCDCStreamFailure(t *testing.T) {
+	for _, fault := range []string{"cancel", "close", "decode", "ACK"} {
+		t.Run(fault, func(t *testing.T) {
+			s, f := streamFixture(t, true)
+			defer s.Close()
+			var token *Checkpoint
+			for range 3 {
+				event, err := s.Next(t.Context())
+				if err != nil {
+					t.Fatal(err)
+				}
+				if event.Checkpoint != nil {
+					token = event.Checkpoint
+				}
+			}
+			var err error
+			switch fault {
+			case "cancel":
+				f.packets = nil
+				f.block = true
+				ctx, cancel := context.WithTimeout(t.Context(), 20*time.Millisecond)
+				defer cancel()
+				_, err = s.Next(ctx)
+				if !errors.Is(err, context.DeadlineExceeded) {
+					t.Fatal(err)
+				}
+			case "close":
+				s.Close()
+				_, err = s.Next(t.Context())
+			case "decode":
+				f.packets = []mariadb.ReplicationPacket{{Data: wireEvent(200, nil, true)}}
+				_, err = s.Next(t.Context())
+			case "ACK":
+				f.ackErr = io.ErrUnexpectedEOF
+				err = s.Acknowledge(t.Context(), token)
+			}
+			if err == nil {
+				t.Fatal("terminal failure ignored")
+			}
+			if s.AcknowledgedCheckpoint() != nil || s.LatestCheckpoint().sequence != token.sequence {
+				t.Fatal("failure advanced progress")
+			}
+			_, again := s.Next(t.Context())
+			if again != err {
+				t.Fatal("failure was not sticky", err, again)
+			}
+		})
+	}
+}
+
+func TestCDCZeroStream(t *testing.T) {
+	for _, stream := range []*Stream{nil, {}} {
+		if _, err := stream.Next(context.Background()); !errors.Is(err, ErrClosed) {
+			t.Fatal(err)
+		}
+		if err := stream.Close(); err != nil {
+			t.Fatal(err)
+		}
+		if stream.LatestCheckpoint() != nil || stream.AcknowledgedCheckpoint() != nil {
+			t.Fatal("zero stream progress")
+		}
+	}
+}
+
+func TestCDCConcurrentOwnership(t *testing.T) {
+	s, f := streamFixture(t, false)
+	defer s.Close()
+	for range 3 {
+		if _, err := s.Next(t.Context()); err != nil {
+			t.Fatal(err)
+		}
+	}
+	f.packets = nil
+	f.block = true
+	entered := make(chan struct{})
+	f.entered = entered
+	returned := make(chan error, 1)
+	go func() { _, err := s.Next(t.Context()); returned <- err }()
+	<-entered
+	ctx, cancel := context.WithTimeout(t.Context(), 20*time.Millisecond)
+	defer cancel()
+	if err := s.Acknowledge(ctx, s.LatestCheckpoint()); !errors.Is(err, context.DeadlineExceeded) {
+		t.Fatal("ownership wait ignored context", err)
+	}
+	select {
+	case <-f.closed:
+		t.Fatal("waiting cancellation retired active reader")
+	default:
+	}
+	if s.LatestCheckpoint() == nil || s.AcknowledgedCheckpoint() != nil {
+		t.Fatal("ownership wait changed progress")
+	}
+	s.Close()
+	select {
+	case err := <-returned:
+		if !errors.Is(err, ErrClosed) {
+			t.Fatal(err)
+		}
+	case <-time.After(time.Second):
+		t.Fatal("Close did not interrupt read")
+	}
+}
+
+func FuzzCDCDecode(f *testing.F) {
+	f.Add(byte(19), tableBody())
+	f.Add(byte(23), rowBody(23))
+	f.Add(byte(162), gtidBody(1, 4))
+	f.Add(byte(2), queryBody("BEGIN"))
+	f.Fuzz(func(t *testing.T, typ byte, body []byte) {
+		if len(body) > 65536 {
+			return
+		}
+		d := testDecoder(t)
+		d.limits.MaxEventBytes = 65536
+		d.limits.MaxCells = 1024
+		d.active = &GTID{Domain: 1, Server: 17, Sequence: 1}
+		_, _ = d.decode(wireEvent(typ, body, true), false)
+	})
+}
+
+func reviewPosition(raw []byte, position uint32) []byte {
+    binary.LittleEndian.PutUint32(raw[13:],position)
+    binary.LittleEndian.PutUint32(raw[len(raw)-4:],crc32.ChecksumIEEE(raw[:len(raw)-4]))
+    return raw
+}
+func TestReviewCDCDecreasingFileCheckpoint(t *testing.T) {
+    s,f:=streamFixture(t,false);defer s.Close();s.decoder.useGTID=false
+    positions:=[]uint32{0,70,100,130,60}
+    for i:=range f.packets {reviewPosition(f.packets[i].Data,positions[i])}
+    for range 3 {if _,err:=s.Next(t.Context());err!=nil{t.Fatal(err)}}
+    first:=s.LatestCheckpoint().Resume()
+    for range 2 {
+        if _,err:=s.Next(t.Context());err!=nil{return} // A rejected regression is safe.
+    }
+    last:=s.LatestCheckpoint().Resume()
+    if last.Position<first.Position {t.Fatalf("completed file progress regressed: %s:%d -> %s:%d",first.File,first.Position,last.File,last.Position)}
+}
+func TestReviewCDCFuzzStateRejectsValidSeeds(t *testing.T) {
+    for _,kind:=range []byte{GTIDEvent,WriteRowsV1} {
+        d:=testDecoder(t)
+        d.limits.MaxEventBytes=65536;d.limits.MaxCells=1024
+        d.active=&GTID{Domain:1,Server:17,Sequence:1}
+        body:=gtidBody(1,4);if kind==WriteRowsV1{body=rowBody(kind)}
+        if _,err:=d.decode(wireEvent(kind,body,true),false);err!=nil {
+            t.Errorf("valid seed %d cannot reach its intended parser under fuzz setup: %v",kind,err)
+        }
+    }
+}

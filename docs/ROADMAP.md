@@ -62,18 +62,27 @@ no benchmarks ran. Anton subsequently requested committing and pushing the full
 stage and saved evidence to `master`. Earlier uncommitted statements describe
 their original capture context; publication does not repeat measurements.
 
-**Next proposed functional stage while measurements remain deferred:** an
-optional MariaDB CDC/binlog package, kept separate from ordinary `database/sql`
-connections. Start with an explicit event/transaction/checkpoint contract,
-bounded row-event decoding and a dedicated replication connection, then add
-consumer-controlled checkpoints and GTID resume with disconnect/replay tests.
-Do not promise exactly-once delivery. This is a proposal, not authorization to
-implement or publish a CDC package. The performance runbook stays queued for an
-explicitly authorized measurement window.
+**Stage 6, later on 12 November:** Anton authorized the complete optional
+MariaDB CDC/binlog implementation while keeping benchmarks deferred. The
+[`cdc` package](STAGE6_CDC.md) provides a dedicated connection, bounded owned
+row events, complete-group checkpoints, GTID resume and explicit semisync ACKs,
+with isolated live/restart and malformed-event tests. This stage stays
+uncommitted for review. It does not promise exactly-once delivery or authorize
+a package release. The performance runbook remains queued for an authorized window.
+
+**Stage 6 review corrections, later on 12 November:** Anton authorized fixing
+all seven [review findings](STAGE6_CODE_REVIEW.md). The
+[correction record](STAGE6_REVIEW_FIXES.md) covers matching CI toolchain selection,
+cursor Config reuse, monotone file checkpoints (including MariaDB's zero-position
+cached events), complete replication EOF, descendant cleanup, reachable fuzz
+states and direct bounded expansion. Exact-source Mac/Linux race/vet/correctness
+and 89 harness checks pass with all earlier passes retained. Current correctness
+is 1,588/1,591 passing leaves, zero failures and the same 8/5 profile skips.
+No benchmarks ran; all changes remain uncommitted on `master`.
 
 Next performance work: authorized first measurements for the new profiles and attribution of the
 remaining text-read signals. Evaluate pipelining independently after that,
-followed by optional CDC as a separately scoped feature. Production PAM/Kerberos
+while retaining CDC as a separate opt-in package. Production PAM/Kerberos
 deployments and broader platform/provider integration remain open validation work.
 Anton subsequently requested preparation only, with no benchmarks yet. The
 [measurement runbook](STAGE4_MEASUREMENT_PLAN.md) records the checks, comparison
@@ -239,13 +248,14 @@ inspect MariaDB type information without losing ordinary value compatibility.
 * Expand user/migration guides, API comments, examples, release checks and
   application pilots before changing Alpha readiness claims.
 
-## 6. Optional CDC package — separate scope decision
+## 6. Optional CDC package — implemented, Alpha
 
-Only after the SQL-driver foundations: consider an optional MariaDB binlog/GTID
-package with bounded decoding, complete-transaction checkpoints, durable resume,
-consumer-controlled ACKs, checksum/compression validation and explicit unsupported
-event handling. Reuse protocol knowledge from Haskell but design idiomatic Go
-stream ownership and cancellation. Do not couple core SQL-driver adoption to CDC.
+Authorized and implemented on 12 November. The [stage record](STAGE6_CDC.md)
+documents bounds, row/value decoding, complete-group checkpoint ownership,
+explicit resume/ACK semantics, tests and limitations. Ordinary SQL-driver users
+do not need to import CDC. Production topology/failover pilots and broader
+server versions remain validation work; XA, two-phase ALTER and engine-specific
+binlog protocols require separately scoped implementations.
 
 ## Operating rules
 

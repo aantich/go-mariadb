@@ -165,8 +165,20 @@ jobs:
             ssl_key=${{ runner.temp }}/go-mariadb-tls/server-key.pem
       - name: Provision required isolated schemas and authentication accounts
         run: python3 validation/prepare_ci.py provision --tls-dir '${{ runner.temp }}/go-mariadb-tls'
+      - name: Select the matching MariaDB installation for CDC
+        shell: python
+        run: |
+          import os
+          from pathlib import Path
+          import shutil
+          server = shutil.which('mariadbd')
+          if not server:
+              raise SystemExit('The selected MariaDB installation has no mariadbd')
+          basedir = Path(server).resolve().parent.parent
+          with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as output:
+              output.write(f'GO_MARIADB_CDC_BASEDIR={basedir}\n')
       - name: Require live features, managed sessions, instrumentation and race checks
-        run: python3 validation/auth_fixture.py -- python3 validation/ci.py --correctness-only
+        run: python3 validation/auth_fixture.py -- python3 validation/cdc_fixture.py -- python3 validation/ci.py --correctness-only
 
   # notifies that all test jobs are finished.
   finish:

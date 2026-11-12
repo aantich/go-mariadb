@@ -1,0 +1,5 @@
+--- FAIL: TestReplicationACKPreservesBufferedCompression (0.00s)
+    replication_test.go:150: ACK consumed buffered replication input
+FAIL
+FAIL	github.com/aantich/go-mariadb	0.364s
+FAIL

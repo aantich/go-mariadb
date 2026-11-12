@@ -2,10 +2,10 @@
 
 ## Latest correctness — native MariaDB APIs
 
-Recorded: **2026-11-12T19:00:44.453790+00:00** · Source: `9d7c4b8c5b19e246660b0326d2cf32c8cf114e6c998a29cac5c7372d29da7807` · **1398 PASS / 0 FAIL / 8 SKIP**, unique leaves.
+Recorded: **2026-11-12T21:21:29.442567+00:00** · Source: `69f760d553f6ec430157640a420190123790d4a636555d766126f468ab03c043` · **1588 PASS / 0 FAIL / 8 SKIP**, unique leaves.
 Server: **12.3.3-MariaDB-log** · Go: `go version go1.27.4 darwin/arm64` · Host: `macOS-26.4-arm64-arm-64bit-Mach-O` · GOMAXPROCS: **2** · performance_schema: **0**. Server settings match before/after checks.
 Race detection, vet, harness policy checks pass. No prior passing assertion was lost. Managed isolation is explicitly opted in; ordinary checkout remains liveness-only.
-[Raw correctness receipt](results/stage5-review-fixes-mac-final/capture.json) · [Reusable statements](../docs/STAGE4_STATEMENT_REUSE.md) · [Native API contracts](../docs/STAGE3_NATIVE_APIS.md) · [Session foundations](../docs/STAGE2_SESSION_FOUNDATIONS.md).
+[Raw correctness receipt](results/stage6-review-fixes-mac-final/capture.json) · [Reusable statements](../docs/STAGE4_STATEMENT_REUSE.md) · [Native API contracts](../docs/STAGE3_NATIVE_APIS.md) · [Session foundations](../docs/STAGE2_SESSION_FOUNDATIONS.md).
 
 **No performance measurements were made for this source.** The timing tables and full-capture failures below belong to the earlier source fingerprint shown there. They are historical, qualified measurements; none were copied into a new baseline or presented as current-source timings.
 
@@ -107,7 +107,7 @@ Historical totals retain the parser used by that capture; latest correctness exc
 | PARSEC authentication | UNSUPPORTED_API | SUPPORTED | Built-in parsec plugin; real MariaDB account succeeds, binary challenge/signature and malformed/work-factor unit checks. |
 | interactive PAM authentication | UNSUPPORTED_API | SUPPORTED | Opt-in PAM dialogue policy, verified TLS/Unix transport, prompt/response budgets and cancellation; isolated real single/multiple-question and rejection fixtures. See docs/STAGE5_AUTHENTICATION.md. |
 | Kerberos GSSAPI authentication | UNSUPPORTED_API | SUPPORTED | Explicit principal-pinned mutual authentication and optional native macOS/Linux provider, Kerberos-only credentials and bounded asynchronous cleanup; isolated real KDC/MariaDB tests. Windows SSPI/NTLM is not implemented. |
-| transaction-aware CDC/GTID resume | UNSUPPORTED_API | UNSUPPORTED_API | no binlog consumer API; separate optional extension scope beyond database/sql |
+| transaction-aware CDC/GTID resume | UNSUPPORTED_API | SUPPORTED | Optional cdc package: dedicated bounded pull stream, owned row images, complete-group checkpoints, MariaDB domain GTID resume and explicit semisync receipts. Private real binlog/TLS/zlib/compression/rotation/restart fixtures and protocol faults; XA, two-phase ALTER and engine-specific replication modes fail closed. See docs/STAGE6_CDC.md. |
 | performance_schema instrumentation | ENVIRONMENT | SUPPORTED | Required real statement/thread/connection-attribute checks on isolated Linux MariaDB with performance_schema=ON. Shared Mac service stays OFF and reports a profile skip. |
 | PAM/Kerberos services | ENVIRONMENT | SUPPORTED | Task-owned disposable PAM/MariaDB/KDC services, synthetic PAM credentials, real tickets and private caches/CA; fixture source/runtime provenance recorded. No host realm/PAM changes or production identity-system claim. |
 

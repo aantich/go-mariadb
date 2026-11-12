@@ -1,0 +1,6 @@
+--- FAIL: TestCDCIntegrityAndLimits (0.00s)
+    --- FAIL: TestCDCIntegrityAndLimits/CRC (0.00s)
+        decoder_test.go:221: unsafe input accepted
+FAIL
+FAIL	github.com/aantich/go-mariadb/cdc	0.341s
+FAIL

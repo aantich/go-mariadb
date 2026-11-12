@@ -1,0 +1,9 @@
+=== RUN   TestMariaDBCDC
+    stage6_cdc_test.go:108: CDC_FIXTURE {"binlog_format": "ROW", "checksum": "CRC32", "contract": "cdc-v1", "fixture_sha256": "ce19dfa92382a8bfc192a1fb185ca27af4043c090a854fd11eaa4f3425428720", "semisync_available": true, "server_id": 621129, "server_version": "12.3.3-MariaDB-log", "transport": "private-unix-socket"}
+=== RUN   TestMariaDBCDC/cursor_config_remains_reusable
+    stage6_cdc_test.go:126: CDC setup inherited SQL cursor routing driver: skip fast-path; continue as if unimplemented
+--- FAIL: TestMariaDBCDC (0.04s)
+    --- FAIL: TestMariaDBCDC/cursor_config_remains_reusable (0.00s)
+FAIL
+FAIL	github.com/aantich/go-mariadb/validation	0.430s
+FAIL

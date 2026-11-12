@@ -1,0 +1,547 @@
+// Copyright 2026 Anton Antich. SPDX-License-Identifier: MPL-2.0
+
+package cdc
+
+import (
+	"bytes"
+	"compress/zlib"
+	"encoding/binary"
+	"fmt"
+	"hash/crc32"
+	"io"
+	"math"
+	"strings"
+)
+
+type tableEntry struct {
+	table  Table
+	charge int
+}
+type fragment struct {
+	total, next uint32
+	server      uint32
+	size        int
+	data        []byte
+	ack         bool
+}
+type decoder struct {
+	limits        Limits
+	format        *Format
+	checksum      bool
+	file          string
+	position      uint64 // Physical offset lower bound; cached events can omit their end offset.
+	boundary      uint64 // Last completed group or explicitly requested file start.
+	tables        map[uint64]tableEntry
+	tableBytes    int
+	active        *GTID
+	groupFlags    byte
+	inTransaction bool
+	completed     GTIDSet
+	pending       GTIDSet
+	useGTID       bool
+	owner         *checkpointOwner
+	sequence      uint64
+	fragment      *fragment
+	bootstrap     int
+}
+
+func newDecoder(limits Limits, start Resume) *decoder {
+	d := &decoder{limits: limits, checksum: true, file: start.File, tables: make(map[uint64]tableEntry), completed: start.GTIDs, useGTID: start.UseGTID, owner: &checkpointOwner{1}}
+	if !start.UseGTID {
+		d.position, d.boundary = start.Position, start.Position
+	}
+	return d
+}
+func (d *decoder) clearTables() { clear(d.tables); d.tableBytes = 0 }
+func (d *decoder) end() error {
+	if d.active != nil || d.inTransaction || d.fragment != nil {
+		return fmt.Errorf("%w: stream ended inside a group or fragmented event", ErrMalformed)
+	}
+	if d.format == nil {
+		return fmt.Errorf("%w: no format description", ErrMalformed)
+	}
+	return nil
+}
+
+// decode takes ownership of the packet. Stored metadata is separately copied;
+// row cells may share this event's owned bytes but never a transport read buffer.
+func (d *decoder) decode(raw []byte, ack bool) (*Event, error) {
+	if len(raw) < 19 || len(raw) > d.limits.MaxEventBytes {
+		return nil, fmt.Errorf("%w: event size", ErrLimit)
+	}
+	if uint64(uint32le(raw[9:])) != uint64(len(raw)) {
+		return nil, fmt.Errorf("%w: declared event size", ErrMalformed)
+	}
+	e := &Event{Timestamp: uint32le(raw), Type: raw[4], WireType: raw[4], ServerID: uint32le(raw[5:]), Position: uint64(uint32le(raw[13:])), Flags: binary.LittleEndian.Uint16(raw[17:]), File: d.file, AckRequested: ack}
+	body := raw[19:]
+	hasFooter, verifyCRC := d.checksum, d.checksum
+	if e.Type == FormatEvent {
+		if len(raw) < 19+58+4 {
+			return nil, ErrMalformed
+		}
+		// FDE always reserves a footer. For OFF files MariaDB edits the sent
+		// log position/creation fields without recomputing that footer; its own
+		// replication reader skips CRC verification when the descriptor is OFF.
+		algorithm := raw[len(raw)-5]
+		if algorithm > 1 {
+			return nil, fmt.Errorf("%w: checksum algorithm", ErrUnsupported)
+		}
+		hasFooter = true
+		verifyCRC = algorithm == 1
+	}
+	if hasFooter {
+		if len(body) < 4 {
+			return nil, ErrMalformed
+		}
+		if verifyCRC && crc32.ChecksumIEEE(raw[:len(raw)-4]) != uint32le(raw[len(raw)-4:]) {
+			return nil, fmt.Errorf("%w: CRC32 mismatch in event %d", ErrMalformed, e.Type)
+		}
+		body = body[:len(body)-4]
+	}
+	// FDE, rotation, GTID summaries and heartbeats can be synthesized by the
+	// server at connect time. Other events must advance their physical offset.
+	// MariaDB Log_event::write_header leaves cached events' log_pos at zero;
+	// their wire size still advances a lower bound, but never a checkpoint.
+	// Classic headers carry only uint32: reject rollover instead of publishing
+	// a truncated file checkpoint or acknowledging an unrelated earlier offset.
+	contextEvent := e.Type == FormatEvent || e.Type == RotateEvent || e.Type == GTIDListEvent || e.Type == HeartbeatEvent
+	if false && !contextEvent && e.Flags&0x20 == 0 {
+		if e.Position == 0 {
+			if uint64(len(raw)) > math.MaxUint32-d.position {
+				return nil, fmt.Errorf("%w: 32-bit binlog position rollover is unsupported", ErrMalformed)
+			}
+			d.position += uint64(len(raw))
+		} else if e.Position <= d.position {
+			return nil, fmt.Errorf("%w: event %d position %d did not advance beyond %d (32-bit rollover is unsupported)", ErrMalformed, e.Type, e.Position, d.position)
+		} else {
+			d.position = e.Position
+		}
+	}
+	if e.Type == 172 || d.fragment != nil {
+		return d.partial(e, body)
+	}
+	return d.event(e, body)
+}
+func (d *decoder) finish(e *Event) error {
+	if d.active == nil && !d.inTransaction {
+		return fmt.Errorf("%w: completion outside a group", ErrMalformed)
+	}
+	if e.File == "" || e.Position < 4 || e.Flags&0x20 != 0 || d.sequence == math.MaxUint64 {
+		return fmt.Errorf("%w: invalid checkpoint coordinate", ErrMalformed)
+	}
+	if d.active != nil {
+		// Advance was validated when the GTID arrived. Keep that immutable
+		// candidate private until completion, without copying all domains twice.
+		d.completed = d.pending
+	}
+	d.pending = GTIDSet{}
+	d.sequence++
+	state := Resume{File: e.File, Position: e.Position, UseGTID: d.useGTID}
+	if d.useGTID {
+		state.GTIDs = d.completed
+	}
+	e.Checkpoint = &Checkpoint{owner: d.owner, sequence: d.sequence, state: state}
+	d.boundary = e.Position
+	d.active = nil
+	d.inTransaction = false
+	d.clearTables()
+	return nil
+}
+func (d *decoder) event(e *Event, body []byte) (*Event, error) {
+	if d.format == nil {
+		d.bootstrap++
+		if d.bootstrap > 1024 {
+			return nil, fmt.Errorf("%w: format bootstrap", ErrLimit)
+		}
+		if e.Type != FormatEvent && e.Type != RotateEvent && e.Type != HeartbeatEvent && e.Flags&0x80 == 0 {
+			return nil, fmt.Errorf("%w: data before format description", ErrMalformed)
+		}
+	}
+	var err error
+	if normal := normalCompressed(e.Type); normal != 0 {
+		body, err = d.expand(e.Type, normal, body)
+		if err != nil {
+			return nil, err
+		}
+		e.Type = normal
+	}
+	switch e.Type {
+	case FormatEvent:
+		if d.active != nil || d.inTransaction || len(body) < 58 || len(body) > 57+257 || binary.LittleEndian.Uint16(body) != 4 || body[56] != 19 {
+			return nil, fmt.Errorf("%w: format description", ErrMalformed)
+		}
+		algorithm := body[len(body)-1]
+		if algorithm > 1 {
+			return nil, fmt.Errorf("%w: checksum algorithm", ErrUnsupported)
+		}
+		version := strings.TrimRight(string(body[2:52]), "\x00")
+		if !strings.Contains(version, "MariaDB") {
+			return nil, fmt.Errorf("%w: non-MariaDB format", ErrUnsupported)
+		}
+		f := Format{ServerVersion: version, HeaderLengths: bytes.Clone(body[57 : len(body)-1]), Checksum: algorithm == 1}
+		d.format = &f
+		d.checksum = f.Checksum
+		d.clearTables()
+		copy := f
+		copy.HeaderLengths = bytes.Clone(f.HeaderLengths)
+		e.Data = copy
+	case RotateEvent:
+		if d.active != nil || d.inTransaction || len(body) < 9 {
+			return nil, fmt.Errorf("%w: rotation inside group or truncated rotate", ErrMalformed)
+		}
+		position := binary.LittleEndian.Uint64(body)
+		file := string(body[8:])
+		if position < 4 || position > math.MaxUint32 || !validFile(file) {
+			return nil, ErrMalformed
+		}
+		if file != d.file {
+			d.position, d.boundary = position, position
+		} else {
+			// An initial fake rotate may name the requested file at offset four.
+			// It must not lower a later explicit start or established progress.
+			d.position = max(d.position, position)
+			d.boundary = max(d.boundary, position)
+		}
+		d.file = file
+		d.clearTables()
+		e.File = file
+		e.Position = position
+		e.Data = Rotate{file, position}
+	case GTIDEvent:
+		if d.active != nil || d.inTransaction {
+			return nil, fmt.Errorf("%w: nested GTID", ErrMalformed)
+		}
+		r := reader{data: body}
+		g := GTID{Sequence: r.le(8), Domain: uint32(r.le(4)), Server: e.ServerID}
+		flags := r.byte()
+		if flags&0xc0 != 0 {
+			return nil, fmt.Errorf("%w: XA group", ErrUnsupported)
+		}
+		if flags&2 != 0 {
+			r.le(8)
+		}
+		extra := byte(0)
+		if r.pos < len(body) {
+			extra = r.byte()
+		}
+		if extra&^byte(0x1f) != 0 || extra&0x0e != 0 {
+			return nil, fmt.Errorf("%w: GTID extension or two-phase ALTER", ErrUnsupported)
+		}
+		if extra&1 != 0 && r.byte() == 0 {
+			return nil, ErrMalformed
+		}
+		if extra&0x10 != 0 {
+			r.le(4)
+		}
+		for _, b := range r.rest() {
+			if b != 0 {
+				return nil, fmt.Errorf("%w: GTID padding", ErrMalformed)
+			}
+		}
+		if r.end() != nil || len(body) < 19 || g.Sequence == 0 {
+			return nil, ErrMalformed
+		}
+		next, advanceErr := d.completed.Advance(g)
+		if advanceErr != nil {
+			return nil, fmt.Errorf("%w: %v", ErrMalformed, advanceErr)
+		}
+		d.pending = next
+		d.active = &g
+		d.groupFlags = flags
+		d.clearTables()
+		e.Data = g
+	case GTIDListEvent:
+		r := reader{data: body}
+		word := uint32(r.le(4))
+		count := int(word & 0x0fffffff)
+		if count > 4096 {
+			return nil, ErrLimit
+		}
+		list := GTIDList{Flags: word & 0xf0000000, Entries: make([]GTID, 0, count)}
+		seen := make(map[[2]uint32]bool, count)
+		for range count {
+			g := GTID{Domain: uint32(r.le(4)), Server: uint32(r.le(4)), Sequence: r.le(8)}
+			key := [2]uint32{g.Domain, g.Server}
+			if g.Sequence == 0 || seen[key] {
+				return nil, ErrMalformed
+			}
+			seen[key] = true
+			list.Entries = append(list.Entries, g)
+		}
+		if err = r.end(); err != nil {
+			return nil, err
+		}
+		e.Data = list
+	case TableMapEvent:
+		if len(body) > d.limits.MaxTableBytes {
+			return nil, ErrLimit
+		}
+		table, charge, parseErr := d.tableMap(body)
+		if parseErr != nil {
+			return nil, parseErr
+		}
+		old, exists := d.tables[table.ID]
+		count := len(d.tables)
+		if !exists {
+			count++
+		}
+		if count > d.limits.MaxTables || charge > d.limits.MaxTableBytes-(d.tableBytes-old.charge) {
+			return nil, ErrLimit
+		}
+		d.tables[table.ID] = tableEntry{table, charge}
+		d.tableBytes += charge - old.charge
+		e.Data = cloneTable(table)
+	case WriteRowsV1, UpdateRowsV1, DeleteRowsV1, WriteRowsV2, UpdateRowsV2, DeleteRowsV2:
+		if d.active == nil && !d.inTransaction {
+			return nil, fmt.Errorf("%w: row outside a group", ErrMalformed)
+		}
+		rows, parseErr := d.rows(e.Type, body)
+		if parseErr != nil {
+			return nil, parseErr
+		}
+		e.Data = rows
+		if rows.Flags&1 != 0 {
+			if d.active != nil && d.groupFlags&1 != 0 {
+				err = d.finish(e)
+			} else {
+				d.clearTables()
+			}
+		}
+	case QueryEvent:
+		if d.postHeader(QueryEvent) != 13 {
+			return nil, fmt.Errorf("%w: query post-header", ErrUnsupported)
+		}
+		query, parseErr := parseQuery(body)
+		if parseErr != nil {
+			return nil, parseErr
+		}
+		e.Data = query
+		// Control words are short. Avoid allocating an uppercased copy of an
+		// arbitrarily large SQL payload just to classify a transaction boundary.
+		control := ""
+		trimmed := bytes.TrimSpace(query.SQL)
+		if len(trimmed) <= 8 {
+			control = strings.ToUpper(string(trimmed))
+		}
+		switch control {
+		case "BEGIN":
+			if d.inTransaction {
+				return nil, ErrMalformed
+			}
+			d.inTransaction = true
+			d.clearTables()
+		case "COMMIT", "ROLLBACK":
+			err = d.finish(e)
+		default:
+			if d.active == nil && !d.inTransaction {
+				return nil, fmt.Errorf("%w: query outside a group", ErrMalformed)
+			}
+			if d.active != nil && d.groupFlags&1 != 0 {
+				err = d.finish(e)
+			} else {
+				d.clearTables()
+			}
+		}
+	case XIDEvent:
+		if len(body) != 8 {
+			return nil, ErrMalformed
+		}
+		e.Data = binary.LittleEndian.Uint64(body)
+		err = d.finish(e)
+	case AnnotateEvent:
+		e.Data = body
+	case BinlogCheckpointEvent:
+		r := reader{data: body}
+		n := r.le(4)
+		if n > 512 {
+			return nil, ErrLimit
+		}
+		file := string(r.take(int(n)))
+		if r.end() != nil || !validFile(file) {
+			return nil, ErrMalformed
+		}
+		e.Data = file
+	case HeartbeatEvent:
+	case StopEvent:
+		if d.active != nil || d.inTransaction {
+			return nil, fmt.Errorf("%w: STOP inside group", ErrMalformed)
+		}
+	case 5, 13, 14, 28, 29:
+		e.Data = body // Statement context and explicitly ignorable events.
+	default:
+		if e.Flags&0x80 == 0 {
+			return nil, fmt.Errorf("%w: event type %d", ErrUnsupported, e.Type)
+		}
+		e.Data = body
+	}
+	if err != nil {
+		return nil, err
+	}
+	return e, nil
+}
+func validFile(file string) bool {
+	return len(file) > 0 && len(file) <= 512 && !strings.ContainsRune(file, 0)
+}
+func (d *decoder) postHeader(typ byte) int {
+	if d.format == nil || typ == 0 || int(typ) > len(d.format.HeaderLengths) {
+		return 0
+	}
+	return int(d.format.HeaderLengths[int(typ)-1])
+}
+func parseQuery(body []byte) (Query, error) {
+	r := reader{data: body}
+	q := Query{ThreadID: uint32(r.le(4)), ExecutionTime: uint32(r.le(4))}
+	schemaLen := int(r.byte())
+	q.ErrorCode = uint16(r.le(2))
+	statusLen := int(r.le(2))
+	q.Status = r.take(statusLen)
+	q.Schema = string(r.take(schemaLen))
+	if r.byte() != 0 {
+		return q, ErrMalformed
+	}
+	q.SQL = r.rest()
+	return q, r.end()
+}
+func normalCompressed(typ byte) byte {
+	if typ == 165 {
+		return QueryEvent
+	}
+	if typ >= 166 && typ <= 168 {
+		return typ - 166 + WriteRowsV1
+	}
+	if typ >= 169 && typ <= 171 {
+		return typ - 169 + WriteRowsV2
+	}
+	return 0
+}
+func (d *decoder) expand(typ, normal byte, body []byte) ([]byte, error) {
+	r := reader{data: body}
+	if normal == QueryEvent {
+		if len(body) < 13 {
+			return nil, ErrMalformed
+		}
+		schemaLen := int(body[8])
+		statusLen := int(binary.LittleEndian.Uint16(body[11:]))
+		r.take(13 + statusLen + schemaLen)
+		if r.byte() != 0 {
+			return nil, ErrMalformed
+		}
+	} else {
+		h := d.postHeader(typ)
+		if h == 0 {
+			h = d.postHeader(normal)
+		}
+		if (normal >= WriteRowsV2 && h != 10) || (normal < WriteRowsV2 && h != 6 && h != 8) {
+			return nil, ErrMalformed
+		}
+		idWidth := 6
+		if h == 6 {
+			idWidth = 4
+		}
+		r.take(idWidth + 2)
+		if normal >= WriteRowsV2 && normal <= DeleteRowsV2 {
+			extra := int(r.le(2))
+			if extra < 2 {
+				return nil, ErrMalformed
+			}
+			r.take(extra - 2)
+		}
+		count := r.count(d.limits.MaxColumns)
+		if count < 1 {
+			return nil, ErrMalformed
+		}
+		maps := (count + 7) / 8
+		if normal == UpdateRowsV1 || normal == UpdateRowsV2 {
+			maps *= 2
+		}
+		r.take(maps)
+	}
+	if r.err != nil {
+		return nil, r.err
+	}
+	prefix := r.pos
+	header := r.byte()
+	width := int(header & 7)
+	if header&0xf8 != 0x80 || width < 1 || width > 4 {
+		return nil, fmt.Errorf("%w: compression algorithm/header", ErrUnsupported)
+	}
+	size := r.be(width)
+	if r.err != nil {
+		return nil, r.err
+	}
+	if prefix > d.limits.MaxEventBytes-19 || size > uint64(d.limits.MaxEventBytes-19-prefix) {
+		return nil, ErrLimit
+	}
+	compressed := bytes.NewReader(r.rest())
+	zr, err := zlib.NewReader(compressed)
+	if err != nil {
+		return nil, fmt.Errorf("%w: zlib header", ErrMalformed)
+	}
+	defer zr.Close()
+	// The advertised size has already been bounded. Inflate directly into the
+	// final event storage; ReadAll plus a second copy doubles expanded payloads.
+	result := make([]byte, prefix+int(size))
+	copy(result, body[:prefix])
+	if _, err := io.ReadFull(zr, result[prefix:]); err != nil {
+		return nil, fmt.Errorf("%w: zlib payload", ErrMalformed)
+	}
+	// Read through stream completion, including its Adler checksum. ReadFull
+	// alone may stop just before that footer; one extra byte also detects an
+	// advertised size that is smaller than the actual expansion.
+	var extra [1]byte
+	n, err := zr.Read(extra[:])
+	if n != 0 || err != io.EOF || compressed.Len() != 0 {
+		return nil, fmt.Errorf("%w: expansion length/trailing compressed bytes", ErrMalformed)
+	}
+	return result, nil
+}
+func (d *decoder) partial(e *Event, body []byte) (*Event, error) {
+	if d.format == nil {
+		return nil, fmt.Errorf("%w: fragment before format description", ErrMalformed)
+	}
+	if e.Type != 172 {
+		return nil, fmt.Errorf("%w: interleaved partial row event", ErrMalformed)
+	}
+	r := reader{data: body}
+	count := uint32(r.le(4))
+	sequence := uint32(r.le(4))
+	flags := r.byte()
+	if d.fragment == nil {
+		size := r.le(8)
+		if r.err != nil || count < 2 || count > 65536 || sequence != 1 || flags != 1 || size < 19 || size > uint64(d.limits.MaxEventBytes) {
+			return nil, fmt.Errorf("%w: first row fragment", ErrMalformed)
+		}
+		d.fragment = &fragment{total: count, next: 1, server: e.ServerID, size: int(size), data: make([]byte, 0, int(size))}
+	} else if flags != 0 {
+		return nil, ErrMalformed
+	}
+	f := d.fragment
+	if count != f.total || sequence != f.next || e.ServerID != f.server || r.err != nil {
+		return nil, fmt.Errorf("%w: row fragment sequence", ErrMalformed)
+	}
+	chunk := r.rest()
+	if len(chunk) == 0 || len(chunk) > f.size-len(f.data) {
+		return nil, ErrMalformed
+	}
+	f.data = append(f.data, chunk...)
+	f.next++
+	f.ack = f.ack || e.AckRequested
+	if sequence < count {
+		return nil, nil
+	}
+	if len(f.data) != f.size {
+		return nil, ErrMalformed
+	}
+	raw := f.data
+	kind := raw[4]
+	declared := uint64(uint32le(raw[9:]))
+	if (declared != uint64(len(raw)) && declared != uint64(len(raw)+4)) || uint32le(raw[5:]) != f.server || !((kind >= 23 && kind <= 25) || (kind >= 30 && kind <= 32)) {
+		return nil, ErrMalformed
+	}
+	e.Type = kind
+	e.Timestamp = uint32le(raw)
+	e.Flags = binary.LittleEndian.Uint16(raw[17:])
+	e.AckRequested = f.ack
+	d.fragment = nil
+	return d.event(e, raw[19:])
+}

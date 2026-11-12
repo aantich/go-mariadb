@@ -1,0 +1,105 @@
+{
+  "restore-cursor-routing": {
+    "exit_code": 1,
+    "expected_failure": "CDC setup inherited SQL cursor routing",
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "validation/cdc_fixture.py",
+      "--",
+      "go",
+      "test",
+      "-race",
+      "-overlay",
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage6-review-fixes-20261112/restore-cursor-routing-overlay.json",
+      "./validation",
+      "-run",
+      "^TestMariaDBCDC/cursor_config_remains_reusable$",
+      "-count=1",
+      "-v"
+    ],
+    "source": "replication.go",
+    "replacement_sha256": "8b598ace9a018d4651db75ba9832026d2d07524a4ea093b7914ee5ac6cee0c01"
+  },
+  "restore-short-eof": {
+    "exit_code": 1,
+    "expected_failure": "terminator did not retire transport with expected status",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "-overlay",
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage6-review-fixes-20261112/restore-short-eof-overlay.json",
+      ".",
+      "-run",
+      "^TestReplicationEOFValidation$",
+      "-count=1",
+      "-v"
+    ],
+    "source": "replication.go",
+    "replacement_sha256": "74c69cdb287a7247b85f5ff8c9cc4c975182251b128142777c98c014d2356080"
+  },
+  "restore-backward-coordinates": {
+    "exit_code": 1,
+    "expected_failure": "backward/equal coordinate accepted",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "-overlay",
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage6-review-fixes-20261112/restore-backward-coordinates-overlay.json",
+      "./cdc",
+      "-run",
+      "^TestCDCFileCoordinates$",
+      "-count=1",
+      "-v"
+    ],
+    "source": "cdc/decoder.go",
+    "replacement_sha256": "68db27070301ce0705a9ca6515c6dc59cd7916a88ae85e332f1f36f49b3861e4"
+  },
+  "restore-unreachable-fuzz-state": {
+    "exit_code": 1,
+    "expected_failure": "positive seed did not reach its payload parser",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "-overlay",
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage6-review-fixes-20261112/restore-unreachable-fuzz-state-overlay.json",
+      "./cdc",
+      "-run",
+      "^TestCDCFuzzSeedReachability/family/",
+      "-count=1",
+      "-v"
+    ],
+    "source": "cdc/fuzz_test.go",
+    "replacement_sha256": "146ff0e8fb24ada7a0d55119d508ba7f2719e26e667f757a766a1fb6126e27f9"
+  },
+  "omit-expansion-completion": {
+    "exit_code": 1,
+    "expected_failure": "bad expansion published progress",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "-overlay",
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage6-review-fixes-20261112/omit-expansion-completion-overlay.json",
+      "./cdc",
+      "-run",
+      "^TestCDCExpansionIntegrity$",
+      "-count=1",
+      "-v"
+    ],
+    "source": "cdc/decoder.go",
+    "replacement_sha256": "10542f526dc24152fe6ed61b5bd4bb2a712f20b62c6429b799eea615cab1cb0c"
+  },
+  "restore-path-only-toolchain": {
+    "failures": 2,
+    "errors": 2,
+    "replacement_sha256": "621f01b4db8bab39cf5ecaa9490ce39965519214a9d5d78b53ca059426f25755"
+  },
+  "restore-leader-only-cleanup": {
+    "failures": 1,
+    "errors": 0,
+    "replacement_sha256": "011902e183e7edbd2f85770c7335f24ffde106b7aca156a5459cfe26506f42cb"
+  }
+}

@@ -1,0 +1,100 @@
+"""Verify final correction receipts and preserve old bytes before sealing hashes."""
+import ast,gzip,hashlib,json,re,subprocess,sys
+from collections import Counter
+from pathlib import Path
+sys.path.insert(0,'validation')
+import correctness,record
+
+OUT=Path('validation/results/stage6-review-fixes-20261112')
+def digest(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+frozen=json.loads((OUT/'source.json').read_text())
+assert record.inputs()==frozen['inputs'],'Source changed after final checks'
+old=json.loads(Path('validation/results/stage6-confirmation.json').read_text())
+profiles={}
+for name in ('mac','linux'):
+    directory=Path('validation/results')/('stage6-review-fixes-'+name+'-final')
+    capture=json.loads((directory/'capture.json').read_text())
+    summary=correctness.summarize(capture,directory)
+    prior=json.loads((Path(old['profiles'][name]['directory'])/'capture.json').read_text())
+    before={k for k,v in correctness.leaves(prior['stages']['correctness']['cases']).items() if v.get('status')=='pass'}
+    after={k for k,v in correctness.leaves(capture['stages']['correctness']['cases']).items() if v.get('status')=='pass'}
+    assert not before-after and len(after-before)==84
+    assert 'Ran 89 tests' in (directory/'recorder.log').read_text()
+    profiles[name]={'directory':str(directory),'input_fingerprint':summary['input_fingerprint'],
+        'leaf_counts':summary['leaf_counts'],'prior_passing_leaves':len(before),'new_passing_leaves':len(after-before),
+        'prior_passes_lost':[],'checks':summary['verified_checks'],'harness_tests':89,
+        'go':capture.get('go'),'host':capture.get('host'),'server':capture.get('server'),
+        'cdc_fixture':capture['cdc_fixture'],'instrumentation_required':capture.get('instrumentation_required',False)}
+historical={}
+review=json.loads(Path('validation/results/stage6-review-20261112/capture.json').read_text())
+for name,manifest in [('stage6',old),('stage6-review',review)]:
+    entries={}
+    for path,expected in manifest['artifacts'].items():
+        preserved=Path(path)
+        if digest(preserved)!=expected:
+            preserved=OUT/'historical-documents'/path
+            assert preserved.is_file() and digest(preserved)==expected,'Historical artifact changed: '+path
+        entries[path]={'sha256':expected,'preserved_at':str(preserved)}
+    historical[name]={'artifact_count':len(entries),'all_original_bytes_preserved':True,'artifacts':entries}
+assert digest('validation/results/current.json')=='02fea12c04c5c42f1596bdb0c56ddd3839afb26a86f7e3e61f0b7e798adea7ed'
+assert review['base_confirmation_sha256']==digest('validation/results/stage6-confirmation.json')
+for script in Path('validation').glob('*.py'):ast.parse(script.read_text(),filename=str(script))
+files=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','--','*.go'],text=True).splitlines()
+files=[p for p in files if not p.startswith('validation/results/')]
+assert not subprocess.check_output(['gofmt','-l',*files],text=True)
+subprocess.run(['git','diff','--check'],check=True)
+subprocess.run(['/private/tmp/gomdb-review-tools/actionlint'],check=True)
+subprocess.run(['git','diff','--exit-code','HEAD','--','validation/baselines','validation/results/stage5*'],check=True,stdout=subprocess.DEVNULL)
+def passwords(obj):
+    if isinstance(obj,dict):
+        return [v for k,v in obj.items() if 'pass' in k.lower() and isinstance(v,str) and v]+[s for v in obj.values() for s in passwords(v)]
+    if isinstance(obj,list):return [s for v in obj for s in passwords(v)]
+    return []
+secrets=passwords(json.loads(Path('validation/.local/config.json').read_text()))
+assert secrets,'No configured secret identified for leakage check'
+for directory in Path('validation/results').glob('stage6*'):
+    for p in (directory.rglob('*') if directory.is_dir() else [directory]):
+        if not p.is_file():continue
+        data=p.read_bytes()
+        if p.suffix=='.gz':data=gzip.decompress(data)
+        assert not any(secret.encode() in data for secret in secrets),'Configured secret leaked: '+str(p)
+fuzz={}
+for name in ('decode','sequence','values'):
+    path=OUT/('fuzz-'+name+'-final.log');output=path.read_text()
+    assert '\nPASS\n' in output
+    fuzz[name]={'log':str(path),'executions':int(re.findall(r'execs: (\d+)',output)[-1]),
+                'duration_seconds':8,'purpose':'bounded correctness fuzzing, not measurement','exit_code':0}
+standalone=json.loads((OUT/'standalone-linux-distribution.json').read_text())
+output=(OUT/'standalone-linux-live-final.log').read_text()
+assert len(re.findall(r'--- PASS: TestMariaDBCDC/',output))==15 and '\nPASS\n' in output
+result={'date':'2026-11-12','parent_commit':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
+    'branch':subprocess.check_output(['git','branch','--show-current'],text=True).strip(),
+    'status':'All seven Stage 6 review findings fixed and validated; uncommitted for review.',
+    'input_fingerprint':frozen['input_fingerprint'],'input_counts':frozen['input_counts'],'inputs':frozen['inputs'],
+    'findings_resolved':list(range(1,8)),'profiles':profiles,'fuzz':fuzz,
+    'negative_controls':json.loads((OUT/'negative-controls.json').read_text()),'standalone_distribution':standalone,
+    'portability':json.loads((OUT/'portability.json').read_text()),
+    'static':{'actionlint':'pass','gofmt':'pass','git_diff_check':'pass','python_ast':'pass'},
+    'historical_preservation':historical,'original_confirmation_sha256':digest('validation/results/stage6-confirmation.json'),
+    'original_review_manifest_sha256':digest('validation/results/stage6-review-20261112/capture.json'),
+    'timing_pointer_sha256':digest('validation/results/current.json'),'immutable_references_verified':True,
+    'stage5_saved_artifacts_unchanged':True,'configured_secret_absent_from_public_stage6_artifacts':True,
+    'performance_measured':False,'benchmark_smoke_executed':False,'profiling_executed':False,
+    'remote_CI_executed':False,'committed':False,'pushed':False,
+    'cleanup':{'owned_cdc_servers_and_descendants_reaped':True,'disposable_containers_removed':True,
+        'standalone_downloads_and_extractions_removed':True,'cross_build_binaries_removed':True,'prior_caches_retained':True},
+    'scope_limits':['Alpha; no real application readiness claim','XA, two-phase ALTER and engine-specific replication remain unsupported',
+        '32-bit file-position rollover fails before checkpoint; no 64-bit file start support',
+        'MariaDB 13.2 partial rows remain synthetic coverage only','Broader server/platform/topology pilots remain open',
+        'No CDC speedup or allocation measurement claimed']}
+paths=[p for p in OUT.rglob('*') if p.is_file()]
+for profile in profiles.values():paths += [p for p in Path(profile['directory']).rglob('*') if p.is_file()]
+paths += [Path(p) for p in ('README.md','AGENTS.md','docs/ROADMAP.md','docs/USER_GUIDE.md','docs/STAGE6_CDC.md',
+    'docs/STAGE6_REVIEW_FIXES.md','validation/README.md','validation/COVERAGE.md','validation/RESULTS.md',
+    'validation/results/correctness-current.json')]
+result['artifacts']={str(p):digest(p) for p in sorted(set(paths))}
+Path('validation/results/stage6-review-fixes-confirmation.json').write_text(json.dumps(result,indent=2)+'\n')
+print(json.dumps({'fingerprint':result['input_fingerprint'],'profiles':{k:v['leaf_counts'] for k,v in profiles.items()},
+    'historical_artifacts_preserved':{k:v['artifact_count'] for k,v in historical.items()},
+    'correction_artifacts':len(result['artifacts']),'fuzz_executions':{k:v['executions'] for k,v in fuzz.items()},
+    'configured_secret_absent':True},indent=2))

@@ -519,6 +519,13 @@ func (mc *mysqlConn) query(query string, args []driver.Value) (*textRows, error)
 		// Let database/sql prepare even parameterless SELECTs for cursor mode.
 		return nil, driver.ErrSkip
 	}
+	return mc.queryText(query, args)
+}
+
+// queryText sends an ordinary text query without database/sql cursor routing.
+// Internal probes have no prepare fallback and must not inherit that routing.
+// Authentication, wire limits and result validation still use the same policy.
+func (mc *mysqlConn) queryText(query string, args []driver.Value) (*textRows, error) {
 	handleOk := mc.clearResult()
 
 	if mc.closed.Load() {

@@ -1,0 +1,29 @@
+=== RUN   TestMariaDBCDC
+    stage6_cdc_test.go:106: CDC_FIXTURE {"binlog_format": "ROW", "checksum": "CRC32", "contract": "cdc-v1", "fixture_sha256": "b4bf561b3a33d8147f604bde93d0b934c701729818ec235794ed05bf0b2824b9", "semisync_available": true, "server_id": 621129, "server_version": "12.3.3-MariaDB-log", "transport": "private-unix-socket"}
+=== RUN   TestMariaDBCDC/plain
+=== RUN   TestMariaDBCDC/compressed
+=== RUN   TestMariaDBCDC/TLS
+=== RUN   TestMariaDBCDC/TLS_compressed
+=== RUN   TestMariaDBCDC/minimal
+=== RUN   TestMariaDBCDC/event_compression
+=== RUN   TestMariaDBCDC/GTID_resume_and_DDL_rotation
+=== RUN   TestMariaDBCDC/cancellation_and_close
+=== RUN   TestMariaDBCDC/semisync_manual_acknowledgement
+=== RUN   TestMariaDBCDC/restart_from_durable_GTID
+[mariadb] 2026/11/12 20:31:05 connection.go:865 closing bad idle connection: EOF
+[mariadb] 2026/11/12 20:31:05 packets.go:177 write unix ->/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/go-mariadb-cdc-0qipwt39/server.sock: write: broken pipe
+[mariadb] 2026/11/12 20:31:05 connection.go:865 closing bad idle connection: EOF
+[mariadb] 2026/11/12 20:31:05 packets.go:177 write unix ->/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/go-mariadb-cdc-0qipwt39/server.sock: write: broken pipe
+--- PASS: TestMariaDBCDC (0.98s)
+    --- PASS: TestMariaDBCDC/plain (0.00s)
+    --- PASS: TestMariaDBCDC/compressed (0.00s)
+    --- PASS: TestMariaDBCDC/TLS (0.01s)
+    --- PASS: TestMariaDBCDC/TLS_compressed (0.01s)
+    --- PASS: TestMariaDBCDC/minimal (0.00s)
+    --- PASS: TestMariaDBCDC/event_compression (0.00s)
+    --- PASS: TestMariaDBCDC/GTID_resume_and_DDL_rotation (0.08s)
+    --- PASS: TestMariaDBCDC/cancellation_and_close (0.06s)
+    --- PASS: TestMariaDBCDC/semisync_manual_acknowledgement (0.01s)
+    --- PASS: TestMariaDBCDC/restart_from_durable_GTID (0.78s)
+PASS
+ok  	github.com/aantich/go-mariadb/validation	2.441s

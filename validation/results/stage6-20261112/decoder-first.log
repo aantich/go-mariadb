@@ -1,0 +1,94 @@
+=== RUN   TestCDCTransactions
+=== RUN   TestCDCTransactions/X
+=== RUN   TestCDCTransactions/Y
+=== RUN   TestCDCTransactions/Z
+=== RUN   TestCDCTransactions/_
+=== RUN   TestCDCTransactions/`
+=== RUN   TestCDCTransactions/a
+=== RUN   TestCDCTransactions/standalone_and_rollback
+=== RUN   TestCDCTransactions/file_progress_does_not_invent_GTIDs
+--- PASS: TestCDCTransactions (0.00s)
+    --- PASS: TestCDCTransactions/X (0.00s)
+    --- PASS: TestCDCTransactions/Y (0.00s)
+    --- PASS: TestCDCTransactions/Z (0.00s)
+    --- PASS: TestCDCTransactions/_ (0.00s)
+    --- PASS: TestCDCTransactions/` (0.00s)
+    --- PASS: TestCDCTransactions/a (0.00s)
+    --- PASS: TestCDCTransactions/standalone_and_rollback (0.00s)
+    --- PASS: TestCDCTransactions/file_progress_does_not_invent_GTIDs (0.00s)
+=== RUN   TestCDCIntegrityAndLimits
+=== RUN   TestCDCIntegrityAndLimits/CRC
+=== RUN   TestCDCIntegrityAndLimits/size
+=== RUN   TestCDCIntegrityAndLimits/unknown_event
+=== RUN   TestCDCIntegrityAndLimits/XA
+=== RUN   TestCDCIntegrityAndLimits/two_phase_ALTER
+=== RUN   TestCDCIntegrityAndLimits/nested_GTID
+=== RUN   TestCDCIntegrityAndLimits/truncated_group
+=== RUN   TestCDCIntegrityAndLimits/stale_table
+=== RUN   TestCDCIntegrityAndLimits/column_budget
+=== RUN   TestCDCIntegrityAndLimits/cell_budget
+=== RUN   TestCDCIntegrityAndLimits/table_budget
+=== RUN   TestCDCIntegrityAndLimits/metadata_budget
+=== RUN   TestCDCIntegrityAndLimits/nonadvancing_GTID
+=== RUN   TestCDCIntegrityAndLimits/rotation_inside_group
+=== RUN   TestCDCIntegrityAndLimits/checksum_off_and_ignorable
+--- PASS: TestCDCIntegrityAndLimits (0.00s)
+    --- PASS: TestCDCIntegrityAndLimits/CRC (0.00s)
+    --- PASS: TestCDCIntegrityAndLimits/size (0.00s)
+    --- PASS: TestCDCIntegrityAndLimits/unknown_event (0.00s)
+    --- PASS: TestCDCIntegrityAndLimits/XA (0.00s)
+    --- PASS: TestCDCIntegrityAndLimits/two_phase_ALTER (0.00s)
+    --- PASS: TestCDCIntegrityAndLimits/nested_GTID (0.00s)
+    --- PASS: TestCDCIntegrityAndLimits/truncated_group (0.00s)
+    --- PASS: TestCDCIntegrityAndLimits/stale_table (0.00s)
+    --- PASS: TestCDCIntegrityAndLimits/column_budget (0.00s)
+    --- PASS: TestCDCIntegrityAndLimits/cell_budget (0.00s)
+    --- PASS: TestCDCIntegrityAndLimits/table_budget (0.00s)
+    --- PASS: TestCDCIntegrityAndLimits/metadata_budget (0.00s)
+    --- PASS: TestCDCIntegrityAndLimits/nonadvancing_GTID (0.00s)
+    --- PASS: TestCDCIntegrityAndLimits/rotation_inside_group (0.00s)
+    --- PASS: TestCDCIntegrityAndLimits/checksum_off_and_ignorable (0.00s)
+=== RUN   TestCDCCompressedAndFragments
+=== RUN   TestCDCCompressedAndFragments/compressed_rows
+=== RUN   TestCDCCompressedAndFragments/valid
+=== RUN   TestCDCCompressedAndFragments/expansion_bound
+=== RUN   TestCDCCompressedAndFragments/trailing_bytes
+=== RUN   TestCDCCompressedAndFragments/length_mismatch
+=== RUN   TestCDCCompressedAndFragments/fragments/valid
+=== RUN   TestCDCCompressedAndFragments/fragments/order
+=== RUN   TestCDCCompressedAndFragments/fragments/interleave
+=== RUN   TestCDCCompressedAndFragments/fragments/truncated
+--- PASS: TestCDCCompressedAndFragments (0.00s)
+    --- PASS: TestCDCCompressedAndFragments/compressed_rows (0.00s)
+    --- PASS: TestCDCCompressedAndFragments/valid (0.00s)
+    --- PASS: TestCDCCompressedAndFragments/expansion_bound (0.00s)
+    --- PASS: TestCDCCompressedAndFragments/trailing_bytes (0.00s)
+    --- PASS: TestCDCCompressedAndFragments/length_mismatch (0.00s)
+    --- PASS: TestCDCCompressedAndFragments/fragments/valid (0.00s)
+    --- PASS: TestCDCCompressedAndFragments/fragments/order (0.00s)
+    --- PASS: TestCDCCompressedAndFragments/fragments/interleave (0.00s)
+    --- PASS: TestCDCCompressedAndFragments/fragments/truncated (0.00s)
+=== RUN   TestCDCCheckpointOwnership
+--- PASS: TestCDCCheckpointOwnership (0.00s)
+=== RUN   TestCDCStreamFailure
+=== RUN   TestCDCStreamFailure/cancel
+=== RUN   TestCDCStreamFailure/close
+=== RUN   TestCDCStreamFailure/decode
+=== RUN   TestCDCStreamFailure/ACK
+--- PASS: TestCDCStreamFailure (0.02s)
+    --- PASS: TestCDCStreamFailure/cancel (0.02s)
+    --- PASS: TestCDCStreamFailure/close (0.00s)
+    --- PASS: TestCDCStreamFailure/decode (0.00s)
+    --- PASS: TestCDCStreamFailure/ACK (0.00s)
+=== RUN   FuzzCDCDecode
+=== RUN   FuzzCDCDecode/seed#0
+=== RUN   FuzzCDCDecode/seed#1
+=== RUN   FuzzCDCDecode/seed#2
+=== RUN   FuzzCDCDecode/seed#3
+--- PASS: FuzzCDCDecode (0.00s)
+    --- PASS: FuzzCDCDecode/seed#0 (0.00s)
+    --- PASS: FuzzCDCDecode/seed#1 (0.00s)
+    --- PASS: FuzzCDCDecode/seed#2 (0.00s)
+    --- PASS: FuzzCDCDecode/seed#3 (0.00s)
+PASS
+ok  	github.com/aantich/go-mariadb/cdc	1.420s

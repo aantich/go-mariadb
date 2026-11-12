@@ -1,5 +1,24 @@
 # MariaDB Go coverage map
 
+**Stage 6 review corrections:** Live cursor-enabled Config reuse and unchanged
+SQL fetch routing; requested-start/equal/backward file positions, artificial
+bootstrap and rotation, zero-position cached events and rollover rejection;
+classic binlog EOF with either SQL EOF capability; complete zlib length/footer/
+trailing validation and owned expansion bytes; matching standalone/system/symlink
+toolchains and initializer diagnostics; cleanup after leader exit and ignored
+SIGTERM. Fuzzer seed tests prove GTID/row/compressed/fragment parser reachability,
+and bounded sequences retain state across events. See
+[corrections and evidence](../docs/STAGE6_REVIEW_FIXES.md).
+
+**Stage 6 CDC:** A separate dedicated stream now has format/CRC32/OFF, table-map,
+sparse row/value, compressed/fragmented event, group-boundary and checkpoint
+ownership tests. Real private MariaDB tests cover plain/zlib/TLS transports,
+event compression, 17 MiB split events, limits, GTID resume, DDL/rotation, restart,
+purged history, privilege denial and explicit semisync ACKs. Checkpoint state is
+owned and never advances on partial/corrupt groups. Both publishers require
+current source-matched fixture evidence; fuzzing covers decoder and cell inputs.
+See [scope, tests and remaining limits](../docs/STAGE6_CDC.md).
+
 **Stage 5 authentication:** Explicit PAM prompt policies, protected transport,
 principal/mechanism pinning, mutual completion and optional native-provider
 ownership now have deterministic fault and isolated real PAM/KDC tests. Policies
@@ -113,7 +132,7 @@ implementation is unchanged; no unsupported capability is recorded as a PASS.
 | Session isolation | explicit desired clean-checkout assertion exposes retained user variable | opt-in reset, role/schema/charset/time-zone/SQL-mode restoration, temporary tables and tracker payloads |
 | Authentication / TLS | real native, ed25519, PARSEC, SHA-2, Unix identity, verified TLS/X.509, isolated PAM dialogue/Kerberos, principal/mutual/cancellation policy, bad credentials and hostname | Windows SSPI, production PAM/realm integration, expiry/revocation/rotation and broader continuation fuzzing |
 | Bulk / cursors / progress | source-reviewed missing API inventory; existing prepared/text/LOCAL INFILE alternatives benchmarked | real APIs, correctness/fault tests and separate feature benchmarks |
-| CDC | source-reviewed absent API only | optional separately scoped binlog/GTID transaction/checkpoint package |
+| CDC (Stage 6 update) | dedicated stream, bounded owned row decoding, complete-group checkpoints, GTID resume, semisync and real private restart/binlog fixtures | XA, two-phase ALTER, engine-specific protocols, multi-node failover pilots and wider server-version validation |
 | Toolchain / static | Go 1.27.4, vet, race-enabled inherited/live suite, four recorder parser tests | Go 1.25/1.26, multi-OS/architecture CI and staticcheck version profile |
 | Performance | 144 inherited + 40 added profiles, seven repetitions; live scans, metadata wire-byte control, batch alternatives, connections/pools, decoder/scanner microbenchmarks | native bulk/reset/cursors/streaming/auth extension baselines; network-emulated WAN; optional independent C control |
 

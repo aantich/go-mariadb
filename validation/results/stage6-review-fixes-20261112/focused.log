@@ -1,0 +1,7 @@
+ok  	github.com/aantich/go-mariadb	1.399s
+--- FAIL: TestCDCFileCoordinates (0.00s)
+    --- FAIL: TestCDCFileCoordinates/rotate_resets_only_for_another_file (0.00s)
+        review_fixes_test.go:111: new-file position did not reset {bin.000002 87 1-17-2 true}
+FAIL
+FAIL	github.com/aantich/go-mariadb/cdc	0.747s
+FAIL

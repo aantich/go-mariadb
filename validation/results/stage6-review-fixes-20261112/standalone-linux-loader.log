@@ -1,0 +1,22 @@
+/selected/bin/mariadbd  Ver 12.3.3-MariaDB for Linux on aarch64 (shogo82148/build-mysql)
+	linux-vdso.so.1 (0x0000ffffaac34000)
+	libpcre2-8.so.0 => /lib/aarch64-linux-gnu/libpcre2-8.so.0 (0x0000ffffaab50000)
+	libcrypt.so.1 => /lib/aarch64-linux-gnu/libcrypt.so.1 (0x0000ffffaab00000)
+	libz.so.1 => /lib/aarch64-linux-gnu/libz.so.1 (0x0000ffffaaac0000)
+	libssl.so.3 => /lib/aarch64-linux-gnu/libssl.so.3 (0x0000ffffa8530000)
+	libcrypto.so.3 => /lib/aarch64-linux-gnu/libcrypto.so.3 (0x0000ffffa8000000)
+	libstdc++.so.6 => /lib/aarch64-linux-gnu/libstdc++.so.6 (0x0000ffffa7c00000)
+	libm.so.6 => /lib/aarch64-linux-gnu/libm.so.6 (0x0000ffffa7f50000)
+	libgcc_s.so.1 => /lib/aarch64-linux-gnu/libgcc_s.so.1 (0x0000ffffaaa80000)
+	libc.so.6 => /lib/aarch64-linux-gnu/libc.so.6 (0x0000ffffa7a40000)
+	/lib/ld-linux-aarch64.so.1 (0x0000ffffaabf7000)
+OpenSSL 3.6.3 9 Jun 2026 (Library: OpenSSL 3.6.3 9 Jun 2026)
+built on: Thu Sep 10 08:30:05 2026 UTC
+platform: linux-aarch64
+options:  bn(64,64)
+compiler: gcc-12 -fPIC -pthread -Wa,--noexecstack -Wall -O3 -DOPENSSL_USE_NODELETE -DOPENSSL_PIC -DOPENSSL_BUILDING_OPENSSL -DNDEBUG
+OPENSSLDIR: "/opt/hostedtoolcache/mariadb/12.3.3/arm64"
+ENGINESDIR: "/opt/hostedtoolcache/mariadb/12.3.3/arm64/lib/engines-3"
+MODULESDIR: "/opt/hostedtoolcache/mariadb/12.3.3/arm64/lib/ossl-modules"
+Seeding source: os-specific
+CPUINFO: OPENSSL_armcap=0x8fd

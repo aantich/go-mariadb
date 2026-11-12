@@ -1,0 +1,345 @@
+// Copyright 2026 Anton Antich. SPDX-License-Identifier: MPL-2.0
+
+package mariadb
+
+import (
+	"context"
+	"database/sql/driver"
+	"encoding/binary"
+	"errors"
+	"fmt"
+	"io"
+	"math"
+	"strconv"
+	"strings"
+	"time"
+)
+
+// ReplicationOptions configures a low-level dedicated MariaDB binlog transport.
+// Most consumers should use package cdc for decoding and safe checkpoints.
+type ReplicationOptions struct {
+	ServerID      uint32 // Unique, nonzero replica ID, assigned by the application.
+	File          string
+	Position      uint64 // Traditional COM_BINLOG_DUMP starts are limited to uint32.
+	GTIDs         GTIDSet
+	UseGTID       bool
+	NonBlocking   bool
+	SemiSync      bool          // Require enabled server semisync; reading never acknowledges.
+	MaxEventBytes int           // Default 64 MiB; includes binlog header/checksum, not framing.
+	Heartbeat     time.Duration // Zero uses the server default; otherwise 1 ms..1 hour.
+}
+
+// ReplicationPacket owns one event's bytes, excluding OK/semisync framing.
+// AckRequested alone never sends an acknowledgement.
+type ReplicationPacket struct {
+	Data         []byte
+	AckRequested bool
+}
+
+// ReplicationConn owns a fresh physical connection that is never put in a SQL
+// pool. Reads and acknowledgements serialize; waiting for ownership honors ctx.
+// Close may run concurrently and interrupts blocked I/O without sending SQL.
+// Any I/O/cancellation/protocol failure is terminal; reopen explicitly to resume.
+type ReplicationConn struct {
+	mc      *mysqlConn
+	gate    chan struct{}
+	limit   int
+	semi    bool
+	nextSeq byte
+}
+
+// OpenReplication authenticates using cfg's existing policies, establishes only
+// session-local replication settings, and sends COM_BINLOG_DUMP. It never changes
+// shared server globals, installs plugins, or retries application SQL.
+func OpenReplication(ctx context.Context, cfg *Config, options ReplicationOptions) (stream *ReplicationConn, err error) {
+	if cfg == nil || options.ServerID == 0 || (!options.UseGTID && options.Position > math.MaxUint32) || options.MaxEventBytes < 0 || options.MaxEventBytes > 1<<30 ||
+		options.Heartbeat < 0 || options.Heartbeat > time.Hour || (options.Heartbeat > 0 && options.Heartbeat < time.Millisecond) {
+		return nil, errors.New("mariadb: invalid replication options")
+	}
+	if options.MaxEventBytes == 0 {
+		options.MaxEventBytes = 64 << 20
+	}
+	if options.MaxEventBytes < 19 || (!options.UseGTID && (options.Position < 4 || !validBinlogFile(options.File))) {
+		return nil, errors.New("mariadb: invalid binlog start or event budget")
+	}
+	connector, err := NewConnector(cfg)
+	if err != nil {
+		return nil, err
+	}
+	raw, err := connector.Connect(ctx)
+	if err != nil {
+		return nil, err
+	}
+	mc := raw.(*mysqlConn)
+	ready := false
+	defer func() {
+		if !ready {
+			mc.cleanup()
+		}
+	}()
+	if err = mc.watchCancel(ctx); err != nil {
+		return nil, err
+	}
+	defer mc.finish()
+	version, err := replicationScalar(mc, "SELECT VERSION()")
+	if err != nil {
+		return nil, err
+	}
+	if !strings.Contains(version, "MariaDB") {
+		return nil, errors.New("mariadb: replication requires MariaDB")
+	}
+	if options.SemiSync {
+		enabled, e := replicationScalar(mc, "SELECT @@global.rpl_semi_sync_master_enabled")
+		if e != nil {
+			return nil, e
+		}
+		if enabled != "1" && enabled != "ON" {
+			return nil, errors.New("mariadb: semisync is not enabled on the source")
+		}
+	}
+	state := "NULL"
+	if options.UseGTID {
+		state = "'" + options.GTIDs.String() + "'"
+	}
+	semi := "0"
+	if options.SemiSync {
+		semi = "1"
+	}
+	setup := "SET @mariadb_slave_capability=4,@slave_gtid_strict_mode=1,@slave_gtid_ignore_duplicates=0,@slave_connect_state=" + state + ",@master_binlog_checksum='CRC32',@rpl_semi_sync_slave=" + semi
+	if options.Heartbeat > 0 {
+		setup += ",@master_heartbeat_period=" + strconv.FormatInt(int64(options.Heartbeat), 10)
+	}
+	if err = mc.exec(setup); err != nil {
+		return nil, err
+	}
+	file, position := options.File, options.Position
+	if options.UseGTID {
+		file = ""
+		position = 4
+	}
+	flags := uint16(2)
+	if options.NonBlocking {
+		flags |= 1
+	}
+	data := make([]byte, 4+1+4+2+4+len(file))
+	data[4] = comBinlogDump
+	binary.LittleEndian.PutUint32(data[5:], uint32(position))
+	binary.LittleEndian.PutUint16(data[9:], flags)
+	binary.LittleEndian.PutUint32(data[11:], options.ServerID)
+	copy(data[15:], file)
+	mc.resetSequence()
+	if err = mc.writePacket(data); err != nil {
+		return nil, err
+	}
+	mc.syncSequence()
+	if err = ctx.Err(); err != nil {
+		return nil, err
+	}
+	stream = &ReplicationConn{mc: mc, gate: make(chan struct{}, 1), limit: min(options.MaxEventBytes+3, mc.receiveLimit()), semi: options.SemiSync, nextSeq: mc.sequence}
+	ready = true
+	return stream, nil
+}
+
+func validBinlogFile(file string) bool {
+	return len(file) > 0 && len(file) <= 512 && !strings.ContainsRune(file, 0)
+}
+func replicationScalar(mc *mysqlConn, query string) (text string, err error) {
+	rows, err := mc.query(query, nil)
+	if err != nil {
+		return "", err
+	}
+	defer func() {
+		if closeErr := rows.Close(); err == nil {
+			err = closeErr
+		}
+	}()
+	values := make([]driver.Value, len(rows.Columns()))
+	if err = rows.Next(values); err != nil {
+		return "", err
+	}
+	if len(values) != 1 {
+		return "", ErrMalformPkt
+	}
+	switch value := values[0].(type) {
+	case []byte:
+		text = string(value)
+	case string:
+		text = value
+	case int64:
+		text = strconv.FormatInt(value, 10)
+	default:
+		return "", ErrMalformPkt
+	}
+	if err = rows.Next(values); err != io.EOF {
+		if err == nil {
+			err = ErrMalformPkt
+		}
+		return "", err
+	}
+	return text, nil
+}
+func (r *ReplicationConn) enter(ctx context.Context) error {
+	if r == nil || r.mc == nil || r.gate == nil {
+		return ErrInvalidConn
+	}
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	select {
+	case r.gate <- struct{}{}:
+	case <-ctx.Done():
+		return ctx.Err()
+	case <-r.mc.closech:
+		return ErrInvalidConn
+	}
+	if err := ctx.Err(); err != nil {
+		<-r.gate
+		return err
+	}
+	return nil
+}
+func (r *ReplicationConn) operation(ctx context.Context, fn func() error) (err error) {
+	if err = r.enter(ctx); err != nil {
+		return err
+	}
+	defer func() { <-r.gate }()
+	if err = r.mc.error(); err != nil {
+		return err
+	}
+	if err = r.mc.watchCancel(ctx); err != nil {
+		return err
+	}
+	defer r.mc.finish()
+	defer func() {
+		if value := recover(); value != nil {
+			r.mc.cleanup()
+			panic(value)
+		}
+		if canceled := r.mc.canceled.Value(); canceled != nil {
+			err = canceled
+		} else if ctx.Err() != nil {
+			err = ctx.Err()
+		}
+		if err != nil {
+			r.mc.cleanup()
+		}
+	}()
+	return fn()
+}
+
+// Read returns one owned event or io.EOF at a nonblocking source end. End of
+// stream also closes the dedicated connection. CRC/event validation is in cdc.
+func (r *ReplicationConn) Read(ctx context.Context) (packet ReplicationPacket, err error) {
+	err = r.operation(ctx, func() error {
+		message, e := r.readMessage()
+		if e != nil {
+			return e
+		}
+		if len(message) == 0 {
+			return ErrMalformPkt
+		}
+		switch message[0] {
+		case iERR:
+			return r.mc.handleErrorPacket(message)
+		case iEOF:
+			// MariaDB Protocol::net_send_eof explicitly excludes COM_BINLOG_DUMP
+			// from CLIENT_DEPRECATE_EOF: marker, warnings and status are always
+			// five bytes. A short/OK-shaped packet is not a clean source end.
+			if len(message) == 5 {
+				return io.EOF
+			}
+			return ErrMalformPkt
+		case iOK:
+		default:
+			return ErrMalformPkt
+		}
+		offset := 1
+		if r.semi {
+			if len(message) < 3 || message[1] != 0xef || message[2]&^byte(1) != 0 {
+				return ErrMalformPkt
+			}
+			packet.AckRequested = message[2] == 1
+			offset = 3
+		}
+		if len(message)-offset < 19 {
+			return ErrMalformPkt
+		}
+		packet.Data = message[offset:]
+		return nil
+	})
+	return packet, err
+}
+func (r *ReplicationConn) readMessage() ([]byte, error) {
+	read := r.mc.readNext
+	if r.mc.compress {
+		read = func(n int) ([]byte, error) { return r.mc.compIO.readNextLimit(n, min(r.limit+4, maxPacketSize*2+4)) }
+	}
+	var message []byte
+	for {
+		header, err := read(4)
+		if err != nil {
+			return nil, err
+		}
+		size := getUint24(header[:3])
+		sequence := header[3]
+		// Semisync marks pkt_nr as resettable; compression also synchronizes it
+		// to envelope counters at flushes. Neither guarantees a cross-event
+		// sequence. Within a split logical event, fragments remain contiguous.
+		if sequence != r.nextSeq && !(len(message) == 0 && (r.semi || r.mc.compress)) {
+			return nil, fmt.Errorf("%w: replication packet expected %d, got %d", ErrPktSync, r.nextSeq, sequence)
+		}
+		r.nextSeq = sequence + 1
+		if size > r.limit-len(message) {
+			return nil, ErrPktTooLarge
+		}
+		if size == 0 {
+			if len(message) == 0 {
+				return nil, ErrMalformPkt
+			}
+			return message, nil
+		}
+		body, err := read(size)
+		if err != nil {
+			return nil, err
+		}
+		message = append(message, body...)
+		if size < maxPacketSize {
+			return message, nil
+		}
+	}
+}
+
+// Acknowledge sends an explicit MariaDB semisync receipt. cdc validates complete
+// group tokens before calling this primitive. Do not acknowledge unpersisted data.
+func (r *ReplicationConn) Acknowledge(ctx context.Context, file string, position uint64) error {
+	if r == nil || r.mc == nil {
+		return ErrInvalidConn
+	}
+	if !r.semi || !validBinlogFile(file) || position < 4 {
+		return errors.New("mariadb: invalid semisync acknowledgement")
+	}
+	return r.operation(ctx, func() error {
+		data := make([]byte, 4+9+len(file))
+		data[4] = 0xef
+		binary.LittleEndian.PutUint64(data[5:], position)
+		copy(data[13:], file)
+		// Compression's normal command writer reuses its read buffer. An ACK
+		// must preserve already-read replication bytes, including batched frames.
+		readIO := r.mc.compIO
+		if r.mc.compress {
+			r.mc.compIO = newCompIO(r.mc)
+			defer func() { r.mc.compIO = readIO }()
+		}
+		r.mc.sequence = 0
+		r.mc.compressSequence = 0
+		return r.mc.writePacket(data)
+	})
+}
+
+// Close is terminal and idempotent. It is safe concurrently with a blocked Read.
+func (r *ReplicationConn) Close() error {
+	if r != nil && r.mc != nil {
+		r.mc.cleanup()
+	}
+	return nil
+}

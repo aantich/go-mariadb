@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/cdc_fixture.py", line 181, in <module>
+    raise SystemExit(main(sys.argv[1:]))
+                     ~~~~^^^^^^^^^^^^^^
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/cdc_fixture.py", line 104, in main
+    subprocess.run([programs['mariadb-install-db'], '--no-defaults', '--basedir='+str(basedir), '--datadir='+str(directory/'data'),
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    '--auth-root-authentication-method=normal', '--skip-test-db'],
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                   stdout=log, stderr=subprocess.STDOUT, check=True, timeout=60)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['/private/tmp/go-mariadb-stage6-standalone-20261112/installation/scripts/mariadb-install-db', '--no-defaults', '--basedir=/private/tmp/go-mariadb-stage6-standalone-20261112/installation', '--datadir=/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/go-mariadb-cdc-xop94bft/data', '--auth-root-authentication-method=normal', '--skip-test-db']' returned non-zero exit status 1.

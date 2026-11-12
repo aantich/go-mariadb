@@ -1,0 +1,11 @@
+=== RUN   TestMariaDBCDC
+    stage6_cdc_test.go:108: CDC_FIXTURE {"binlog_format": "ROW", "checksum": "CRC32", "contract": "cdc-v1", "fixture_sha256": "a0458163e750042305b3893d86c1230a4209909dee9061e7c0cb24cea956bc8c", "semisync_available": true, "server_id": 621129, "server_version": "12.3.3-MariaDB-log", "transport": "private-unix-socket"}
+=== RUN   TestMariaDBCDC/MariaDB_value_families
+=== RUN   TestMariaDBCDC/checksum_OFF_transition
+    stage6_cdc_test.go:284: CDC read mariadb/cdc: malformed event: CRC32 mismatch in event 15
+--- FAIL: TestMariaDBCDC (0.20s)
+    --- PASS: TestMariaDBCDC/MariaDB_value_families (0.04s)
+    --- FAIL: TestMariaDBCDC/checksum_OFF_transition (0.11s)
+FAIL
+FAIL	github.com/aantich/go-mariadb/validation	0.742s
+FAIL

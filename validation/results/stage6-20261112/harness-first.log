@@ -1,0 +1,14 @@
+...............F.............................................................
+======================================================================
+FAIL: test_collector_controls_environment_and_rejects_skips_or_setting_drift (test_full_capture.FullCaptureTests.test_collector_controls_environment_and_rejects_skips_or_setting_drift) (fault=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_full_capture.py", line 280, in test_collector_controls_environment_and_rejects_skips_or_setting_drift
+    self.assertEqual(code,int(fault is not None))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 77 tests in 9.044s
+
+FAILED (failures=1)

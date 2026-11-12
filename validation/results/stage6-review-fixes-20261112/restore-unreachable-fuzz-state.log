@@ -1,0 +1,58 @@
+=== RUN   TestCDCFuzzSeedReachability
+=== RUN   TestCDCFuzzSeedReachability/family/0/type=19
+=== RUN   TestCDCFuzzSeedReachability/family/1/type=23
+    fuzz_test.go:182: positive seed did not reach its payload parser mariadb/cdc: malformed event: stale or unknown table ID
+=== RUN   TestCDCFuzzSeedReachability/family/2/type=162
+    fuzz_test.go:182: positive seed did not reach its payload parser mariadb/cdc: malformed event: nested GTID
+=== RUN   TestCDCFuzzSeedReachability/family/3/type=2
+=== RUN   TestCDCFuzzSeedReachability/family/4/type=23
+    fuzz_test.go:182: positive seed did not reach its payload parser mariadb/cdc: malformed event: stale or unknown table ID
+=== RUN   TestCDCFuzzSeedReachability/family/5/type=166
+    fuzz_test.go:182: positive seed did not reach its payload parser mariadb/cdc: malformed event: stale or unknown table ID
+=== RUN   TestCDCFuzzSeedReachability/family/6/type=24
+    fuzz_test.go:182: positive seed did not reach its payload parser mariadb/cdc: malformed event: stale or unknown table ID
+=== RUN   TestCDCFuzzSeedReachability/family/7/type=167
+    fuzz_test.go:182: positive seed did not reach its payload parser mariadb/cdc: malformed event: stale or unknown table ID
+=== RUN   TestCDCFuzzSeedReachability/family/8/type=25
+    fuzz_test.go:182: positive seed did not reach its payload parser mariadb/cdc: malformed event: stale or unknown table ID
+=== RUN   TestCDCFuzzSeedReachability/family/9/type=168
+    fuzz_test.go:182: positive seed did not reach its payload parser mariadb/cdc: malformed event: stale or unknown table ID
+=== RUN   TestCDCFuzzSeedReachability/family/10/type=30
+    fuzz_test.go:182: positive seed did not reach its payload parser mariadb/cdc: malformed event: stale or unknown table ID
+=== RUN   TestCDCFuzzSeedReachability/family/11/type=169
+    fuzz_test.go:182: positive seed did not reach its payload parser mariadb/cdc: malformed event: stale or unknown table ID
+=== RUN   TestCDCFuzzSeedReachability/family/12/type=31
+    fuzz_test.go:182: positive seed did not reach its payload parser mariadb/cdc: malformed event: stale or unknown table ID
+=== RUN   TestCDCFuzzSeedReachability/family/13/type=170
+    fuzz_test.go:182: positive seed did not reach its payload parser mariadb/cdc: malformed event: stale or unknown table ID
+=== RUN   TestCDCFuzzSeedReachability/family/14/type=32
+    fuzz_test.go:182: positive seed did not reach its payload parser mariadb/cdc: malformed event: stale or unknown table ID
+=== RUN   TestCDCFuzzSeedReachability/family/15/type=171
+    fuzz_test.go:182: positive seed did not reach its payload parser mariadb/cdc: malformed event: stale or unknown table ID
+=== RUN   TestCDCFuzzSeedReachability/family/16/type=165
+=== RUN   TestCDCFuzzSeedReachability/family/17/type=172
+=== RUN   TestCDCFuzzSeedReachability/family/18/type=15
+    fuzz_test.go:182: positive seed did not reach its payload parser mariadb/cdc: malformed event: format description
+--- FAIL: TestCDCFuzzSeedReachability (0.01s)
+    --- PASS: TestCDCFuzzSeedReachability/family/0/type=19 (0.00s)
+    --- FAIL: TestCDCFuzzSeedReachability/family/1/type=23 (0.00s)
+    --- FAIL: TestCDCFuzzSeedReachability/family/2/type=162 (0.00s)
+    --- PASS: TestCDCFuzzSeedReachability/family/3/type=2 (0.00s)
+    --- FAIL: TestCDCFuzzSeedReachability/family/4/type=23 (0.00s)
+    --- FAIL: TestCDCFuzzSeedReachability/family/5/type=166 (0.00s)
+    --- FAIL: TestCDCFuzzSeedReachability/family/6/type=24 (0.00s)
+    --- FAIL: TestCDCFuzzSeedReachability/family/7/type=167 (0.00s)
+    --- FAIL: TestCDCFuzzSeedReachability/family/8/type=25 (0.00s)
+    --- FAIL: TestCDCFuzzSeedReachability/family/9/type=168 (0.00s)
+    --- FAIL: TestCDCFuzzSeedReachability/family/10/type=30 (0.00s)
+    --- FAIL: TestCDCFuzzSeedReachability/family/11/type=169 (0.00s)
+    --- FAIL: TestCDCFuzzSeedReachability/family/12/type=31 (0.00s)
+    --- FAIL: TestCDCFuzzSeedReachability/family/13/type=170 (0.00s)
+    --- FAIL: TestCDCFuzzSeedReachability/family/14/type=32 (0.00s)
+    --- FAIL: TestCDCFuzzSeedReachability/family/15/type=171 (0.00s)
+    --- PASS: TestCDCFuzzSeedReachability/family/16/type=165 (0.00s)
+    --- PASS: TestCDCFuzzSeedReachability/family/17/type=172 (0.00s)
+    --- FAIL: TestCDCFuzzSeedReachability/family/18/type=15 (0.00s)
+FAIL
+FAIL	github.com/aantich/go-mariadb/cdc	0.355s
+FAIL

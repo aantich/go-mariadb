@@ -1,0 +1,40 @@
+// MariaDB/server b439f350ce3a8306c77e64bc1679681320244d17, sql/log_event_server.cc:875-912
+// GPL-2.0; see ../stage6-review-20261112/server-12.3.3-COPYING.txt.
+  DBUG_ENTER("Log_event::write_header");
+  DBUG_PRINT("enter", ("filepos: %lld  length: %zu type: %d",
+                       (longlong) writer->pos(), event_data_length,
+                       (int) get_type_code()));
+
+  /* Store number of bytes that will be written by this event */
+  data_written= event_data_length + sizeof(header) + writer->checksum_len;
+
+  /*
+    log_pos != 0 if this is relay-log event. In this case we should not
+    change the position
+  */
+
+  if (is_artificial_event() ||
+      cache_type == Log_event::EVENT_STMT_CACHE ||
+      cache_type == Log_event::EVENT_TRANSACTIONAL_CACHE)
+  {
+    /*
+      Artificial events are automatically generated and do not exist
+      in master's binary log, so log_pos should be set to 0.
+
+      Events written through transaction or statement cache have log_pos set
+      to 0 so that they can be copied directly to the binlog without having
+      to compute the real end_log_pos.
+    */
+    log_pos= 0;
+  }
+  else  if (!log_pos)
+  {
+    /*
+      Calculate the position of where the next event will start
+      (end of this event, that is).
+    */
+
+    log_pos= writer->pos() + data_written;
+    
+    DBUG_EXECUTE_IF("dbug_master_binlog_over_2GB", log_pos += (1ULL <<31););
+  }

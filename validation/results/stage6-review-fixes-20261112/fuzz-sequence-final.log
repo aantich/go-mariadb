@@ -1,0 +1,7 @@
+fuzz: elapsed: 0s, gathering baseline coverage: 0/130 completed
+fuzz: elapsed: 0s, gathering baseline coverage: 130/130 completed, now fuzzing with 2 workers
+fuzz: elapsed: 3s, execs: 177869 (59282/sec), new interesting: 42 (total: 172)
+fuzz: elapsed: 6s, execs: 362538 (61551/sec), new interesting: 88 (total: 218)
+fuzz: elapsed: 8s, execs: 483664 (59875/sec), new interesting: 133 (total: 263)
+PASS
+ok  	github.com/aantich/go-mariadb/cdc	8.283s

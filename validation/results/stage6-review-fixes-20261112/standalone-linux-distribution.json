@@ -1,0 +1,20 @@
+{
+  "arch": "arm64",
+  "distribution": "mariadb",
+  "os": "ubuntu-22.04",
+  "sha256": "ee9fc7dbc849aeb15a72d58a18b8fd25f2bca4df8081deee31abf8197558b5c2",
+  "url": "https://github.com/shogo82148/build-mysql/releases/download/mariadb-12.3.3-20260910082800/mariadb-12.3.3-ubuntu-22.04-arm64.tar.zstd",
+  "version": "12.3.3",
+  "bytes": 376495651,
+  "sha256_verified": true,
+  "selected_files": {
+    "bin/mariadbd": "2a82c17618610be38360796269180423748323277f729c50cff311511d4151c1",
+    "bin/mariadb": "16f87be42aeddb3a097edf5b36de59a6f37dd6f6c1b6dc72c84e631f18eba183",
+    "scripts/mariadb-install-db": "7882a80aa118a3a950b1cce6d954095c2290c77828e7f8a383a5dc5fc082fe19"
+  },
+  "live_test_log": "standalone-linux-live-final.log",
+  "live_test_exit_code": 0,
+  "live_subtests_passed": 15,
+  "distribution_modified": false,
+  "note": "Linux standalone fixture uses its explicit prefix and system TLS tooling. Earlier arbitrary Darwin relocation and Linux loader experiments remain separate failed attempts."
+}

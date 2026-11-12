@@ -1,0 +1,6 @@
+--- FAIL: TestCDCIntegrityAndLimits (0.00s)
+    --- FAIL: TestCDCIntegrityAndLimits/table_accounting_overflow (0.00s)
+        decoder_test.go:160: overflow bypassed table budget <nil>
+FAIL
+FAIL	github.com/aantich/go-mariadb/cdc	0.435s
+FAIL

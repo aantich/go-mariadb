@@ -3,8 +3,8 @@
 A dedicated, pure-Go **MariaDB** driver for `database/sql`, forked from
 [go-sql-driver/mysql](https://github.com/go-sql-driver/mysql).
 
-**Alpha:** automated tests cover MariaDB 12.3.3 locally. Application pilots,
-wider server/platform validation and several native APIs remain outstanding.
+**Alpha:** automated tests cover MariaDB 12.3.3 locally. Application pilots and
+wider server/platform validation remain outstanding.
 This is a development checkout; no independent release has been published.
 MySQL and TiDB are outside this project's support scope.
 
@@ -21,6 +21,8 @@ MySQL and TiDB are outside this project's support scope.
 **[Reusable native statements and measurement preparation](docs/STAGE4_STATEMENT_REUSE.md)** ·
 **[Stage 4 review findings](docs/STAGE4_CODE_REVIEW.md)** ·
 **[Stage 4 review corrections](docs/STAGE4_REVIEW_FIXES.md)** ·
+**[Optional CDC and durable resume](docs/STAGE6_CDC.md)** ·
+**[CDC review corrections and validation](docs/STAGE6_REVIEW_FIXES.md)** ·
 **[Roadmap and remaining gaps](docs/ROADMAP.md)** ·
 **[Run validation](validation/README.md)**
 
@@ -78,6 +80,10 @@ create a registration collision.
 * Opt-in clean session reset/restoration with lazy prepared-handle reprepare;
   bounded session observations and native column attributes through
   `InspectSession`, `Describe` and standard `ColumnTypes`.
+* Optional [`cdc`](cdc) package: a dedicated pull-driven binlog stream, owned
+  sparse row images, bounded checksum/compression decoding, complete-group
+  checkpoints, MariaDB GTID resume and explicit consumer-controlled semisync ACKs.
+  See the [CDC guide](docs/USER_GUIDE.md#change-data-capture-cdc).
 
 Metadata caching, ed25519 and direct scanning are inherited capabilities. Native
 bulk, PARSEC and the documented hardening are additions in this fork. Shared wire
@@ -112,7 +118,9 @@ The current live profile is MariaDB 12.3.3, macOS arm64 and Go 1.27.4. The inten
 server range is MariaDB 10.11 and newer; broader CI is not equivalent to completed
 runtime validation. [Stage 5](docs/STAGE5_AUTHENTICATION.md) adds isolated real
 PAM/Kerberos fixtures; Windows SSPI/NTLM and production identity-service integration
-remain outside the current provider. CDC is optional future scope. Native API limits and ownership
+remain outside the current provider. [Stage 6](docs/STAGE6_CDC.md) adds optional
+CDC with isolated binlog/restart fixtures; XA, two-phase ALTER and engine-specific
+replication modes remain explicitly unsupported. Native API limits and ownership
 rules are documented in the guide; performance acceptance remains open.
 
 The fork preserves the upstream MPL-2.0 license and attribution. Internal names

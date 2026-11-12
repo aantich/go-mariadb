@@ -1,0 +1,3 @@
+./metadata.go:194:6: can inline validateColumnTail
+./metadata.go:189:27: inlining call to validateColumnTail
+./packets.go:808:31: inlining call to validateColumnTail

@@ -120,6 +120,9 @@ const (
 	comStmtFetch
 )
 
+// COM_RESET_CONNECTION follows reserved command slots in MariaDB's protocol.
+const comResetConnection byte = 0x1f
+
 // https://dev.mysql.com/doc/internals/en/com-query-response.html#packet-Protocol::ColumnType
 type fieldType byte
 

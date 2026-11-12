@@ -303,6 +303,9 @@ func (mc *mysqlConn) initCapabilities(serverCapabilities capabilityFlag, serverE
 	if mc.cfg.ClientFoundRows {
 		clientCapabilities |= clientFoundRows
 	}
+	if mc.cfg.sessionTracking {
+		clientCapabilities |= clientSessionTrack
+	}
 	if mc.cfg.compress {
 		if compression.Zstd != nil && serverCapabilities&clientZstdCompression != 0 {
 			// MySQL prefers zlib if both flags are set, so advertise only zstd.
@@ -319,7 +322,7 @@ func (mc *mysqlConn) initCapabilities(serverCapabilities capabilityFlag, serverE
 	if mc.cfg.MultiStatements {
 		clientCapabilities |= clientMultiStatements
 	}
-	if n := len(mc.cfg.DBName); n > 0 {
+	if n := len(mc.cfg.DBName); n > 0 && mc.cfg.sessionReset == nil {
 		clientCapabilities |= clientConnectWithDB
 	}
 
@@ -330,6 +333,9 @@ func (mc *mysqlConn) initCapabilities(serverCapabilities capabilityFlag, serverE
 	mc.extCapabilities = clientCacheMetadata & serverExtCapabilities
 	if mc.cfg.bulkOperations {
 		mc.extCapabilities |= clientStmtBulkOperations & serverExtCapabilities
+	}
+	if mc.cfg.extendedMetadata {
+		mc.extCapabilities |= clientExtendedMetadata & serverExtCapabilities
 	}
 }
 
@@ -684,10 +690,13 @@ func (mc *okHandler) handleOkPacket(data []byte) error {
 	}
 
 	// server_status [2 bytes]
-	mc.status = readStatus(data[1+n+m : 1+n+m+2])
-	if mc.status&statusMoreResultsExists != 0 {
-		return nil
+	status := readStatus(data[1+n+m : 1+n+m+2])
+	if mc.capabilities&clientSessionTrack != 0 {
+		if err := mc.conn().readSessionTail(data[1+n+m+4:], status); err != nil {
+			return err
+		}
 	}
+	mc.status = status
 
 	// warning count [2 bytes]
 
@@ -782,7 +791,21 @@ func (mc *mysqlConn) readColumns(count int, old []mysqlField) ([]mysqlField, err
 
 		// The length marker describes twelve mandatory fixed bytes. Validate
 		// before indexing; trailing default-value fields may follow.
-		if len(data)-pos < 13 || data[pos] != 12 {
+		if mc.extCapabilities&clientExtendedMetadata != 0 {
+			metadata, rest, err := consumeString(data[pos:])
+			if err != nil {
+				return nil, mc.protocolError()
+			}
+			attributes, nativeType, format, err := parseColumnAttributes(metadata)
+			if err != nil {
+				return nil, mc.protocolError()
+			}
+			if len(attributes) != 0 {
+				columns[i].extended = &columnExtension{nativeType, format, attributes}
+			}
+			pos = len(data) - len(rest)
+		}
+		if err := validateColumnTail(data[pos:]); err != nil {
 			return nil, mc.protocolError()
 		}
 		pos++
@@ -903,6 +926,7 @@ func (mc *mysqlConn) skipColumns(n int) error {
 	if n < 0 || n > mc.columnLimit() {
 		return mc.protocolError()
 	}
+	extended := mc.extCapabilities&clientExtendedMetadata != 0
 	remaining := mc.metadataBudget()
 	for range n {
 		if remaining <= 0 {
@@ -916,6 +940,11 @@ func (mc *mysqlConn) skipColumns(n int) error {
 			return mc.handleErrorPacket(data)
 		}
 		remaining -= len(data)
+		if extended {
+			if err := validateExtendedColumn(data); err != nil {
+				return mc.protocolError()
+			}
+		}
 	}
 	return mc.skipEof()
 }

@@ -12,6 +12,8 @@ MySQL and TiDB are outside this project's support scope.
 **[Live correctness and benchmarks](validation/RESULTS.md)** ·
 **[Implementation record](docs/DEDICATED_DRIVER.md)** ·
 **[Review corrections](docs/STAGE1_REVIEW_FIXES.md)** ·
+**[Session foundations](docs/STAGE2_SESSION_FOUNDATIONS.md)** ·
+**[Session review corrections](docs/STAGE2_REVIEW_FIXES.md)** ·
 **[Roadmap and remaining gaps](docs/ROADMAP.md)** ·
 **[Run validation](validation/README.md)**
 
@@ -57,6 +59,9 @@ create a registration collision.
   overflow errors.
 * LOCAL INFILE file allowlisting/reader handlers, optional zlib and buffered
   long-data parameters with bounded staging storage.
+* Opt-in clean session reset/restoration with lazy prepared-handle reprepare;
+  bounded session observations and native column attributes through
+  `InspectSession`, `Describe` and standard `ColumnTypes`.
 
 Metadata caching, ed25519 and direct scanning are inherited capabilities. Native
 bulk, PARSEC and the documented hardening are additions in this fork. Shared wire
@@ -69,6 +74,8 @@ capture against an immutable, unchanged-upstream baseline: the same workloads,
 seven repetitions per profile, source hashes and explicit host conditions.
 Negative elapsed-time changes mean faster execution. New feature benchmarks have
 separate first measurements; they are not old-versus-new driver improvements.
+Session foundations have correctness-only validation. The report labels the
+earlier timing source separately; no fresh performance run was authorized.
 
 The inherited baseline already showed substantial differences between existing
 API alternatives: a prepared 1,000-row/32-integer read took about 0.496 ms versus
@@ -81,8 +88,7 @@ observed background VM activity. See the report for current results and limits.
 
 The current live profile is MariaDB 12.3.3, macOS arm64 and Go 1.27.4. The intended
 server range is MariaDB 10.11 and newer; broader CI is not equivalent to completed
-runtime validation. Per-unit bulk results, managed clean-session reset, session
-tracking, extended native metadata, reader parameters, cursors, progress and
+runtime validation. Per-unit bulk results, reader parameters, cursors, progress and
 external PAM/GSSAPI fixtures remain on the roadmap. CDC is optional future scope.
 
 The fork preserves the upstream MPL-2.0 license and attribution. Internal names

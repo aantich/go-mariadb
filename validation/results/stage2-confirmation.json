@@ -1,0 +1,59 @@
+{
+  "date": "2026-11-12",
+  "parent_commit": "d7edf02f8eb153ed8cabcc311eb893e90fa7e11e",
+  "input_fingerprint": "deaa2eb89dd3a961ebd0463b2050b793fb1b1685797cf209a695493b89652e76",
+  "driver_inputs": 45,
+  "workload_inputs": 60,
+  "mac": {
+    "path": "results/stage2-mac-report-final/capture.json",
+    "counts": {
+      "pass": 1063,
+      "skip": 8
+    },
+    "failures": [],
+    "skips": [
+      "github.com/aantich/go-mariadb/TestConcurrent",
+      "github.com/aantich/go-mariadb/TestContextCancelBegin",
+      "github.com/aantich/go-mariadb/TestConnectionAttributes",
+      "github.com/aantich/go-mariadb/FuzzFormatDSN/seed#1",
+      "github.com/aantich/go-mariadb/FuzzFormatDSN/seed#2",
+      "github.com/aantich/go-mariadb/FuzzFormatDSN/seed#15",
+      "github.com/aantich/go-mariadb/validation/TestMariaDBSessionInstrumentation",
+      "github.com/aantich/go-mariadb/zstd/TestServerCompression"
+    ],
+    "input_stability": true,
+    "race_warnings": 0,
+    "policy_exit": 0
+  },
+  "linux": {
+    "path": "results/stage2-linux-final/capture.json",
+    "counts": {
+      "pass": 1066,
+      "skip": 5
+    },
+    "failures": [],
+    "skips": [
+      "github.com/aantich/go-mariadb/TestConcurrent",
+      "github.com/aantich/go-mariadb/FuzzFormatDSN/seed#1",
+      "github.com/aantich/go-mariadb/FuzzFormatDSN/seed#2",
+      "github.com/aantich/go-mariadb/FuzzFormatDSN/seed#15",
+      "github.com/aantich/go-mariadb/zstd/TestServerCompression"
+    ],
+    "input_stability": true,
+    "race_warnings": 0,
+    "policy_exit": 0
+  },
+  "exact_inputs_match": true,
+  "prior_passes_lost": [],
+  "harness_tests": 35,
+  "static_checks": {
+    "vet": "pass on both profiles",
+    "actionlint": "pass, v1.7.12"
+  },
+  "contract_migration": "validation/contract-migrations.json; isolation assertions unchanged, policy explicitly enabled",
+  "performance_measured": false,
+  "historical_timing_source": "7e0376b88d5fce25d372680fece6d1faa3c4af6cf10bf8775616b4be79ea5b97",
+  "historical_timing_capture_sha256": "5fa0ebf51e2ddc51b555ff1d1e5aab5e28a976247c1419f079d95c778d0e0b4c",
+  "baseline_modified": false,
+  "publication": "uncommitted; no push or release"
+}

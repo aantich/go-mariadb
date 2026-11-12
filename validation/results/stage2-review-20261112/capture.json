@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "date": "2026-11-12",
+  "purpose": "Session-foundations review; no implementation fixes",
+  "parent_commit": "d7edf02f8eb153ed8cabcc311eb893e90fa7e11e",
+  "reviewed_input_fingerprint": "deaa2eb89dd3a961ebd0463b2050b793fb1b1685797cf209a695493b89652e76",
+  "driver_inputs": 45,
+  "workload_inputs": 60,
+  "isolated_copy_production_inputs_match": true,
+  "findings": {
+    "R1": "P2: materialized metadata immediately discarded",
+    "R2": "P2: publication accepts substituted check commands",
+    "R3": "P2: missing server provenance in automated correctness receipts",
+    "R4": "P3: installed Git without .git aborts CI runner"
+  },
+  "focused_correctness": {
+    "pass_leaves": 40,
+    "pass_parent_containers": 6,
+    "exit_code": 0,
+    "race": true,
+    "log": "review-focused.log",
+    "scope": "New root session/metadata tests and live session-foundations tests; shared Mac, bounded parallelism"
+  },
+  "harness_tests": {
+    "pass": 35,
+    "exit_code": 0
+  },
+  "existing_evidence_verifier": "pass",
+  "diff_check": "pass",
+  "receipt_policy_probe": {
+    "accepted": true,
+    "actual_receipt_changed": false,
+    "proof": "review-command-policy.json"
+  },
+  "source_export_probe": {
+    "exit_code": 1,
+    "git_exit": 128,
+    "log": "review-archive-ci.log",
+    "other_checks_started": false
+  },
+  "server": {
+    "version": "12.3.3-MariaDB-log",
+    "performance_schema": false,
+    "log": "review-server.log"
+  },
+  "metadata_contract_probe": {
+    "describe": "TINYINT",
+    "column_types": "BOOLEAN",
+    "scan_type": "bool",
+    "classification": "Documented wire/native versus configured scan behavior; not counted as a correctness defect",
+    "log": "review-boolean.log",
+    "source": "boolean-contract-probe.go.txt"
+  },
+  "production_changed": false,
+  "harness_changed": false,
+  "live_results_changed": false,
+  "baselines_changed": false,
+  "historical_timing_capture_sha256": "5fa0ebf51e2ddc51b555ff1d1e5aab5e28a976247c1419f079d95c778d0e0b4c",
+  "performance_measured": false,
+  "benchmark_smoke_executed": false,
+  "new_matrix_execution": false,
+  "commit_or_push": false
+}

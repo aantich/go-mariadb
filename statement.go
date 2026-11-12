@@ -21,6 +21,12 @@ type mysqlStmt struct {
 	id         uint32
 	paramCount int
 	columns    []mysqlField
+	session    *statementSession // Only managed sessions retain reprepare state.
+}
+
+type statementSession struct {
+	queryText  string
+	generation uint64
 }
 
 func (stmt *mysqlStmt) Close() error {
@@ -33,7 +39,12 @@ func (stmt *mysqlStmt) Close() error {
 		return nil
 	}
 
-	err := stmt.mc.writeCommandPacketUint32(comStmtClose, stmt.id)
+	// RESET already removed an old-generation ID. Sending CLOSE for it could
+	// close a different statement if the server subsequently reused that ID.
+	var err error
+	if stmt.session == nil || stmt.session.generation == stmt.mc.generation {
+		err = stmt.mc.writeCommandPacketUint32(comStmtClose, stmt.id)
+	}
 	stmt.mc = nil
 	return err
 }
@@ -52,8 +63,13 @@ func (stmt *mysqlStmt) CheckNamedValue(nv *driver.NamedValue) (err error) {
 }
 
 func (stmt *mysqlStmt) Exec(args []driver.Value) (driver.Result, error) {
-	if stmt.mc.closed.Load() {
+	if stmt.mc == nil || stmt.mc.closed.Load() {
 		return nil, driver.ErrBadConn
+	}
+	if stmt.session != nil && stmt.session.generation != stmt.mc.generation {
+		if err := stmt.ensurePrepared(); err != nil {
+			return nil, err
+		}
 	}
 	// Send command
 	err := stmt.writeExecutePacket(args)
@@ -113,8 +129,13 @@ func (stmt *mysqlStmt) Query(args []driver.Value) (driver.Rows, error) {
 }
 
 func (stmt *mysqlStmt) query(args []driver.Value) (*binaryRows, error) {
-	if stmt.mc.closed.Load() {
+	if stmt.mc == nil || stmt.mc.closed.Load() {
 		return nil, driver.ErrBadConn
+	}
+	if stmt.session != nil && stmt.session.generation != stmt.mc.generation {
+		if err := stmt.ensurePrepared(); err != nil {
+			return nil, err
+		}
 	}
 	// Send command
 	err := stmt.writeExecutePacket(args)

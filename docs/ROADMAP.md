@@ -8,8 +8,18 @@ remaining failures. Anton approved committing and pushing the completed stage
 on 12 November; no package release is authorized.
 Earlier proposal/authorization statements below describe the historical review.
 
-Next: clean-session reset/restoration and statement generations, then per-unit
-bulk results and reuse/pipelining performance work. The remaining stages and
+**Session foundations, 12 November 2026:** Opt-in reset/restoration and statement
+generations, bounded session observations, extended native metadata and isolated
+instrumentation are implemented in the working tree. See the
+[contracts and correctness receipt](STAGE2_SESSION_FOUNDATIONS.md). No benchmarks
+were run for this stage; previous timing samples remain historical.
+
+The [session review corrections](STAGE2_REVIEW_FIXES.md) address all four review
+findings, preserve the original references and add exact-source Mac/Linux and
+source-export correctness receipts. Performance acceptance remains deferred.
+
+Next: per-unit bulk results, streamed parameters, cursor/progress APIs and
+reuse/pipelining performance work. The remaining stages and
 broader platform coverage remain open; this is not a claim they are complete.
 
 Proposed 11 November 2026, based on the unchanged driver and

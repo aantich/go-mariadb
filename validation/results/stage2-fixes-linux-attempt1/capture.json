@@ -1,0 +1,374 @@
+{
+  "stages": {
+    "correctness": {
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "-json",
+        "-count=1",
+        "-timeout=240s",
+        "-p=1",
+        "-parallel=2",
+        "-tags=mariadb_validation",
+        "./..."
+      ],
+      "exit_code": 1,
+      "issues": [
+        "Go failed without a completed failing assertion (build/infrastructure failure).",
+        "Package failed without an attributable assertion: github.com/aantich/go-mariadb",
+        "Package failed without an attributable assertion: github.com/aantich/go-mariadb/validation",
+        "Package failed without an attributable assertion: github.com/aantich/go-mariadb/zstd",
+        "Required isolated statement instrumentation did not pass.",
+        "Required test missing/not passing: github.com/aantich/go-mariadb/TestDedicatedBulkCancellationPhases",
+        "Required test missing/not passing: github.com/aantich/go-mariadb/TestDedicatedCloseKeepsCancellation",
+        "Required test missing/not passing: github.com/aantich/go-mariadb/TestDedicatedExecCachedMetadataEOF",
+        "Required test missing/not passing: github.com/aantich/go-mariadb/TestDedicatedTerminatorValidation",
+        "Required test missing/not passing: github.com/aantich/go-mariadb/TestMariaDBMalformedGreeting",
+        "Required test missing/not passing: github.com/aantich/go-mariadb/TestMariaDBMalformedOK",
+        "Required test missing/not passing: github.com/aantich/go-mariadb/validation/TestMariaDBAuthentication/caching_sha2_password",
+        "Required test missing/not passing: github.com/aantich/go-mariadb/validation/TestMariaDBAuthentication/ed25519",
+        "Required test missing/not passing: github.com/aantich/go-mariadb/validation/TestMariaDBAuthentication/parsec",
+        "Required test missing/not passing: github.com/aantich/go-mariadb/validation/TestMariaDBAuthentication/x509",
+        "Required test missing/not passing: github.com/aantich/go-mariadb/validation/TestMariaDBDefaultSessionPolicy",
+        "Required test missing/not passing: github.com/aantich/go-mariadb/validation/TestMariaDBDesiredCleanPoolReset",
+        "Required test missing/not passing: github.com/aantich/go-mariadb/validation/TestMariaDBManagedRestorationFailure",
+        "Required test missing/not passing: github.com/aantich/go-mariadb/validation/TestMariaDBManagedRoleAndSchema",
+        "Required test missing/not passing: github.com/aantich/go-mariadb/validation/TestMariaDBManagedSessionIsolation",
+        "Required test missing/not passing: github.com/aantich/go-mariadb/validation/TestMariaDBNativeBulk",
+        "Required test missing/not passing: github.com/aantich/go-mariadb/validation/TestMariaDBNativeTypeMetadata",
+        "Required test missing/not passing: github.com/aantich/go-mariadb/validation/TestMariaDBNativeUnsignedResult",
+        "Required test missing/not passing: github.com/aantich/go-mariadb/validation/TestMariaDBReviewBulkTransports",
+        "Required test missing/not passing: github.com/aantich/go-mariadb/validation/TestMariaDBReviewCachedMetadataEOF",
+        "Required test missing/not passing: github.com/aantich/go-mariadb/validation/TestMariaDBReviewZeroTimeParity",
+        "Required test missing/not passing: github.com/aantich/go-mariadb/validation/TestMariaDBSessionObservations"
+      ],
+      "cases": {}
+    },
+    "recorder": {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "validation",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "issues": []
+    },
+    "vet": {
+      "command": [
+        "go",
+        "vet",
+        "./..."
+      ],
+      "exit_code": 1,
+      "issues": [
+        "vet failed."
+      ]
+    }
+  },
+  "inputs": {
+    "driver": {
+      "auth.go": "780eee6084fc13ecc0fda23457ba08b861ede1a5cf8c64a7532317ea0cd285b8",
+      "auth_caching_sha2.go": "20d821164be6dd7da8a162cfd6215d4753415164f421079c1738419af29475ad",
+      "auth_cleartext.go": "a7b940e8c7df05a529f74e73dcd6b34519989cfc021e70142bc78fd79796c1e0",
+      "auth_context.go": "f392c4cac5ea430cbad268d889099165efdf67a639d1ee1f6d45bc2b4cae89e6",
+      "auth_ed25519.go": "d245bac9fe50a5b201460d7e98fb42aff3841081aa835a7bf63ee6ef2be455c0",
+      "auth_mysql_native.go": "27c9fc6cdb098dd42cee477ef42e18dfefdf767f1308d06c57cd9d2ced2cc566",
+      "auth_oidc.go": "72a0d43ffde3308275aeed3e7a8de530a4d41be372e23980dd321d539fbaffa5",
+      "auth_old_password.go": "1463fc9cfa695c70be577b70040dbb8d5204ad54f77ba3f6c3b9d28ff103bd03",
+      "auth_parsec.go": "8815677c29c1806932381f9208eaedba68fa5eeee2cce2fd6ad81babf17f60a3",
+      "auth_plugin.go": "178c596aea4df74e235ba90b3e78c93ef2e11fdbf36ba3f3cf96521b7e2f6b17",
+      "auth_sha256.go": "3747bfb432093d9c42bfa58a7d4ac60c2bdaf13da7d2ebd2645ecf67be0db043",
+      "buffer.go": "397304123c95e30295577e2339d1159421040f0031cfe201ca5438bf9f963171",
+      "bulk.go": "590f641d914f537bd9abd409e0f6c843c199719f9e43d0894a639e373ea3aeff",
+      "collations.go": "58588a475a2057de3470ae162c9e571c88d47c8751033467041a672f1d6f9fdf",
+      "compress.go": "19049456d2a8178f5c167ee545e5f07d4e92a8d4c8d46ae2fa72144ea53f7306",
+      "conncheck.go": "6e4c85a972f850d53cee518d9ba2afcc74b2f91fb5998265ebb93a9c15e4205e",
+      "conncheck_dummy.go": "78df88bc8119699efc431525431cd4eed56dc03225529237b0364990f7d38b5d",
+      "conncheck_error.go": "f0d72ada4bd83e558f3a4ad03e5d1376844a18a4b398e33bdb73beb6a0a44e31",
+      "connection.go": "ccc5b0aa7d90657e27376720fab09be54cac9872c3480bb09622d1fb65362b94",
+      "connector.go": "7f7bda026fb6918cda4c56852b7cc004d8483b0ea12d9f7af4c11456adb7fa49",
+      "const.go": "9f09b8f2ce169bac6c4331a3cf74771e0458ac87179e97648927d41a28e213c2",
+      "driver.go": "37596ae2be1d3efe90f2060b6c50c5bc750fc30fab81e7e0336df50440a811b2",
+      "dsn.go": "647a0a75fe7561bafed271a2491a6d1277a73b1ffea8d3c72bde68ec0e29ff7f",
+      "errors.go": "7a1113406b28a6320b36c5a72729d7d18efb9130d43ee643fb2abf0ed57d22b0",
+      "fields.go": "276526feb867dca6d39d96e4bfba573368ff99a2bb664e9480f1d6d58205bf5d",
+      "go.mod": "11b1a03cf46a64f1ce9c3b61e27c2a28d354e09c802c6760338a115055362c37",
+      "go.sum": "3f0dbcf3deb909e6a7fea62f0905f98272be6c3dd940ff15a618718f72232c34",
+      "infile.go": "3ded889f5254b0b595bddc3fff063be4130d607855afa2492c079b3336db25c5",
+      "internal/compression/compression.go": "7f06e2db3056646ade911a8d0dc58ca4fb221a59327731f368c28e502b90e4ca",
+      "limits.go": "8785eb666198f20c8d1343c7aae37e0f66ffb1753ce6843a923c5a612447ba8f",
+      "metadata.go": "beedfdc8cf91daf897072b2b29022f7d480b2685fb7332707a76d941640f0221",
+      "nulltime.go": "cef56c52c0563e8ded1277fdcb9846436ceff369be0a928185c04b880611dc3e",
+      "packets.go": "fb7c384e076378e876389bbab6fd78ebea12c5b64ec92f69e2aea8033b577d8e",
+      "result.go": "fb89803e98bfe243c9b6cf54a31b6424f2710b3d0f22e660edb1e1ec516dd989",
+      "rows.go": "52177b136cdb974019d01f490bcb5bc7c04e41fa036e565cfb9e07e37444801b",
+      "rows_column_scanner.go": "dd59a861db27684e415169402ba1b34a827bb718c31113935873d48bde85dc2b",
+      "rows_decode.go": "cbc9bdc57f6eaab7ecd688cc4e82a545ed01589d59814345793dc8be960f9002",
+      "session_reset.go": "aa229e394e9d33bd8f901e26b724941f9ab214508754af544a2700b4ac41b54c",
+      "session_track.go": "45243352c869f84cf73aa351c4cd5e9d81b2b18f0f8d223e973e7aeca4b075f6",
+      "statement.go": "c0782cc84145db8b68cdcb4397d5e901d6a7da5aa3185d50e4efba71db55c6f3",
+      "terminator.go": "3d9db4d3a18570680de6c71abd17c9bb430cd236bbf429ae61ba5ad93f5640b2",
+      "transaction.go": "3b9b053597c23ca62f51c514e17ba7e17b36f331dec690f184f1078250983d49",
+      "unsigned.go": "6a55a4653e672c0bbbfa9108b728cb83c72ab8d0c7a066c342ecff7e7cd9315c",
+      "utils.go": "4ab1a7dc16293665f3b6b0719b2368314d702590786b2207122022b17678c2bc",
+      "zstd/zstd.go": "e9820e9f6e8425a390c1e28ce7d4388d3a2cf9256cb09186015a4f57ac225c8a"
+    },
+    "workload": {
+      ".github/workflows/actions.lock": "b4687239f4810d7729d076b2e9d5b8f336d43384a125c634762960fa46a097c5",
+      ".github/workflows/test.yml": "668e704d512d2ce15929dc5b0d5647785c8cf2568bbed9cc46e620f617d11954",
+      "auth_fallback_test.go": "1deb8237885bf019405a82297ddd4c04f39583e32ce38df79532cb3f632b7a95",
+      "auth_plugin_test.go": "21bed8ee5c40965b749fd77335fde7cce6745317a3e7d675a1e2c5640f2ce748",
+      "auth_security_test.go": "915b86327f498ec5d32416a67650583ac3ee2114a7a84d26f6fe99bd8997a0ed",
+      "auth_test.go": "fbca7b8c05ec083017ed581f29c10f0c761ff8e028c6e61587ad012d937063f2",
+      "auth_transport_test.go": "b79e44acfc0eecfdc3a8e9fdd384872669ebb80952a7da9a0d01457484cd7a7b",
+      "benchmark_test.go": "dcf795604af4eb1fc67c67223b1b1dfade6a6ae2e8b2937a38873ae096260e18",
+      "boolean_test.go": "cb2bcee315fa73a51d36ef43d87c7f0c095948a6bf1f15ff72ea30bad7ca333c",
+      "bulk_fault_regression_test.go": "a4d7b02ab651e88606a4fc21aae21f0d96435f6c03f3b21c284dfe41780b0205",
+      "compress_negotiation_test.go": "e8159df67f341f59079a5d9e297e0f6433338f309ac1a3e5e12a2fc97e4252f9",
+      "compress_test.go": "42aec42966ae0ffee4b63217862a4709858834590d9adee2e63678cb8a17c194",
+      "conncheck_error_test.go": "925457a6bf9e832af73363d6d99e2a45570c6b22c0cf32b6bf1ceb3baed4477e",
+      "conncheck_test.go": "7332b52c1b347ae9a1871ed1e562d985669bc195fbc7619a34e74d7b73338677",
+      "connection_test.go": "d9e0d0ed18fd68f56bfe8a6111be9f48f8d69591bcff7fe4fdfbbdbec4680b5f",
+      "connector_test.go": "11de9bda5f7c33a2e6d00d0faecd18a8a8be840cfc2d2ad13d1ebb508ddd07b8",
+      "dedicated_test.go": "02ec00a9d245f5c5a66c2972ba0e18cc5f3fc4afb46762b4ec53ce1f933a7c5c",
+      "driver_test.go": "a3f98d630a3eebc78fc28c9b5327b72eb329d0ad8fb05b817851d0be5b5a909f",
+      "dsn_fuzz_test.go": "7139dc6fa250424f8fc386d3482f88ad7a0b4debff016b2d7684f21c8bbfa345",
+      "dsn_test.go": "fba162fb95973fd3c750e8a4b4f8c73f51db1d45761189a0f3639b60f5125d8a",
+      "errors_test.go": "5df2aa82895f72f8a73c8a304f4c483d9f77be361f52ed6e02e3d51688279cae",
+      "hardening_regression_test.go": "1d0b1fdd743107855de37b0a1fbf8b4562ee94f6716cd272dd631ac10a34ca4b",
+      "hardening_scanner_regression_test.go": "bab270fd494812b7fc0243d6bcfdf97e60f83cf737045bcd33617cdfd09e9476",
+      "length_fastpath_test.go": "a14ee6f51112d779f38e64ae73d775e4fb06f918c0e76bed9cdc8a33411aca6a",
+      "mariadb_validation_protocol_test.go": "1029d113fe3a85bca3239da219288f5b051dd8d520debf9c93f08f6b5a2a0a39",
+      "nulltime_test.go": "7898360f3c838304b1ac8c29963acc15ad7392092e1b1637fd11c752d8049e21",
+      "oidc_test.go": "bada1a5a562a3052cd217f58b90c2a4f1b6a1dd21b73180810bb4dda7dbc94da",
+      "packets_test.go": "98786f027f9b8438ee6deff38260dc606c5ae93e1f8f54664e17058a66fa61b2",
+      "rows_benchmark_test.go": "3887dd5fb30421021aa1b1ad1c89355f7c69241f3612cb17c53fc8027122778c",
+      "rows_column_scanner_test.go": "46924903fbe8404de95d2f50cb9085ca4dddbcea9d06642ab1f074ca500456f7",
+      "rows_decode_test.go": "8a6b48ed23b22d8ae4357656d393fad007eee13dd6a6d04c7e4aaf2ecf0b6cb1",
+      "session_foundations_test.go": "11ba47388a0cca0ad8a97941e087086e5ea3ef9e61ad53673b37f7a98156ba71",
+      "session_review_fixes_test.go": "e2aa058aa94fb1a5cff1a9acd3bdb51e007ff950182b703fa691158f23fd6192",
+      "statement_test.go": "47025e65dbaff246fa94d69348d371835ff2abc2b54ef939130fdc6cf54ea834",
+      "utils_test.go": "fa4f3754a53cf65c1a3199ac733df5d4364a398837b8cf6b1b17d0ed73596ca6",
+      "validation/benchmark_test.go": "9fb5c4793bf0c59b607c75554ca0d148818e44bdf7b883a002fc32f375ce40c0",
+      "validation/check.py": "4939a0a80a0aed8276081a323264c33f13e248ab8ec9b5610687508dcf612ead",
+      "validation/ci.py": "eadc0b9b855900b8dc4f438932d456746c36cf80cd818f070deac22c2dfaec79",
+      "validation/config_test.go": "4dbcdadc404c5f6417358a62428691e9074a0f007d8f5a506bec521524cd3e04",
+      "validation/contract-migrations.json": "6121f8f49d798adf65e2f7ee9963e0fb11cb06d55602d28fec348b795c2484f9",
+      "validation/contracts.py": "287232ca419c3420bc41351126aedcb112c468218af99901831dbf9b87658ce4",
+      "validation/correctness.py": "0b1d49ee862da111593e476e7c06ca7ecf3acd59827daf4dcffbf997fc3ea6ac",
+      "validation/evidence.py": "8016aad4455feed48f5747337562d0f3f658f715c447ff326121956a47cf2474",
+      "validation/identity-migration.json": "70a983fa1166faacf8c965c770a87e4fd996c3137fa7695cc88de89f09381f22",
+      "validation/metadata_benchmark_test.go": "68e860e1b22c8abee5c64bf2693b3a283bf2ce90d8143640773405e59dce8752",
+      "validation/native_test.go": "8dd563dfe0167494b397222a7fa1159174bf06bfcdf19f38c3f3dd20d2d46ef6",
+      "validation/prepare_ci.py": "079303b633acd09b4101bb6682411d26f95bbaad5771786abb268c703efb8167",
+      "validation/prepare_sessions.py": "056a5849894e4e4a1fcb6954f3a74141d7c1e00ddd90e66ca21a23afe899e738",
+      "validation/provenance.py": "f8f7d867a3ce9ca12d7be88cf974d4ed3b3616c06e3010d6ffa0514f5a40bb99",
+      "validation/provision.py": "545b2c7af9fb4ed0fbdc783a860e7a26324d543f3eba3594b0fc6ed29e6d2388",
+      "validation/record.py": "03eb8c0ab523929da71ebf2051083e9ed55867ba394ab41679f9a2d2e94448d3",
+      "validation/review_regression_test.go": "c89abb3233de402a1b31c5f531abb4da653ed6bd03bdb93e7a987be6078d329f",
+      "validation/run.py": "ebaa780e0dd12500e6120f3fc69b819ac4e47f7a11ecb5515d90809ef8aee6e3",
+      "validation/session_test.go": "381252475da23d5a8ab57c53c89e83e157a141fd0a34f3d820ac79e3956d2bf6",
+      "validation/suite_test.go": "8eb29269218f0aa94912265a5b4171d1766398f952e5c82cee52cd94b6f3a653",
+      "validation/test_ci_policy.py": "dde138b1c24e0e7a918e68d142a7daba22853fc0218bb0f39b4ab7d2d45bba4b",
+      "validation/test_dedicated_recorder.py": "0bed6ecb6aea171d4c5349ef6699cf50c97e86baf8eba12e7c78715dfe2052b2",
+      "validation/test_provenance.py": "09d4d35f4a809b269710b9742e387f9858f5bdc6c0920a845c7c67a486f791cc",
+      "validation/test_recorder.py": "6a12eb661a77e7601edf507e326745e69103267d884d255aeebb7312697d23bb",
+      "validation/test_review_guards.py": "8ef14d5e350e6203bb1260a11a57e5b8477b455285facb41a8fc1cc380f246f1",
+      "validation/test_session_evidence.py": "3a85582d3a53e13f30529b014acd33411b77fee4385d6d561a1a2614a1d7f6e5",
+      "validation/verify.py": "dca9544309d30ad909a3539dc6a2c123b32a33f0ef14b8cff3392b6575287f1e",
+      "zstd/connection_test.go": "c002e27321679d9d5402476930f6113885710cba5da3cad499f4fcec01d25e7b",
+      "zstd/zstd_test.go": "ffb03c5db1fcbf66c94474dc9c6162a2f4fc174889b504964d754a84cf365e48"
+    }
+  },
+  "input_fingerprint": "8df163063b8be05a12cc41bd2430d97a1ab121d26ef1a19d4e980dca107fa80e",
+  "recorded_at": "2026-11-12T09:46:10.449428+00:00",
+  "commit": null,
+  "revision_provenance": {
+    "status": "git-unavailable"
+  },
+  "check_environment": {
+    "GOMAXPROCS": "2",
+    "GOFLAGS": "",
+    "GOWORK": "off"
+  },
+  "capabilities": [
+    {
+      "name": "MariaDB metadata caching",
+      "status": "SUPPORTED",
+      "evidence": "packets.go:initCapabilities; validation metadata cached/uncached wire-byte control"
+    },
+    {
+      "name": "ed25519 authentication",
+      "status": "SUPPORTED",
+      "evidence": "auth_ed25519.go; real ed25519 account"
+    },
+    {
+      "name": "Unix/TLS/X.509 authentication",
+      "status": "SUPPORTED",
+      "evidence": "real socket identity and CA/hostname/client-certificate tests"
+    },
+    {
+      "name": "large []byte parameters",
+      "status": "SUPPORTED",
+      "evidence": "existing COM_STMT_SEND_LONG_DATA; 2 MiB value/checksum checks"
+    },
+    {
+      "name": "LOCAL INFILE reader",
+      "status": "SUPPORTED",
+      "evidence": "RegisterReaderHandler; real data/count/sum verification"
+    },
+    {
+      "name": "Go 1.27 direct typed row scanning",
+      "status": "SUPPORTED",
+      "evidence": "rows_column_scanner.go; inherited RowsScan and typed/RawBytes benchmarks"
+    },
+    {
+      "name": "native binary bulk execution",
+      "status": "SUPPORTED",
+      "evidence": "Opt-in BulkExec; real 1/16/100/1000-row tests, unsigned/NULL/DEFAULT/IGNORE, errors and validation-before-send. Aggregate results only."
+    },
+    {
+      "name": "per-unit bulk results",
+      "status": "UNSUPPORTED_API",
+      "evidence": "clientUnitBulkResult defined but not negotiated or exposed"
+    },
+    {
+      "name": "extended type metadata",
+      "status": "SUPPORTED",
+      "evidence": "Opt-in WithExtendedMetadata; real UUID/INET4/INET6/JSON attributes, Describe and ColumnTypes, caching/DDL/reset and owned bounded parsing. MariaDB 12.3 exposes VECTOR as VARBINARY without a type-name attribute."
+    },
+    {
+      "name": "session-state observation",
+      "status": "SUPPORTED",
+      "evidence": "Opt-in WithSessionTracking and pinned InspectSession; bounded OK/terminator blocks and owned last-observed variables/schema, including legacy EOF, errors and reset generations."
+    },
+    {
+      "name": "clean connection reset/restoration",
+      "status": "SUPPORTED",
+      "evidence": "Opt-in WithSessionReset and pinned ResetSession; charset/role/schema/ordered params/InitSQL restoration, rollback, private-state cleanup, lazy statement generations, cancellation and retirement. Default checkout remains liveness-only."
+    },
+    {
+      "name": "server cursor fetch",
+      "status": "UNSUPPORTED_API",
+      "evidence": "comStmtFetch constant exists; execute flags do not request cursors; no public fetch API"
+    },
+    {
+      "name": "io.Reader prepared parameters",
+      "status": "UNSUPPORTED_API",
+      "evidence": "large []byte parameters supported, but converter has no streamed io.Reader parameter contract"
+    },
+    {
+      "name": "progress callbacks",
+      "status": "UNSUPPORTED_API",
+      "evidence": "progressIndicator not negotiated; no callback/routing contract"
+    },
+    {
+      "name": "PARSEC authentication",
+      "status": "SUPPORTED",
+      "evidence": "Built-in parsec plugin; real MariaDB account succeeds, binary challenge/signature and malformed/work-factor unit checks."
+    },
+    {
+      "name": "interactive PAM authentication",
+      "status": "UNSUPPORTED_API",
+      "evidence": "generic plugin extension exists; no built-in dialog/prompt policy or real PAM fixture"
+    },
+    {
+      "name": "Kerberos GSSAPI authentication",
+      "status": "UNSUPPORTED_API",
+      "evidence": "generic plugin extension exists; no built-in GSSAPI/service-principal policy or real KDC fixture"
+    },
+    {
+      "name": "transaction-aware CDC/GTID resume",
+      "status": "UNSUPPORTED_API",
+      "evidence": "no binlog consumer API; separate optional extension scope beyond database/sql"
+    },
+    {
+      "name": "performance_schema instrumentation",
+      "status": "SUPPORTED",
+      "evidence": "Required real statement/thread/connection-attribute checks on isolated Linux MariaDB with performance_schema=ON. Shared Mac service stays OFF and reports a profile skip."
+    },
+    {
+      "name": "PAM/Kerberos services",
+      "status": "ENVIRONMENT",
+      "evidence": "isolated service fixtures not provisioned in this first Mac profile; do not claim live coverage"
+    }
+  ],
+  "instrumentation_required": true,
+  "go": "go version go1.27.4 linux/arm64",
+  "host": "Linux-6.10.14-linuxkit-aarch64-with-glibc2.39",
+  "method": "correctness only, no benchmarks",
+  "server": {
+    "endpoint": {
+      "host": "127.0.0.1",
+      "port": 3306,
+      "user": "gomdb_validation",
+      "database": "go_mariadb_validation"
+    },
+    "command": [
+      "/usr/bin/mariadb",
+      "--no-defaults",
+      "--protocol=tcp",
+      "--host=127.0.0.1",
+      "--port=3306",
+      "--user=gomdb_validation",
+      "--database=go_mariadb_validation",
+      "--batch",
+      "--raw",
+      "--skip-column-names",
+      "--skip-ssl",
+      "--execute=SELECT JSON_OBJECT('version',VERSION(),'version_comment',@@version_comment,'database',DATABASE(),'performance_schema',(@@performance_schema+0),'max_allowed_packet',@@max_allowed_packet,'local_infile',(@@local_infile+0),'log_bin',(@@log_bin+0),'sql_mode',@@sql_mode,'time_zone',@@time_zone,'character_set_client',@@character_set_client,'collation_connection',@@collation_connection,'character_set_server',@@character_set_server,'collation_server',@@collation_server,'innodb_flush_log_at_trx_commit',@@innodb_flush_log_at_trx_commit,'sync_binlog',@@sync_binlog,'max_connections',@@max_connections)"
+    ],
+    "before": {
+      "version": "12.3.3-MariaDB-ubu2404",
+      "version_comment": "mariadb.org binary distribution",
+      "database": "go_mariadb_validation",
+      "performance_schema": 1,
+      "max_allowed_packet": 50331648,
+      "local_infile": 1,
+      "log_bin": 0,
+      "sql_mode": "STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION",
+      "time_zone": "SYSTEM",
+      "character_set_client": "utf8mb4",
+      "collation_connection": "utf8mb4_uca1400_ai_ci",
+      "character_set_server": "utf8mb4",
+      "collation_server": "utf8mb4_uca1400_ai_ci",
+      "innodb_flush_log_at_trx_commit": 1,
+      "sync_binlog": 0,
+      "max_connections": 151
+    },
+    "after": {
+      "version": "12.3.3-MariaDB-ubu2404",
+      "version_comment": "mariadb.org binary distribution",
+      "database": "go_mariadb_validation",
+      "performance_schema": 1,
+      "max_allowed_packet": 50331648,
+      "local_infile": 1,
+      "log_bin": 0,
+      "sql_mode": "STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION",
+      "time_zone": "SYSTEM",
+      "character_set_client": "utf8mb4",
+      "collation_connection": "utf8mb4_uca1400_ai_ci",
+      "character_set_server": "utf8mb4",
+      "collation_server": "utf8mb4_uca1400_ai_ci",
+      "innodb_flush_log_at_trx_commit": 1,
+      "sync_binlog": 0,
+      "max_connections": 151
+    },
+    "stable": true
+  },
+  "inputs_stable": true,
+  "logs": {
+    "vet.log": "e39dec2b94e81121e9d2f06e425c7b5b002eff55bb8c1434916a010a44a9ac88",
+    "correctness.log": "1779a78331ac517eaf3eae603517ff05d4f2ca19e0bbe002f4981362077cf5ce",
+    "server-after.log": "a38a08cf207926d05b6cfc46158b3b2b51de7b2171b6571a675fade7a50269b1",
+    "server-before.log": "a38a08cf207926d05b6cfc46158b3b2b51de7b2171b6571a675fade7a50269b1",
+    "recorder.log": "cdadac1d8c6657aef9c631701bcf7619092aef2289fd8d6564ba0efe8d24195e"
+  },
+  "exit_code": 1
+}

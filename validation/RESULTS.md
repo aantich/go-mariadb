@@ -1,5 +1,18 @@
 # Go MariaDB live validation and benchmarks
 
+## Latest correctness — session foundations
+
+Recorded: **2026-11-12T09:44:51.475172+00:00** · Source: `8df163063b8be05a12cc41bd2430d97a1ab121d26ef1a19d4e980dca107fa80e` · **1070 PASS / 0 FAIL / 8 SKIP**, unique leaves.
+Server: **12.3.3-MariaDB-log** · Go: `go version go1.27.4 darwin/arm64` · Host: `macOS-26.4-arm64-arm-64bit-Mach-O` · GOMAXPROCS: **2** · performance_schema: **0**. Server settings match before/after checks.
+Race detection, vet, harness policy checks pass. No prior passing assertion was lost. Managed isolation is explicitly opted in; ordinary checkout remains liveness-only.
+[Raw correctness receipt](results/stage2-fixes-mac-final/capture.json) · [Implementation and contracts](../docs/STAGE2_SESSION_FOUNDATIONS.md).
+
+**No performance measurements were made for this source.** The timing tables and full-capture failures below belong to the earlier source fingerprint shown there. They are historical, qualified measurements; none were copied into a new baseline or presented as current-source timings.
+
+<details><summary>Earlier full-capture results and historical failures</summary>
+
+## Earlier full performance capture
+
 > Dedicated MariaDB driver, Alpha. Baseline = unchanged upstream; Current = the measured working tree below.
 
 Recorded: **2026-11-12T08:20:38.200863+00:00** · Parent commit: `e6232456bb6e` · Go: `go version go1.27.4 darwin/arm64`
@@ -10,7 +23,7 @@ Server: **12.3.3-MariaDB-log** · Host: `macOS-26.4-arm64-arm-64bit-Mach-O` · G
 
 Benchmark conditions: **No fresh idle confirmation. Correctness and isolated Linux validation complete before benchmark timing; per-family CPU observations retained. This capture includes all review corrections and prepare-write cancellation identity.**. Seven independent processes per benchmark family; medians and raw repetitions are retained.
 
-## Current stage at a glance
+## Earlier measured stage at a glance
 
 🟢 **1029 passing assertions** · 🔴 **1 failed assertions** · ⏭ **7 skips**.
 Ordinary totals exclude repeated race checks. The desired clean-session assertion remains an API gap; other failures are listed below.
@@ -31,7 +44,7 @@ These compare matched API alternatives on the current driver. Text/TSV data and 
 
 The [review corrections](../docs/STAGE1_REVIEW_FIXES.md), [implementation record](../docs/DEDICATED_DRIVER.md) and [coverage limits](COVERAGE.md) describe supported paths and remaining work. Original references and earlier captures remain unchanged.
 
-## Correctness
+## Earlier full-capture correctness
 
 | Suite | PASS | FAIL | SKIP | Exit |
 | --- | ---: | ---: | ---: | ---: |
@@ -60,11 +73,11 @@ The [review corrections](../docs/STAGE1_REVIEW_FIXES.md), [implementation record
 | bench-upstream-2 | 0 | 0 | 0 | 0 |
 | bench-mariadb-3 | 0 | 0 | 0 | 0 |
 
-Leaf cases are counted once. Race cases repeat correctness coverage; do not add them to the ordinary total. Vet/build rows have no individual test cases.
+Historical totals retain the parser used by that capture; latest correctness excludes all ancestor containers. Race cases repeat coverage.
 
-## Failed assertions
+## Earlier full-capture failures
 
-| Suite | Baseline failures | Current failures |
+| Suite | Baseline failures | Earlier capture failures |
 | --- | ---: | ---: |
 | upstream | 0 | 0 |
 | protocol | 76 | 0 |
@@ -82,7 +95,9 @@ Leaf cases are counted once. Race cases repeat correctness coverage; do not add 
 
 </details>
 
-## Capability inventory
+</details>
+
+## Current capability inventory
 
 | Capability | Baseline | Current | Evidence / next step |
 | --- | --- | --- | --- |
@@ -94,9 +109,9 @@ Leaf cases are counted once. Race cases repeat correctness coverage; do not add 
 | Go 1.27 direct typed row scanning | SUPPORTED | SUPPORTED | rows_column_scanner.go; inherited RowsScan and typed/RawBytes benchmarks |
 | native binary bulk execution | UNSUPPORTED_API | SUPPORTED | Opt-in BulkExec; real 1/16/100/1000-row tests, unsigned/NULL/DEFAULT/IGNORE, errors and validation-before-send. Aggregate results only. |
 | per-unit bulk results | UNSUPPORTED_API | UNSUPPORTED_API | clientUnitBulkResult defined but not negotiated or exposed |
-| extended type metadata | UNSUPPORTED_API | UNSUPPORTED_API | clientExtendedMetadata defined but not negotiated/parsed/exposed |
-| session-state observation | UNSUPPORTED_API | UNSUPPORTED_API | clientSessionTrack not negotiated; OK state-change payload not exposed |
-| clean connection reset/restoration | UNSUPPORTED_API | UNSUPPORTED_API | ResetSession performs stale-connection checks only; desired-isolation assertion fails |
+| extended type metadata | UNSUPPORTED_API | SUPPORTED | Opt-in WithExtendedMetadata; real UUID/INET4/INET6/JSON attributes, Describe and ColumnTypes, caching/DDL/reset and owned bounded parsing. MariaDB 12.3 exposes VECTOR as VARBINARY without a type-name attribute. |
+| session-state observation | UNSUPPORTED_API | SUPPORTED | Opt-in WithSessionTracking and pinned InspectSession; bounded OK/terminator blocks and owned last-observed variables/schema, including legacy EOF, errors and reset generations. |
+| clean connection reset/restoration | UNSUPPORTED_API | SUPPORTED | Opt-in WithSessionReset and pinned ResetSession; charset/role/schema/ordered params/InitSQL restoration, rollback, private-state cleanup, lazy statement generations, cancellation and retirement. Default checkout remains liveness-only. |
 | server cursor fetch | UNSUPPORTED_API | UNSUPPORTED_API | comStmtFetch constant exists; execute flags do not request cursors; no public fetch API |
 | io.Reader prepared parameters | UNSUPPORTED_API | UNSUPPORTED_API | large []byte parameters supported, but converter has no streamed io.Reader parameter contract |
 | progress callbacks | UNSUPPORTED_API | UNSUPPORTED_API | progressIndicator not negotiated; no callback/routing contract |
@@ -104,16 +119,18 @@ Leaf cases are counted once. Race cases repeat correctness coverage; do not add 
 | interactive PAM authentication | UNSUPPORTED_API | UNSUPPORTED_API | generic plugin extension exists; no built-in dialog/prompt policy or real PAM fixture |
 | Kerberos GSSAPI authentication | UNSUPPORTED_API | UNSUPPORTED_API | generic plugin extension exists; no built-in GSSAPI/service-principal policy or real KDC fixture |
 | transaction-aware CDC/GTID resume | UNSUPPORTED_API | UNSUPPORTED_API | no binlog consumer API; separate optional extension scope beyond database/sql |
-| performance_schema instrumentation | ENVIRONMENT | ENVIRONMENT | local service has performance_schema=OFF; do not change shared server configuration |
+| performance_schema instrumentation | ENVIRONMENT | SUPPORTED | Required real statement/thread/connection-attribute checks on isolated Linux MariaDB with performance_schema=ON. Shared Mac service stays OFF and reports a profile skip. |
 | PAM/Kerberos services | ENVIRONMENT | ENVIRONMENT | isolated service fixtures not provisioned in this first Mac profile; do not claim live coverage |
 
 Inventory entries are source-reviewed API gaps, not passing feature tests. Missing external services are recorded separately from missing APIs. See [coverage and limits](COVERAGE.md).
 
 ## Benchmark comparison
 
+Last measured source: `7e0376b88d5fce25d372680fece6d1faa3c4af6cf10bf8775616b4be79ea5b97`. Current source has **no performance measurements**.
+
 Baseline = immutable unchanged-upstream capture for original workloads; [first native-bulk capture](baselines/native-bulk-stage1-macos-arm64-mariadb-12.3.3-go1.27.4/capture.json) for the new matched bulk profiles. Current = latest complete capture. Change = `(Current / Baseline - 1) × 100`; negative means less time. Units are **ns/operation**. The original added live reads consume 1,000 rows, BLOB reads consume 1 MiB, and original added writes replace 100 rows transactionally. Native bulk alternatives use **1/16/100/1000 rows per transaction**. Inherited workloads retain their own row counts and decoder/scanner units; do not apply the live-read row count to every inherited benchmark. Connection operations establish and close one connection.
 
-| Benchmark | Baseline ns/op | Current ns/op | Change vs baseline | Current B/op | Current allocs/op |
+| Benchmark | Baseline ns/op | Last measured ns/op | Change vs baseline | Last measured B/op | Last measured allocs/op |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | `BenchmarkExec` | 7,838.0 | 12,624.0 | +61.1% | 155 | 8 |
 | `BenchmarkExecContext/1` | 10,338.0 | 22,803.0 | +120.6% | 152 | 8 |

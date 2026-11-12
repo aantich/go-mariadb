@@ -79,6 +79,10 @@ type Config struct {
 
 	compress          bool // Enable compression
 	bulkOperations    bool
+	extendedMetadata  bool
+	sessionTracking   bool
+	sessionTrackLimit int
+	sessionReset      *SessionResetPolicy
 	receiveLimit      int
 	columnLimit       int
 	authLimit         int
@@ -220,6 +224,12 @@ func (cfg *Config) Clone() *Config {
 		maps.Copy(cp.Params, cfg.Params)
 	}
 	cp.paramOrder = slices.Clone(cfg.paramOrder)
+	cp.charsets = slices.Clone(cfg.charsets)
+	if cfg.sessionReset != nil {
+		policy := *cfg.sessionReset
+		policy.InitSQL = slices.Clone(policy.InitSQL)
+		cp.sessionReset = &policy
+	}
 	if cfg.pubKey != nil {
 		cp.pubKey = &rsa.PublicKey{
 			N: new(big.Int).Set(cfg.pubKey.N),
@@ -249,6 +259,9 @@ func (cfg *Config) checkUnsafeCharset() error {
 }
 
 func (cfg *Config) normalize() error {
+	if err := cfg.validateSessionPolicy(); err != nil {
+		return err
+	}
 	if err := cfg.checkUnsafeCharset(); err != nil {
 		return err
 	}

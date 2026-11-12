@@ -13,6 +13,7 @@ import (
 	"database/sql"
 	"database/sql/driver"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net"
@@ -39,6 +40,8 @@ type mysqlConn struct {
 	compressSequence uint8
 	parseTime        bool
 	compress         bool
+	generation       uint64 // Server statement IDs are valid only in this reset generation.
+	session          *sessionObservation
 
 	// for context support (Go 1.8+)
 	watching bool
@@ -231,6 +234,9 @@ func (mc *mysqlConn) Prepare(query string) (driver.Stmt, error) {
 	stmt := &mysqlStmt{
 		mc: mc,
 	}
+	if mc.cfg != nil && mc.cfg.sessionReset != nil {
+		stmt.session = &statementSession{queryText: query, generation: mc.generation}
+	}
 
 	// Read Result
 	columnCount, err := stmt.readPrepareResultPacket()
@@ -242,7 +248,7 @@ func (mc *mysqlConn) Prepare(query string) (driver.Stmt, error) {
 		}
 
 		if columnCount > 0 {
-			if mc.extCapabilities&clientCacheMetadata != 0 {
+			if mc.extCapabilities&(clientCacheMetadata|clientExtendedMetadata) != 0 {
 				if stmt.columns, err = mc.readColumns(int(columnCount), nil); err != nil {
 					return nil, err
 				}
@@ -793,6 +799,17 @@ func (mc *mysqlConn) CheckNamedValue(nv *driver.NamedValue) (err error) {
 func (mc *mysqlConn) ResetSession(ctx context.Context) error {
 	if mc.closed.Load() || mc.buf.busy() {
 		return driver.ErrBadConn
+	}
+	if mc.cfg.sessionReset != nil {
+		err := mc.resetSession(ctx)
+		if err != nil && mc.closed.Load() {
+			// database/sql only honors ErrBadConn from SessionResetter; other
+			// errors are ignored. No caller command has run at this boundary,
+			// so discarding/replacing this connection is safe. Native explicit
+			// reset returns the original error without this pool-only marker.
+			return errors.Join(driver.ErrBadConn, err)
+		}
+		return err
 	}
 
 	// Perform a stale connection check. We only perform this check for

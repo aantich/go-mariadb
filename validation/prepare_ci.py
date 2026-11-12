@@ -13,6 +13,7 @@ from pathlib import Path
 import secrets
 import shutil
 import subprocess
+from prepare_sessions import provision as provision_sessions
 
 
 def certificates(directory):
@@ -73,6 +74,7 @@ def provision(directory, output):
               'user':'gomdb_validation', 'password':password, 'database':schemas[0], 'upstream_database':schemas[1],
               'tls_ca':str(directory/'ca.pem'), 'tls_cert':str(directory/'client-cert.pem'), 'tls_key':str(directory/'client-key.pem'),
               'plugins':sorted(plugins)}
+    provision_sessions(config, admin, isolated=True)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.parent.chmod(0o700)
     # Set the mode at creation, before writing any credentials.

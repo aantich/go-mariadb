@@ -50,6 +50,7 @@ def inputs():
     workload = {str(p.relative_to(ROOT)):digest(p.read_bytes()) for p in files if p.name.endswith('_test.go')}
     workload.update({str(p.relative_to(ROOT)):digest(p.read_bytes()) for p in HERE.glob('*.py')})
     workload['validation/identity-migration.json'] = digest((HERE/'identity-migration.json').read_bytes())
+    workload['validation/contract-migrations.json'] = digest((HERE/'contract-migrations.json').read_bytes())
     for path in ('.github/workflows/test.yml', '.github/workflows/actions.lock'):
         workload[path] = digest((ROOT/path).read_bytes())
     return {'driver':dict(sorted(driver.items())), 'workload':dict(sorted(workload.items()))}
@@ -67,6 +68,14 @@ def original_workload_bytes(path):
         data = data.replace(b'sql.Open("mariadb",',b'sql.Open("mysql",')
         if path == 'statement_test.go':
             data = data.replace(b'unsupported type mariadb.derived',b'unsupported type mysql.derived')
+    # The sole approved live contract change requests managed session reuse.
+    # Reverse exact bytes; any assertion/body change still fails the frozen hash.
+    for change in json.loads((HERE/'contract-migrations.json').read_text())['changes']:
+        if change['path'] == path:
+            before, after = change['before'].encode(), change['after'].encode()
+            if data.count(after) != 1:
+                return data
+            data = data.replace(after, before, 1)
     return data
 
 
@@ -119,7 +128,12 @@ def test_cases(text):
             item['output'] += event.get('Output', '')
         if event['Action'] in ['pass', 'fail', 'skip']:
             item['status'] = event['Action']
-    parents = {key.rsplit('/', 1)[0] for key in records}
+    parents = set()
+    for key in records:
+        parent = key.rsplit('/', 1)[0]
+        while parent:
+            parents.add(parent)
+            parent = parent.rpartition('/')[0]
     return [value for key,value in sorted(records.items()) if key not in parents]
 
 
@@ -137,8 +151,23 @@ def benchmark_rows(text):
     return rows
 
 
-def render(current, baseline):
+def render(current, baseline, correctness=None):
     features = json.loads((NATIVE_BASELINE/'capture.json').read_text())['benchmarks'] if NATIVE_BASELINE.exists() else {}
+    latest = []
+    if correctness is not None:
+        from contracts import verified_checks
+        checks = verified_checks(correctness)
+        counts = correctness['leaf_counts']
+        server = correctness['server']['before']
+        checked = [label for key,label in (('race','Race detection'),('vet','vet'),('harness_policy','harness policy checks')) if checks[key]]
+        latest = ['## Latest correctness — session foundations', '',
+                  f"Recorded: **{correctness['recorded_at']}** · Source: `{correctness['input_fingerprint']}` · **{counts.get('pass',0)} PASS / {counts.get('fail',0)} FAIL / {counts.get('skip',0)} SKIP**, unique leaves.",
+                  f"Server: **{server['version']}** · Go: `{correctness['go']}` · Host: `{correctness['host']}` · GOMAXPROCS: **{correctness['check_environment']['GOMAXPROCS']}** · performance_schema: **{server['performance_schema']}**. Server settings match before/after checks.",
+                  ', '.join(checked)+' pass. No prior passing assertion was lost. Managed isolation is explicitly opted in; ordinary checkout remains liveness-only.',
+                  f"[Raw correctness receipt]({correctness['evidence_directory']}/capture.json) · [Implementation and contracts](../docs/STAGE2_SESSION_FOUNDATIONS.md).", '',
+                  '**No performance measurements were made for this source.** The timing tables and full-capture failures below belong to the earlier source fingerprint shown there. They are historical, qualified measurements; none were copied into a new baseline or presented as current-source timings.', '',
+                  '<details><summary>Earlier full-capture results and historical failures</summary>', '',
+                  '## Earlier full performance capture', '']
     lines = ['# Go MariaDB live validation and benchmarks', '',
              '> Dedicated MariaDB driver, Alpha. Baseline = unchanged upstream; Current = the measured working tree below.', '',
              f"Recorded: **{current['recorded_at']}** · Parent commit: `{current['commit'][:12]}` · Go: `{current['go']}`", '',
@@ -147,12 +176,15 @@ def render(current, baseline):
              f"Benchmark conditions: **{current['conditions']}**. Seven independent processes per benchmark family; medians and raw repetitions are retained.", '',
              *overview(current, baseline),
              '## Correctness', '', '| Suite | PASS | FAIL | SKIP | Exit |', '| --- | ---: | ---: | ---: | ---: |']
+    if latest:
+        lines[2:2] = latest
+        lines = [line.replace('## Current stage at a glance','## Earlier measured stage at a glance').replace('## Correctness','## Earlier full-capture correctness') for line in lines]
     for name,stage in current['stages'].items():
         counts=Counter(case.get('status','incomplete') for case in stage.get('cases',[]))
         lines.append(f"| {name} | {counts['pass']} | {counts['fail']} | {counts['skip']} | {stage['exit_code']} |")
-    lines += ['', 'Leaf cases are counted once. Race cases repeat correctness coverage; do not add them to the ordinary total. Vet/build rows have no individual test cases.', '',
-              '## Failed assertions', '',
-              '| Suite | Baseline failures | Current failures |', '| --- | ---: | ---: |']
+    lines += ['', 'Historical totals retain the parser used by that capture; latest correctness excludes all ancestor containers. Race cases repeat coverage.' if correctness else 'Leaf cases are counted once. Race cases repeat correctness coverage; do not add them to the ordinary total. Vet/build rows have no individual test cases.', '',
+              '## Earlier full-capture failures' if correctness else '## Failed assertions', '',
+              '| Suite | Baseline failures | Earlier capture failures |' if correctness else '| Suite | Baseline failures | Current failures |', '| --- | ---: | ---: |']
     for name in ('upstream','protocol','mariadb'):
         old=sum(c.get('status')=='fail' for c in baseline['stages'][name].get('cases',[]))
         now=sum(c.get('status')=='fail' for c in current['stages'][name].get('cases',[]))
@@ -165,14 +197,17 @@ def render(current, baseline):
             for case in failures:
                 lines.append('- `' + case['name'] + '`')
             lines += ['', '</details>', '']
-    lines += ['## Capability inventory', '', '| Capability | Baseline | Current | Evidence / next step |', '| --- | --- | --- | --- |']
+    if correctness:
+        lines += ['</details>', '']
+    lines += ['## Current capability inventory' if correctness else '## Capability inventory', '', '| Capability | Baseline | Current | Evidence / next step |', '| --- | --- | --- | --- |']
     old_capabilities={item['name']:item['status'] for item in baseline['capabilities']}
-    for item in current['capabilities']:
+    for item in (correctness or current)['capabilities']:
         lines.append(f"| {item['name']} | {old_capabilities.get(item['name'],'new inventory')} | {item['status']} | {item['evidence']} |")
     lines += ['', 'Inventory entries are source-reviewed API gaps, not passing feature tests. Missing external services are recorded separately from missing APIs. See [coverage and limits](COVERAGE.md).', '',
               '## Benchmark comparison', '',
+              f"Last measured source: `{current.get('input_fingerprint','historical')}`. Current source has **no performance measurements**." if correctness else '', '',
               'Baseline = immutable unchanged-upstream capture for original workloads; [first native-bulk capture](baselines/native-bulk-stage1-macos-arm64-mariadb-12.3.3-go1.27.4/capture.json) for the new matched bulk profiles. Current = latest complete capture. Change = `(Current / Baseline - 1) × 100`; negative means less time. Units are **ns/operation**. The original added live reads consume 1,000 rows, BLOB reads consume 1 MiB, and original added writes replace 100 rows transactionally. Native bulk alternatives use **1/16/100/1000 rows per transaction**. Inherited workloads retain their own row counts and decoder/scanner units; do not apply the live-read row count to every inherited benchmark. Connection operations establish and close one connection.', '',
-              '| Benchmark | Baseline ns/op | Current ns/op | Change vs baseline | Current B/op | Current allocs/op |',
+              '| Benchmark | Baseline ns/op | Last measured ns/op | Change vs baseline | Last measured B/op | Last measured allocs/op |' if correctness else '| Benchmark | Baseline ns/op | Current ns/op | Change vs baseline | Current B/op | Current allocs/op |',
               '| --- | ---: | ---: | ---: | ---: | ---: |']
     for name in sorted(current['benchmarks'].keys() | baseline['benchmarks'].keys() | features.keys()):
         row = current['benchmarks'].get(name)

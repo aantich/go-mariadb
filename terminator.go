@@ -24,6 +24,13 @@ func (mc *mysqlConn) terminatorStatus(data []byte) (statusFlag, error) {
 		if len(data)-pos < 4 {
 			return 0, mc.protocolError()
 		}
+		if mc.capabilities&clientSessionTrack != 0 {
+			if err := mc.readSessionTail(data[pos+4:], readStatus(data[pos:])); err != nil {
+				return 0, err
+			}
+		}
+	} else if mc.capabilities&clientSessionTrack != 0 && mc.session != nil {
+		mc.session.Changes = nil // Legacy EOF has no tracking payload.
 	}
 	return readStatus(data[pos:]), nil
 }

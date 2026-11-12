@@ -1,0 +1,7 @@
+=== RUN   TestReviewDescribeBooleanConsistency
+    stage2_review_test.go:24: Describe=TINYINT, ColumnTypes=BOOLEAN, ScanType=bool
+    stage2_review_test.go:26: public metadata helpers disagree for the same configured connection and query
+--- FAIL: TestReviewDescribeBooleanConsistency (0.00s)
+FAIL
+FAIL	github.com/aantich/go-mariadb/validation	0.431s
+FAIL

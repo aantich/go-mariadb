@@ -72,6 +72,9 @@ func (rows *mysqlRows) tinyInt1IsBool(i int) bool {
 }
 
 func (rows *mysqlRows) ColumnTypeDatabaseTypeName(i int) string {
+	if rows.rs.columns[i].extended != nil {
+		return rows.rs.columns[i].databaseType()
+	}
 	if rows.tinyInt1IsBool(i) {
 		return "BOOLEAN"
 	}

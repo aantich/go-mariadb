@@ -453,7 +453,11 @@ func TestMariaDBReliability(t *testing.T) {
 // This is a desired opt-in isolation contract, not an existing database/sql
 // guarantee. Its failure is reported as a capability gap, not a regression.
 func TestMariaDBDesiredCleanPoolReset(t *testing.T) {
-	db := openDB(t, "text")
+	cfg := driverConfig(t, "text")
+	if err := cfg.Apply(mysql.WithSessionReset(mysql.SessionResetPolicy{})); err != nil {
+		t.Fatal(err)
+	}
+	db := openConfig(t, cfg)
 	db.SetMaxOpenConns(1)
 	db.SetMaxIdleConns(1)
 	conn, err := db.Conn(t.Context())

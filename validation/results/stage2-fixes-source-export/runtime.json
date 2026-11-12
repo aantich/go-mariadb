@@ -1,0 +1,9 @@
+{
+  "source": "/private/tmp/go-mariadb-stage2-fixed-export-20261112",
+  "git_executable": "/usr/bin/git",
+  "git_metadata_present": false,
+  "git_lookup_exit": 128,
+  "source_bytes_match_checkout": true,
+  "complete_correctness_checks": "pass",
+  "benchmarks_executed": false
+}

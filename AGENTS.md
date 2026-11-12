@@ -1,5 +1,19 @@
 # Current authorization, 11 November 2026
 
+Session-stage publication authorization, 12 November 2026: Anton requested
+committing and pushing the completed session foundations, all four review fixes
+and their documentation/evidence to this fork's existing `master`. This supersedes
+the stage's earlier uncommitted-only instruction for this delivery. Do not repeat
+tests or benchmarks just for publication; verify the existing source receipt.
+No package release or new performance run is authorized.
+
+Stage 2 authorization, 12 November 2026: Anton approved the session-foundations
+stage in `docs/STAGE2_SESSION_FOUNDATIONS.md`. Implement directly in this checkout
+on `master`; leave the new stage uncommitted. The live desired-clean-pool test may
+explicitly request the new opt-in policy, with an exact recorded contract migration
+and the original baseline preserved. All other frozen workload bodies stay fixed.
+Correctness only: no benchmark execution, including one-iteration smoke checks.
+
 Publication authorization, 12 November 2026: Anton requested committing and
 pushing the completed Go driver work to this fork's existing `master` branch.
 This supersedes the uncommitted-only status for this delivery. It does not

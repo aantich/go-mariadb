@@ -1,0 +1,31 @@
+{
+  "eligible_for_publication_without_race_or_real_vet_command": true,
+  "leaf_counts": {
+    "pass": 1063,
+    "skip": 8
+  },
+  "prior_passes_lost": [],
+  "commands": {
+    "correctness": [
+      "go",
+      "test",
+      "-json",
+      "-count=1",
+      "-timeout=240s",
+      "-p=1",
+      "-parallel=2",
+      "-tags=mariadb_validation",
+      "./..."
+    ],
+    "recorder": [
+      "python3",
+      "-c",
+      "pass"
+    ],
+    "vet": [
+      "go",
+      "version"
+    ]
+  },
+  "live_receipt_changed": false
+}

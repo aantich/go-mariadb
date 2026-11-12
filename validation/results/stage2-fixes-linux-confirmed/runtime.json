@@ -1,0 +1,13 @@
+{
+  "image": "go-mariadb-review:20261112",
+  "image_id": "sha256:0dc8f8292298201f3c9c9d9a3bb4a059e0d5c97d8e826b2cbfb493595cc7c41a",
+  "cpu_limit": 2,
+  "memory_limit": "4g",
+  "network": "bridge; no published ports",
+  "dependency_fetching": "GOPROXY=off",
+  "module_mounts": "Only the two declared modules and their download metadata, read-only from the host cache",
+  "repository_mount": "read-only /work",
+  "server": "isolated task-owned MariaDB 12.3.3; stopped after checks",
+  "performance_schema": true,
+  "benchmarks_executed": false
+}

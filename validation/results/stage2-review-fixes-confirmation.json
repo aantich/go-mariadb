@@ -1,0 +1,85 @@
+{
+  "date": "2026-11-12",
+  "parent_commit": "d7edf02f8eb153ed8cabcc311eb893e90fa7e11e",
+  "input_fingerprint": "8df163063b8be05a12cc41bd2430d97a1ab121d26ef1a19d4e980dca107fa80e",
+  "driver_inputs": 45,
+  "workload_inputs": 64,
+  "exact_inputs_match": true,
+  "profiles": {
+    "mac": {
+      "path": "results/stage2-fixes-mac-final/capture.json",
+      "leaf_counts": {
+        "pass": 1070,
+        "skip": 8
+      },
+      "go": "go version go1.27.4 darwin/arm64",
+      "host": "macOS-26.4-arm64-arm-64bit-Mach-O",
+      "server": "12.3.3-MariaDB-log",
+      "performance_schema": 0,
+      "server_settings_stable": true,
+      "source_stable": true,
+      "race_warnings": 0,
+      "prior_passing_leaves_lost": [],
+      "revision_provenance": {
+        "status": "available"
+      }
+    },
+    "linux": {
+      "path": "results/stage2-fixes-linux-confirmed/capture.json",
+      "leaf_counts": {
+        "pass": 1073,
+        "skip": 5
+      },
+      "go": "go version go1.27.4 linux/arm64",
+      "host": "Linux-6.10.14-linuxkit-aarch64-with-glibc2.39",
+      "server": "12.3.3-MariaDB-ubu2404",
+      "performance_schema": 1,
+      "server_settings_stable": true,
+      "source_stable": true,
+      "race_warnings": 0,
+      "prior_passing_leaves_lost": [],
+      "revision_provenance": {
+        "status": "git-unavailable"
+      }
+    },
+    "source_export": {
+      "path": "results/stage2-fixes-source-export/capture.json",
+      "leaf_counts": {
+        "pass": 1070,
+        "skip": 8
+      },
+      "go": "go version go1.27.4 darwin/arm64",
+      "host": "macOS-26.4-arm64-arm-64bit-Mach-O",
+      "server": "12.3.3-MariaDB-log",
+      "performance_schema": 0,
+      "server_settings_stable": true,
+      "source_stable": true,
+      "race_warnings": 0,
+      "prior_passing_leaves_lost": [],
+      "revision_provenance": {
+        "status": "metadata-unavailable",
+        "exit_code": 128
+      }
+    }
+  },
+  "harness_tests": 44,
+  "static_checks": {
+    "vet": "pass on all three profiles",
+    "actionlint": "pass, 1.7.12",
+    "fixed_tail_helper": "inlined; compiler-inlining.log"
+  },
+  "negative_controls": "results/stage2-fixes-controls/negative-controls.json",
+  "all_four_review_findings_fixed": true,
+  "performance_measured": false,
+  "benchmark_smoke_executed": false,
+  "historical_timing_capture_sha256": "5fa0ebf51e2ddc51b555ff1d1e5aab5e28a976247c1419f079d95c778d0e0b4c",
+  "baselines_modified": false,
+  "frozen_workload_assertions_modified": false,
+  "new_go_test_leaves": 7,
+  "new_harness_tests": 9,
+  "retained_linux_attempts": {
+    "results/stage2-fixes-linux-attempt1": "Offline image lacked dependency archives; build/infrastructure failure.",
+    "results/stage2-fixes-linux-attempt2": "Frozen TestConnectorReturnsTimeout got network unreachable without routing; rerun with prior routing profile."
+  },
+  "publication": "uncommitted; no push or release"
+}

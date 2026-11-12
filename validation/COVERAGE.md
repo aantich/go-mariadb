@@ -1,5 +1,24 @@
 # MariaDB Go coverage map
 
+**Session review corrections:** Retained/discarded extended metadata share
+attribute validation and fixed-tail checks, with prefix, duplicate/count, budget,
+EOF and malformed-stream retirement regressions. Publication tests reject
+substituted or narrowed check commands, missing server provenance, raw/summary
+mismatches and server-setting drift. Revision lookup covers absent Git and
+unavailable repository metadata. See the
+[correction record](../docs/STAGE2_REVIEW_FIXES.md) for final-source results.
+
+**Session foundations, 12 November 2026:** Opt-in reset/restoration, statement
+generations, bounded owned session observations and extended type attributes now
+have persistent mock/live coverage. Tests include real rollback/private-state
+cleanup, role-only schema access, repeated prepared reads/writes, native bulk,
+TCP/zlib/TLS/socket/X.509/legacy EOF and uncached metadata, DDL reprepare, phase
+cancellation and failed-restoration retirement. The original desired isolation
+assertion explicitly opts into managed reuse; ordinary checkout is tested
+separately. See the [current correctness and older timing sources](RESULTS.md)
+and [implementation limits](../docs/STAGE2_SESSION_FOUNDATIONS.md). No performance
+measurement was run for this stage. The following snapshots are historical.
+
 **Review corrections, 12 November 2026:** Persistent regressions now cover
 checked EOF/OK draining, malformed-row retirement, cleanup cancellation under
 a stalled peer, legacy EOF with cached metadata, bulk date parity, actual BLOB

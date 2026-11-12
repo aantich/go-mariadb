@@ -1,0 +1,24 @@
+#!/bin/sh
+set -eu
+export GO_MARIADB_ISOLATED_CI=1
+export GO_MARIADB_REQUIRE_INSTRUMENTATION=1
+export MARIADB_VALIDATION_CONFIG=/run/gomdb/config.json
+export GOCACHE=/run/gomdb/go-cache
+export GIT_CONFIG_COUNT=1
+export GIT_CONFIG_KEY_0=safe.directory
+export GIT_CONFIG_VALUE_0=/work
+python3 validation/prepare_ci.py certificates --tls-dir /run/gomdb/tls
+if [ ! -d /run/gomdb/data/mysql ]; then
+    mariadb-install-db --no-defaults --datadir=/run/gomdb/data --auth-root-authentication-method=normal --skip-test-db --user=root > /run/gomdb/install.log 2>&1
+fi
+mariadbd --no-defaults --user=root --datadir=/run/gomdb/data --socket=/run/gomdb/mysql.sock --pid-file=/run/gomdb/server.pid --port=3306 --bind-address=127.0.0.1 --max-allowed-packet=48M --local-infile=1 --innodb-buffer-pool-size=128M --performance-schema=ON --ssl-ca=/run/gomdb/tls/ca.pem --ssl-cert=/run/gomdb/tls/server-cert.pem --ssl-key=/run/gomdb/tls/server-key.pem > /run/gomdb/server.log 2>&1 &
+gomdb_ci_pid=$!
+trap 'kill "$gomdb_ci_pid" 2>/dev/null || true; wait "$gomdb_ci_pid" 2>/dev/null || true' EXIT
+for gomdb_attempt in $(seq 1 60); do
+    if mariadb-admin --no-defaults --protocol=tcp --host=127.0.0.1 --user=root --skip-ssl ping > /dev/null 2>&1; then break; fi
+    sleep 1
+done
+python3 validation/prepare_ci.py provision --tls-dir /run/gomdb/tls --output "$MARIADB_VALIDATION_CONFIG"
+go version
+mariadb --no-defaults --protocol=tcp --host=127.0.0.1 --user=root --skip-ssl -e 'SELECT VERSION(),@@performance_schema'
+python3 validation/ci.py --correctness-only --output /run/gomdb/evidence-final

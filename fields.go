@@ -148,6 +148,7 @@ type mysqlField struct {
 	fieldType fieldType
 	decimals  byte
 	charSet   uint16
+	extended  *columnExtension // Allocated only when native attributes are present.
 }
 
 func (mf *mysqlField) scanType() reflect.Type {

@@ -17,13 +17,13 @@ class CIPolicyTests(unittest.TestCase):
         issues, _ = ci.assess_tests('', 0)
         self.assertTrue(issues)
 
-    def test_required_successes_and_exact_known_gap_are_distinct(self):
+    def test_prior_gap_is_no_longer_an_allowed_failure(self):
         case = {'Package':ci.PACKAGE+'/validation', 'Test':'TestMariaDBDesiredCleanPoolReset'}
         output = events([{**case, 'Action':'output', 'Output':'GAP: pool checkout retains previous request user variables; ResetSession is liveness-only'},
                          {**case, 'Action':'fail'}, {'Package':ci.PACKAGE+'/validation', 'Action':'fail'}])
         issues, records = ci.assess_tests(output, 1)
-        self.assertEqual(issues, [])
-        self.assertEqual(records[ci.KNOWN_GAP]['status'], 'fail')
+        self.assertTrue(issues)
+        self.assertEqual(records[ci.MANAGED_SESSION_TEST]['status'], 'fail')
 
     def test_known_test_name_does_not_allow_an_unrelated_error(self):
         output = events([{'Package':ci.PACKAGE+'/validation', 'Test':'TestMariaDBDesiredCleanPoolReset', 'Action':'fail'}])

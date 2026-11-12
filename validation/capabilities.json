@@ -41,18 +41,18 @@
   },
   {
     "name": "extended type metadata",
-    "status": "UNSUPPORTED_API",
-    "evidence": "clientExtendedMetadata defined but not negotiated/parsed/exposed"
+    "status": "SUPPORTED",
+    "evidence": "Opt-in WithExtendedMetadata; real UUID/INET4/INET6/JSON attributes, Describe and ColumnTypes, caching/DDL/reset and owned bounded parsing. MariaDB 12.3 exposes VECTOR as VARBINARY without a type-name attribute."
   },
   {
     "name": "session-state observation",
-    "status": "UNSUPPORTED_API",
-    "evidence": "clientSessionTrack not negotiated; OK state-change payload not exposed"
+    "status": "SUPPORTED",
+    "evidence": "Opt-in WithSessionTracking and pinned InspectSession; bounded OK/terminator blocks and owned last-observed variables/schema, including legacy EOF, errors and reset generations."
   },
   {
     "name": "clean connection reset/restoration",
-    "status": "UNSUPPORTED_API",
-    "evidence": "ResetSession performs stale-connection checks only; desired-isolation assertion fails"
+    "status": "SUPPORTED",
+    "evidence": "Opt-in WithSessionReset and pinned ResetSession; charset/role/schema/ordered params/InitSQL restoration, rollback, private-state cleanup, lazy statement generations, cancellation and retirement. Default checkout remains liveness-only."
   },
   {
     "name": "server cursor fetch",
@@ -91,8 +91,8 @@
   },
   {
     "name": "performance_schema instrumentation",
-    "status": "ENVIRONMENT",
-    "evidence": "local service has performance_schema=OFF; do not change shared server configuration"
+    "status": "SUPPORTED",
+    "evidence": "Required real statement/thread/connection-attribute checks on isolated Linux MariaDB with performance_schema=ON. Shared Mac service stays OFF and reports a profile skip."
   },
   {
     "name": "PAM/Kerberos services",

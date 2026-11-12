@@ -84,6 +84,9 @@ func (c *connector) Connect(ctx context.Context) (driver.Conn, error) {
 	if cfg.openIDToken != "" && cfg.TLS == nil {
 		return nil, ErrOpenIDConnectTLS
 	}
+	if err := cfg.validateSessionPolicy(); err != nil {
+		return nil, err
+	}
 
 	// New mysqlConn
 	mc := &mysqlConn{
@@ -163,6 +166,11 @@ func (c *connector) Connect(ctx context.Context) (driver.Conn, error) {
 	// Establish TLS before starting the authentication plugin, so its context
 	// describes the transport that will actually carry its responses.
 	mc.initCapabilities(serverCapabilities, serverExtCapabilities)
+	if (cfg.sessionTracking && mc.capabilities&clientSessionTrack == 0) ||
+		(cfg.extendedMetadata && mc.extCapabilities&clientExtendedMetadata == 0) {
+		mc.cleanup()
+		return nil, ErrUnsupportedCapability
+	}
 	tlsEstablished := false
 	if mc.capabilities&clientSSL != 0 {
 		if err := mc.writeSSLRequestPacket(); err != nil {
@@ -245,7 +253,7 @@ func (c *connector) Connect(ctx context.Context) (driver.Conn, error) {
 	}
 
 	// Charset: character_set_connection, character_set_client, character_set_results
-	if len(mc.cfg.charsets) > 0 {
+	if len(mc.cfg.charsets) > 0 && mc.cfg.sessionReset == nil {
 		for _, cs := range mc.cfg.charsets {
 			// ignore errors here - a charset may not exist
 			if mc.cfg.Collation != "" {
@@ -264,9 +272,16 @@ func (c *connector) Connect(ctx context.Context) (driver.Conn, error) {
 	}
 
 	// Handle DSN Params
-	err = mc.handleParams()
+	if mc.cfg.sessionReset != nil {
+		err = mc.restoreManagedSession()
+	} else {
+		err = mc.handleParams()
+	}
 	if err != nil {
-		mc.Close()
+		mc.close()
+		if canceled := mc.canceled.Value(); canceled != nil {
+			return nil, canceled
+		}
 		return nil, err
 	}
 

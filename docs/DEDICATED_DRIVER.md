@@ -1,5 +1,7 @@
 # Dedicated MariaDB driver: first implementation stage
 
+**Session-foundations follow-up:** The new uncommitted [session stage](STAGE2_SESSION_FOUNDATIONS.md) implements opt-in clean reuse, session observations, native metadata and isolated instrumentation. Its latest correctness source is separated from historical timing evidence in the live report.
+
 **Publication update, 12 November 2026:** Anton approved committing and pushing
 the completed stage and review corrections to the fork's existing `master`
 branch. Historical uncommitted status below describes the earlier checkpoints.

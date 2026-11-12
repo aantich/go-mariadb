@@ -1,0 +1,26 @@
+{
+  "missing_race": {
+    "rejected": true,
+    "reason": "Required check command differs: correctness"
+  },
+  "missing_validation_tag": {
+    "rejected": true,
+    "reason": "Required check command differs: correctness"
+  },
+  "narrow_test_filter": {
+    "rejected": true,
+    "reason": "Required check command differs: correctness"
+  },
+  "substituted_policy": {
+    "rejected": true,
+    "reason": "Required check command differs: recorder"
+  },
+  "substituted_vet": {
+    "rejected": true,
+    "reason": "Required check command differs: vet"
+  },
+  "missing_server_provenance": {
+    "rejected": true,
+    "reason": "Missing or invalid server endpoint provenance."
+  }
+}

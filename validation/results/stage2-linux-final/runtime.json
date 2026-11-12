@@ -1,0 +1,19 @@
+{
+  "image": "go-mariadb-review:20261112",
+  "image_id": "sha256:0dc8f8292298201f3c9c9d9a3bb4a059e0d5c97d8e826b2cbfb493595cc7c41a",
+  "entrypoint": [
+    "sh",
+    "/run/gomdb/check.sh"
+  ],
+  "cpu_limit": 2,
+  "memory_limit": "4g",
+  "repo_mount": "read-only /work",
+  "fixture_directory": "/private/tmp/gomdb-stage2-20261112",
+  "server": "12.3.3-MariaDB-ubu2404",
+  "performance_schema": true,
+  "database_process": "disposable; stopped after validation",
+  "datadir": "task-owned; reused from initial stage-2 setup",
+  "git_binary_available": false,
+  "revision_provenance": "parent recorded in Mac receipt; identical production/workload hashes verified",
+  "benchmarks_executed": false
+}

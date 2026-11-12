@@ -1,0 +1,26 @@
+{"ImportPath":"filippo.io/edwards25519","Action":"build-output","Output":"# github.com/aantich/go-mariadb\n"}
+{"ImportPath":"filippo.io/edwards25519","Action":"build-output","Output":"auth_ed25519.go:15:2: filippo.io/edwards25519@v1.2.0: Get \"https://proxy.golang.org/filippo.io/edwards25519/@v/v1.2.0.zip\": dial tcp: lookup proxy.golang.org on 192.168.65.7:53: dial udp 192.168.65.7:53: connect: network is unreachable\n"}
+{"ImportPath":"filippo.io/edwards25519","Action":"build-fail"}
+{"Time":"2026-11-12T09:46:10.629578336Z","Action":"start","Package":"github.com/aantich/go-mariadb"}
+{"Time":"2026-11-12T09:46:10.629647669Z","Action":"output","Package":"github.com/aantich/go-mariadb","Output":"FAIL\tgithub.com/aantich/go-mariadb [setup failed]\n","OutputType":"frame"}
+{"Time":"2026-11-12T09:46:10.629653461Z","Action":"fail","Package":"github.com/aantich/go-mariadb","Elapsed":0,"FailedBuild":"filippo.io/edwards25519"}
+{"ImportPath":"filippo.io/edwards25519","Action":"build-output","Output":"# github.com/aantich/go-mariadb/validation\n"}
+{"ImportPath":"filippo.io/edwards25519","Action":"build-output","Output":"auth_ed25519.go:15:2: filippo.io/edwards25519@v1.2.0: Get \"https://proxy.golang.org/filippo.io/edwards25519/@v/v1.2.0.zip\": dial tcp: lookup proxy.golang.org on 192.168.65.7:53: dial udp 192.168.65.7:53: connect: network is unreachable\n"}
+{"ImportPath":"filippo.io/edwards25519","Action":"build-fail"}
+{"Time":"2026-11-12T09:46:10.639025669Z","Action":"start","Package":"github.com/aantich/go-mariadb/validation"}
+{"Time":"2026-11-12T09:46:10.639032836Z","Action":"output","Package":"github.com/aantich/go-mariadb/validation","Output":"FAIL\tgithub.com/aantich/go-mariadb/validation [setup failed]\n","OutputType":"frame"}
+{"Time":"2026-11-12T09:46:10.639036627Z","Action":"fail","Package":"github.com/aantich/go-mariadb/validation","Elapsed":0,"FailedBuild":"filippo.io/edwards25519"}
+{"ImportPath":"filippo.io/edwards25519","Action":"build-output","Output":"# github.com/aantich/go-mariadb/zstd\n"}
+{"ImportPath":"filippo.io/edwards25519","Action":"build-output","Output":"auth_ed25519.go:15:2: filippo.io/edwards25519@v1.2.0: Get \"https://proxy.golang.org/filippo.io/edwards25519/@v/v1.2.0.zip\": dial tcp: lookup proxy.golang.org on 192.168.65.7:53: dial udp 192.168.65.7:53: connect: network is unreachable\n"}
+{"ImportPath":"filippo.io/edwards25519","Action":"build-fail"}
+{"ImportPath":"github.com/klauspost/compress/zstd","Action":"build-output","Output":"# github.com/aantich/go-mariadb/zstd\n"}
+{"ImportPath":"github.com/klauspost/compress/zstd","Action":"build-output","Output":"zstd/zstd.go:22:2: github.com/klauspost/compress@v1.19.2: Get \"https://proxy.golang.org/github.com/klauspost/compress/@v/v1.19.2.zip\": dial tcp: lookup proxy.golang.org on 192.168.65.7:53: dial udp 192.168.65.7:53: connect: network is unreachable\n"}
+{"ImportPath":"github.com/klauspost/compress/zstd","Action":"build-fail"}
+{"Time":"2026-11-12T09:46:10.639074919Z","Action":"start","Package":"github.com/aantich/go-mariadb/zstd"}
+{"Time":"2026-11-12T09:46:10.639076752Z","Action":"output","Package":"github.com/aantich/go-mariadb/zstd","Output":"FAIL\tgithub.com/aantich/go-mariadb/zstd [setup failed]\n","OutputType":"frame"}
+{"Time":"2026-11-12T09:46:10.639078044Z","Action":"fail","Package":"github.com/aantich/go-mariadb/zstd","Elapsed":0,"FailedBuild":"filippo.io/edwards25519"}
+{"Time":"2026-11-12T09:46:10.644923002Z","Action":"start","Package":"github.com/aantich/go-mariadb/internal/compression"}
+{"Time":"2026-11-12T09:46:10.644945836Z","Action":"output","Package":"github.com/aantich/go-mariadb/internal/compression","Output":"?   \tgithub.com/aantich/go-mariadb/internal/compression\t[no test files]\n"}
+{"Time":"2026-11-12T09:46:10.644951669Z","Action":"skip","Package":"github.com/aantich/go-mariadb/internal/compression","Elapsed":0}
+go: downloading github.com/klauspost/compress v1.19.2
+go: downloading filippo.io/edwards25519 v1.2.0

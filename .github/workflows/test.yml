@@ -133,6 +133,7 @@ jobs:
         go: ['1.25', '1.26', '1.27']
     env:
       GO_MARIADB_ISOLATED_CI: '1'
+      GO_MARIADB_REQUIRE_INSTRUMENTATION: '1'
       MARIADB_VALIDATION_CONFIG: ${{ github.workspace }}/validation/.local/ci-config.json
     steps:
       - uses: actions/checkout@v7.0.1
@@ -148,13 +149,14 @@ jobs:
             innodb_buffer_pool_size=512MB
             max_allowed_packet=48MB
             local_infile=1
+            performance_schema=on
             ssl_ca=${{ runner.temp }}/go-mariadb-tls/ca.pem
             ssl_cert=${{ runner.temp }}/go-mariadb-tls/server-cert.pem
             ssl_key=${{ runner.temp }}/go-mariadb-tls/server-key.pem
       - name: Provision required isolated schemas and authentication accounts
         run: python3 validation/prepare_ci.py provision --tls-dir '${{ runner.temp }}/go-mariadb-tls'
-      - name: Require live features, tagged protocol checks, race checks and benchmark smoke
-        run: python3 validation/ci.py
+      - name: Require live features, managed sessions, instrumentation and race checks
+        run: python3 validation/ci.py --correctness-only
 
   # notifies that all test jobs are finished.
   finish:

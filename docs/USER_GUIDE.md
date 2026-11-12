@@ -188,12 +188,94 @@ Enable zlib with `cfg.Apply(mariadb.EnableCompression(true))`. Compression is a
 network/CPU tradeoff; use [measured profiles](../validation/RESULTS.md). The optional
 zstd package is retained but zstd is not negotiated by the current MariaDB runtime.
 
-Pool reuse currently checks liveness and **does not sanitize SQL session state**.
-Keep request-specific variables, temporary tables and role changes on a pinned
-connection and restore them explicitly, or close/retire that session according to
-application policy. A managed reset-and-restore API remains a documented gap;
-the original desired-clean-pool assertion remains failing rather than being
-relabelled as success.
+Ordinary pool reuse checks liveness. Enable the managed policy below when each
+borrower requires a clean session; pin a `sql.Conn` for a request that intentionally
+uses several commands with shared session state.
+
+## Clean managed reuse
+
+```go
+cfg.DBName = "app" // Required: RESET does not clear the current database.
+if err := cfg.Apply(mariadb.WithSessionReset(mariadb.SessionResetPolicy{
+    Role: "app_role", // Literal role name; omit to restore ROLE NONE.
+    InitSQL: []string{"SET @application='api'"},
+})); err != nil { return err }
+connector, err := mariadb.NewConnector(cfg)
+if err != nil { return err }
+db := sql.OpenDB(connector)
+defer db.Close()
+```
+
+Fresh managed connections initialize in the same order as reset: charset and
+collation, role, database, ordered `Config.Params`, then `InitSQL`. Use
+`cfg.Apply(mariadb.AddParam(...))` when parameter order matters. Initialization
+SQL is trusted application configuration, runs again on every checkout and should
+be idempotent. It must leave no transaction open. The role is activated before
+selecting a database whose privileges may depend on that role.
+
+Clean checkout rolls back unfinished transactions and removes user variables,
+temporary tables and server prepared statements. Existing Go statement handles
+reprepare lazily, validating their parameter count before execution. Reset adds
+round trips and reprepare work; enable it for the isolation contract you need.
+Group related commands on one pinned connection to establish a request boundary.
+
+For explicit cleanup on a managed pinned connection, first close rows and finish
+any `sql.Tx`, then call `mariadb.ResetSession(ctx, conn)`. The caller still owns
+`conn`. A reset/restoration error retires its physical connection; cancellation
+never revives it. The helper preserves the original server/context error and does
+not request automatic replay. Automatic pool checkout marks a retired connection
+with Go's `ErrBadConn` before any caller query is sent, allowing safe replacement.
+
+## Observe session changes
+
+```go
+if err := cfg.Apply(mariadb.WithSessionTracking(true)); err != nil { return err }
+if err := cfg.Apply(mariadb.AddParam("session_track_system_variables",
+    "'time_zone,sql_mode,autocommit'")); err != nil { return err }
+// Construct the connector after applying options, then borrow conn from db.
+state, err := mariadb.InspectSession(ctx, conn)
+if err != nil { return err }
+fmt.Println(state.Generation, state.ObservedSchema, state.ObservedVariables)
+```
+
+Inspect only after closing active rows, on the same pinned connection that ran
+the commands. The snapshot sends no SQL, owns its maps/bytes and includes raw
+tracking blocks for future types. These are **observations**, not a complete
+mirror of arbitrary SQL state. Changing server tracker settings can make earlier
+observations incomplete or stale. `WithSessionTrackLimit` bounds each payload and
+the retained variable dictionary (64 KiB each by default); block/name counts are
+also bounded. Malformed tracking data retires the stream.
+
+## Native column metadata
+
+```go
+if err := cfg.Apply(mariadb.WithExtendedMetadata(true)); err != nil { return err }
+// Create the connector with this configuration, then borrow conn.
+columns, err := mariadb.Describe(ctx, conn, "SELECT id, address FROM people WHERE id=?")
+if err != nil { return err }
+for _, column := range columns {
+    fmt.Println(column.Name, column.DatabaseType, column.Attributes)
+}
+```
+
+`Describe` prepares and closes a transient statement without executing it or
+binding parameters. Returned attributes are owned. Ordinary `rows.ColumnTypes()`
+also reports native names when sent by the server. Raw values and Scanner types
+retain their existing behavior. UUID, INET4, INET6 and JSON metadata are covered
+by actual table tests, including cache omission, DDL reprepare and reset.
+
+`Describe` reports the native/wire database type independently of scan options.
+For example, with `TinyInt1IsBool(true)`, a signed `TINYINT(1)` column is still
+`TINYINT` in `Describe`, while `ColumnTypes` calls it `BOOLEAN` and selects a
+boolean scan type. Use `Describe` for database type identity and `ColumnTypes`
+when choosing destinations for the configured row scanner.
+
+MariaDB 12.3 sends VECTOR as binary VARCHAR without an extended type-name
+attribute, so it is accurately reported as VARBINARY; VECTOR values still round
+trip as bytes. Use a deliberate catalog query when an application needs that
+table declaration. The driver does not infer identity from a value's length.
+An explicitly requested capability missing from the greeting returns
+`ErrUnsupportedCapability` during connection setup.
 
 ## Migration and readiness
 

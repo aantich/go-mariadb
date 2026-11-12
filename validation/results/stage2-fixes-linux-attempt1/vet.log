@@ -1,0 +1,4 @@
+go: downloading github.com/klauspost/compress v1.19.2
+go: downloading filippo.io/edwards25519 v1.2.0
+auth_ed25519.go:15:2: filippo.io/edwards25519@v1.2.0: Get "https://proxy.golang.org/filippo.io/edwards25519/@v/v1.2.0.zip": dial tcp: lookup proxy.golang.org on 192.168.65.7:53: dial udp 192.168.65.7:53: connect: network is unreachable
+zstd/zstd.go:22:2: github.com/klauspost/compress@v1.19.2: Get "https://proxy.golang.org/github.com/klauspost/compress/@v/v1.19.2.zip": dial tcp: lookup proxy.golang.org on 192.168.65.7:53: dial udp 192.168.65.7:53: connect: network is unreachable

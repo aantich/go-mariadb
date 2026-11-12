@@ -2,13 +2,64 @@
 
 ## Current dedicated driver
 
+Session foundations add opt-in clean reuse, owned bounded session observations,
+native column attributes and isolated instrumentation. Run correctness without
+executing any benchmark functions:
+
+```sh
+python3 validation/prepare_sessions.py
+GOCACHE=/private/tmp/go-mariadb-validation-20261111/go-cache python3 validation/correctness.py \
+  --output validation/results/unique-correctness-attempt --publish
+python3 validation/verify.py
+```
+
+Use a new output directory for each attempt. `--publish-existing` verifies and
+publishes an already completed exact-source receipt without repeating tests.
+The latest correctness pointer is `results/correctness-current.json`; the prior
+full timing capture stays in `results/current.json`. The generated live report
+identifies both source fingerprints, and verification checks them separately.
+No timing is claimed for a source tested only for correctness.
+
+Correctness publication verifies the exact race/tag/package scope, harness-test
+discovery and vet commands. The runner sets `GOMAXPROCS=2`, clears `GOFLAGS` and
+disables external Go workspaces for those commands; the receipt records that
+environment. Removing a check or narrowing its scope makes publication fail.
+Each receipt also retains checksummed, read-only MariaDB snapshots before and
+after the suite, queried through the configured TCP endpoint/account/schema.
+They record the actual version, instrumentation, packet/durability settings and
+probe-session SQL mode/encoding defaults; driver-specific session overrides are
+tested separately. Changed settings or missing provenance prevent publication.
+The latest-correctness section displays its own server/compiler/host profile.
+
+The read-only probe needs a `mariadb` client (`mysql` is accepted when that is
+the installed client name). Credentials are passed privately to the subprocess
+environment, never recorded in argv or results. Git revision metadata is
+optional for source exports/containers: the receipt records why it is unavailable,
+while production/workload fingerprints remain mandatory. See the
+[session review corrections](../docs/STAGE2_REVIEW_FIXES.md).
+
+The historical desired-clean-pool assertion now explicitly requests managed
+reuse; `contract-migrations.json` records that exact configuration-only change.
+All original assertions and the immutable failing baseline remain preserved.
+An independent regression verifies ordinary liveness-only checkout. CI no longer
+allows any failing assertion, including the former known gap. Current leaf
+counting excludes all ancestors even for multi-segment subtest names.
+
+The shared Mac service's performance_schema setting remains OFF. The isolated
+Linux job enables it at startup, provisions only its reserved role/accounts and
+requires actual thread, statement-history and connection-attribute observations.
+The single Mac instrumentation skip is a named profile limitation, not an API
+failure. Use `ci.py --correctness-only` for a fixture-backed run without smoke
+benchmarks; isolated provisioning additionally requires its explicit CI marker.
+
 The [review corrections](../docs/STAGE1_REVIEW_FIXES.md) add persistent protocol,
 cleanup, native bulk transport/date/fault regressions and strict benchmark
 completeness guards. The full report is generated, including its overview,
 performance signals and workload-specific units. Do not manually repair captions
 or summary numbers after each capture.
 
-The driver now has its own module/package/SQL registration. Use:
+The driver has its own module/package/SQL registration. For full comparable
+measurement only when performance runs are authorized, use:
 
 ```sh
 python3 -m unittest discover -s validation -p 'test_*.py'
@@ -19,24 +70,24 @@ python3 validation/verify.py
 `--correctness-only` runs tests/race/vet/recorder/fuzz checks without replacing
 the complete live benchmark report. `--freeze-native-baseline` is reserved for
 the first complete matched bulk capture and refuses an existing reference.
-The original baseline is immutable. Exact inverse identity substitutions verify
-original workload bodies; every original passing test remains protected.
+The original baseline is immutable. Exact inverse identity substitutions and
+the one approved contract migration verify original workload bodies; every
+original passing test remains protected.
 All tracked and untracked production Go files are fingerprinted. Native helpers
 add sixteen matched bulk profiles and independent first measurements.
 
-The original desired-default-clean-pool test still fails: reset/restoration is
-an open API gap. Full capture exit 1 honestly retains that failure. Current
-readiness is Alpha; inspect the live report rather than treating a checksum pass
-as correctness success. See [implementation](../docs/DEDICATED_DRIVER.md) and
-[user guide](../docs/USER_GUIDE.md).
+The earlier full performance capture retains its original clean-pool failure.
+The latest correctness-only receipt tests the implemented managed policy and
+requires zero failing assertions. Readiness remains Alpha; inspect both source
+fingerprints in the live report. See [session foundations](../docs/STAGE2_SESSION_FOUNDATIONS.md)
+and the [user guide](../docs/USER_GUIDE.md).
 
 The additional `mariadb-validation` CI job runs fixture-backed Linux MariaDB
 12.3 on Go 1.25/1.26/1.27. Missing live fixtures and required test skips fail the
-job. It retains the exact known clean-session failure as a warning/raw failing
-assertion; no additional failures are allowed. Hosted-runner native benchmarks
-execute all sixteen paths once as smoke checks, without publishing comparable
-timings. Local equivalent: set `MARIADB_VALIDATION_CONFIG` and run
-`python3 validation/ci.py`. Isolated Linux certificate/plugin provisioning uses
+job. No assertion failure is allowed. The feature job runs correctness only;
+the CI helper retains optional explicit smoke support for a later authorized
+measurement workflow. Local equivalent: set `MARIADB_VALIDATION_CONFIG` and run
+`python3 validation/ci.py --correctness-only`. Isolated Linux certificate/plugin provisioning uses
 `prepare_ci.py`; it must not be used to reconfigure the shared Mac service.
 
 ## Original unchanged-driver workflow (historical)

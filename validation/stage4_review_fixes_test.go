@@ -10,6 +10,7 @@ import (
 	"strings"
 	"sync"
 	"testing"
+	"time"
 
 	mariadb "github.com/aantich/go-mariadb"
 )
@@ -145,6 +146,20 @@ func TestMariaDBNativeDeferredCloseCancellation(t *testing.T) {
 		t.Fatal(err)
 	}
 	cancel()
+	// Wait for database/sql to observe cancellation before requesting Close.
+	// Otherwise Close can win its awaitDone select and legitimately leave Err
+	// nil; that tests scheduler ordering rather than cancellation retirement.
+	deadline := time.NewTimer(2 * time.Second)
+	defer deadline.Stop()
+	tick := time.NewTicker(time.Millisecond)
+	defer tick.Stop()
+	for !errors.Is(rows.Err(), context.Canceled) {
+		select {
+		case <-deadline.C:
+			t.Fatal("Rows did not observe cancellation")
+		case <-tick.C:
+		}
+	}
 	rows.Close()
 	if !errors.Is(rows.Err(), context.Canceled) {
 		t.Fatalf("Rows error=%v", rows.Err())

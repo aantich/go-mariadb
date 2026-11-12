@@ -13,7 +13,7 @@ import record
 from contracts import CHECK_ENVIRONMENT, CORRECTNESS_COMMANDS
 import provenance
 import pass_history
-from test_ci_policy import events
+from test_ci_policy import events, external_auth_receipt
 from test_provenance import sample_server
 
 
@@ -38,7 +38,7 @@ class SessionEvidenceTests(unittest.TestCase):
         capture = {'exit_code':0,'inputs_stable':True,'inputs':source,'go':'synthetic compiler','host':'synthetic host',
                 'input_fingerprint':record.digest(json.dumps(source,sort_keys=True).encode()),
                 'method':'correctness only, no benchmarks','capabilities':json.loads((record.HERE/'capabilities.json').read_text()),
-                'check_environment':dict(CHECK_ENVIRONMENT),
+                'check_environment':dict(CHECK_ENVIRONMENT), 'external_auth':external_auth_receipt(),
                 'server':{'endpoint':endpoint,'command':provenance.server_command(endpoint,'mariadb'),'before':server.copy(),'after':server.copy(),'stable':True},
                 'stages':{name:{'command':command,'exit_code':0,'issues':[],**({'cases':cases} if name=='correctness' else {})} for name,command in commands.items()},'logs':logs}
         pass_history.write_snapshot(capture,directory)

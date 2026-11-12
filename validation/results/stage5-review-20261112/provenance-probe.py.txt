@@ -1,0 +1,73 @@
+"""Review-only omission probe; run from any directory, never publishes results."""
+import copy
+import json
+from pathlib import Path
+import shutil
+import sys
+import tempfile
+
+ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(ROOT / 'validation'))
+import ci
+import correctness
+import record
+
+original = ROOT / 'validation/results/stage5-mac-ci-final'
+protected = [original / 'capture.json', original / 'correctness.log',
+             ROOT / 'validation/results/correctness-current.json',
+             ROOT / 'validation/results/current.json',
+             ROOT / 'validation/RESULTS.md']
+before = {str(path.relative_to(ROOT)): record.digest(path.read_bytes())
+          for path in protected}
+source = record.inputs()
+capture = json.loads((original / 'capture.json').read_text())
+assert capture['inputs'] == source
+changed = copy.deepcopy(capture)
+del changed['external_auth']
+
+kept = []
+removed = 0
+for line in (original / 'correctness.log').read_text().splitlines(keepends=True):
+    try:
+        event = json.loads(line)
+    except ValueError:
+        event = {}
+    if (event.get('Test') == 'TestMariaDBExternalAuthentication' and
+            'EXTERNAL_AUTH ' in event.get('Output', '')):
+        removed += 1
+    else:
+        kept.append(line)
+assert removed == 1
+output = ''.join(kept)
+issues, cases = ci.assess_tests(output, 0, changed.get('instrumentation_required', False))
+assert not issues, issues
+assert {key: case['status'] for key, case in cases.items()} == {
+    key: case['status'] for key, case in capture['stages']['correctness']['cases'].items()}
+changed['stages']['correctness']['cases'] = cases
+changed['logs']['correctness.log'] = record.digest(output.encode())
+
+with tempfile.TemporaryDirectory(prefix='go-mariadb-review-provenance-') as directory:
+    target = Path(directory)
+    for path in original.iterdir():
+        if path.is_file():
+            shutil.copy2(path, target / path.name)
+    (target / 'correctness.log').write_text(output)
+    records = correctness.validate(changed, target)
+    assert records == cases
+
+after = {str(path.relative_to(ROOT)): record.digest(path.read_bytes())
+         for path in protected}
+assert before == after
+assert record.inputs() == source
+print(json.dumps({
+    'source_fingerprint': capture['input_fingerprint'],
+    'method': 'Copy successful final receipt; remove external_auth metadata and its one raw event; '
+              'keep all test statuses, commands, source and server/prior snapshots; reconcile changed '
+              'raw-log checksum and parsed case output. Invoke real correctness.validate, never publish.',
+    'external_provenance_removed': True,
+    'raw_fixture_events_removed': removed,
+    'all_test_statuses_preserved': True,
+    'current_publisher_validation_accepted': True,
+    'live_results_or_source_changed': False,
+    'protected_files': before,
+}, indent=2))

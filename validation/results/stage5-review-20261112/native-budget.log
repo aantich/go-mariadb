@@ -1,0 +1,7 @@
+=== RUN   TestReviewCanceledNativeBudget
+    provider_test.go:172: At most one factory caller active at a time; 8 native opens still outstanding after 8 canceled callers returned
+    provider_test.go:181: caller concurrency limit of one did not bound pending native work: 8 outstanding
+--- FAIL: TestReviewCanceledNativeBudget (0.00s)
+FAIL
+FAIL	github.com/aantich/go-mariadb/gssapi	1.762s
+FAIL

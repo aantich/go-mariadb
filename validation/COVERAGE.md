@@ -1,5 +1,20 @@
 # MariaDB Go coverage map
 
+**Stage 5 authentication:** Explicit PAM prompt policies, protected transport,
+principal/mechanism pinning, mutual completion and optional native-provider
+ownership now have deterministic fault and isolated real PAM/KDC tests. Policies
+cannot be bypassed by registry overrides. Cancellation, errors, bad/missing
+credentials, downgrade rejection and repeated cleanup are covered. Native C/header
+and fixture sources are fingerprinted; fixture provenance is checked against raw
+test events. See [contracts and evidence](../docs/STAGE5_AUTHENTICATION.md).
+
+The [Stage 5 review corrections](../docs/STAGE5_REVIEW_FIXES.md) add 16 secrecy
+cases across initial/switched PAM, ERR/unknown-plugin/PEM diagnostics and callback
+error preservation. Provider tests cover shared/default/independent capacity,
+canceled waiters, blocked native open/step/cleanup and capacity recovery. Both
+current publication validators reject missing provenance metadata, events or
+both, without relying on checksum inconsistencies to detect the omission.
+
 **Stage 4 review corrections:** Old-handle close during the next borrower's active
 Rows now has live regressions in all seven transport/metadata modes, with ordinary/
 prepared/cursor reads, early close, borrowed values and same-connection reuse.
@@ -96,7 +111,7 @@ implementation is unchanged; no unsupported capability is recorded as a PASS.
 | Transactions | commit/rollback/savepoint, read-only, read committed/repeatable read/serializable | lock timeout/deadlock, disconnect around COMMIT and durable uncertainty/replay tests |
 | Ownership / cancellation | cancellation with fresh connection, early result draining, owned byte slices, bounded concurrent pool, server error number/SQLSTATE | repeated cancellation at each phase, slow cleanup and transport faults |
 | Session isolation | explicit desired clean-checkout assertion exposes retained user variable | opt-in reset, role/schema/charset/time-zone/SQL-mode restoration, temporary tables and tracker payloads |
-| Authentication / TLS | real native, ed25519, PARSEC attempt, SHA-2, Unix identity, verified TLS/X.509, bad password and bad hostname | isolated interactive PAM/GSSAPI, auth limits/deadlines, expiry/revocation/rotation and continuation fuzzing |
+| Authentication / TLS | real native, ed25519, PARSEC, SHA-2, Unix identity, verified TLS/X.509, isolated PAM dialogue/Kerberos, principal/mutual/cancellation policy, bad credentials and hostname | Windows SSPI, production PAM/realm integration, expiry/revocation/rotation and broader continuation fuzzing |
 | Bulk / cursors / progress | source-reviewed missing API inventory; existing prepared/text/LOCAL INFILE alternatives benchmarked | real APIs, correctness/fault tests and separate feature benchmarks |
 | CDC | source-reviewed absent API only | optional separately scoped binlog/GTID transaction/checkpoint package |
 | Toolchain / static | Go 1.27.4, vet, race-enabled inherited/live suite, four recorder parser tests | Go 1.25/1.26, multi-OS/architecture CI and staticcheck version profile |
@@ -105,5 +120,5 @@ implementation is unchanged; no unsupported capability is recorded as a PASS.
 The inherited saturation test intentionally tries to consume all server
 connections; it is skipped on the shared service. Its replacement here exercises
 eight workers and a four-connection pool, without claiming saturation coverage.
-performance_schema is OFF. External PAM/Kerberos services and multi-node server
+performance_schema is OFF. PAM/Kerberos services are isolated fixtures; multi-node server
 topologies are not installed. These are explicit fixture gaps, never feature PASSes.

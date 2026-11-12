@@ -1,0 +1,22 @@
+#!/bin/sh
+set -eu
+export GO_MARIADB_ISOLATED_CI=1
+export GO_MARIADB_REQUIRE_INSTRUMENTATION=1
+export MARIADB_VALIDATION_CONFIG=/run/gomdb/config-stage5.json
+export GOCACHE=/run/gomdb/go-cache
+export GOMAXPROCS=2
+export GOPROXY=off
+export GOMODCACHE=/go/pkg/mod
+export GIT_CONFIG_COUNT=1
+export GIT_CONFIG_KEY_0=safe.directory
+export GIT_CONFIG_VALUE_0=/work
+cd /work
+mariadbd --no-defaults --user=root --datadir=/run/gomdb/data --socket=/run/gomdb/mysql.sock --pid-file=/run/gomdb/server.pid --port=3306 --bind-address=127.0.0.1 --max-allowed-packet=48M --local-infile=1 --innodb-buffer-pool-size=128M --performance-schema=ON --ssl-ca=/run/gomdb/tls/ca.pem --ssl-cert=/run/gomdb/tls/server-cert.pem --ssl-key=/run/gomdb/tls/server-key.pem > /run/review/main-server.log 2>&1 &
+gomdb_stage5_server_pid=$!
+trap 'kill "$gomdb_stage5_server_pid" 2>/dev/null || true; wait "$gomdb_stage5_server_pid" 2>/dev/null || true' EXIT
+for gomdb_stage5_attempt in $(seq 1 60); do
+    if mariadb-admin --no-defaults --protocol=tcp --host=127.0.0.1 --user=root --skip-ssl ping > /dev/null 2>&1; then break; fi
+    sleep 1
+done
+python3 validation/prepare_ci.py provision --tls-dir /run/gomdb/tls --output "$MARIADB_VALIDATION_CONFIG"
+python3 validation/auth_fixture.py --local -- python3 validation/ci.py --correctness-only --output /run/review/evidence-linux-attempt2

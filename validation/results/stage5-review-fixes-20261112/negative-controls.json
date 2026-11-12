@@ -1,0 +1,56 @@
+{
+  "controls": [
+    {
+      "name": "secret-switch",
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "-count=1",
+        "-timeout=30s",
+        "-v",
+        "-run",
+        "^TestExternalAuthErrorSecrecy$",
+        "-overlay=/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage5-review-fixes-20261112/secret-switch-overlay.json",
+        "."
+      ],
+      "exit_code": 1,
+      "expected_failure_reproduced": true,
+      "log": "secret-switch-negative.log"
+    },
+    {
+      "name": "native-bound",
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "-count=1",
+        "-timeout=30s",
+        "-v",
+        "-run",
+        "^TestProviderAdmission$",
+        "-overlay=/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage5-review-fixes-20261112/native-bound-overlay.json",
+        "./gssapi"
+      ],
+      "exit_code": 1,
+      "expected_failure_reproduced": true,
+      "log": "native-bound-negative.log"
+    },
+    {
+      "name": "provenance-omission",
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "-v",
+        "test_stage5_auth.ExternalAuthTests.test_publication_rejects_omitted_metadata_event_or_both"
+      ],
+      "exit_code": 1,
+      "expected_failure_reproduced": true,
+      "log": "provenance-omission-negative.log",
+      "method": "Temporary module override restores only the absence exemption; both real publication validators then accept omitted provenance."
+    }
+  ],
+  "production_inputs_changed": false,
+  "benchmark_functions_executed": false
+}

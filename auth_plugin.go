@@ -13,7 +13,7 @@ import (
 	"sync"
 )
 
-// AuthPlugin represents an authentication plugin for MySQL/MariaDB.
+// AuthPlugin represents a MariaDB client authentication plugin.
 // The driver creates an instance for each authentication exchange and calls its
 // methods sequentially. ctx is the connection's context and may be canceled
 // while a method is running. Plugins should use it to cancel blocking work.
@@ -34,6 +34,28 @@ type AuthPlugin interface {
 	// empty response sends an empty packet. An error aborts authentication.
 	// Only a server OK packet completes authentication successfully.
 	ContinuationAuth(ctx context.Context, packet, authData []byte, auth *AuthContext) (nextPacket []byte, err error)
+}
+
+// AuthPluginCloser optionally releases resources owned by an authentication
+// exchange. Close is called exactly once after success, failure or a switch to
+// another plugin, including an InitAuth failure. It must be idempotent and must
+// not block waiting for network/provider work; canceled work may finish cleanup
+// asynchronously, without access to the SQL connection.
+type AuthPluginCloser interface {
+	Close() error
+}
+
+// AuthPluginValidator optionally requires local protocol completion before a
+// server OK can authenticate the connection. It must not send data. This matters
+// for mutual authentication: a server OK alone does not validate its identity.
+type AuthPluginValidator interface {
+	ValidateAuth() error
+}
+
+func closeAuthPlugin(plugin AuthPlugin) {
+	if closer, ok := plugin.(AuthPluginCloser); ok {
+		_ = closer.Close()
+	}
 }
 
 // simpleAuth provides the default continuation behavior for authentication

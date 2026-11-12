@@ -89,6 +89,8 @@ type Config struct {
 	receiveLimit      int
 	columnLimit       int
 	authLimit         int
+	pamDialog         *PAMDialogConfig
+	gssapi            *GSSAPIConfig
 	metadataByteLimit int
 	tinyInt1IsBool    bool // Treat signed TINYINT(1) as boolean
 
@@ -228,6 +230,14 @@ func (cfg *Config) Clone() *Config {
 	}
 	cp.paramOrder = slices.Clone(cfg.paramOrder)
 	cp.charsets = slices.Clone(cfg.charsets)
+	if cfg.pamDialog != nil {
+		policy := *cfg.pamDialog
+		cp.pamDialog = &policy
+	}
+	if cfg.gssapi != nil {
+		policy := *cfg.gssapi
+		cp.gssapi = &policy
+	}
 	if cfg.sessionReset != nil {
 		policy := *cfg.sessionReset
 		policy.InitSQL = slices.Clone(policy.InitSQL)

@@ -1,0 +1,182 @@
+// Copyright 2026 Anton Antich. SPDX-License-Identifier: MPL-2.0
+
+package gssapi
+
+import (
+	"context"
+	"errors"
+	"sync/atomic"
+	"testing"
+	"time"
+
+	mariadb "github.com/aantich/go-mariadb"
+)
+
+type fakeNative struct {
+	run    func([]byte) ([]byte, bool, error)
+	closed atomic.Int32
+}
+
+func (n *fakeNative) step(token []byte) ([]byte, bool, error) { return n.run(token) }
+func (n *fakeNative) close()                                  { n.closed.Add(1) }
+
+func waitDone(t *testing.T, c *client, state *fakeNative) {
+	t.Helper()
+	select {
+	case <-c.done:
+	case <-time.After(2 * time.Second):
+		t.Fatal("native worker leaked")
+	}
+	if state.closed.Load() != 1 {
+		t.Fatal("native resources not released exactly once")
+	}
+}
+
+func TestProviderCancellation(t *testing.T) {
+	for _, phase := range []string{"open", "step", "close during step", "provider error"} {
+		t.Run(phase, func(t *testing.T) {
+			entered, release := make(chan struct{}), make(chan struct{})
+			ctx, cancel := context.WithCancel(t.Context())
+			defer cancel()
+			marker := errors.New("provider failed")
+			state := &fakeNative{run: func(token []byte) ([]byte, bool, error) {
+				if phase == "provider error" {
+					return nil, false, marker
+				}
+				close(entered)
+				<-release
+				if len(token) > 0 && string(token) != "input" {
+					t.Error("canceled caller overwrote native input")
+				}
+				return []byte("ticket"), true, nil
+			}}
+			open := func(mariadb.GSSAPIRequest) (nativeContext, error) {
+				if phase == "open" {
+					close(entered)
+					<-release
+				}
+				return state, nil
+			}
+			if phase == "open" {
+				returned := make(chan error, 1)
+				go func() {
+					_, err := newClient(ctx, mariadb.GSSAPIRequest{ServicePrincipal: "service"}, open)
+					returned <- err
+				}()
+				<-entered
+				cancel()
+				select {
+				case err := <-returned:
+					if !errors.Is(err, context.Canceled) {
+						t.Fatal(err)
+					}
+				case <-time.After(time.Second):
+					t.Fatal("open cancellation blocked on native work")
+				}
+				close(release)
+				deadline := time.After(2 * time.Second)
+				for state.closed.Load() != 1 {
+					select {
+					case <-deadline:
+						t.Fatal("canceled open leaked resources")
+					default:
+						time.Sleep(time.Millisecond)
+					}
+				}
+				return
+			}
+			provider, err := newClient(ctx, mariadb.GSSAPIRequest{ServicePrincipal: "service"}, open)
+			if err != nil {
+				t.Fatal(err)
+			}
+			c := provider.(*client)
+			if phase == "provider error" {
+				if _, _, err := c.Step(ctx, nil); !errors.Is(err, marker) {
+					t.Fatal(err)
+				}
+				_ = c.Close()
+				waitDone(t, c, state)
+				return
+			}
+			token := []byte("input")
+			returned := make(chan error, 1)
+			go func() { _, _, err := c.Step(ctx, token); returned <- err }()
+			<-entered
+			if phase == "close during step" {
+				_ = c.Close()
+			} else {
+				cancel()
+			}
+			select {
+			case err := <-returned:
+				if phase != "close during step" && !errors.Is(err, context.Canceled) {
+					t.Fatal(err)
+				}
+			case <-time.After(time.Second):
+				t.Fatal("step cancellation blocked on native work")
+			}
+			copy(token, "other")
+			close(release)
+			_ = c.Close()
+			_ = c.Close()
+			waitDone(t, c, state)
+			if _, _, err := c.Step(t.Context(), nil); err == nil {
+				t.Fatal("closed provider accepted step")
+			}
+		})
+	}
+}
+
+func TestProviderOpenFailure(t *testing.T) {
+	state := &fakeNative{}
+	marker := errors.New("open failed")
+	_, err := newClient(t.Context(), mariadb.GSSAPIRequest{ServicePrincipal: "service"}, func(mariadb.GSSAPIRequest) (nativeContext, error) { return state, marker })
+	if !errors.Is(err, marker) {
+		t.Fatal(err)
+	}
+	deadline := time.After(2 * time.Second)
+	for state.closed.Load() != 1 {
+		select {
+		case <-deadline:
+			t.Fatal("failed open leaked")
+		default:
+			time.Sleep(time.Millisecond)
+		}
+	}
+}
+
+
+// Review-only regression: sequential canceled callers must not accumulate
+// an unbounded number of still-running native opens.
+func TestReviewCanceledNativeBudget(t *testing.T) {
+    release:=make(chan struct{})
+    defer func(){select{case <-release:default:close(release)}}()
+    var states []*fakeNative
+    const attempts=8
+    for range attempts {
+        state:=&fakeNative{}
+        states=append(states,state)
+        entered:=make(chan struct{})
+        returned:=make(chan error,1)
+        ctx,cancel:=context.WithCancel(t.Context())
+        go func(){
+            _,err:=newClient(ctx,mariadb.GSSAPIRequest{ServicePrincipal:"mariadb/host@REALM"},func(mariadb.GSSAPIRequest)(nativeContext,error){close(entered);<-release;return state,nil})
+            returned<-err
+        }()
+        <-entered
+        cancel()
+        select{case err:=<-returned:if !errors.Is(err,context.Canceled){t.Fatal(err)};case <-time.After(time.Second):t.Fatal("canceled caller did not return")}
+    }
+    outstanding:=0
+    for _,state:=range states{if state.closed.Load()==0{outstanding++}}
+    t.Logf("At most one factory caller active at a time; %d native opens still outstanding after %d canceled callers returned",outstanding,attempts)
+    close(release)
+    deadline:=time.After(2*time.Second)
+    for {
+        closed:=0
+        for _,state:=range states{closed+=int(state.closed.Load())}
+        if closed==attempts{break}
+        select{case <-deadline:t.Fatal("eventual cleanup failed");default:time.Sleep(time.Millisecond)}
+    }
+    if outstanding>1{t.Errorf("caller concurrency limit of one did not bound pending native work: %d outstanding",outstanding)}
+}

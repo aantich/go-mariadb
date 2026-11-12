@@ -2,10 +2,26 @@
 import json
 import unittest
 import ci
+import record
+
+
+def external_auth_receipt():
+    """Explicit synthetic provenance for verifier tests; never a measured receipt."""
+    source = record.inputs()
+    return {'contract':'external-auth-v1', 'runtime_identity':'docker-runtime-sha256:'+'a'*64,
+            'server_version':'12.3.3-MariaDB', 'realm':'GO-MARIADB.TEST',
+            'service_principal':'mariadb/localhost@GO-MARIADB.TEST', 'tls_certificate_sha256':'b'*64,
+            'fixture_inputs':{name:source['workload']['validation/auth_fixture/'+name]
+                              for name in ('Dockerfile','serve.py','pam_fixture.c')}}
+
+
+def external_auth_event():
+    return {'Package':ci.PACKAGE+'/validation', 'Test':'TestMariaDBExternalAuthentication',
+            'Action':'output', 'Output':'EXTERNAL_AUTH '+json.dumps(external_auth_receipt())+'\n'}
 
 
 def events(extra=()):
-    records = []
+    records = [external_auth_event()]
     for name in ci.REQUIRED:
         package, _, test = name.rpartition('/Test')
         records.append({'Package':package, 'Test':'Test'+test, 'Action':'pass'})

@@ -1,0 +1,7 @@
+{
+  "auth_first": "PAM empty initial switch was rejected; GSSAPI already passed. Corrected before full captures.",
+  "linux_attempt1": "Private fixture directory was under a read-only source mount; no Go suite ran. Corrected to writable container temporary storage.",
+  "linux_attempt2": "Inherited route expectation and Close/cancellation scheduling race failed. The old collector then crashed on int(nonempty_list), leaving raw logs but no complete receipt. All corrected.",
+  "mac_attempt3": "Go/race/vet passed; a new synthetic Python mock did not isolate platform.platform from its subprocess mock on macOS. Corrected; final Mac and Linux receipts pass.",
+  "negative_control_first_overlay": "Initial principal control did not compile due to an unused variable; its build error is retained. Both corrected overlays fail assertions as intended."
+}

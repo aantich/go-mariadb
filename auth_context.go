@@ -21,6 +21,9 @@ type AuthContext struct {
 	password        string
 	tls             bool
 	unixSocket      bool
+	verifiedTLS     bool
+	pamDialog       *PAMDialogConfig
+	gssapi          *GSSAPIConfig
 	serverPublicKey *rsa.PublicKey
 }
 
@@ -32,6 +35,9 @@ func newAuthContext(cfg *Config, password string, tlsEstablished bool) *AuthCont
 		password:        password,
 		tls:             tlsEstablished,
 		unixSocket:      cfg.Net == "unix",
+		verifiedTLS:     tlsEstablished && cfg.TLS != nil && !cfg.TLS.InsecureSkipVerify,
+		pamDialog:       cfg.pamDialog,
+		gssapi:          cfg.gssapi,
 		serverPublicKey: cfg.pubKey,
 	}
 	auth.serverPublicKey = auth.ServerPublicKey()

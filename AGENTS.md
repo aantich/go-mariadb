@@ -1,5 +1,71 @@
 # Current authorization, 12 November 2026
 
+Stage 5 publication authorization, later on 12 November: Anton requested commit
+and push of the full current Go driver work to the fork's existing `master`,
+including Stage 5, its three review corrections, measurement-preparation docs
+and saved evidence. This supersedes earlier uncommitted-only instructions for
+this delivery. Verify the completed source/artifact receipts; do not repeat
+tests or benchmarks for publication. No package release is authorized. The
+benchmark/profiling restriction remains in force. Historical receipt statements
+describe their original capture context. The next functional-stage proposal is
+optional transaction-aware MariaDB CDC/GTID streaming; implementation requires
+a later instruction to proceed.
+
+Stage 5 review corrections completed: `docs/STAGE5_REVIEW_FIXES.md` and
+`validation/results/stage5-review-fixes-confirmation.json` record all three fixes.
+Final source `9d7c4b8c…29da7807` has 1,398 Mac / 1,401 Linux PASS, zero failures,
+8/5 skips, all 1,377/1,380 earlier passes preserved and 21 new leaves per profile.
+Race/vet/77 harness checks pass on both platforms. Three valid defect-restoration
+controls fail the intended regressions; CGO-disabled checks and Windows fallback
+cross-compilation pass. Live correctness is updated, timing/reference bytes are
+unchanged and owned containers/caches are removed. No benchmarks, smoke/profile
+workloads, commit, push or release occurred. Keep all changes uncommitted.
+
+Stage 5 correction authorization, later on 12 November: Anton requested fixing
+all three review findings. Implement permanent regressions, confirm correctness,
+race/static/harness checks on Mac and the disposable Linux profile, preserve
+all historical receipts/timings and update the live correctness report. Work
+on existing `master` and leave changes uncommitted. No benchmark, smoke or
+profiling workload, commit, push or release is authorized.
+
+Stage 5 review, later on 12 November: Anton requested a review pass. See
+`docs/STAGE5_CODE_REVIEW.md` and `validation/results/stage5-review-20261112`.
+Three P2 findings are pending: external-auth error secrecy after plugin switches,
+unbounded native work after caller cancellation despite SQL pool limits, and
+acceptance of missing external-auth provenance in current receipts. Two Go
+overlay probes fail their new assertions under race detection; the real current
+correctness validator accepts the provenance omission. Existing focused auth
+tests, 75 harness tests and freshness checks pass. No production/permanent-test
+fixes or benchmark/profile workloads were made. Preserve the earlier complete
+green receipts as recorded coverage, not coverage of these new counterexamples.
+Keep all work uncommitted on `master`; no commit, push or release is authorized.
+
+Stage 5 authorization, later on 12 November: Anton requested implementing the
+next functional stage and deferring benchmarks. Implement opt-in interactive
+PAM and principal-pinned GSSAPI with isolated real fixtures, public documentation
+and correctness/race/static checks only. Preserve the Stage 4 preparation changes,
+all historical timing samples and references. Work on existing `master`; leave
+changes uncommitted. Do not run benchmark, smoke or profiling workloads.
+
+Stage 5 final receipt: `docs/STAGE5_AUTHENTICATION.md` and
+`validation/results/stage5-confirmation.json`. Fingerprint `c65a2f7f…e652171a`
+matches 60 production/module/native and 93 workload/CI/fixture inputs on both
+platforms: 1,377 Mac / 1,380 Linux PASS, zero failures, 8/5 named skips, race/vet
+and 75 harness checks passing. All 1,304/1,307 Stage 4 passes are preserved,
+with 73 added leaves per profile. Real PAM/Kerberos, native context cleanup,
+permission/downgrade guards and failed-receipt retention are tested. Two valid
+defect-restoration overlays fail their security regressions. CGO-disabled tests
+and Windows fallback cross-compilation pass; Windows SSPI/NTLM is not implemented.
+Earlier fixture/mock failures remain retained. No benchmarks/profiling ran;
+timing pointers/references remain unchanged. Keep everything uncommitted.
+
+Measurement preparation, later on 12 November: Anton requested proceeding with
+the next stage, then explicitly selected "Continue preparation only; no benchmarks
+yet". Prepare the runbook and read-only readiness evidence only. Do not execute
+benchmark functions, one-iteration smoke runs or CPU/allocation profiling. No new
+commit, push or release is requested. Preserve all live results and references.
+See `docs/STAGE4_MEASUREMENT_PLAN.md` before the later authorized measurement.
+
 Stage 4 publication authorization, later on 12 November: Anton requested commit
 and push of the complete Stage 4 implementation, all four review corrections,
 documentation and saved evidence to the fork's existing `master`. This supersedes

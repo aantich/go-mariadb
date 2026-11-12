@@ -1,0 +1,194 @@
+// Copyright 2026 Anton Antich. SPDX-License-Identifier: MPL-2.0
+
+// Package gssapi provides MariaDB's optional native Kerberos initiator. Importing
+// the core driver alone does not link GSSAPI. macOS uses the GSS framework;
+// Linux requires libkrb5-dev (headers and libgssapi_krb5) and cgo. Other builds
+// return ErrUnavailable. Credentials come from the OS Kerberos credential cache;
+// the provider never reads a SQL password or requests credential delegation.
+package gssapi
+
+import (
+	"context"
+	"errors"
+	"strings"
+	"sync"
+	"unicode/utf8"
+
+	mariadb "github.com/aantich/go-mariadb"
+)
+
+// ErrUnavailable means this build has no supported native GSSAPI provider.
+var ErrUnavailable = errors.New("mariadb/gssapi: native provider requires cgo on macOS or Linux")
+
+type nativeContext interface {
+	step([]byte) ([]byte, bool, error)
+	close()
+}
+
+type result struct {
+	token    []byte
+	complete bool
+	err      error
+}
+
+type request struct {
+	token []byte
+	reply chan result
+}
+
+type client struct {
+	requests chan request
+	stop     chan struct{}
+	done     chan struct{}
+	once     sync.Once
+}
+
+// DefaultMaxContexts bounds native contexts shared by calls to NewClient.
+// The bound includes canceled calls until their native cleanup has finished.
+const DefaultMaxContexts = 32
+
+// Provider bounds the native contexts created by its NewClient method. Share
+// one Provider across connectors that should use the same capacity budget.
+// A context occupies capacity from its first native call through final cleanup,
+// including any native work that outlives a canceled SQL connection attempt.
+// Use NewProvider to construct it; the zero value cannot create clients.
+type Provider struct {
+	slots chan struct{}
+}
+
+// NewProvider creates an independent native-context budget. maxContexts must be
+// positive. Waiting for capacity honors the connection context without starting
+// another worker. The returned provider is safe for concurrent use; do not create
+// a new provider for every connection, since that would bypass the shared bound.
+func NewProvider(maxContexts int) (*Provider, error) {
+	if maxContexts <= 0 {
+		return nil, errors.New("mariadb/gssapi: maxContexts must be positive")
+	}
+	return &Provider{slots: make(chan struct{}, maxContexts)}, nil
+}
+
+var defaultProvider = &Provider{slots: make(chan struct{}, DefaultMaxContexts)}
+
+// NewClient is a GSSAPIConfig.NewClient factory. A dedicated worker exclusively
+// owns each native context. Cancellation returns promptly even if a native
+// credential/KDC call is still running; that worker later releases its resources
+// and has no access to the SQL transport. Native retry duration is controlled by
+// the OS Kerberos configuration. All calls share DefaultMaxContexts capacity,
+// retained until each worker has finished cleanup. database/sql's MaxOpenConns
+// alone cannot bound work left by canceled connection attempts. Use a shared
+// Provider.NewClient when an independent or differently sized budget is needed.
+func NewClient(ctx context.Context, policy mariadb.GSSAPIRequest) (mariadb.GSSAPIClient, error) {
+	return newClient(ctx, policy, openNative)
+}
+
+// NewClient implements GSSAPIConfig.NewClient using this provider's capacity.
+// Close each returned client after authentication; capacity is released only
+// after the worker's native resources have actually been freed.
+func (p *Provider) NewClient(ctx context.Context, policy mariadb.GSSAPIRequest) (mariadb.GSSAPIClient, error) {
+	return p.newClient(ctx, policy, openNative)
+}
+
+func newClient(ctx context.Context, policy mariadb.GSSAPIRequest, open func(mariadb.GSSAPIRequest) (nativeContext, error)) (mariadb.GSSAPIClient, error) {
+	return defaultProvider.newClient(ctx, policy, open)
+}
+
+func (p *Provider) newClient(ctx context.Context, policy mariadb.GSSAPIRequest, open func(mariadb.GSSAPIRequest) (nativeContext, error)) (mariadb.GSSAPIClient, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	if len(policy.ServicePrincipal) == 0 || len(policy.ServicePrincipal) > 1024 ||
+		!utf8.ValidString(policy.ServicePrincipal) || strings.ContainsRune(policy.ServicePrincipal, 0) {
+		return nil, mariadb.ErrGSSAPIPolicy
+	}
+	if p == nil || p.slots == nil {
+		return nil, mariadb.ErrGSSAPIPolicy
+	}
+	c := &client{requests: make(chan request), stop: make(chan struct{}), done: make(chan struct{})}
+	ready := make(chan error, 1)
+	go func() {
+		defer close(c.done)
+		state, err := open(policy)
+		if state != nil {
+			defer state.close()
+		}
+		ready <- err
+		if err != nil {
+			return
+		}
+		for {
+			select {
+			case <-c.stop:
+				return
+			case work := <-c.requests:
+				select {
+				case <-c.stop:
+					return
+				default:
+				}
+				token, complete, err := state.step(work.token)
+				work.reply <- result{token, complete, err} // Buffered; caller may be canceled.
+				if err != nil {
+					return
+				}
+			}
+		}
+	}()
+	select {
+	case err := <-ready:
+		if err != nil {
+			_ = c.Close()
+			return nil, err
+		}
+		if err := ctx.Err(); err != nil {
+			_ = c.Close()
+			return nil, err
+		}
+		return c, nil
+	case <-ctx.Done():
+		_ = c.Close()
+		return nil, ctx.Err()
+	}
+}
+
+func (c *client) Step(ctx context.Context, token []byte) ([]byte, bool, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, false, err
+	}
+	if len(token) > 1<<20 {
+		return nil, false, mariadb.ErrGSSAPIPolicy
+	}
+	select {
+	case <-c.stop:
+		return nil, false, mariadb.ErrGSSAPIPolicy
+	default:
+	}
+	// The worker can outlive this call. Its owned input must not alias caller
+	// storage that can be reused once cancellation returns.
+	work := request{token: append([]byte(nil), token...), reply: make(chan result, 1)}
+	select {
+	case <-ctx.Done():
+		return nil, false, ctx.Err()
+	case <-c.stop:
+		return nil, false, mariadb.ErrGSSAPIPolicy
+	case <-c.done:
+		return nil, false, mariadb.ErrGSSAPIPolicy
+	case c.requests <- work:
+	}
+	select {
+	case reply := <-work.reply:
+		if err := ctx.Err(); err != nil {
+			return nil, false, err
+		}
+		return reply.token, reply.complete, reply.err
+	case <-ctx.Done():
+		_ = c.Close()
+		return nil, false, ctx.Err()
+	case <-c.stop:
+		return nil, false, mariadb.ErrGSSAPIPolicy
+	}
+}
+
+func (c *client) Close() error {
+	c.once.Do(func() { close(c.stop) })
+	return nil
+}

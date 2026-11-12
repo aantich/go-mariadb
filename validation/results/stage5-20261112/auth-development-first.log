@@ -1,0 +1,37 @@
+--- FAIL: TestMariaDBExternalAuthentication (0.15s)
+    --- FAIL: TestMariaDBExternalAuthentication/PAM/password (0.03s)
+        stage5_auth_test.go:115: query=0 calls=0 error=malformed packet
+    --- FAIL: TestMariaDBExternalAuthentication/PAM/multiple (0.01s)
+        stage5_auth_test.go:115: query=0 calls=0 error=malformed packet
+    --- FAIL: TestMariaDBExternalAuthentication/PAM/callback_error (0.00s)
+        stage5_auth_test.go:125: malformed packet
+    --- FAIL: TestMariaDBExternalAuthentication/PAM/cancellation (0.01s)
+        stage5_auth_test.go:128: malformed packet
+FAIL
+FAIL	github.com/aantich/go-mariadb/validation	0.517s
+ok  	github.com/aantich/go-mariadb/gssapi	1.578s
+FAIL
+Initializing database '/fixture/principal' for realm 'GO-MARIADB.TEST',
+master key name 'K/M@GO-MARIADB.TEST'
+No policy specified for mariadb/localhost@GO-MARIADB.TEST; defaulting to no policy
+Authenticating as principal root/admin@GO-MARIADB.TEST with password.
+Principal "mariadb/localhost@GO-MARIADB.TEST" created.
+No policy specified for driver@GO-MARIADB.TEST; defaulting to no policy
+Authenticating as principal root/admin@GO-MARIADB.TEST with password.
+Principal "driver@GO-MARIADB.TEST" created.
+No policy specified for other@GO-MARIADB.TEST; defaulting to no policy
+Authenticating as principal root/admin@GO-MARIADB.TEST with password.
+Principal "other@GO-MARIADB.TEST" created.
+Authenticating as principal root/admin@GO-MARIADB.TEST with password.
+Entry for principal mariadb/localhost@GO-MARIADB.TEST with kvno 2, encryption type aes256-cts-hmac-sha1-96 added to keytab WRFILE:/fixture/server.keytab.
+Entry for principal mariadb/localhost@GO-MARIADB.TEST with kvno 2, encryption type aes128-cts-hmac-sha1-96 added to keytab WRFILE:/fixture/server.keytab.
+Authenticating as principal root/admin@GO-MARIADB.TEST with password.
+Entry for principal driver@GO-MARIADB.TEST with kvno 2, encryption type aes256-cts-hmac-sha1-96 added to keytab WRFILE:/fixture/driver.keytab.
+Entry for principal driver@GO-MARIADB.TEST with kvno 2, encryption type aes128-cts-hmac-sha1-96 added to keytab WRFILE:/fixture/driver.keytab.
+Authenticating as principal root/admin@GO-MARIADB.TEST with password.
+Entry for principal other@GO-MARIADB.TEST with kvno 2, encryption type aes256-cts-hmac-sha1-96 added to keytab WRFILE:/fixture/other.keytab.
+Entry for principal other@GO-MARIADB.TEST with kvno 2, encryption type aes128-cts-hmac-sha1-96 added to keytab WRFILE:/fixture/other.keytab.
+2026-11-12 18:10:11 0 [Warning] mariadbd: io_uring_queue_init() failed with EPERM: sysctl kernel.io_uring_disabled has the value 2, or 1 and the user of the process is not a member of sysctl kernel.io_uring_group. (see man 2 io_uring_setup).
+create_uring failed: falling back to libaio
+mariadb/localhost@GO-MARIADB.TEST: kvno = 2
+mariadb/localhost@GO-MARIADB.TEST: kvno = 2

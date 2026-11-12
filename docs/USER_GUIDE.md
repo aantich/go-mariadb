@@ -92,9 +92,128 @@ server-side and supply its password normally. PARSEC validates the binary
 challenge, algorithm and salt length and rejects factors above 10 (1,048,576
 PBKDF2 rounds). Key material is cleared after signing; the KDF is bounded but
 cannot be interrupted halfway through a single derivation. Context cancellation
-is checked before and after it. PAM dialogues and GSSAPI are not implemented in
-this stage. Protocol names such as `mysql_native_password` remain valid MariaDB
+is checked before and after it. Protocol names such as `mysql_native_password` remain valid MariaDB
 authentication names.
+
+### Interactive PAM
+
+MariaDB PAM accounts use the `dialog` client plugin. Enable it per connector with
+`WithPAMDialog`; it is disabled by default and has no automatic terminal reader.
+Use verified TLS as configured above, or a Unix socket. An encrypted connection
+with `InsecureSkipVerify=true` is rejected by this policy. The independent legacy
+`AllowCleartextPasswords` setting does not enable PAM dialogues.
+
+Using the TLS-configured `cfg` from above, recognize the exact prompts configured
+by your administrator and supply each response explicitly:
+
+```go
+err := cfg.Apply(mariadb.WithPAMDialog(mariadb.PAMDialogConfig{
+    MaxPrompts: 2,
+    Prompt: func(ctx context.Context, p mariadb.PAMPrompt) (string, error) {
+        if err := ctx.Err(); err != nil {
+            return "", err
+        }
+        switch {
+        case p.Number == 1 && !p.Echo && p.Text == "Password:":
+            return os.Getenv("DB_PAM_PASSWORD"), nil
+        case p.Number == 2 && p.Text == "Verification code:":
+            return os.Getenv("DB_PAM_CODE"), nil
+        default:
+            return "", errors.New("unrecognized PAM question")
+        }
+    },
+}))
+if err != nil {
+    return err
+}
+connector, err := mariadb.NewConnector(cfg)
+if err != nil {
+    return err
+}
+db := sql.OpenDB(connector)
+defer db.Close()
+ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+defer cancel()
+return db.PingContext(ctx)
+```
+
+This example requires `context`, `database/sql`, `errors`, `os`, `time` and the
+driver imports. Adapt prompt text to your PAM stack. A real one-time-code provider
+must obtain a fresh value for each connection rather than reuse the environment
+variable shown here. The callback may run concurrently on different connections,
+must honor its context while waiting for input, and must never log responses.
+`PAMPrompt.Text` is untrusted server text; `Last` is a hint, not proof of success.
+Prompts/responses are capped at 64 KiB and responses cannot contain NUL. The
+default prompt budget is eight, with a maximum of 64. A server may switch before
+its first question; the driver acknowledges that empty switch without calling
+your handler. Only a subsequent valid server OK completes authentication.
+
+### Kerberos GSSAPI
+
+The core driver defines the policy/provider interface without linking native
+libraries. The optional provider import is:
+
+```go
+import "github.com/aantich/go-mariadb/gssapi"
+
+// cfg contains the SQL username, address, database and verified TLS settings.
+err := cfg.Apply(mariadb.WithGSSAPI(mariadb.GSSAPIConfig{
+    ServicePrincipal: "mariadb/db.example.org@EXAMPLE.ORG",
+    NewClient: gssapi.NewClient,
+}))
+```
+
+Check `err`, then create the connector and use a bounded PingContext as above.
+Acquire Kerberos credentials through your OS's normal `kinit`/credential-cache
+workflow. The SQL password is not used. The exact expected service principal is
+required before acquiring credentials; hostname discovery from the server's
+challenge is deliberately absent. Configuring GSSAPI also requires this method:
+password-only success and switches to another plugin are rejected. The initial
+default-plugin handshake sends no password proof.
+
+The native provider requires cgo and either the macOS GSS framework or Linux
+GSSAPI headers/runtime (`libkrb5-dev` on Debian/Ubuntu). Building an application
+that imports only the core driver adds no native dependency. Unsupported platforms
+or cgo-disabled builds of the optional provider return `gssapi.ErrUnavailable`.
+Windows SSPI/NTLM is not implemented. `AllowSPNEGO` is opt-in and retains a
+Kerberos-only credential policy; credential delegation is never requested.
+
+The exchange requires mutual authentication before accepting SQL OK, limits
+tokens to 1 MiB and defaults to 16 provider steps (maximum 64). GSSAPI verifies
+identity; it does not encrypt subsequent SQL, so configure TLS for confidentiality.
+This provider does not supply GSS channel bindings. Authentication errors retain
+server code/SQLSTATE but suppress server text that could echo credentials. This
+protection remains in force across later authentication-plugin switches and
+also suppresses peer-controlled plugin names and public-key diagnostic text.
+Errors returned by application callbacks/providers retain their original identity.
+
+Cancellation stops SQL authentication promptly. Native credential/KDC work already
+in progress may finish later under the OS's retry policy; one worker exclusively
+owns and eventually releases that context, without access to the SQL socket.
+`gssapi.NewClient` shares a default bound of **32 native contexts** across the
+process, including canceled calls whose native cleanup is still running. Waiting
+for capacity honors the connection context and starts no native worker. SQL
+pool limits remain useful, but do not bound work left behind by canceled connects.
+To choose an independent capacity budget, create a provider once and share it
+across the relevant connectors:
+
+```go
+provider, err := gssapi.NewProvider(16)
+if err != nil { return err }
+err = cfg.Apply(mariadb.WithGSSAPI(mariadb.GSSAPIConfig{
+    ServicePrincipal: "mariadb/db.example.org@EXAMPLE.ORG",
+    NewClient: provider.NewClient,
+}))
+```
+
+Do not construct a provider per connection: each provider has an independent
+budget. A returned native client holds its slot until Close and actual cleanup;
+the core driver closes it after each authentication exchange. Applications
+supplying a custom provider must preserve these lifetime, capacity, cancellation
+and mutual authentication requirements. Policies/callbacks are copied into connector
+configuration and are never included in a formatted DSN. Generic plugins may
+implement `AuthPluginCloser` and `AuthPluginValidator` for equivalent cleanup and
+local-completion checks.
 
 ## Native binary bulk DML
 

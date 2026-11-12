@@ -18,6 +18,7 @@ from record import benchmark_rows, digest, inputs
 from contracts import CHECK_ENVIRONMENT, CORRECTNESS_COMMANDS
 from provenance import read_server, revision_info, server_command
 import pass_history
+import external_auth_evidence
 
 ROOT = Path(__file__).resolve().parent.parent
 PACKAGE = 'github.com/aantich/go-mariadb'
@@ -53,6 +54,13 @@ REQUIRED |= {PACKAGE+'/validation/'+name for name in ('TestMariaDBNativeStatemen
             'TestMariaDBNativeStatementReset', 'TestMariaDBNativeStatementConcurrent', 'TestMariaDBNativeStatementCancellation')}
 REQUIRED |= {PACKAGE+'/validation/'+name for name in ('TestMariaDBNativeCloseAfterReturn',
             'TestMariaDBNativeDeferredCloseCancellation', 'TestMariaDBStage4UnitValidation')}
+REQUIRED |= {PACKAGE+'/'+name for name in ('TestExternalAuthPolicy', 'TestPAMDialogProtocol',
+            'TestGSSAPIProtocol', 'TestExternalAuthWire', 'TestGSSAPIRequiredMethod', 'TestExternalAuthPanicCleanup',
+            'TestExternalAuthErrorSecrecy')}
+REQUIRED |= {PACKAGE+'/validation/TestMariaDBExternalAuthentication',
+             PACKAGE+'/gssapi/TestNativeContextCleanup', PACKAGE+'/gssapi/TestProviderCancellation',
+             PACKAGE+'/gssapi/TestProviderAdmission', PACKAGE+'/gssapi/TestProviderCapacity',
+             PACKAGE+'/gssapi/TestProviderDefaultAdmission'}
 
 
 def assess_tests(output, exit_code, require_instrumentation=False, required=None):
@@ -132,6 +140,8 @@ def main():
                'instrumentation_required':env.get('GO_MARIADB_REQUIRE_INSTRUMENTATION') == '1',
                'go':subprocess.check_output(['go','version'], env=env, text=True).strip(), 'host':platform.platform(),
                'method':'correctness only, no benchmarks' if args.correctness_only else 'correctness plus one-iteration benchmark smoke; not accepted performance measurements'}
+    if env.get('GO_MARIADB_AUTH_RECEIPT'):
+        capture['external_auth'] = json.loads(env['GO_MARIADB_AUTH_RECEIPT'])
     client = shutil.which('mariadb') or shutil.which('mysql')
     if not client:
         raise SystemExit('MariaDB administrative client is required for read-only provenance.')
@@ -165,6 +175,10 @@ def main():
         stage = {'command':command, 'exit_code':result.returncode, 'issues':[]}
         if name == 'correctness':
             stage['issues'], stage['cases'] = assess_tests(output, result.returncode, env.get('GO_MARIADB_REQUIRE_INSTRUMENTATION') == '1')
+            try:
+                external_auth_evidence.validate(capture, output)
+            except (ValueError, KeyError, TypeError) as error:
+                stage['issues'].append(str(error))
         elif name == 'native-benchmark-smoke':
             expected = {f'BenchmarkMariaDBNativeBulk/{rows}/{method}' for rows in (1,16,100,1000)
                         for method in ('prepared','native_bulk','text_batch','local_infile')}
@@ -184,7 +198,7 @@ def main():
     capture['inputs_stable'] = source == inputs()
     capture['logs'] = {path.name:digest(path.read_bytes()) for path in target.glob('*.log')}
     capture['lost_correctness_passes'] = pass_history.lost(capture, target, pass_history.statuses(capture))
-    capture['exit_code'] = int(not capture['inputs_stable'] or not capture['server']['stable'] or capture['lost_correctness_passes'] or any(s['issues'] for s in capture['stages'].values()))
+    capture['exit_code'] = int(bool(not capture['inputs_stable'] or not capture['server']['stable'] or capture['lost_correctness_passes'] or any(s['issues'] for s in capture['stages'].values())))
     (target/'capture.json').write_text(json.dumps(capture, indent=2)+'\n')
     return capture['exit_code']
 

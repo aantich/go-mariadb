@@ -81,13 +81,13 @@
   },
   {
     "name": "interactive PAM authentication",
-    "status": "UNSUPPORTED_API",
-    "evidence": "generic plugin extension exists; no built-in dialog/prompt policy or real PAM fixture"
+    "status": "SUPPORTED",
+    "evidence": "Opt-in PAM dialogue policy, verified TLS/Unix transport, prompt/response budgets and cancellation; isolated real single/multiple-question and rejection fixtures. See docs/STAGE5_AUTHENTICATION.md."
   },
   {
     "name": "Kerberos GSSAPI authentication",
-    "status": "UNSUPPORTED_API",
-    "evidence": "generic plugin extension exists; no built-in GSSAPI/service-principal policy or real KDC fixture"
+    "status": "SUPPORTED",
+    "evidence": "Explicit principal-pinned mutual authentication and optional native macOS/Linux provider, Kerberos-only credentials and bounded asynchronous cleanup; isolated real KDC/MariaDB tests. Windows SSPI/NTLM is not implemented."
   },
   {
     "name": "transaction-aware CDC/GTID resume",
@@ -101,7 +101,7 @@
   },
   {
     "name": "PAM/Kerberos services",
-    "status": "ENVIRONMENT",
-    "evidence": "isolated service fixtures not provisioned in this first Mac profile; do not claim live coverage"
+    "status": "SUPPORTED",
+    "evidence": "Task-owned disposable PAM/MariaDB/KDC services, synthetic PAM credentials, real tickets and private caches/CA; fixture source/runtime provenance recorded. No host realm/PAM changes or production identity-system claim."
   }
 ]

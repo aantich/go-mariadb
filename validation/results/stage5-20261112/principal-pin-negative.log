@@ -1,0 +1,6 @@
+--- FAIL: TestGSSAPIProtocol (0.00s)
+    --- FAIL: TestGSSAPIProtocol/pin_before_provider (0.00s)
+        auth_external_test.go:297: provider called before pin check
+FAIL
+FAIL	github.com/aantich/go-mariadb	0.400s
+FAIL

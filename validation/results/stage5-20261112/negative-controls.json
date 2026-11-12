@@ -1,0 +1,22 @@
+{
+  "original_input_fingerprint": "8bcbc06f9458c1f7d7ab2f75eeb8908e27285bb4bd52b516836036347c9b6622",
+  "method": "temporary Go overlays; unchanged checked-out source; no benchmark functions",
+  "source_unchanged": true,
+  "controls": [
+    {
+      "name": "premature-ok",
+      "exit_code": 1,
+      "regression_failed": true,
+      "overlay": "validation/results/stage5-20261112/premature-ok-overlay.json",
+      "log": "validation/results/stage5-20261112/premature-ok-negative.log"
+    },
+    {
+      "name": "principal-pin",
+      "exit_code": 1,
+      "regression_failed": true,
+      "overlay": "validation/results/stage5-20261112/principal-pin-overlay.json",
+      "log": "validation/results/stage5-20261112/principal-pin-negative.log"
+    }
+  ],
+  "earlier_control_issue": "Initial principal overlay did not compile (unused local); corrected to remove pin validation while retaining valid source. Its build-error log is retained."
+}

@@ -87,6 +87,9 @@ func (c *connector) Connect(ctx context.Context) (driver.Conn, error) {
 	if err := cfg.validateSessionPolicy(); err != nil {
 		return nil, err
 	}
+	if cfg.gssapi != nil && cfg.openIDToken != "" {
+		return nil, ErrGSSAPIPolicy
+	}
 
 	// New mysqlConn
 	mc := &mysqlConn{
@@ -95,6 +98,14 @@ func (c *connector) Connect(ctx context.Context) (driver.Conn, error) {
 		closech:          make(chan struct{}),
 		cfg:              cfg,
 	}
+	connected := false
+	defer func() {
+		// A caller-supplied auth callback/provider can panic. Preserve that panic,
+		// but do not leave its connection or cancellation watcher alive.
+		if !connected {
+			mc.cleanup()
+		}
+	}()
 	mc.parseTime = mc.cfg.ParseTime
 
 	// Connect to Server
@@ -193,7 +204,11 @@ func (c *connector) Connect(ctx context.Context) (driver.Conn, error) {
 	auth := newAuthContext(mc.cfg, mc.cfg.Passwd, tlsEstablished)
 	var authPlugin AuthPlugin
 	var authResp []byte
-	if cfg.openIDToken != "" {
+	if cfg.gssapi != nil && plugin != "auth_gssapi_client" {
+		plugin = defaultAuthPlugin
+		authPlugin = &requiredGSSAPIPlugin{}
+		authResp = []byte{}
+	} else if cfg.openIDToken != "" {
 		authPlugin = &openIDConnectAuthPlugin{token: cfg.openIDToken}
 		authResp, err = authPlugin.InitAuth(ctx, authData, auth)
 	} else {
@@ -214,12 +229,19 @@ func (c *connector) Connect(ctx context.Context) (driver.Conn, error) {
 		return nil, err
 	}
 
+	authTransferred := false
+	defer func() {
+		if !authTransferred {
+			closeAuthPlugin(authPlugin)
+		}
+	}()
 	if err = mc.writeHandshakeResponsePacket(authResp, plugin); err != nil {
 		mc.cleanup()
 		return nil, err
 	}
 
 	// Handle response to auth packet, switch methods if possible
+	authTransferred = true // handleAuthResult now owns plugin cleanup on every exit.
 	if err = mc.handleAuthResult(ctx, authData, authPlugin, auth); err != nil {
 		// Authentication failed and MySQL has already closed the connection
 		// (https://dev.mysql.com/doc/dev/mysql-server/latest/page_protocol_connection_phase.html#sect_protocol_connection_phase_fast_path_fails).
@@ -286,6 +308,7 @@ func (c *connector) Connect(ctx context.Context) (driver.Conn, error) {
 		return nil, err
 	}
 
+	connected = true
 	return mc, nil
 }
 

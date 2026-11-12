@@ -1,0 +1,5 @@
+{
+  "Replace": {
+    "/Users/aantich/dev/mariadbnew/projects/go-mariadb/gssapi/provider.go": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage5-review-fixes-20261112/native-bound-restored.go.txt"
+  }
+}

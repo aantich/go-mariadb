@@ -1,0 +1,16 @@
+{
+  "source_fingerprint": "c65a2f7f932395d71b48d621db4ea827a3f21a947600937d2bb3e6cee652171a",
+  "method": "Copy successful final receipt; remove external_auth metadata and its one raw event; keep all test statuses, commands, source and server/prior snapshots; reconcile changed raw-log checksum and parsed case output. Invoke real correctness.validate, never publish.",
+  "external_provenance_removed": true,
+  "raw_fixture_events_removed": 1,
+  "all_test_statuses_preserved": true,
+  "current_publisher_validation_accepted": true,
+  "live_results_or_source_changed": false,
+  "protected_files": {
+    "validation/results/stage5-mac-ci-final/capture.json": "162c7485330dcd6c0c4f7028d1984bc621681905cd84916ffb331e78cc0ea318",
+    "validation/results/stage5-mac-ci-final/correctness.log": "85831b26afc4b9b1157c44e9d2b16b2cb04513e04f83f70f5b761d7e61c0209e",
+    "validation/results/correctness-current.json": "7ac13668e012b7a5ef2b8db9622a0b2c696c74d02c0d1e18b0e5ee2eb0f3958f",
+    "validation/results/current.json": "02fea12c04c5c42f1596bdb0c56ddd3839afb26a86f7e3e61f0b7e798adea7ed",
+    "validation/RESULTS.md": "73b3603e2205c28adcfd860f88e1d23c772de8f69435e728e527a60f92c95bb4"
+  }
+}

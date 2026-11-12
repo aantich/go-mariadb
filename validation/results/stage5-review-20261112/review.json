@@ -1,0 +1,84 @@
+{
+  "date": "2026-11-12",
+  "scope": "Review only; Stage 5 external authentication",
+  "branch": "master",
+  "parent_commit": "527b5b9577dedfce03ee1fa70ea22a7ed1f94a80",
+  "source_fingerprint": "c65a2f7f932395d71b48d621db4ea827a3f21a947600937d2bb3e6cee652171a",
+  "input_counts": {
+    "driver": 60,
+    "workload": 93
+  },
+  "production_or_permanent_test_changes": false,
+  "pending_findings": [
+    {
+      "priority": "P2",
+      "finding": "External-auth error secrecy lost across plugin switches",
+      "probe": "TestReviewExternalSecretSwitches",
+      "failing_children": 2
+    },
+    {
+      "priority": "P2",
+      "finding": "Canceled callers do not bound outstanding native GSSAPI work",
+      "probe": "TestReviewCanceledNativeBudget",
+      "outstanding_native_opens_after_sequential_callers": 8
+    },
+    {
+      "priority": "P2",
+      "finding": "Current correctness validator accepts external-auth provenance omission",
+      "probe": "provenance-probe.py.txt"
+    }
+  ],
+  "executed_checks": [
+    {
+      "command": "GOCACHE=/private/tmp/go-mariadb-validation-20261111/go-cache GOMAXPROCS=2 GOFLAGS= GOWORK=off go test -race -count=1 -timeout=30s -v -run ^TestReviewExternalSecretSwitches$ -overlay=validation/results/stage5-review-20261112/secret-switch-overlay.json .",
+      "exit_code": 1,
+      "expected": "Secrecy assertion fails in both children; no race report",
+      "log": "secret-switch.log"
+    },
+    {
+      "command": "GOCACHE=/private/tmp/go-mariadb-validation-20261111/go-cache GOMAXPROCS=2 GOFLAGS= GOWORK=off go test -race -count=1 -timeout=30s -v -run ^TestReviewCanceledNativeBudget$ -overlay=validation/results/stage5-review-20261112/native-budget-overlay.json ./gssapi",
+      "exit_code": 1,
+      "expected": "Outstanding-native-work bound assertion fails; eventual cleanup succeeds; no race report",
+      "log": "native-budget.log"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 validation/results/stage5-review-20261112/provenance-probe.py.txt",
+      "exit_code": 0,
+      "expected": "Actual current validator accepts the omission; official files unchanged",
+      "result": "provenance-omission.json"
+    },
+    {
+      "command": "GOCACHE=/private/tmp/go-mariadb-validation-20261111/go-cache GOMAXPROCS=2 GOFLAGS= GOWORK=off go test -race -count=1 -timeout=60s -v -run '^(TestGSSAPIRequiredMethod|TestExternalAuthPanicCleanup|TestExternalAuthPolicy|TestPAMDialogProtocol|TestGSSAPIProtocol|TestExternalAuthWire|TestProviderCancellation|TestProviderOpenFailure)$' . ./gssapi",
+      "exit_code": 0,
+      "log": "existing-auth-tests.log"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s validation -p 'test_*.py'",
+      "exit_code": 0,
+      "tests": 75,
+      "log": "harness-tests.log"
+    },
+    {
+      "command": "PYTHONDONTWRITEBYTECODE=1 python3 validation/verify.py",
+      "exit_code": 0,
+      "log": "freshness.log"
+    }
+  ],
+  "complete_real_service_suite_repeated": false,
+  "benchmarks_smoke_or_profiles_executed": false,
+  "live_timing_pointer_unchanged": true,
+  "commit_or_push_performed": false,
+  "files": {
+    "validation/results/stage5-review-20261112/existing-auth-tests.log": "1d0d55bd1c67409538483ee257856164da990b3b3459a14ac8cce62e9780656d",
+    "validation/results/stage5-review-20261112/freshness.log": "c493740d802560911baa4bd543e21def0349a912b7b37234d9124ca8aca0522b",
+    "validation/results/stage5-review-20261112/harness-tests.log": "69caea0344c37146bdbfe0ca46b7fc6c8b40ac84bbae7e8a47bf5c94bc7cde20",
+    "validation/results/stage5-review-20261112/native-budget-overlay.json": "fdad7a0bde7f52bde505bb63b64b499ff7042359ca504ed2869e582350cc4e7e",
+    "validation/results/stage5-review-20261112/native-budget.log": "cb74c051dc0e67d6eee3b9e0bf6b24573afbac719824c607392dd08ecbef12ba",
+    "validation/results/stage5-review-20261112/native-budget_test.go.txt": "3add25f72d5d2c2c43a70cd78fea0e8b117f42c8df692e618388dbf713679946",
+    "validation/results/stage5-review-20261112/provenance-omission.json": "f6a81e2acea70aa199b552b90dac55fcf2fcc3f4b369f9904d5858ba6e8181ff",
+    "validation/results/stage5-review-20261112/provenance-probe.py.txt": "9780320ba343301fefa5e5c56940c07499064ea26627d129836cb0d4b377a825",
+    "validation/results/stage5-review-20261112/secret-switch-overlay.json": "788406cfd60d580366600b4cd404fbf538f8ef737c76d0bfc676b6a36211d908",
+    "validation/results/stage5-review-20261112/secret-switch.log": "e7c86b75befcfcadccbbe51a8194370cac9fd2fbde60848dae3c20a5e8e67719",
+    "validation/results/stage5-review-20261112/secret-switch_test.go.txt": "808ec1a99653a9deb20137c69294c286c940d66620c17cfe399b04d98af3f2dd"
+  }
+}

@@ -49,9 +49,35 @@ corrections to `master`. Saved receipts retain their original prepublication
 context; no tests or measurements are repeated for publication. The new profiles
 remain unmeasured.
 
-Next: authorized first measurements for the new profiles and attribution of the
+**External authentication, later on 12 November:** Anton requested implementing
+the next functional stage while deferring benchmarks. [Stage 5](STAGE5_AUTHENTICATION.md)
+adds opt-in PAM dialogue and principal-pinned GSSAPI with isolated real services.
+Performance-dependent read-path optimization and pipelining remain deferred.
+
+All three [Stage 5 review](STAGE5_CODE_REVIEW.md) findings are
+[corrected and validated](STAGE5_REVIEW_FIXES.md): secrecy across auth switches,
+native work bounded through cleanup, and required current fixture provenance.
+Matching-source Mac/Linux correctness passes with all earlier passes preserved;
+no benchmarks ran. Anton subsequently requested committing and pushing the full
+stage and saved evidence to `master`. Earlier uncommitted statements describe
+their original capture context; publication does not repeat measurements.
+
+**Next proposed functional stage while measurements remain deferred:** an
+optional MariaDB CDC/binlog package, kept separate from ordinary `database/sql`
+connections. Start with an explicit event/transaction/checkpoint contract,
+bounded row-event decoding and a dedicated replication connection, then add
+consumer-controlled checkpoints and GTID resume with disconnect/replay tests.
+Do not promise exactly-once delivery. This is a proposal, not authorization to
+implement or publish a CDC package. The performance runbook stays queued for an
+explicitly authorized measurement window.
+
+Next performance work: authorized first measurements for the new profiles and attribution of the
 remaining text-read signals. Evaluate pipelining independently after that,
-followed by interactive PAM/GSSAPI fixtures and optional CDC.
+followed by optional CDC as a separately scoped feature. Production PAM/Kerberos
+deployments and broader platform/provider integration remain open validation work.
+Anton subsequently requested preparation only, with no benchmarks yet. The
+[measurement runbook](STAGE4_MEASUREMENT_PLAN.md) records the checks, comparison
+rules and commands for a later authorized run; live results remain unchanged.
 The remaining stages and
 broader platform coverage remain open; this is not a claim they are complete.
 

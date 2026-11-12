@@ -90,7 +90,7 @@ func (p *sha256PasswordPlugin) ContinuationAuth(ctx context.Context, packet, aut
 		return nil, fmt.Errorf("%w: invalid PEM data in auth response", ErrMalformPkt)
 	}
 	if block.Type != "PUBLIC KEY" {
-		return nil, fmt.Errorf("%w: unexpected PEM block type %q in auth response", ErrMalformPkt, block.Type)
+		return nil, &authDiagnostic{ErrMalformPkt, fmt.Sprintf("unexpected PEM block type %q in auth response", block.Type)}
 	}
 
 	// Parse the public key

@@ -1,0 +1,14 @@
+=== RUN   TestProviderAdmission
+=== RUN   TestProviderAdmission/open
+    provider_test.go:233: saturated provider admitted new native work: <nil>
+=== RUN   TestProviderAdmission/step
+    provider_test.go:233: saturated provider admitted new native work: <nil>
+=== RUN   TestProviderAdmission/cleanup
+    provider_test.go:233: saturated provider admitted new native work: <nil>
+--- FAIL: TestProviderAdmission (0.00s)
+    --- FAIL: TestProviderAdmission/open (0.00s)
+    --- FAIL: TestProviderAdmission/step (0.00s)
+    --- FAIL: TestProviderAdmission/cleanup (0.00s)
+FAIL
+FAIL	github.com/aantich/go-mariadb/gssapi	0.317s
+FAIL

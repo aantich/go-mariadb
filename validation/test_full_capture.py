@@ -22,6 +22,7 @@ from test_provenance import sample_server
 import verify
 import pass_history
 from stage4_workloads import STAGE4_PROFILES
+from test_ci_policy import external_auth_receipt, external_auth_event
 
 
 class FullCaptureTests(unittest.TestCase):
@@ -36,6 +37,7 @@ class FullCaptureTests(unittest.TestCase):
                    'complete':True, 'exit_code':0, 'inputs_stable':True, 'inputs':source,
                    'input_fingerprint':record.digest(json.dumps(source,sort_keys=True).encode()),
                    'capabilities':json.loads((record.HERE/'capabilities.json').read_text()),
+                   'external_auth':external_auth_receipt(),
                    'execution_directory':str(directory.resolve()), 'lost_baseline_passes':[], 'logs':{},
                    'evidence_directory':'results/full-test',
                    'hardware':copy.deepcopy(self.native['hardware']),
@@ -56,7 +58,7 @@ class FullCaptureTests(unittest.TestCase):
             identities['mariadb' if '/validation/' in name else 'upstream'].add(name)
         outputs = {}
         for name, cases in identities.items():
-            events = []
+            events = [json.dumps(external_auth_event())] if name == 'mariadb' else []
             for case in sorted(cases):
                 package, test = re.split(r'/(?=Test|Fuzz|Example)',case,maxsplit=1)
                 events.append(json.dumps({'Package':package, 'Test':test, 'Action':'pass'}))
@@ -269,7 +271,7 @@ class FullCaptureTests(unittest.TestCase):
                         mock.patch.object(record.subprocess,'run',side_effect=run), \
                         mock.patch.object(record.subprocess,'check_output',side_effect=check_output), \
                         mock.patch.dict('os.environ',{'GOFLAGS':'-overlay=/tmp/untrusted.json','GOWORK':'/tmp/other.work',
-                                                     'GO_MARIADB_REQUIRE_INSTRUMENTATION':'0'}), \
+                                                     'GO_MARIADB_REQUIRE_INSTRUMENTATION':'0', 'GO_MARIADB_AUTH_RECEIPT':json.dumps(valid['external_auth'])}), \
                         mock.patch('sys.argv',['record.py','--config',str(path),'--conditions','synthetic test','--correctness-only']), \
                         mock.patch('builtins.print'):
                     code=record.main()

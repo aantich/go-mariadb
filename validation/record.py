@@ -53,8 +53,13 @@ def inputs():
     files = [p for p in ROOT.rglob('*.go') if not any(x in p.parts for x in ('results','baselines','.git'))]
     driver = {str(p.relative_to(ROOT)): digest(p.read_bytes()) for p in files if not p.name.endswith('_test.go')}
     driver.update({name:digest((ROOT/name).read_bytes()) for name in ('go.mod','go.sum')})
+    # The optional native provider is executable driver code too. A Go-only
+    # fingerprint would miss ABI, mechanism-policy and cleanup changes here.
+    driver.update({str(p.relative_to(ROOT)):digest(p.read_bytes()) for p in (ROOT/'gssapi').glob('native.*')
+                   if p.suffix in ('.c','.h')})
     workload = {str(p.relative_to(ROOT)):digest(p.read_bytes()) for p in files if p.name.endswith('_test.go')}
     workload.update({str(p.relative_to(ROOT)):digest(p.read_bytes()) for p in HERE.glob('*.py')})
+    workload.update({str(p.relative_to(ROOT)):digest(p.read_bytes()) for p in (HERE/'auth_fixture').glob('*') if p.is_file()})
     workload['validation/identity-migration.json'] = digest((HERE/'identity-migration.json').read_bytes())
     workload['validation/contract-migrations.json'] = digest((HERE/'contract-migrations.json').read_bytes())
     for path in ('.github/workflows/test.yml', '.github/workflows/actions.lock'):
@@ -345,6 +350,8 @@ def main():
            'host_observations':[],
            'hardware':subprocess.check_output(['sysctl','-n','machdep.cpu.brand_string','hw.ncpu','hw.memsize'],text=True).splitlines(),
            'method':{'process_repetitions':7,'benchtime':'200ms','gomaxprocs':4,'warmups':'original forty added serial profiles: two explicit warmups; native bulk, Stage 4 and inherited/parallel profiles: Go benchmark calibration','profile':PROFILE}}
+    if env.get('GO_MARIADB_AUTH_RECEIPT'):
+        state['external_auth'] = json.loads(env['GO_MARIADB_AUTH_RECEIPT'])
     def server_snapshot(phase):
         try:
             snapshot, output = read_server(cfg, env, server_argv)

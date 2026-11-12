@@ -2,6 +2,25 @@
 
 ## Current dedicated driver
 
+**Stage 5, correctness only:** Opt-in interactive PAM and principal-pinned mutual
+GSSAPI now use real isolated PAM/Kerberos services. See the
+[contracts and reproduction](../docs/STAGE5_AUTHENTICATION.md) and
+[user guide](../docs/USER_GUIDE.md#interactive-pam). Build the dedicated fixture
+image once, then wrap correctness/full commands with `auth_fixture.py --` as
+shown in the stage document. Required external-auth tests cannot silently skip.
+The [review corrections](../docs/STAGE5_REVIEW_FIXES.md) add secrecy across plugin
+switches, native-context admission through cleanup, and mandatory provenance:
+current correctness/full receipts cannot omit both metadata and raw markers.
+The optional native package needs cgo and system GSSAPI headers on Linux; the
+core driver alone has no native library dependency. Existing benchmark runs and
+references remain historical; no benchmark or profiling execution is authorized.
+
+**Next measurement pass, preparation only:** Anton explicitly deferred benchmark
+and profiling execution. The [measurement runbook](../docs/STAGE4_MEASUREMENT_PLAN.md)
+records the preflight, full-run command, separate diagnostic work and acceptance
+rules. Its commands are for a later authorized window. Existing live results and
+immutable references remain unchanged; no new performance result is claimed.
+
 **Stage 4, 12 November:** Explicit `PrepareNative` bulk/unit/stream handles and
 62 additive benchmark profiles are implemented. Anton excluded all benchmark
 execution while using the Mac. Run correctness only; **do not invoke benchmark

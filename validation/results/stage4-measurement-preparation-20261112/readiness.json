@@ -1,0 +1,87 @@
+{
+  "recorded_at": "2026-11-12T18:01:17.943371+00:00",
+  "status": "preparation_only; timing and profiling authorization deferred by user",
+  "commit": "527b5b9577dedfce03ee1fa70ea22a7ed1f94a80",
+  "branch": "master",
+  "input_fingerprint": "d48b450072dd1b8e7405efdaa5888e01c18849b6e40d8ec927fbb62e41603fc7",
+  "production_inputs": 53,
+  "workload_inputs": 81,
+  "host": "macOS-26.4-arm64-arm-64bit-Mach-O",
+  "hardware": [
+    "Apple M4 Max",
+    "16",
+    "137438953472"
+  ],
+  "go": "go version go1.27.4 darwin/arm64",
+  "modules": [
+    "github.com/aantich/go-mariadb",
+    "filippo.io/edwards25519 v1.2.0",
+    "github.com/klauspost/compress v1.19.2"
+  ],
+  "server": {
+    "version": "12.3.3-MariaDB-log",
+    "version_comment": "Homebrew",
+    "database": "go_mariadb_validation",
+    "performance_schema": 0,
+    "max_allowed_packet": 402653184,
+    "local_infile": 1,
+    "log_bin": 1,
+    "sql_mode": "STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION",
+    "time_zone": "+00:00",
+    "character_set_client": "utf8mb4",
+    "collation_connection": "utf8mb4_uca1400_ai_ci",
+    "character_set_server": "utf8mb4",
+    "collation_server": "utf8mb4_unicode_ci",
+    "innodb_flush_log_at_trx_commit": 1,
+    "sync_binlog": 0,
+    "max_connections": 151
+  },
+  "checks": {
+    "frozen_workloads_match": true,
+    "dependency_graph_matches": true,
+    "host_compiler_hardware_server_match": true,
+    "private_config_owner_only": true,
+    "existing_references_verified": true,
+    "live_artifacts_byte_identical_to_committed": true,
+    "stage4_reference_absent": true
+  },
+  "immutable_references": {
+    "validation/baselines/macos-arm64-mariadb-12.3.3-go1.27.4": {
+      "sha256sums": "00b8619a1fb31568f7eeb8fcb9d1ba26bbd1e412c18bc0d2ad3e21d5ff0fee49",
+      "verified": true
+    },
+    "validation/baselines/native-bulk-stage1-macos-arm64-mariadb-12.3.3-go1.27.4": {
+      "sha256sums": "4e5433d8844a176b5692d254c0215803ecce56c11bcdb8adae6ec88c2fd480db",
+      "verified": true
+    }
+  },
+  "preserved_live_artifacts": {
+    "validation/results/current.json": "02fea12c04c5c42f1596bdb0c56ddd3839afb26a86f7e3e61f0b7e798adea7ed",
+    "validation/results/correctness-current.json": "acad8944b17ba6f162abbdac20616b4af8645a0a063f648c9864a43d31d53642",
+    "validation/RESULTS.md": "fdfc3907b6a2600a6680688ef0f4212c08f5fd0d1640106b51e2dfb30aa2be5c"
+  },
+  "benchmark_functions_executed": false,
+  "profiling_workloads_executed": false,
+  "correctness_tests_repeated": false,
+  "planned_measurement": {
+    "profiles": 262,
+    "new_stage4_profiles": 62,
+    "repetitions_per_profile": 7,
+    "samples": 1834,
+    "benchtime": "200ms",
+    "gomaxprocs": 4,
+    "command": [
+      "python3",
+      "validation/record.py",
+      "--freeze-stage4-baseline",
+      "--conditions",
+      "Describe actual authorized host conditions"
+    ]
+  },
+  "remaining_before_execution": [
+    "Explicit benchmark/profile authorization and actual host conditions",
+    "Reconfirm point-in-time profile preflight",
+    "For CPU attribution, retain a separate CPU-only diagnostic with allocation profiling disabled; existing combined profile records every allocation"
+  ],
+  "performance_acceptance": "No new measurements or performance conclusions; earlier correctness and timing evidence remains separate."
+}

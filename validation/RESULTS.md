@@ -2,10 +2,10 @@
 
 ## Latest correctness — native MariaDB APIs
 
-Recorded: **2026-11-12T16:27:12.184780+00:00** · Source: `d48b450072dd1b8e7405efdaa5888e01c18849b6e40d8ec927fbb62e41603fc7` · **1304 PASS / 0 FAIL / 8 SKIP**, unique leaves.
+Recorded: **2026-11-12T19:00:44.453790+00:00** · Source: `9d7c4b8c5b19e246660b0326d2cf32c8cf114e6c998a29cac5c7372d29da7807` · **1398 PASS / 0 FAIL / 8 SKIP**, unique leaves.
 Server: **12.3.3-MariaDB-log** · Go: `go version go1.27.4 darwin/arm64` · Host: `macOS-26.4-arm64-arm-64bit-Mach-O` · GOMAXPROCS: **2** · performance_schema: **0**. Server settings match before/after checks.
 Race detection, vet, harness policy checks pass. No prior passing assertion was lost. Managed isolation is explicitly opted in; ordinary checkout remains liveness-only.
-[Raw correctness receipt](results/stage4-review-fixes-mac-confirmed/capture.json) · [Reusable statements](../docs/STAGE4_STATEMENT_REUSE.md) · [Native API contracts](../docs/STAGE3_NATIVE_APIS.md) · [Session foundations](../docs/STAGE2_SESSION_FOUNDATIONS.md).
+[Raw correctness receipt](results/stage5-review-fixes-mac-final/capture.json) · [Reusable statements](../docs/STAGE4_STATEMENT_REUSE.md) · [Native API contracts](../docs/STAGE3_NATIVE_APIS.md) · [Session foundations](../docs/STAGE2_SESSION_FOUNDATIONS.md).
 
 **No performance measurements were made for this source.** The timing tables and full-capture failures below belong to the earlier source fingerprint shown there. They are historical, qualified measurements; none were copied into a new baseline or presented as current-source timings.
 
@@ -105,11 +105,11 @@ Historical totals retain the parser used by that capture; latest correctness exc
 | io.Reader prepared parameters | UNSUPPORTED_API | SUPPORTED | ExecStream and StreamParam; chunk-bounded one-shot upload, exact limits/empty/NULL/reader errors, live transport and transaction tests, cancellation phases and bounded allocation with materialization control. Server still bounds complete parameters. |
 | progress callbacks | UNSUPPORTED_API | SUPPORTED | WithProgressReports and ExecWithProgress; owned validated reports, real ALTER COPY callbacks on all transport profiles, callback error/panic draining and server-error preservation; no report guarantee or global server-setting changes. |
 | PARSEC authentication | UNSUPPORTED_API | SUPPORTED | Built-in parsec plugin; real MariaDB account succeeds, binary challenge/signature and malformed/work-factor unit checks. |
-| interactive PAM authentication | UNSUPPORTED_API | UNSUPPORTED_API | generic plugin extension exists; no built-in dialog/prompt policy or real PAM fixture |
-| Kerberos GSSAPI authentication | UNSUPPORTED_API | UNSUPPORTED_API | generic plugin extension exists; no built-in GSSAPI/service-principal policy or real KDC fixture |
+| interactive PAM authentication | UNSUPPORTED_API | SUPPORTED | Opt-in PAM dialogue policy, verified TLS/Unix transport, prompt/response budgets and cancellation; isolated real single/multiple-question and rejection fixtures. See docs/STAGE5_AUTHENTICATION.md. |
+| Kerberos GSSAPI authentication | UNSUPPORTED_API | SUPPORTED | Explicit principal-pinned mutual authentication and optional native macOS/Linux provider, Kerberos-only credentials and bounded asynchronous cleanup; isolated real KDC/MariaDB tests. Windows SSPI/NTLM is not implemented. |
 | transaction-aware CDC/GTID resume | UNSUPPORTED_API | UNSUPPORTED_API | no binlog consumer API; separate optional extension scope beyond database/sql |
 | performance_schema instrumentation | ENVIRONMENT | SUPPORTED | Required real statement/thread/connection-attribute checks on isolated Linux MariaDB with performance_schema=ON. Shared Mac service stays OFF and reports a profile skip. |
-| PAM/Kerberos services | ENVIRONMENT | ENVIRONMENT | isolated service fixtures not provisioned in this first Mac profile; do not claim live coverage |
+| PAM/Kerberos services | ENVIRONMENT | SUPPORTED | Task-owned disposable PAM/MariaDB/KDC services, synthetic PAM credentials, real tickets and private caches/CA; fixture source/runtime provenance recorded. No host realm/PAM changes or production identity-system claim. |
 
 Inventory entries are source-reviewed API gaps, not passing feature tests. Missing external services are recorded separately from missing APIs. See [coverage and limits](COVERAGE.md).
 

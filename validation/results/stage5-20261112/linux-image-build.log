@@ -1,0 +1,99 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.linux
+#1 transferring dockerfile: 562B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/golang:1.27.4-bookworm
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/go-mariadb-stage5-auth:latest
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [toolchain 1/1] FROM docker.io/library/golang:1.27.4-bookworm@sha256:4fa7c968ba93f1635670522dbb01a2c78150443e1385746924566079f36570ea
+#5 resolve docker.io/library/golang:1.27.4-bookworm@sha256:4fa7c968ba93f1635670522dbb01a2c78150443e1385746924566079f36570ea done
+#5 CACHED
+
+#6 [stage-1 1/4] FROM docker.io/library/go-mariadb-stage5-auth:latest@sha256:1d058486967e6f1ceaa5637077df85a4815392d92523caf3a93028afea5eb7b7
+#6 resolve docker.io/library/go-mariadb-stage5-auth:latest@sha256:1d058486967e6f1ceaa5637077df85a4815392d92523caf3a93028afea5eb7b7 done
+#6 DONE 0.0s
+
+#7 [stage-1 2/4] RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends     libkrb5-dev && rm -rf /var/lib/apt/lists/*
+#7 0.243 Get:1 http://archive.mariadb.org/mariadb-12.3.3/repo/ubuntu noble InRelease [27.9 kB]
+#7 0.363 Get:2 http://ports.ubuntu.com/ubuntu-ports noble InRelease [256 kB]
+#7 0.418 Get:3 http://archive.mariadb.org/mariadb-12.3.3/repo/ubuntu noble/main arm64 Packages [15.7 kB]
+#7 0.531 Get:4 http://archive.mariadb.org/mariadb-12.3.3/repo/ubuntu noble/main/debug arm64 Packages [10.1 kB]
+#7 0.861 Get:5 http://ports.ubuntu.com/ubuntu-ports noble-updates InRelease [126 kB]
+#7 0.990 Get:6 http://ports.ubuntu.com/ubuntu-ports noble-backports InRelease [126 kB]
+#7 1.114 Get:7 http://ports.ubuntu.com/ubuntu-ports noble-security InRelease [126 kB]
+#7 1.240 Get:8 http://ports.ubuntu.com/ubuntu-ports noble/multiverse arm64 Packages [274 kB]
+#7 1.313 Get:9 http://ports.ubuntu.com/ubuntu-ports noble/universe arm64 Packages [19.0 MB]
+#7 3.023 Get:10 http://ports.ubuntu.com/ubuntu-ports noble/restricted arm64 Packages [113 kB]
+#7 3.028 Get:11 http://ports.ubuntu.com/ubuntu-ports noble/main arm64 Packages [1776 kB]
+#7 3.177 Get:12 http://ports.ubuntu.com/ubuntu-ports noble-updates/universe arm64 Packages [2233 kB]
+#7 3.368 Get:13 http://ports.ubuntu.com/ubuntu-ports noble-updates/multiverse arm64 Packages [107 kB]
+#7 3.377 Get:14 http://ports.ubuntu.com/ubuntu-ports noble-updates/main arm64 Packages [1853 kB]
+#7 3.536 Get:15 http://ports.ubuntu.com/ubuntu-ports noble-updates/restricted arm64 Packages [3392 kB]
+#7 3.826 Get:16 http://ports.ubuntu.com/ubuntu-ports noble-backports/universe arm64 Packages [36.3 kB]
+#7 3.830 Get:17 http://ports.ubuntu.com/ubuntu-ports noble-backports/main arm64 Packages [49.0 kB]
+#7 3.833 Get:18 http://ports.ubuntu.com/ubuntu-ports noble-backports/multiverse arm64 Packages [669 B]
+#7 3.833 Get:19 http://ports.ubuntu.com/ubuntu-ports noble-security/restricted arm64 Packages [3270 kB]
+#7 4.240 Get:20 http://ports.ubuntu.com/ubuntu-ports noble-security/universe arm64 Packages [1656 kB]
+#7 4.253 Get:21 http://ports.ubuntu.com/ubuntu-ports noble-security/multiverse arm64 Packages [102 kB]
+#7 4.262 Get:22 http://ports.ubuntu.com/ubuntu-ports noble-security/main arm64 Packages [1541 kB]
+#7 4.470 Fetched 36.1 MB in 4s (8266 kB/s)
+#7 4.470 Reading package lists...
+#7 5.117 Reading package lists...
+#7 5.753 Building dependency tree...
+#7 5.911 Reading state information...
+#7 6.092 The following additional packages will be installed:
+#7 6.092   comerr-dev krb5-multidev
+#7 6.093 Suggested packages:
+#7 6.093   doc-base krb5-doc
+#7 6.108 The following NEW packages will be installed:
+#7 6.108   comerr-dev krb5-multidev libkrb5-dev
+#7 6.376 0 upgraded, 3 newly installed, 0 to remove and 10 not upgraded.
+#7 6.376 Need to get 181 kB of archives.
+#7 6.376 After this operation, 1148 kB of additional disk space will be used.
+#7 6.376 Get:1 http://ports.ubuntu.com/ubuntu-ports noble-updates/main arm64 comerr-dev arm64 2.1-1.47.0-2.4~exp1ubuntu4.1 [44.1 kB]
+#7 6.642 Get:2 http://ports.ubuntu.com/ubuntu-ports noble-updates/main arm64 krb5-multidev arm64 1.20.1-6ubuntu2.10 [125 kB]
+#7 6.800 Get:3 http://ports.ubuntu.com/ubuntu-ports noble-updates/main arm64 libkrb5-dev arm64 1.20.1-6ubuntu2.10 [11.9 kB]
+#7 6.902 debconf: delaying package configuration, since apt-utils is not installed
+#7 6.924 Fetched 181 kB in 1s (259 kB/s)
+#7 6.935 Selecting previously unselected package comerr-dev:arm64.
+#7 6.935 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 12212 files and directories currently installed.)
+#7 6.939 Preparing to unpack .../comerr-dev_2.1-1.47.0-2.4~exp1ubuntu4.1_arm64.deb ...
+#7 6.940 Unpacking comerr-dev:arm64 (2.1-1.47.0-2.4~exp1ubuntu4.1) ...
+#7 6.953 Selecting previously unselected package krb5-multidev:arm64.
+#7 6.954 Preparing to unpack .../krb5-multidev_1.20.1-6ubuntu2.10_arm64.deb ...
+#7 6.955 Unpacking krb5-multidev:arm64 (1.20.1-6ubuntu2.10) ...
+#7 6.968 Selecting previously unselected package libkrb5-dev:arm64.
+#7 6.969 Preparing to unpack .../libkrb5-dev_1.20.1-6ubuntu2.10_arm64.deb ...
+#7 6.970 Unpacking libkrb5-dev:arm64 (1.20.1-6ubuntu2.10) ...
+#7 6.984 Setting up comerr-dev:arm64 (2.1-1.47.0-2.4~exp1ubuntu4.1) ...
+#7 6.987 Setting up krb5-multidev:arm64 (1.20.1-6ubuntu2.10) ...
+#7 6.989 Setting up libkrb5-dev:arm64 (1.20.1-6ubuntu2.10) ...
+#7 DONE 7.0s
+
+#8 [stage-1 3/4] COPY --from=toolchain /usr/local/go /usr/local/go
+#8 DONE 0.8s
+
+#9 [stage-1 4/4] RUN touch /opt/driver-auth/disposable-fixture
+#9 DONE 0.1s
+
+#10 exporting to image
+#10 exporting layers
+#10 exporting layers 6.3s done
+#10 exporting manifest sha256:cc98e0d9e83cbbe8d401a14591b7c3790eff8a67fb3a5e06e2da158c7b9f12ca
+#10 exporting manifest sha256:cc98e0d9e83cbbe8d401a14591b7c3790eff8a67fb3a5e06e2da158c7b9f12ca done
+#10 exporting config sha256:1d5fcce2d57dba62f4aedfaa573ead2321f4f2bcd186dcf3b3317bf6ea336537 done
+#10 exporting attestation manifest sha256:7288cf2f9684aac348cb4e250cb407a3d3c03a3f8d808125ab29ba3c726760e7 done
+#10 exporting manifest list sha256:fcd7208d6d976370578eebe4f89cdd2bf4c90432569e90e17df6597a021f9f56 done
+#10 naming to docker.io/library/go-mariadb-stage5-linux:20261112 done
+#10 unpacking to docker.io/library/go-mariadb-stage5-linux:20261112
+#10 unpacking to docker.io/library/go-mariadb-stage5-linux:20261112 1.2s done
+#10 DONE 7.6s

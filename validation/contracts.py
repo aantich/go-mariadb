@@ -17,7 +17,7 @@ CORRECTNESS_COMMANDS = {
 # that either the tests or the separately built benchmark binaries execute.
 FULL_CHECK_ENVIRONMENT = {'GOMAXPROCS': '4', 'GOFLAGS': '', 'GOWORK': 'off'}
 FULL_COMMANDS = {
-    'upstream': ('go', 'test', '-json', '-count=1', '-timeout=240s', '.', './zstd', './internal/...'),
+    'upstream': ('go', 'test', '-json', '-count=1', '-timeout=240s', '.', './zstd', './internal/...', './gssapi'),
     'protocol': ('go', 'test', '-json', '-count=1', '-timeout=60s', '-tags=mariadb_validation', '-run=^TestMariaDB', '.'),
     'mariadb': ('go', 'test', '-json', '-count=1', '-timeout=120s', './validation'),
     # Require the complete tagged suite with race detection, including protocol

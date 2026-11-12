@@ -1,0 +1,258 @@
+{
+  "recorded_at": "2026-11-12T18:27:50.498322+00:00",
+  "status": "Stage 5 implemented and final Mac/Linux correctness confirmed; changes uncommitted on master; no benchmarks, profiles, commit, push or release",
+  "parent_commit": "527b5b9577dedfce03ee1fa70ea22a7ed1f94a80",
+  "input_fingerprint": "c65a2f7f932395d71b48d621db4ea827a3f21a947600937d2bb3e6cee652171a",
+  "production_module_native_inputs": 60,
+  "workload_ci_fixture_inputs": 93,
+  "profiles": {
+    "mac": {
+      "capture": "validation/results/stage5-mac-ci-final/capture.json",
+      "leaf_counts": {
+        "pass": 1377,
+        "fail": 0,
+        "skip": 8
+      },
+      "stage4_receipt": "validation/results/stage4-review-fixes-mac-confirmed/capture.json",
+      "stage4_passes_preserved": 1304,
+      "added_passes": 73,
+      "stage4_passes_lost": [],
+      "lost_correctness_passes": [],
+      "stages": {
+        "correctness": 0,
+        "recorder": 0,
+        "vet": 0
+      },
+      "external_auth": {
+        "contract": "external-auth-v1",
+        "fixture_inputs": {
+          "Dockerfile": "2fbec1c32625e19a0880c93db66d27c4350d1d234956f60589813f083218c5d7",
+          "pam_fixture.c": "9af7b7cf9c588c061a0172b850eac7ca07a48f8edf04ffe6f45e836a2b85cafa",
+          "serve.py": "2c22e4d43c680a0d23cf72073e644b08498aead53140b721f9534ee36dc4ba31"
+        },
+        "realm": "GO-MARIADB.TEST",
+        "runtime_identity": "docker-runtime-sha256:8ab4ca1b95d1f45504e6d2dc13b3c8c0cbd9881278c6d0a1361f197a33480b64",
+        "server_version": "12.3.3-MariaDB-ubu2404",
+        "service_principal": "mariadb/localhost@GO-MARIADB.TEST",
+        "tls_certificate_sha256": "3bcdd82e055a737c75cef8ee0228664abce517b050335785d522ce8117c6d0e6"
+      },
+      "skips": [
+        "github.com/aantich/go-mariadb/FuzzFormatDSN/seed#1",
+        "github.com/aantich/go-mariadb/FuzzFormatDSN/seed#15",
+        "github.com/aantich/go-mariadb/FuzzFormatDSN/seed#2",
+        "github.com/aantich/go-mariadb/TestConcurrent",
+        "github.com/aantich/go-mariadb/TestConnectionAttributes",
+        "github.com/aantich/go-mariadb/TestContextCancelBegin",
+        "github.com/aantich/go-mariadb/validation/TestMariaDBSessionInstrumentation",
+        "github.com/aantich/go-mariadb/zstd/TestServerCompression"
+      ]
+    },
+    "linux": {
+      "capture": "validation/results/stage5-linux-ci-final/capture.json",
+      "leaf_counts": {
+        "pass": 1380,
+        "fail": 0,
+        "skip": 5
+      },
+      "stage4_receipt": "validation/results/stage4-review-fixes-linux-confirmed/capture.json",
+      "stage4_passes_preserved": 1307,
+      "added_passes": 73,
+      "stage4_passes_lost": [],
+      "lost_correctness_passes": [],
+      "stages": {
+        "correctness": 0,
+        "recorder": 0,
+        "vet": 0
+      },
+      "external_auth": {
+        "contract": "external-auth-v1",
+        "fixture_inputs": {
+          "Dockerfile": "2fbec1c32625e19a0880c93db66d27c4350d1d234956f60589813f083218c5d7",
+          "pam_fixture.c": "9af7b7cf9c588c061a0172b850eac7ca07a48f8edf04ffe6f45e836a2b85cafa",
+          "serve.py": "2c22e4d43c680a0d23cf72073e644b08498aead53140b721f9534ee36dc4ba31"
+        },
+        "realm": "GO-MARIADB.TEST",
+        "runtime_identity": "local-disposable-linux-profile",
+        "server_version": "12.3.3-MariaDB-ubu2404",
+        "service_principal": "mariadb/localhost@GO-MARIADB.TEST",
+        "tls_certificate_sha256": "4752dab1a6dceb730d750b1f035c8b15518039cfdf058ed37fe471f4c5f31708"
+      },
+      "skips": [
+        "github.com/aantich/go-mariadb/FuzzFormatDSN/seed#1",
+        "github.com/aantich/go-mariadb/FuzzFormatDSN/seed#15",
+        "github.com/aantich/go-mariadb/FuzzFormatDSN/seed#2",
+        "github.com/aantich/go-mariadb/TestConcurrent",
+        "github.com/aantich/go-mariadb/zstd/TestServerCompression"
+      ]
+    }
+  },
+  "harness_tests": 75,
+  "benchmark_functions_executed": false,
+  "profiling_workloads_executed": false,
+  "new_stage4_profiles_unmeasured": 62,
+  "stage4_reference_exists": false,
+  "remaining_inventoried_unsupported_api": [
+    "transaction-aware CDC/GTID resume"
+  ],
+  "native_provider_limits": [
+    "macOS/Linux cgo only; unsupported builds return ErrUnavailable",
+    "No Windows SSPI/NTLM or GSS channel bindings",
+    "No SQL transport encryption from GSSAPI; configure TLS",
+    "Canceled native work can outlive its caller until OS retry policy completes; no socket access"
+  ],
+  "static_checks": {
+    "gofmt": true,
+    "diff_check": true,
+    "actionlint": true
+  },
+  "portability_checks": {
+    "cgo_disabled_provider_tests": {
+      "command": "CGO_ENABLED=0 GOMAXPROCS=2 go test -timeout=60s -run ^(TestProvider|TestUnavailable) ./gssapi",
+      "exit_code": 0,
+      "log": "validation/results/stage5-20261112/cgo-disabled.log"
+    },
+    "windows_fallback_cross_compile": {
+      "goos": "windows",
+      "goarch": "amd64",
+      "cgo_enabled": false,
+      "package": "./gssapi",
+      "exit_code": 0,
+      "log": "validation/results/stage5-20261112/windows-build.log",
+      "runtime_tested": false
+    }
+  },
+  "negative_controls": "validation/results/stage5-20261112/negative-controls.json",
+  "development_history": "validation/results/stage5-20261112/development-history.json",
+  "linux_fixture": {
+    "image": "go-mariadb-stage5-linux:20261112",
+    "image_id": "sha256:fcd7208d6d976370578eebe4f89cdd2bf4c90432569e90e17df6597a021f9f56",
+    "cpus": 2,
+    "memory": "4 GiB",
+    "read_only_source": true,
+    "published_ports": false,
+    "outbound_route": "normal Docker route retained for inherited timeout expectation; GOPROXY=off",
+    "container_removed": true
+  },
+  "mac_auth_fixture": {
+    "image": "go-mariadb-stage5-auth:latest",
+    "image_id": "sha256:1d058486967e6f1ceaa5637077df85a4815392d92523caf3a93028afea5eb7b7",
+    "cpus": 2,
+    "memory": "1 GiB",
+    "published_ports": "ephemeral loopback only",
+    "containers_removed": true
+  },
+  "shared_server_globals_changed": false,
+  "preserved_timing_capture": {
+    "path": "validation/results/current.json",
+    "sha256": "02fea12c04c5c42f1596bdb0c56ddd3839afb26a86f7e3e61f0b7e798adea7ed",
+    "unchanged": true
+  },
+  "immutable_references": {
+    "validation/baselines/native-bulk-stage1-macos-arm64-mariadb-12.3.3-go1.27.4": {
+      "sha256sums": "4e5433d8844a176b5692d254c0215803ecce56c11bcdb8adae6ec88c2fd480db",
+      "verified": true
+    },
+    "validation/baselines/macos-arm64-mariadb-12.3.3-go1.27.4": {
+      "sha256sums": "00b8619a1fb31568f7eeb8fcb9d1ba26bbd1e412c18bc0d2ad3e21d5ff0fee49",
+      "verified": true
+    }
+  },
+  "files": {
+    "validation/results/stage5-linux-confirmed/prior-correctness.json": "f75842b054df925bafd7aaa9befb86b56463218e271744653d8c19148fc4fb7d",
+    "validation/results/stage5-linux-confirmed/vet.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "validation/results/stage5-linux-confirmed/correctness.log": "0f46035a5227df972d56b858a30d7e36c41ac3dd96de4211a1f210a10fb9f9db",
+    "validation/results/stage5-linux-confirmed/capture.json": "002a435b890a6e132e1389c5e449d1fc07556f726e52ff1682921ecdd75e1518",
+    "validation/results/stage5-linux-confirmed/server-after.log": "a38a08cf207926d05b6cfc46158b3b2b51de7b2171b6571a675fade7a50269b1",
+    "validation/results/stage5-linux-confirmed/server-before.log": "a38a08cf207926d05b6cfc46158b3b2b51de7b2171b6571a675fade7a50269b1",
+    "validation/results/stage5-linux-confirmed/recorder.log": "a22a53f55a41d9175a9a70caf8186027b939140d560a326024a04d879160be27",
+    "validation/results/stage5-mac-attempt1/prior-correctness.json": "422c67c67992c53074c04a33186a94d06e6c281c78ce6e831ef6c7130c760c21",
+    "validation/results/stage5-mac-attempt1/vet.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "validation/results/stage5-mac-attempt1/correctness.log": "a00220e33ce9a9bc343de11b935c3f44dd0298bd0c0b02a045e9b61138083841",
+    "validation/results/stage5-mac-attempt1/capture.json": "10ffd2452c0ece196e6bd44c187637f907b7c96fcf7156a21b6061b6ceaa92a9",
+    "validation/results/stage5-mac-attempt1/server-after.log": "fc0dcfeb4c06669c9ac42344a1c1e763662af4ac5237d360eabd3f04cc0922d6",
+    "validation/results/stage5-mac-attempt1/server-before.log": "fc0dcfeb4c06669c9ac42344a1c1e763662af4ac5237d360eabd3f04cc0922d6",
+    "validation/results/stage5-mac-attempt1/recorder.log": "772c536b69af597d0d6510974bc51522b3263fb86fa53614e69a16952e784497",
+    "validation/results/stage5-mac-confirmed-final/prior-correctness.json": "316aeed2d3436fc6072eaf928e18861ca7dd7811f7650b25f5c5a8e6f39bc5ef",
+    "validation/results/stage5-mac-confirmed-final/vet.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "validation/results/stage5-mac-confirmed-final/correctness.log": "b97a5085df36b55ba71bf687fa5dc433af7d84a02a2dc04de36d755815fb65b0",
+    "validation/results/stage5-mac-confirmed-final/capture.json": "0ea41b517f8167065f92ac136e4e1b4bc328ce5f7e2708413d3174a3d9ccc886",
+    "validation/results/stage5-mac-confirmed-final/server-after.log": "fc0dcfeb4c06669c9ac42344a1c1e763662af4ac5237d360eabd3f04cc0922d6",
+    "validation/results/stage5-mac-confirmed-final/server-before.log": "fc0dcfeb4c06669c9ac42344a1c1e763662af4ac5237d360eabd3f04cc0922d6",
+    "validation/results/stage5-mac-confirmed-final/recorder.log": "51ed76875f387edeb2ceaa28ddbc5c31ee12417110eec8abed8ca23ffe9719cb",
+    "validation/results/stage5-linux-ci-final/prior-correctness.json": "8cc57bf8173c7fbf3c08f3aa12ddaeb31cf0e3a2059acecac5b37facc01d23fb",
+    "validation/results/stage5-linux-ci-final/vet.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "validation/results/stage5-linux-ci-final/correctness.log": "e8b777a7ec07a7ff752a79592fd210d0ef99321e13f00d456f4de72fea8b9421",
+    "validation/results/stage5-linux-ci-final/capture.json": "5cbc6655bca706b3e17de3e022556ab9e3ae6dc61964460cb17ef7a4fad3c4ea",
+    "validation/results/stage5-linux-ci-final/server-after.log": "a38a08cf207926d05b6cfc46158b3b2b51de7b2171b6571a675fade7a50269b1",
+    "validation/results/stage5-linux-ci-final/server-before.log": "a38a08cf207926d05b6cfc46158b3b2b51de7b2171b6571a675fade7a50269b1",
+    "validation/results/stage5-linux-ci-final/recorder.log": "7b56c0b5e7970f43c553b3326fe741f0cdc17b32501d8fc2ad07264890c121b5",
+    "validation/results/stage5-mac-final/prior-correctness.json": "d4378d4bc76bf6db1c8271f7d553075b331fa78816c1c49aeaa40d1d8303c1ef",
+    "validation/results/stage5-mac-final/vet.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "validation/results/stage5-mac-final/correctness.log": "897adaef08d36a13a02b3aa7785a68ed83d7e80c03358a31662ecc2518692a02",
+    "validation/results/stage5-mac-final/capture.json": "da964e00516add549ed62cb2c3aca23a66497df3899a0ecc88dc1b22610d6057",
+    "validation/results/stage5-mac-final/server-after.log": "fc0dcfeb4c06669c9ac42344a1c1e763662af4ac5237d360eabd3f04cc0922d6",
+    "validation/results/stage5-mac-final/server-before.log": "fc0dcfeb4c06669c9ac42344a1c1e763662af4ac5237d360eabd3f04cc0922d6",
+    "validation/results/stage5-mac-final/recorder.log": "ad7e584f2ccdebd6152a29885d9488631ee69fe035249527fd92968d2b530dd2",
+    "validation/results/stage5-mac-ci-final/prior-correctness.json": "c29287d9a11ae597e339a95b8036111d52d07edf2292e653336e0591ceb452eb",
+    "validation/results/stage5-mac-ci-final/vet.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "validation/results/stage5-mac-ci-final/correctness.log": "85831b26afc4b9b1157c44e9d2b16b2cb04513e04f83f70f5b761d7e61c0209e",
+    "validation/results/stage5-mac-ci-final/capture.json": "162c7485330dcd6c0c4f7028d1984bc621681905cd84916ffb331e78cc0ea318",
+    "validation/results/stage5-mac-ci-final/server-after.log": "fc0dcfeb4c06669c9ac42344a1c1e763662af4ac5237d360eabd3f04cc0922d6",
+    "validation/results/stage5-mac-ci-final/server-before.log": "fc0dcfeb4c06669c9ac42344a1c1e763662af4ac5237d360eabd3f04cc0922d6",
+    "validation/results/stage5-mac-ci-final/recorder.log": "ca27d787577b4f1fe4c413aa18d731218d5124f67f6f0bd0b1ef1ff538b87ec9",
+    "validation/results/stage5-mac-confirmed/prior-correctness.json": "316aeed2d3436fc6072eaf928e18861ca7dd7811f7650b25f5c5a8e6f39bc5ef",
+    "validation/results/stage5-mac-confirmed/vet.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "validation/results/stage5-mac-confirmed/correctness.log": "b78ecd8d19b991cac5f63426b07925ecc554b357d1b17c3409c2186dc54d90d7",
+    "validation/results/stage5-mac-confirmed/capture.json": "7733cfb93b259b9712725515d5b1c6ba8c71eda540a78fb50485f66ca0e6d49f",
+    "validation/results/stage5-mac-confirmed/server-after.log": "fc0dcfeb4c06669c9ac42344a1c1e763662af4ac5237d360eabd3f04cc0922d6",
+    "validation/results/stage5-mac-confirmed/server-before.log": "fc0dcfeb4c06669c9ac42344a1c1e763662af4ac5237d360eabd3f04cc0922d6",
+    "validation/results/stage5-mac-confirmed/recorder.log": "bceda8568aefaf065eae7bd87587736fc2a79f33e7e2d80035c32320d21ce8d8",
+    "validation/results/stage5-linux-attempt3/prior-correctness.json": "aca6b4a948727a6a8aa7f0fe205c6e045ee7915dc0ffe10f31634593b064d12e",
+    "validation/results/stage5-linux-attempt3/vet.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "validation/results/stage5-linux-attempt3/correctness.log": "60c88d2cdc630e613178ceae650ebbce8d5f533a3bd7d4454df591e4f040e8e7",
+    "validation/results/stage5-linux-attempt3/capture.json": "2b5a270217507046384d65333f651c39408a77a3c24382f5f0a861dc23a9d012",
+    "validation/results/stage5-linux-attempt3/server-after.log": "a38a08cf207926d05b6cfc46158b3b2b51de7b2171b6571a675fade7a50269b1",
+    "validation/results/stage5-linux-attempt3/server-before.log": "a38a08cf207926d05b6cfc46158b3b2b51de7b2171b6571a675fade7a50269b1",
+    "validation/results/stage5-linux-attempt3/recorder.log": "88f77818f64df135d5a0e97b37020a74c3da8ef9ed6b709fad925bbd92d754df",
+    "validation/results/stage5-linux-attempt2-incomplete/prior-correctness.json": "aca6b4a948727a6a8aa7f0fe205c6e045ee7915dc0ffe10f31634593b064d12e",
+    "validation/results/stage5-linux-attempt2-incomplete/vet.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "validation/results/stage5-linux-attempt2-incomplete/INCOMPLETE.txt": "a0b602201436b833714b3a58262aa709168a8d3dfce6b6b25256790526e206c5",
+    "validation/results/stage5-linux-attempt2-incomplete/correctness.log": "870a6522d0240d1ead694db11dd3e06132209440210b0826b17895a0d41dfdd5",
+    "validation/results/stage5-linux-attempt2-incomplete/server-after.log": "a38a08cf207926d05b6cfc46158b3b2b51de7b2171b6571a675fade7a50269b1",
+    "validation/results/stage5-linux-attempt2-incomplete/server-before.log": "a38a08cf207926d05b6cfc46158b3b2b51de7b2171b6571a675fade7a50269b1",
+    "validation/results/stage5-linux-attempt2-incomplete/recorder.log": "1b044464e6831c94e5b5be00ba568ae34bb29e085635636c9792de8a65ab4bce",
+    "validation/results/stage5-20261112/linux-check-final.sh.txt": "9b448cc6419efbea7173034cf6c08c12bf3594b972a990a43c7d5c58f683b1ac",
+    "validation/results/stage5-20261112/premature-ok.go.txt": "2dbcd8e352b4cfa88c2dd8e7d2aaf1a9bec9b636edc8ed5211affae9c5527f47",
+    "validation/results/stage5-20261112/linux-image-build.log": "d8bf9b44046094929c5ed1e7798ded96298e2dda9d9bd7dd627476b99ca24558",
+    "validation/results/stage5-20261112/auth-development-second.log": "5883fbfc140f0038f13d60e3d18f9977d6d22220f9ebaee23e05bdf6fba9a208",
+    "validation/results/stage5-20261112/principal-pin-build-error.log": "687c6f2f822efd31050f3b9377a8053867c53509094c278e5e01f5fbbed4294c",
+    "validation/results/stage5-20261112/mac-console-ci-final.log": "62f271e4c5a1c8c7afa2c8473d34abbdd16f04f7ce11565f19397febb2c3174c",
+    "validation/results/stage5-20261112/linux-check-attempt2.sh.txt": "418d00ded1d3d310b2f4c78013af32f5af11216a72df61d5b43f8962efa7b6bd",
+    "validation/results/stage5-20261112/principal-pin-negative.log": "a34aca163b68672ce8c1a182798cbb2537c83545e009bec2a08f86f4e51f0370",
+    "validation/results/stage5-20261112/linux-console-ci-final.log": "494a02c8a80ac87e44467d2dc520978ea925c597ddabb2c86cd1643db22aea75",
+    "validation/results/stage5-20261112/cgo-disabled.log": "e47e65c12a9bc11f04a22bcdfcfef43922d57698610d6d3fc48bd72fa2b079d8",
+    "validation/results/stage5-20261112/negative-controls.json": "ada912791d0d526264f66e56b735a8711b55ffae40c1c7a0fae777ab724455b7",
+    "validation/results/stage5-20261112/linux-console-confirmed.log": "a7868b3a754b9a5f101a78be12c72a2db21d7693a095f94644ad6e96f939fcd9",
+    "validation/results/stage5-20261112/pre-ci-confirmation.json": "fc35d07055626f5f34a9cc12f55acd707e5e6d4231e2d9bdb341c7e70b2ea786",
+    "validation/results/stage5-20261112/linux-console-final.log": "8c8d6720e77d8933f58cf8ad590f839c81902ba8d045097b09792696d199f0e1",
+    "validation/results/stage5-20261112/principal-pin-overlay.json": "6d08b54066f4946f25031eb514d437f60324323c5eebd95e4f163e0b7e9a64d8",
+    "validation/results/stage5-20261112/mac-console-attempt1.log": "107e953324ef53371276511045de3a920791345aaf34ef0824874f72451b6ffb",
+    "validation/results/stage5-20261112/linux-console-attempt2.log": "856da96b9392de6b0918fa2b014a383962305d1c3149460d6ff487a63a34c74e",
+    "validation/results/stage5-20261112/auth-image-build.log": "a83db4da93d9be1a4190a271f658d2435614c21139d771af60799555325ce0ef",
+    "validation/results/stage5-20261112/windows-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "validation/results/stage5-20261112/mac-console-attempt2.log": "c9a057ecdbcfe512d6dbf85e7a4db0f586280a037847f914bbe05ac03d9302b6",
+    "validation/results/stage5-20261112/linux-console-attempt1.log": "4444aa84161e62f651529f7741ad5df7a0ebd6583c32dfe689171ebbce711e2e",
+    "validation/results/stage5-20261112/mac-console-attempt3.log": "2995b895132ce0bbefb27b1a8c106a81674ce5c27326bbc22eb9a7ddb984f7d9",
+    "validation/results/stage5-20261112/mac-console-confirmed.log": "cb78df5a658bf3880f2278537beea1bdd84f1886a25d49afde575e0cc485dea1",
+    "validation/results/stage5-20261112/auth-development-first.log": "1a879ea7be8248ec8e44e1b73455dfb809ab473e0e0aa96636cd148b3ef06e08",
+    "validation/results/stage5-20261112/premature-ok-overlay.json": "d8ddce44da897dd99b8d54d12d13a630fd3df6d4ef7ac6ae1800a05dc4e0111e",
+    "validation/results/stage5-20261112/linux-check-attempt1.sh.txt": "0f3b44cd39590ca02add4c9e3d203686a8b64ebb8763d221eaaf467a4dd3ccb3",
+    "validation/results/stage5-20261112/linux-check-ci-final.sh.txt": "06e65170aed81636e680283d3d128779ffe2f92f79285689df08db5d06f65adc",
+    "validation/results/stage5-20261112/principal-pin.go.txt": "47bdad0dbab8a28a7414a97860918c4952865570bbf593b337a984728818d3ea",
+    "validation/results/stage5-20261112/linux-check-confirmed.sh.txt": "31f6fd591abafc09eaf35b2813411dbf833f61dc0e96c0d38186a56b2e1ec568",
+    "validation/results/stage5-20261112/premature-ok-negative.log": "770e9c989b68546c3d1eca06d649e3a3aaa0a1df2f22b63463915ff159c09cc4",
+    "validation/results/stage5-20261112/development-history.json": "316faaa5e72903b1b073ea9a2567696ce01e274280cf0314466205eed11103cd"
+  },
+  "ci_followup": "Final lint job also installs optional native headers. This workflow-only change leaves every production/native/Go workload byte unchanged; both complete correctness profiles were reconfirmed. Earlier green receipts remain preserved.",
+  "negative_control_source_note": "The controls and CGO-disabled/Windows build checks used 8bcbc06f source, identical in every production/native/Go workload byte; only the lint header-installation workflow subsequently changed."
+}

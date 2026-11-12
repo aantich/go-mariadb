@@ -90,11 +90,26 @@ func readAuthPacket(mc *mysqlConn) ([]byte, error) {
 	return pkt, nil
 }
 
+// authDiagnostic distinguishes driver diagnostics containing peer-controlled
+// text from errors supplied by trusted application callbacks/providers. Once an
+// exchange has sent external credentials, only its non-secret classification
+// may escape; callback errors retain their original identity and message.
+type authDiagnostic struct {
+	kind   error
+	detail string
+}
+
+func (e *authDiagnostic) Error() string { return e.kind.Error() + ": " + e.detail }
+func (e *authDiagnostic) Unwrap() error { return e.kind }
+
 // initAuth enforces the connection's authentication policy before invoking a
 // plugin. The same checks apply to the server greeting and every auth switch.
 func (mc *mysqlConn) initAuth(ctx context.Context, plugin string, authData []byte, auth *AuthContext) (AuthPlugin, []byte, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, nil, err
+	}
+	if auth.gssapi != nil && plugin != "auth_gssapi_client" {
+		return nil, nil, ErrGSSAPIPolicy
 	}
 	switch plugin {
 	case "mysql_native_password":
@@ -109,22 +124,55 @@ func (mc *mysqlConn) initAuth(ctx context.Context, plugin string, authData []byt
 		if !mc.cfg.AllowCleartextPasswords {
 			return nil, nil, ErrCleartextPassword
 		}
+	case "dialog":
+		if auth.pamDialog == nil || !(auth.verifiedTLS || auth.UnixSocket()) {
+			return nil, nil, ErrPAMPolicy
+		}
+	case "auth_gssapi_client":
+		if auth.gssapi == nil {
+			return nil, nil, ErrGSSAPIPolicy
+		}
 	}
 	pluginImpl, exists := globalPluginRegistry.GetPlugin(plugin)
 	if !exists {
-		return nil, nil, fmt.Errorf("authentication plugin %q: %w", plugin, ErrUnknownPlugin)
+		return nil, nil, &authDiagnostic{ErrUnknownPlugin, fmt.Sprintf("authentication plugin %q", plugin)}
 	}
+	initialized := false
+	defer func() {
+		if !initialized {
+			closeAuthPlugin(pluginImpl)
+		}
+	}()
 	response, err := pluginImpl.InitAuth(ctx, authData, auth)
 	if err == nil {
 		err = ctx.Err()
 	}
+	initialized = err == nil
 	return pluginImpl, response, err
 }
 
 // handleAuthResult processes the initial authentication packet and manages subsequent
 // authentication flow. It reads the first authentication packet and hands off processing
 // to the appropriate auth plugin.
-func (mc *mysqlConn) handleAuthResult(ctx context.Context, initialSeed []byte, authPlugin AuthPlugin, auth *AuthContext) error {
+func (mc *mysqlConn) handleAuthResult(ctx context.Context, initialSeed []byte, authPlugin AuthPlugin, auth *AuthContext) (err error) {
+	defer func() { closeAuthPlugin(authPlugin) }()
+	// Sensitivity belongs to the whole connection attempt. A later plugin switch
+	// must not let the peer reflect an earlier password, OTP or ticket into an
+	// application error. Keep trusted callback/provider errors unchanged, while
+	// discarding peer prose in server errors and driver protocol diagnostics.
+	sensitive := false
+	defer func() {
+		if !sensitive {
+			return
+		}
+		switch diagnostic := err.(type) {
+		case *authDiagnostic:
+			err = diagnostic.kind
+		}
+	}()
+	if _, ok := authPlugin.(interface{ sensitiveAuth() }); ok {
+		sensitive = true
+	}
 	data, err := readAuthPacket(mc)
 	if err != nil {
 		return err
@@ -141,9 +189,21 @@ func (mc *mysqlConn) handleAuthResult(ctx context.Context, initialSeed []byte, a
 		// Check for terminal packets first
 		switch data[0] {
 		case iOK:
+			if validator, ok := authPlugin.(AuthPluginValidator); ok {
+				if err := validator.ValidateAuth(); err != nil {
+					return err
+				}
+			}
 			return mc.resultUnchanged().handleOkPacket(data)
 		case iERR:
 			err := mc.handleErrorPacket(data)
+			if sensitive {
+				if serverErr, ok := err.(*MySQLError); ok {
+					// Redact peer prose at its origin, so a trusted callback returning
+					// its own MySQLError still keeps its original error unchanged.
+					serverErr.Message = "external authentication rejected by server"
+				}
+			}
 			if mc.cfg.openIDToken != "" {
 				// Preserve the server error code without exposing an echoed token.
 				if serverErr, ok := err.(*MySQLError); ok {
@@ -172,16 +232,20 @@ func (mc *mysqlConn) handleAuthResult(ctx context.Context, initialSeed []byte, a
 			// and transport information, but give the new plugin its own snapshot.
 			nextAuth := *auth
 			newPlugin, initialAuthResponse, err := mc.initAuth(ctx, plugin, authData, &nextAuth)
+			if _, ok := newPlugin.(interface{ sensitiveAuth() }); ok {
+				sensitive = true
+			}
 			if err != nil {
 				return err
 			}
 
+			closeAuthPlugin(authPlugin)
+			authPlugin = newPlugin
 			if err := mc.writeAuthSwitchPacket(initialAuthResponse); err != nil {
 				return err
 			}
 
 			// Continue iteratively with the new plugin and seed.
-			authPlugin = newPlugin
 			auth = &nextAuth
 			initialSeed = authData
 			data, err = readAuthPacket(mc)
@@ -246,7 +310,7 @@ func (mc *mysqlConn) parseAuthSwitchData(data []byte, initialSeed []byte) (strin
 	authData := data[pluginEndIndex+1:]
 	// Binary MariaDB nonces have no terminator. Keep legacy normalization
 	// for other plugins so existing plugin implementations retain their contract.
-	if plugin != "client_ed25519" && plugin != "parsec" && len(authData) > 0 && authData[len(authData)-1] == 0 {
+	if plugin != "client_ed25519" && plugin != "parsec" && plugin != "dialog" && plugin != "auth_gssapi_client" && len(authData) > 0 && authData[len(authData)-1] == 0 {
 		authData = authData[:len(authData)-1]
 	}
 

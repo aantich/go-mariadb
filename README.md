@@ -67,6 +67,9 @@ create a registration collision.
   cleanup; per-command progress callbacks with error/panic draining.
 * Native/password, ed25519 and **PARSEC** authentication; authentication work and
   message sizes are bounded. Binary MariaDB challenges retain trailing zero bytes.
+* Opt-in interactive PAM with explicit prompt handling and protected transport;
+  principal-pinned, mutually authenticated Kerberos through the optional
+  [`gssapi`](gssapi) provider on macOS/Linux. See the [authentication guide](docs/USER_GUIDE.md#interactive-pam).
 * Checked metadata/OK/greeting/prepare parsing, receive and column limits, safe
   retirement after malformed protocol, and unsigned result accessors with signed
   overflow errors.
@@ -107,8 +110,9 @@ observed background VM activity. See the report for current results and limits.
 
 The current live profile is MariaDB 12.3.3, macOS arm64 and Go 1.27.4. The intended
 server range is MariaDB 10.11 and newer; broader CI is not equivalent to completed
-runtime validation. Interactive PAM, GSSAPI and their external fixtures remain
-on the roadmap. CDC is optional future scope. Native API limits and ownership
+runtime validation. [Stage 5](docs/STAGE5_AUTHENTICATION.md) adds isolated real
+PAM/Kerberos fixtures; Windows SSPI/NTLM and production identity-service integration
+remain outside the current provider. CDC is optional future scope. Native API limits and ownership
 rules are documented in the guide; performance acceptance remains open.
 
 The fork preserves the upstream MPL-2.0 license and attribution. Internal names

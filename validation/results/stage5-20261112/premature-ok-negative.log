@@ -1,0 +1,6 @@
+--- FAIL: TestExternalAuthWire (0.00s)
+    --- FAIL: TestExternalAuthWire/premature_OK (0.00s)
+        auth_external_test.go:409: wrong result: <nil>
+FAIL
+FAIL	github.com/aantich/go-mariadb	0.383s
+FAIL

@@ -1,0 +1,62 @@
+{
+  "mac": {
+    "capture": "validation/results/stage5-review-fixes-mac-final/capture.json",
+    "source_fingerprint": "9d7c4b8c5b19e246660b0326d2cf32c8cf114e6c998a29cac5c7372d29da7807",
+    "leaf_counts": {
+      "pass": 1398,
+      "skip": 8
+    },
+    "prior_receipt": "validation/results/stage5-mac-ci-final/capture.json",
+    "earlier_passes_preserved": 1377,
+    "added_passes": 21,
+    "lost_prior_passes": [],
+    "stages": {
+      "correctness": 0,
+      "recorder": 0,
+      "vet": 0
+    },
+    "external_auth": {
+      "contract": "external-auth-v1",
+      "fixture_inputs": {
+        "Dockerfile": "2fbec1c32625e19a0880c93db66d27c4350d1d234956f60589813f083218c5d7",
+        "pam_fixture.c": "9af7b7cf9c588c061a0172b850eac7ca07a48f8edf04ffe6f45e836a2b85cafa",
+        "serve.py": "2c22e4d43c680a0d23cf72073e644b08498aead53140b721f9534ee36dc4ba31"
+      },
+      "realm": "GO-MARIADB.TEST",
+      "runtime_identity": "docker-runtime-sha256:8ab4ca1b95d1f45504e6d2dc13b3c8c0cbd9881278c6d0a1361f197a33480b64",
+      "server_version": "12.3.3-MariaDB-ubu2404",
+      "service_principal": "mariadb/localhost@GO-MARIADB.TEST",
+      "tls_certificate_sha256": "adab5265812fb86825ec479ed9bbd323c98995c8e2edc3287a0c2212fbf008ad"
+    }
+  },
+  "linux": {
+    "capture": "validation/results/stage5-review-fixes-linux-final/capture.json",
+    "source_fingerprint": "9d7c4b8c5b19e246660b0326d2cf32c8cf114e6c998a29cac5c7372d29da7807",
+    "leaf_counts": {
+      "pass": 1401,
+      "skip": 5
+    },
+    "prior_receipt": "validation/results/stage5-linux-ci-final/capture.json",
+    "earlier_passes_preserved": 1380,
+    "added_passes": 21,
+    "lost_prior_passes": [],
+    "stages": {
+      "correctness": 0,
+      "recorder": 0,
+      "vet": 0
+    },
+    "external_auth": {
+      "contract": "external-auth-v1",
+      "fixture_inputs": {
+        "Dockerfile": "2fbec1c32625e19a0880c93db66d27c4350d1d234956f60589813f083218c5d7",
+        "pam_fixture.c": "9af7b7cf9c588c061a0172b850eac7ca07a48f8edf04ffe6f45e836a2b85cafa",
+        "serve.py": "2c22e4d43c680a0d23cf72073e644b08498aead53140b721f9534ee36dc4ba31"
+      },
+      "realm": "GO-MARIADB.TEST",
+      "runtime_identity": "local-disposable-linux-profile",
+      "server_version": "12.3.3-MariaDB-ubu2404",
+      "service_principal": "mariadb/localhost@GO-MARIADB.TEST",
+      "tls_certificate_sha256": "ba98fcfa5d33fc0b42bc39782396a6881da9a5f9faf308a4e2205b9fbe65c829"
+    }
+  }
+}

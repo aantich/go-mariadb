@@ -138,7 +138,7 @@ class CorrectnessHistoryTests(unittest.TestCase):
                  mock.patch.object(record.subprocess,'run',side_effect=run), \
                  mock.patch.object(record.subprocess,'check_output',side_effect=check_output), \
                  mock.patch.object(pass_history,'preserve',side_effect=preserve), \
-                 mock.patch.dict('os.environ',{'GO_MARIADB_REQUIRE_INSTRUMENTATION':'0'}), \
+                 mock.patch.dict('os.environ',{'GO_MARIADB_REQUIRE_INSTRUMENTATION':'0', 'GO_MARIADB_AUTH_RECEIPT':json.dumps(valid['external_auth'])}), \
                  mock.patch('sys.argv',['record.py','--config',str(cfg),'--conditions','synthetic','--correctness-only']), \
                  mock.patch('builtins.print'):
                 self.assertEqual(record.main(),1)

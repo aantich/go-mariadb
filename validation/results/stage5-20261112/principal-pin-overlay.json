@@ -1,0 +1,5 @@
+{
+  "Replace": {
+    "/Users/aantich/dev/mariadbnew/projects/go-mariadb/auth_gssapi.go": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage5-20261112/principal-pin.go.txt"
+  }
+}

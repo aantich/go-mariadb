@@ -1,0 +1,19 @@
+Isolated MariaDB 12.3.3-MariaDB-ubu2404 fixtures ready; native/TLS/auth tests are required.
+Traceback (most recent call last):
+  File "/work/validation/auth_fixture.py", line 199, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/work/validation/auth_fixture.py", line 194, in main
+    with environment(local=local) as fixture:
+  File "/usr/lib/python3.12/contextlib.py", line 137, in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+  File "/work/validation/auth_fixture.py", line 69, in environment
+    with tempfile.TemporaryDirectory(prefix='external-auth-', dir=HERE/'.local') as directory:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/tempfile.py", line 1021, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/tempfile.py", line 523, in mkdtemp
+    _os.mkdir(file, 0o700)
+OSError: [Errno 30] Read-only file system: '/work/validation/.local/external-auth-jxn3mmeu'

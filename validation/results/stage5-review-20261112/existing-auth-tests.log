@@ -1,0 +1,131 @@
+=== RUN   TestGSSAPIRequiredMethod
+=== RUN   TestGSSAPIRequiredMethod/password-only_OK
+=== RUN   TestGSSAPIRequiredMethod/password_switch
+--- PASS: TestGSSAPIRequiredMethod (0.00s)
+    --- PASS: TestGSSAPIRequiredMethod/password-only_OK (0.00s)
+    --- PASS: TestGSSAPIRequiredMethod/password_switch (0.00s)
+=== RUN   TestExternalAuthPanicCleanup
+--- PASS: TestExternalAuthPanicCleanup (0.00s)
+=== RUN   TestExternalAuthPolicy
+=== RUN   TestExternalAuthPolicy/permission-dialog
+=== RUN   TestExternalAuthPolicy/permission-auth_gssapi_client
+=== RUN   TestExternalAuthPolicy/-1
+=== RUN   TestExternalAuthPolicy/65
+=== RUN   TestExternalAuthPolicy/snapshots_and_DSN
+--- PASS: TestExternalAuthPolicy (0.00s)
+    --- PASS: TestExternalAuthPolicy/permission-dialog (0.00s)
+    --- PASS: TestExternalAuthPolicy/permission-auth_gssapi_client (0.00s)
+    --- PASS: TestExternalAuthPolicy/-1 (0.00s)
+    --- PASS: TestExternalAuthPolicy/65 (0.00s)
+    --- PASS: TestExternalAuthPolicy/snapshots_and_DSN (0.00s)
+=== RUN   TestPAMDialogProtocol
+=== RUN   TestPAMDialogProtocol/2
+=== RUN   TestPAMDialogProtocol/3
+=== RUN   TestPAMDialogProtocol/4
+=== RUN   TestPAMDialogProtocol/5
+=== RUN   TestPAMDialogProtocol/malformed-0
+=== RUN   TestPAMDialogProtocol/malformed-1
+=== RUN   TestPAMDialogProtocol/malformed-2
+=== RUN   TestPAMDialogProtocol/malformed-3
+=== RUN   TestPAMDialogProtocol/malformed-4
+=== RUN   TestPAMDialogProtocol/malformed-5
+=== RUN   TestPAMDialogProtocol/empty_switch_acknowledgement
+=== RUN   TestPAMDialogProtocol/disabled
+=== RUN   TestPAMDialogProtocol/plain
+=== RUN   TestPAMDialogProtocol/unverified_TLS
+=== RUN   TestPAMDialogProtocol/Unix
+=== RUN   TestPAMDialogProtocol/verified_TLS
+=== RUN   TestPAMDialogProtocol/bounded_prompts
+=== RUN   TestPAMDialogProtocol/8
+=== RUN   TestPAMDialogProtocol/65537
+=== RUN   TestPAMDialogProtocol/cancellation_and_callback_identity
+--- PASS: TestPAMDialogProtocol (0.00s)
+    --- PASS: TestPAMDialogProtocol/2 (0.00s)
+    --- PASS: TestPAMDialogProtocol/3 (0.00s)
+    --- PASS: TestPAMDialogProtocol/4 (0.00s)
+    --- PASS: TestPAMDialogProtocol/5 (0.00s)
+    --- PASS: TestPAMDialogProtocol/malformed-0 (0.00s)
+    --- PASS: TestPAMDialogProtocol/malformed-1 (0.00s)
+    --- PASS: TestPAMDialogProtocol/malformed-2 (0.00s)
+    --- PASS: TestPAMDialogProtocol/malformed-3 (0.00s)
+    --- PASS: TestPAMDialogProtocol/malformed-4 (0.00s)
+    --- PASS: TestPAMDialogProtocol/malformed-5 (0.00s)
+    --- PASS: TestPAMDialogProtocol/empty_switch_acknowledgement (0.00s)
+    --- PASS: TestPAMDialogProtocol/disabled (0.00s)
+    --- PASS: TestPAMDialogProtocol/plain (0.00s)
+    --- PASS: TestPAMDialogProtocol/unverified_TLS (0.00s)
+    --- PASS: TestPAMDialogProtocol/Unix (0.00s)
+    --- PASS: TestPAMDialogProtocol/verified_TLS (0.00s)
+    --- PASS: TestPAMDialogProtocol/bounded_prompts (0.00s)
+    --- PASS: TestPAMDialogProtocol/8 (0.00s)
+    --- PASS: TestPAMDialogProtocol/65537 (0.00s)
+    --- PASS: TestPAMDialogProtocol/cancellation_and_callback_identity (0.00s)
+=== RUN   TestGSSAPIProtocol
+=== RUN   TestGSSAPIProtocol/announcement-00
+=== RUN   TestGSSAPIProtocol/announcement-0000
+=== RUN   TestGSSAPIProtocol/announcement-004b65726265726f7300
+=== RUN   TestGSSAPIProtocol/announcement-004e65676f746961746500
+=== RUN   TestGSSAPIProtocol/announcement-004e544c4d00
+=== RUN   TestGSSAPIProtocol/announcement-004b65726265726f73
+=== RUN   TestGSSAPIProtocol/announcement-00007461696c
+=== RUN   TestGSSAPIProtocol/announcement-
+=== RUN   TestGSSAPIProtocol/pin_before_provider
+=== RUN   TestGSSAPIProtocol/success
+=== RUN   TestGSSAPIProtocol/premature_OK
+=== RUN   TestGSSAPIProtocol/step_budget
+=== RUN   TestGSSAPIProtocol/no_first_token
+=== RUN   TestGSSAPIProtocol/oversized_token
+=== RUN   TestGSSAPIProtocol/error
+=== RUN   TestGSSAPIProtocol/factory_error
+=== RUN   TestGSSAPIProtocol/nil_provider
+=== RUN   TestGSSAPIProtocol/SPNEGO
+--- PASS: TestGSSAPIProtocol (0.00s)
+    --- PASS: TestGSSAPIProtocol/announcement-00 (0.00s)
+    --- PASS: TestGSSAPIProtocol/announcement-0000 (0.00s)
+    --- PASS: TestGSSAPIProtocol/announcement-004b65726265726f7300 (0.00s)
+    --- PASS: TestGSSAPIProtocol/announcement-004e65676f746961746500 (0.00s)
+    --- PASS: TestGSSAPIProtocol/announcement-004e544c4d00 (0.00s)
+    --- PASS: TestGSSAPIProtocol/announcement-004b65726265726f73 (0.00s)
+    --- PASS: TestGSSAPIProtocol/announcement-00007461696c (0.00s)
+    --- PASS: TestGSSAPIProtocol/announcement- (0.00s)
+    --- PASS: TestGSSAPIProtocol/pin_before_provider (0.00s)
+    --- PASS: TestGSSAPIProtocol/success (0.00s)
+    --- PASS: TestGSSAPIProtocol/premature_OK (0.00s)
+    --- PASS: TestGSSAPIProtocol/step_budget (0.00s)
+    --- PASS: TestGSSAPIProtocol/no_first_token (0.00s)
+    --- PASS: TestGSSAPIProtocol/oversized_token (0.00s)
+    --- PASS: TestGSSAPIProtocol/error (0.00s)
+    --- PASS: TestGSSAPIProtocol/factory_error (0.00s)
+    --- PASS: TestGSSAPIProtocol/nil_provider (0.00s)
+    --- PASS: TestGSSAPIProtocol/SPNEGO (0.00s)
+=== RUN   TestExternalAuthWire
+=== RUN   TestExternalAuthWire/success
+=== RUN   TestExternalAuthWire/premature_OK
+=== RUN   TestExternalAuthWire/server_error
+=== RUN   TestExternalAuthWire/switch
+=== RUN   TestExternalAuthWire/read_error
+[mariadb] 2026/11/12 19:40:18 packets.go:63 connection is closed
+=== RUN   TestExternalAuthWire/binary_announcement_terminators
+--- PASS: TestExternalAuthWire (0.00s)
+    --- PASS: TestExternalAuthWire/success (0.00s)
+    --- PASS: TestExternalAuthWire/premature_OK (0.00s)
+    --- PASS: TestExternalAuthWire/server_error (0.00s)
+    --- PASS: TestExternalAuthWire/switch (0.00s)
+    --- PASS: TestExternalAuthWire/read_error (0.00s)
+    --- PASS: TestExternalAuthWire/binary_announcement_terminators (0.00s)
+PASS
+ok  	github.com/aantich/go-mariadb	1.463s
+=== RUN   TestProviderCancellation
+=== RUN   TestProviderCancellation/open
+=== RUN   TestProviderCancellation/step
+=== RUN   TestProviderCancellation/close_during_step
+=== RUN   TestProviderCancellation/provider_error
+--- PASS: TestProviderCancellation (0.00s)
+    --- PASS: TestProviderCancellation/open (0.00s)
+    --- PASS: TestProviderCancellation/step (0.00s)
+    --- PASS: TestProviderCancellation/close_during_step (0.00s)
+    --- PASS: TestProviderCancellation/provider_error (0.00s)
+=== RUN   TestProviderOpenFailure
+--- PASS: TestProviderOpenFailure (0.00s)
+PASS
+ok  	github.com/aantich/go-mariadb/gssapi	1.621s

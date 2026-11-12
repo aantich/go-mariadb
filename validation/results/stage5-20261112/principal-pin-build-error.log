@@ -1,0 +1,4 @@
+FAIL	github.com/aantich/go-mariadb [build failed]
+FAIL
+# github.com/aantich/go-mariadb [github.com/aantich/go-mariadb.test]
+./validation/results/stage5-20261112/principal-pin.go.txt:108:2: declared and not used: principal

@@ -6,7 +6,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-package mysql
+package mariadb
 
 import (
 	"bytes"
@@ -45,7 +45,7 @@ func TestConvertDerivedUnsupportedSlice(t *testing.T) {
 	type derived []int
 
 	_, err := converter{}.ConvertValue(derived{1})
-	if err == nil || err.Error() != "unsupported type mysql.derived, a slice of int" {
+	if err == nil || err.Error() != "unsupported type mariadb.derived, a slice of int" {
 		t.Fatal("Unexpected error", err)
 	}
 }

@@ -1,0 +1,358 @@
+{
+  "purpose": "Diagnostic CPU controls; never replace full capture or references",
+  "complete": true,
+  "pattern": "^BenchmarkRowsScan$/^int64$/^binary=(false|true)$/^rows=100$/^direct=(false|true)$",
+  "benchtime": "500ms",
+  "conditions": "No idle confirmation. Order fixed before measuring; all outcomes retained.",
+  "initial_attempt": "attempt0-original.log: all four scan cases passed; diagnostic incorrectly expected a fifth top-level DSN case under a nested benchmark filter. That expectation was corrected before this complete control.",
+  "source_fingerprint": "7e0376b88d5fce25d372680fece6d1faa3c4af6cf10bf8775616b4be79ea5b97",
+  "binaries": {
+    "original": "55787e4c482ea6a861818c1ebdf6b40814bda352f2434d613221f1a089998e7b",
+    "before-review": "9dd65ca6382408e1f5f44b75f13731443a25ce48735ba3d27296de5b1a9919c7",
+    "corrected": "3c0ea42e010bc9ef95c1b4ac89bcc69282cd76bc62298bba335702e76b176c6b"
+  },
+  "samples": [
+    {
+      "repetition": 0,
+      "variant": "original",
+      "exit_code": 0,
+      "benchmarks": {
+        "BenchmarkRowsScan/int64/binary=false/rows=100/direct=false": {
+          "iterations": 73513,
+          "gomaxprocs": 4,
+          "ns/op": 8308.0,
+          "B/op": 816.0,
+          "allocs/op": 101.0
+        },
+        "BenchmarkRowsScan/int64/binary=false/rows=100/direct=true": {
+          "iterations": 114565,
+          "gomaxprocs": 4,
+          "ns/op": 5116.0,
+          "B/op": 24.0,
+          "allocs/op": 1.0
+        },
+        "BenchmarkRowsScan/int64/binary=true/rows=100/direct=false": {
+          "iterations": 98883,
+          "gomaxprocs": 4,
+          "ns/op": 6047.0,
+          "B/op": 816.0,
+          "allocs/op": 101.0
+        },
+        "BenchmarkRowsScan/int64/binary=true/rows=100/direct=true": {
+          "iterations": 181552,
+          "gomaxprocs": 4,
+          "ns/op": 3320.0,
+          "B/op": 24.0,
+          "allocs/op": 1.0
+        }
+      }
+    },
+    {
+      "repetition": 0,
+      "variant": "before-review",
+      "exit_code": 0,
+      "benchmarks": {
+        "BenchmarkRowsScan/int64/binary=false/rows=100/direct=false": {
+          "iterations": 70956,
+          "gomaxprocs": 4,
+          "ns/op": 8227.0,
+          "B/op": 816.0,
+          "allocs/op": 101.0
+        },
+        "BenchmarkRowsScan/int64/binary=false/rows=100/direct=true": {
+          "iterations": 113055,
+          "gomaxprocs": 4,
+          "ns/op": 5262.0,
+          "B/op": 24.0,
+          "allocs/op": 1.0
+        },
+        "BenchmarkRowsScan/int64/binary=true/rows=100/direct=false": {
+          "iterations": 96650,
+          "gomaxprocs": 4,
+          "ns/op": 6233.0,
+          "B/op": 816.0,
+          "allocs/op": 101.0
+        },
+        "BenchmarkRowsScan/int64/binary=true/rows=100/direct=true": {
+          "iterations": 177148,
+          "gomaxprocs": 4,
+          "ns/op": 3407.0,
+          "B/op": 24.0,
+          "allocs/op": 1.0
+        }
+      }
+    },
+    {
+      "repetition": 0,
+      "variant": "corrected",
+      "exit_code": 0,
+      "benchmarks": {
+        "BenchmarkRowsScan/int64/binary=false/rows=100/direct=false": {
+          "iterations": 68956,
+          "gomaxprocs": 4,
+          "ns/op": 8553.0,
+          "B/op": 816.0,
+          "allocs/op": 101.0
+        },
+        "BenchmarkRowsScan/int64/binary=false/rows=100/direct=true": {
+          "iterations": 112328,
+          "gomaxprocs": 4,
+          "ns/op": 5235.0,
+          "B/op": 24.0,
+          "allocs/op": 1.0
+        },
+        "BenchmarkRowsScan/int64/binary=true/rows=100/direct=false": {
+          "iterations": 95743,
+          "gomaxprocs": 4,
+          "ns/op": 6323.0,
+          "B/op": 816.0,
+          "allocs/op": 101.0
+        },
+        "BenchmarkRowsScan/int64/binary=true/rows=100/direct=true": {
+          "iterations": 178194,
+          "gomaxprocs": 4,
+          "ns/op": 3386.0,
+          "B/op": 24.0,
+          "allocs/op": 1.0
+        }
+      }
+    },
+    {
+      "repetition": 1,
+      "variant": "corrected",
+      "exit_code": 0,
+      "benchmarks": {
+        "BenchmarkRowsScan/int64/binary=false/rows=100/direct=false": {
+          "iterations": 68916,
+          "gomaxprocs": 4,
+          "ns/op": 8491.0,
+          "B/op": 816.0,
+          "allocs/op": 101.0
+        },
+        "BenchmarkRowsScan/int64/binary=false/rows=100/direct=true": {
+          "iterations": 115621,
+          "gomaxprocs": 4,
+          "ns/op": 5267.0,
+          "B/op": 24.0,
+          "allocs/op": 1.0
+        },
+        "BenchmarkRowsScan/int64/binary=true/rows=100/direct=false": {
+          "iterations": 92776,
+          "gomaxprocs": 4,
+          "ns/op": 6296.0,
+          "B/op": 816.0,
+          "allocs/op": 101.0
+        },
+        "BenchmarkRowsScan/int64/binary=true/rows=100/direct=true": {
+          "iterations": 177111,
+          "gomaxprocs": 4,
+          "ns/op": 3414.0,
+          "B/op": 24.0,
+          "allocs/op": 1.0
+        }
+      }
+    },
+    {
+      "repetition": 1,
+      "variant": "before-review",
+      "exit_code": 0,
+      "benchmarks": {
+        "BenchmarkRowsScan/int64/binary=false/rows=100/direct=false": {
+          "iterations": 68290,
+          "gomaxprocs": 4,
+          "ns/op": 10410.0,
+          "B/op": 816.0,
+          "allocs/op": 101.0
+        },
+        "BenchmarkRowsScan/int64/binary=false/rows=100/direct=true": {
+          "iterations": 112140,
+          "gomaxprocs": 4,
+          "ns/op": 5161.0,
+          "B/op": 24.0,
+          "allocs/op": 1.0
+        },
+        "BenchmarkRowsScan/int64/binary=true/rows=100/direct=false": {
+          "iterations": 97726,
+          "gomaxprocs": 4,
+          "ns/op": 6444.0,
+          "B/op": 816.0,
+          "allocs/op": 101.0
+        },
+        "BenchmarkRowsScan/int64/binary=true/rows=100/direct=true": {
+          "iterations": 167533,
+          "gomaxprocs": 4,
+          "ns/op": 3980.0,
+          "B/op": 24.0,
+          "allocs/op": 1.0
+        }
+      }
+    },
+    {
+      "repetition": 1,
+      "variant": "original",
+      "exit_code": 0,
+      "benchmarks": {
+        "BenchmarkRowsScan/int64/binary=false/rows=100/direct=false": {
+          "iterations": 73990,
+          "gomaxprocs": 4,
+          "ns/op": 8082.0,
+          "B/op": 816.0,
+          "allocs/op": 101.0
+        },
+        "BenchmarkRowsScan/int64/binary=false/rows=100/direct=true": {
+          "iterations": 121138,
+          "gomaxprocs": 4,
+          "ns/op": 5242.0,
+          "B/op": 24.0,
+          "allocs/op": 1.0
+        },
+        "BenchmarkRowsScan/int64/binary=true/rows=100/direct=false": {
+          "iterations": 92143,
+          "gomaxprocs": 4,
+          "ns/op": 6692.0,
+          "B/op": 816.0,
+          "allocs/op": 101.0
+        },
+        "BenchmarkRowsScan/int64/binary=true/rows=100/direct=true": {
+          "iterations": 161611,
+          "gomaxprocs": 4,
+          "ns/op": 3625.0,
+          "B/op": 24.0,
+          "allocs/op": 1.0
+        }
+      }
+    },
+    {
+      "repetition": 2,
+      "variant": "before-review",
+      "exit_code": 0,
+      "benchmarks": {
+        "BenchmarkRowsScan/int64/binary=false/rows=100/direct=false": {
+          "iterations": 70712,
+          "gomaxprocs": 4,
+          "ns/op": 8518.0,
+          "B/op": 816.0,
+          "allocs/op": 101.0
+        },
+        "BenchmarkRowsScan/int64/binary=false/rows=100/direct=true": {
+          "iterations": 113482,
+          "gomaxprocs": 4,
+          "ns/op": 5902.0,
+          "B/op": 24.0,
+          "allocs/op": 1.0
+        },
+        "BenchmarkRowsScan/int64/binary=true/rows=100/direct=false": {
+          "iterations": 82628,
+          "gomaxprocs": 4,
+          "ns/op": 6896.0,
+          "B/op": 816.0,
+          "allocs/op": 101.0
+        },
+        "BenchmarkRowsScan/int64/binary=true/rows=100/direct=true": {
+          "iterations": 143308,
+          "gomaxprocs": 4,
+          "ns/op": 3840.0,
+          "B/op": 24.0,
+          "allocs/op": 1.0
+        }
+      }
+    },
+    {
+      "repetition": 2,
+      "variant": "original",
+      "exit_code": 0,
+      "benchmarks": {
+        "BenchmarkRowsScan/int64/binary=false/rows=100/direct=false": {
+          "iterations": 64303,
+          "gomaxprocs": 4,
+          "ns/op": 9644.0,
+          "B/op": 816.0,
+          "allocs/op": 101.0
+        },
+        "BenchmarkRowsScan/int64/binary=false/rows=100/direct=true": {
+          "iterations": 106579,
+          "gomaxprocs": 4,
+          "ns/op": 5345.0,
+          "B/op": 24.0,
+          "allocs/op": 1.0
+        },
+        "BenchmarkRowsScan/int64/binary=true/rows=100/direct=false": {
+          "iterations": 79249,
+          "gomaxprocs": 4,
+          "ns/op": 8186.0,
+          "B/op": 816.0,
+          "allocs/op": 101.0
+        },
+        "BenchmarkRowsScan/int64/binary=true/rows=100/direct=true": {
+          "iterations": 156644,
+          "gomaxprocs": 4,
+          "ns/op": 4113.0,
+          "B/op": 24.0,
+          "allocs/op": 1.0
+        }
+      }
+    },
+    {
+      "repetition": 2,
+      "variant": "corrected",
+      "exit_code": 0,
+      "benchmarks": {
+        "BenchmarkRowsScan/int64/binary=false/rows=100/direct=false": {
+          "iterations": 60135,
+          "gomaxprocs": 4,
+          "ns/op": 11064.0,
+          "B/op": 816.0,
+          "allocs/op": 101.0
+        },
+        "BenchmarkRowsScan/int64/binary=false/rows=100/direct=true": {
+          "iterations": 95284,
+          "gomaxprocs": 4,
+          "ns/op": 5657.0,
+          "B/op": 24.0,
+          "allocs/op": 1.0
+        },
+        "BenchmarkRowsScan/int64/binary=true/rows=100/direct=false": {
+          "iterations": 86472,
+          "gomaxprocs": 4,
+          "ns/op": 7037.0,
+          "B/op": 816.0,
+          "allocs/op": 101.0
+        },
+        "BenchmarkRowsScan/int64/binary=true/rows=100/direct=true": {
+          "iterations": 165657,
+          "gomaxprocs": 4,
+          "ns/op": 4016.0,
+          "B/op": 24.0,
+          "allocs/op": 1.0
+        }
+      }
+    }
+  ],
+  "summary": {
+    "BenchmarkRowsScan/int64/binary=false/rows=100/direct=false": {
+      "original": 8308.0,
+      "before-review": 8518.0,
+      "corrected": 8553.0,
+      "corrected_vs_before_percent": 0.4108945761915894
+    },
+    "BenchmarkRowsScan/int64/binary=false/rows=100/direct=true": {
+      "original": 5242.0,
+      "before-review": 5262.0,
+      "corrected": 5267.0,
+      "corrected_vs_before_percent": 0.09502090459900803
+    },
+    "BenchmarkRowsScan/int64/binary=true/rows=100/direct=false": {
+      "original": 6692.0,
+      "before-review": 6444.0,
+      "corrected": 6323.0,
+      "corrected_vs_before_percent": -1.8777157045313464
+    },
+    "BenchmarkRowsScan/int64/binary=true/rows=100/direct=true": {
+      "original": 3625.0,
+      "before-review": 3840.0,
+      "corrected": 3414.0,
+      "corrected_vs_before_percent": -11.093750000000002
+    }
+  },
+  "inputs_stable": true
+}

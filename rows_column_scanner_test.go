@@ -8,7 +8,7 @@
 
 //go:build go1.27
 
-package mysql
+package mariadb
 
 import (
 	"bytes"

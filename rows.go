@@ -6,7 +6,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-package mysql
+package mariadb
 
 import (
 	"database/sql"
@@ -139,9 +139,12 @@ func (rows *mysqlRows) convertTinyInt1ToBool(dest []driver.Value) {
 func (rows *mysqlRows) Close() (err error) {
 	rows.rawCols = nil
 	if f := rows.finish; f != nil {
-		f()
 		rows.finish = nil
+		// Draining can block on the peer just like an ordinary row read. Keep
+		// the query's cancellation watcher alive until cleanup has finished.
+		defer f()
 	}
+	defer func() { rows.mc = nil }()
 
 	mc := rows.mc
 	if mc == nil {
@@ -162,7 +165,6 @@ func (rows *mysqlRows) Close() (err error) {
 		}
 	}
 
-	rows.mc = nil
 	return err
 }
 

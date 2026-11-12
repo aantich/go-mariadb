@@ -8,7 +8,7 @@
 
 //go:build linux || darwin || dragonfly || freebsd || netbsd || openbsd || solaris || illumos
 
-package mysql
+package mariadb
 
 import (
 	"io"

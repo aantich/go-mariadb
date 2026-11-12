@@ -1,0 +1,298 @@
+package mariadb
+
+import (
+	"context"
+	"database/sql"
+	"database/sql/driver"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"net"
+	"os"
+	"testing"
+	"time"
+)
+
+// These review-only tests live in an isolated source copy. They leave the
+// measured implementation and its frozen workload inputs untouched.
+func reviewDB(t *testing.T, compressed bool, withoutEOF bool) *sql.DB {
+	t.Helper()
+	data, err := os.ReadFile(os.Getenv("MARIADB_VALIDATION_CONFIG"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var fixture struct {
+		Host, User, Password, Database string
+		Port                           int
+	}
+	if err := json.Unmarshal(data, &fixture); err != nil {
+		t.Fatal(err)
+	}
+	if fixture.Database != "go_mariadb_validation" {
+		t.Fatal("non-reserved schema")
+	}
+	cfg := NewConfig()
+	cfg.User, cfg.Passwd, cfg.DBName = fixture.User, fixture.Password, fixture.Database
+	cfg.Net, cfg.Addr = "tcp", fmt.Sprintf("%s:%d", fixture.Host, fixture.Port)
+	cfg.Timeout, cfg.ReadTimeout, cfg.WriteTimeout = time.Second, 2*time.Second, 2*time.Second
+	if err := cfg.Apply(WithBulkOperations(true), EnableCompression(compressed)); err != nil {
+		t.Fatal(err)
+	}
+	if withoutEOF {
+		cfg.DialFunc = func(ctx context.Context, network, address string) (net.Conn, error) {
+			c, err := (&net.Dialer{}).DialContext(ctx, network, address)
+			if err != nil {
+				return nil, err
+			}
+			return &reviewLegacyEOFConn{Conn: c}, nil
+		}
+	}
+	c, err := NewConnector(cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	db := sql.OpenDB(c)
+	t.Cleanup(func() { db.Close() })
+	return db
+}
+
+type reviewLegacyEOFConn struct {
+	net.Conn
+	sent bool
+}
+
+func (c *reviewLegacyEOFConn) Write(p []byte) (int, error) {
+	if !c.sent {
+		c.sent = true
+		p = append([]byte(nil), p...)
+		p[7] &^= 1 // high capability byte: CLIENT_DEPRECATE_EOF (1 << 24)
+	}
+	return c.Conn.Write(p)
+}
+
+func TestReviewBulkTransports(t *testing.T) {
+	for _, compressed := range []bool{false, true} {
+		t.Run(fmt.Sprint(compressed), func(t *testing.T) {
+			db := reviewDB(t, compressed, false)
+			ctx, cancel := context.WithTimeout(t.Context(), 5*time.Second)
+			defer cancel()
+			conn, err := db.Conn(ctx)
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer conn.Close()
+			if _, err := conn.ExecContext(ctx, "CREATE TEMPORARY TABLE go_review_bulk(v INT)"); err != nil {
+				t.Fatal(err)
+			}
+			result, err := BulkExec(ctx, conn, "INSERT INTO go_review_bulk VALUES (?)", [][]any{{int64(123)}})
+			if err != nil {
+				t.Fatalf("BulkExec(compressed=%v): %v", compressed, err)
+			}
+			if result.RowsAffectedUnsigned() != 1 {
+				t.Errorf("wrong counters: got %d want 1", result.RowsAffectedUnsigned())
+			}
+			var v int
+			if err := conn.QueryRowContext(ctx, "SELECT v FROM go_review_bulk").Scan(&v); err != nil || v != 123 {
+				t.Fatalf("value=%d err=%v", v, err)
+			}
+		})
+	}
+}
+
+func TestReviewExecOmittedMetadataLegacyEOF(t *testing.T) {
+	_, mc := newRWMockConn(0)
+	conn := mc.netConn.(*mockConn)
+	mc.extCapabilities = clientCacheMetadata
+	stmt := &mysqlStmt{mc: mc, id: 1, columns: []mysqlField{{fieldType: fieldTypeLong}}}
+	response := makePacket(1, []byte{1, 0})
+	response = append(response, makePacket(2, []byte{iEOF, 0, 0, 2, 0})...)
+	response = append(response, makePacket(3, []byte{iOK, 0, 123, 0, 0, 0})...)
+	response = append(response, makePacket(4, []byte{iEOF, 0, 0, 2, 0})...)
+	conn.queuedReplies = [][]byte{response}
+	if _, err := stmt.Exec(nil); err != nil {
+		t.Fatal(err)
+	}
+	if mc.buf.busy() {
+		t.Fatalf("Exec returned success with %d unread response bytes", mc.buf.len())
+	}
+}
+
+func TestReviewExecOmittedMetadataLegacyEOFLive(t *testing.T) {
+	db := reviewDB(t, false, true)
+	ctx, cancel := context.WithTimeout(t.Context(), 5*time.Second)
+	defer cancel()
+	conn, err := db.Conn(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer conn.Close()
+	if err := conn.Raw(func(raw any) error { raw.(*mysqlConn).capabilities &^= clientDeprecateEOF; return nil }); err != nil {
+		t.Fatal(err)
+	}
+	stmt, err := conn.PrepareContext(ctx, "SELECT 123")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer stmt.Close()
+	if _, err := stmt.ExecContext(ctx); err != nil {
+		t.Fatal(err)
+	}
+	var v int
+	if err := conn.QueryRowContext(ctx, "SELECT 456").Scan(&v); err != nil || v != 456 {
+		t.Fatalf("next query after Exec: value=%d err=%v", v, err)
+	}
+}
+
+func TestReviewTruncatedEOFCannotPanic(t *testing.T) {
+	for _, deprecate := range []bool{false, true} {
+		for _, data := range [][]byte{{iEOF}, {iEOF, 0}, {iEOF, 0xfc}, {iEOF, 0, 0}, {iEOF, 0, 0, 0}} {
+			t.Run(fmt.Sprintf("deprecate=%v/%x", deprecate, data), func(t *testing.T) {
+				defer func() {
+					if p := recover(); p != nil {
+						t.Errorf("peer packet panicked: %v", p)
+					}
+				}()
+				conn, mc := newRWMockConn(0)
+				if deprecate {
+					mc.capabilities = clientDeprecateEOF
+				}
+				conn.data = makePacket(0, data)
+				if err := mc.skipRows(); err == nil {
+					t.Error("truncated EOF accepted")
+				}
+			})
+		}
+	}
+}
+
+func TestReviewMalformedRowMustRetire(t *testing.T) {
+	conn, mc := newRWMockConn(0)
+	conn.data = makePacket(0, []byte{0xfc})
+	rows := &textRows{mysqlRows: mysqlRows{mc: mc, rs: resultSet{columns: []mysqlField{{fieldType: fieldTypeString}}}}}
+	if err := rows.Next(make([]driver.Value, 1)); err == nil {
+		t.Fatal("malformed row accepted")
+	}
+	if !mc.closed.Load() {
+		t.Fatal("malformed row returned an error but left connection valid")
+	}
+}
+
+func TestReviewBulkZeroTimeParity(t *testing.T) {
+	db := reviewDB(t, false, false)
+	ctx, cancel := context.WithTimeout(t.Context(), 5*time.Second)
+	defer cancel()
+	conn, err := db.Conn(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer conn.Close()
+	if _, err := conn.ExecContext(ctx, "CREATE TEMPORARY TABLE go_review_dates(id INT PRIMARY KEY,d DATETIME)"); err != nil {
+		t.Fatal(err)
+	}
+	// Zero dates are an established ordinary-parameter convention. Use only
+	// this task-owned connection's SQL mode to compare it with the new API.
+	if _, err := conn.ExecContext(ctx, "SET SESSION sql_mode=''"); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := conn.ExecContext(ctx, "INSERT INTO go_review_dates VALUES (?,?)", 1, time.Time{}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := BulkExec(ctx, conn, "INSERT INTO go_review_dates VALUES (?,?)", [][]any{{int64(2), time.Time{}}}); err != nil {
+		t.Fatal(err)
+	}
+	var ordinary, bulk string
+	if err := conn.QueryRowContext(ctx, "SELECT CAST(d AS CHAR) FROM go_review_dates WHERE id=1").Scan(&ordinary); err != nil {
+		t.Fatal(err)
+	}
+	if err := conn.QueryRowContext(ctx, "SELECT CAST(d AS CHAR) FROM go_review_dates WHERE id=2").Scan(&bulk); err != nil {
+		t.Fatal(err)
+	}
+	if ordinary != bulk {
+		t.Fatalf("ordinary=%s bulk=%s for identical time.Time{}", ordinary, bulk)
+	}
+}
+
+func TestReviewBulkCancellationControl(t *testing.T) {
+	db := reviewDB(t, false, false)
+	conn, err := db.Conn(t.Context())
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer conn.Close()
+	if _, err := conn.ExecContext(t.Context(), "CREATE TEMPORARY TABLE go_review_cancel(v INT)"); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := conn.ExecContext(t.Context(), "INSERT INTO go_review_cancel VALUES (1)"); err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithTimeout(t.Context(), 50*time.Millisecond)
+	defer cancel()
+	_, err = BulkExec(ctx, conn, "UPDATE go_review_cancel SET v=SLEEP(2) WHERE v=?", [][]any{{int64(1)}})
+	if !errors.Is(err, context.DeadlineExceeded) {
+		t.Fatalf("cancellation returned %v", err)
+	}
+	if err := conn.Raw(func(raw any) error {
+		if !raw.(*mysqlConn).closed.Load() {
+			t.Error("canceled connection not retired")
+		}
+		return nil
+	}); err != nil && !errors.Is(err, sql.ErrConnDone) {
+		t.Fatal(err)
+	}
+}
+
+func TestReviewBulkIndicatorsControl(t *testing.T) {
+	db := reviewDB(t, false, false)
+	conn, err := db.Conn(t.Context())
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer conn.Close()
+	if _, err := conn.ExecContext(t.Context(), "CREATE TEMPORARY TABLE go_review_indicators(id INT PRIMARY KEY,s VARCHAR(20) DEFAULT 'fallback')"); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := BulkExec(t.Context(), conn, "INSERT INTO go_review_indicators VALUES (?,?)", [][]any{{int64(1), "preserve"}, {int64(2), nil}, {int64(3), BulkDefault}}); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := BulkExec(t.Context(), conn, "UPDATE go_review_indicators SET s=? WHERE id=?", [][]any{{BulkIgnore, int64(1)}}); err != nil {
+		t.Fatal(err)
+	}
+	var s string
+	var null bool
+	if err := conn.QueryRowContext(t.Context(), "SELECT s FROM go_review_indicators WHERE id=1").Scan(&s); err != nil || s != "preserve" {
+		t.Fatalf("IGNORE=%q err=%v", s, err)
+	}
+	if err := conn.QueryRowContext(t.Context(), "SELECT s IS NULL FROM go_review_indicators WHERE id=2").Scan(&null); err != nil || !null {
+		t.Fatalf("NULL=%v err=%v", null, err)
+	}
+	if err := conn.QueryRowContext(t.Context(), "SELECT s FROM go_review_indicators WHERE id=3").Scan(&s); err != nil || s != "fallback" {
+		t.Fatalf("DEFAULT=%q err=%v", s, err)
+	}
+}
+
+func TestReviewMalformedRowCloseDeadline(t *testing.T) {
+	client, server := net.Pipe()
+	defer client.Close()
+	defer server.Close()
+	mc := &mysqlConn{buf: newBuffer(), cfg: NewConfig(), netConn: client, rawConn: client, closech: make(chan struct{}), maxAllowedPacket: defaultMaxAllowedPacket}
+	mc.startWatcher()
+	ctx, cancel := context.WithTimeout(t.Context(), 50*time.Millisecond)
+	defer cancel()
+	if err := mc.watchCancel(ctx); err != nil {
+		t.Fatal(err)
+	}
+	rows := &textRows{mysqlRows: mysqlRows{mc: mc, finish: mc.finish, rs: resultSet{columns: []mysqlField{{fieldType: fieldTypeString}}}}}
+	go func() { server.Write(makePacket(0, []byte{0xfc})) }()
+	if err := rows.Next(make([]driver.Value, 1)); err == nil {
+		t.Fatal("malformed row accepted")
+	}
+	done := make(chan error, 1)
+	go func() { done <- rows.Close() }()
+	select {
+	case <-done:
+	case <-time.After(200 * time.Millisecond):
+		t.Error("Rows.Close still blocked after query deadline; malformed connection was kept and drain disabled cancellation")
+		client.Close()
+		<-done
+	}
+}

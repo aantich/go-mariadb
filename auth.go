@@ -6,7 +6,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-package mysql
+package mariadb
 
 import (
 	"bytes"
@@ -80,7 +80,7 @@ func getServerPubKey(name string) (pubKey *rsa.PublicKey) {
 }
 
 func readAuthPacket(mc *mysqlConn) ([]byte, error) {
-	pkt, err := mc.readPacket()
+	pkt, err := mc.readPacketLimit(mc.authLimit())
 	if err != nil {
 		return nil, err
 	}
@@ -244,7 +244,9 @@ func (mc *mysqlConn) parseAuthSwitchData(data []byte, initialSeed []byte) (strin
 
 	plugin := string(data[1:pluginEndIndex])
 	authData := data[pluginEndIndex+1:]
-	if len(authData) > 0 && authData[len(authData)-1] == 0 {
+	// Binary MariaDB nonces have no terminator. Keep legacy normalization
+	// for other plugins so existing plugin implementations retain their contract.
+	if plugin != "client_ed25519" && plugin != "parsec" && len(authData) > 0 && authData[len(authData)-1] == 0 {
 		authData = authData[:len(authData)-1]
 	}
 

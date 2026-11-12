@@ -1,7 +1,7 @@
 // Copyright 2026 The Go-MySQL-Driver Authors. All rights reserved.
 // Use of this source code is governed by the Mozilla Public License, v. 2.0.
 
-package mysql
+package mariadb
 
 import (
 	"bytes"
@@ -17,7 +17,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-sql-driver/mysql/internal/compression"
+	"github.com/aantich/go-mariadb/internal/compression"
 	"github.com/klauspost/compress/zstd"
 )
 

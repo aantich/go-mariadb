@@ -4,21 +4,21 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-// Package zstd enables automatic Zstandard compression for MySQL connections
+// Package zstd enables automatic Zstandard compression for connections when the server supports it
 // with compression enabled. Import it for its side effects:
 //
-//	import _ "github.com/go-sql-driver/mysql/zstd"
+//	import _ "github.com/aantich/go-mariadb/zstd"
 //
 // This also registers the mysql database/sql driver. Connections use zstd when
 // the server supports it and fall back to zlib otherwise. Compression remains
-// disabled unless enabled through the DSN or mysql.EnableCompression.
+// disabled unless enabled through the DSN or mariadb.EnableCompression.
 package zstd
 
 import (
 	"sync"
 
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/go-sql-driver/mysql/internal/compression"
+	_ "github.com/aantich/go-mariadb"
+	"github.com/aantich/go-mariadb/internal/compression"
 	"github.com/klauspost/compress/zstd"
 )
 

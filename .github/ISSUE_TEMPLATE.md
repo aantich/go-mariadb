@@ -1,5 +1,6 @@
 ### Issue description
-Tell us what should happen and what happens instead
+Tell us what should happen and what happens instead.
+This driver targets MariaDB; include a minimal reproduction without credentials.
 
 ### Example code
 ```go
@@ -16,6 +17,6 @@ If you have an error log, please paste it here.
 
 *Go version:* run `go version` in your console
 
-*Server version:* E.g. MySQL 5.6, MariaDB 10.0.20
+*Server version:* Exact MariaDB version, e.g. MariaDB 12.3.3
 
-*Server OS:* E.g. Debian 8.1 (Jessie), Windows 10
+*Server OS:* E.g. Linux, macOS or Windows; include architecture

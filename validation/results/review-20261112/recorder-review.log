@@ -1,0 +1,6 @@
+Actual capture: 200 profiles; inputs unchanged: True
+Fresh dedicated-driver results; baseline checksums and original workload bodies intact.
+Seven repetitions per profile. Correctness exit: 1
+BUG: verifier accepted 199 profiles with BenchmarkQuery missing
+Regenerated current overview present: False
+Regenerated over-broad workload caption present: True

@@ -6,7 +6,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-package mysql
+package mariadb
 
 import (
 	"bytes"
@@ -224,7 +224,7 @@ func runTestsParallel(t *testing.T, dsn string, tests ...func(dbt *DBTest, table
 			t.Parallel()
 
 			tableName := newTableName(t)
-			db, err := sql.Open("mysql", dsn)
+			db, err := sql.Open("mariadb", dsn)
 			if err != nil {
 				t.Fatalf("error connecting: %s", err.Error())
 			}
@@ -243,7 +243,7 @@ func runTestsParallel(t *testing.T, dsn string, tests ...func(dbt *DBTest, table
 				t.Parallel()
 
 				tableName := newTableName(t)
-				db, err := sql.Open("mysql", dsn2)
+				db, err := sql.Open("mariadb", dsn2)
 				if err != nil {
 					t.Fatalf("error connecting: %s", err.Error())
 				}
@@ -3587,7 +3587,7 @@ func TestErrorInMultiResult(t *testing.T) {
 	// https://github.com/go-sql-driver/mysql/issues/1361
 	var db *sql.DB
 	if _, err := ParseDSN(dsn); err != errUnsafeCharset {
-		db, err = sql.Open("mysql", dsn)
+		db, err = sql.Open("mariadb", dsn)
 		if err != nil {
 			t.Fatalf("error connecting: %s", err.Error())
 		}

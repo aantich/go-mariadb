@@ -1,0 +1,102 @@
+{
+  "review_date": "2026-11-12",
+  "source_fingerprint": "901628d5decc288cc479da04740fd57c5fc7f2a95526b4c0c32d3f89c9c61c1f",
+  "commands": [
+    {
+      "name": "go-review",
+      "argv": [
+        "go",
+        "test",
+        "-race",
+        "-count=1",
+        "-v",
+        "-run=^TestReview",
+        "."
+      ],
+      "cwd": "/private/tmp/go-mariadb-review-20261112",
+      "exit_code": 1
+    },
+    {
+      "name": "recorder-review",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/review-20261112/recorder_probe.py"
+      ],
+      "cwd": "/Users/aantich/dev/mariadbnew/projects/go-mariadb",
+      "exit_code": 0
+    },
+    {
+      "name": "ci-skip-review",
+      "argv": [
+        "go",
+        "test",
+        "-count=1",
+        "-v",
+        "-run=^(TestMariaDBNativeBulk|TestMariaDBNativeUnsignedResult|TestMariaDBAuthentication)$",
+        "./validation"
+      ],
+      "cwd": "/Users/aantich/dev/mariadbnew/projects/go-mariadb",
+      "exit_code": 0
+    },
+    {
+      "name": "vet-review-artifact-initial",
+      "argv": [
+        "go",
+        "vet",
+        "./..."
+      ],
+      "cwd": "/Users/aantich/dev/mariadbnew/projects/go-mariadb",
+      "exit_code": 1,
+      "note": "The review evidence .go file was discovered as a standalone package by ./...; renamed to review_test.go.txt to keep it outside normal Go builds. No implementation code was changed."
+    },
+    {
+      "name": "recorder-tests",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "validation",
+        "-p",
+        "test_*.py"
+      ],
+      "cwd": "/Users/aantich/dev/mariadbnew/projects/go-mariadb",
+      "exit_code": 0
+    },
+    {
+      "name": "freshness",
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "validation/verify.py"
+      ],
+      "cwd": "/Users/aantich/dev/mariadbnew/projects/go-mariadb",
+      "exit_code": 0
+    },
+    {
+      "name": "vet",
+      "argv": [
+        "go",
+        "vet",
+        "./..."
+      ],
+      "cwd": "/Users/aantich/dev/mariadbnew/projects/go-mariadb",
+      "exit_code": 0
+    },
+    {
+      "name": "freshness-final",
+      "argv": [
+        "python3",
+        "validation/verify.py"
+      ],
+      "cwd": "/Users/aantich/dev/mariadbnew/projects/go-mariadb",
+      "exit_code": 0
+    }
+  ],
+  "production_inputs_checked": 41,
+  "review_copy_production_matches": true,
+  "review_workloads": {
+    "recorder_probe.py": "dcc175e67664600b571fec50138f7ab08be4e5180b92161eedff2838850c1f8c",
+    "review_test.go.txt": "15d0a87704e382ee802ae177b72a02715fe362290ee35f51c7110862cbc23181"
+  }
+}

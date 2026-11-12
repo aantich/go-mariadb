@@ -6,7 +6,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-package mysql
+package mariadb
 
 import (
 	"context"
@@ -218,6 +218,11 @@ func (mc *mysqlConn) Prepare(query string) (driver.Stmt, error) {
 	// Send command
 	err := mc.writeCommandPacketStr(comStmtPrepare, query)
 	if err != nil {
+		// A canceled write already retired the connection. Preserve its context
+		// error for native helpers as well as database/sql's prepare wrapper.
+		if canceled := mc.canceled.Value(); canceled != nil {
+			return nil, canceled
+		}
 		// STMT_PREPARE is safe to retry.  So we can return ErrBadConn here.
 		mc.log(err)
 		return nil, driver.ErrBadConn

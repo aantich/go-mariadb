@@ -4,17 +4,17 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-// Package mysql provides a MySQL driver for Go's database/sql package.
+// Package mariadb provides a MariaDB driver for Go's database/sql package.
 //
 // The driver should be used via the database/sql package:
 //
 //	import "database/sql"
-//	import _ "github.com/go-sql-driver/mysql"
+//	import _ "github.com/aantich/go-mariadb"
 //
-//	db, err := sql.Open("mysql", "user:password@/dbname")
+//	db, err := sql.Open("mariadb", "user:password@/dbname")
 //
-// See https://github.com/go-sql-driver/mysql#usage for details
-package mysql
+// The package is Alpha: automated coverage does not replace application validation.
+package mariadb
 
 import (
 	"context"
@@ -24,9 +24,9 @@ import (
 	"sync"
 )
 
-// MySQLDriver is exported to make the driver directly accessible.
+// MariaDBDriver is exported to make the driver directly accessible.
 // In general the driver is used via the database/sql package.
-type MySQLDriver struct{}
+type MariaDBDriver struct{}
 
 // DialFunc is a function which can be used to establish the network connection.
 // Custom dial functions must be registered with RegisterDial
@@ -78,7 +78,7 @@ func RegisterDial(network string, dial DialFunc) {
 // Open new Connection.
 // See https://github.com/go-sql-driver/mysql#dsn-data-source-name for how
 // the DSN string is formatted
-func (d MySQLDriver) Open(dsn string) (driver.Conn, error) {
+func (d MariaDBDriver) Open(dsn string) (driver.Conn, error) {
 	cfg, err := ParseDSN(dsn)
 	if err != nil {
 		return nil, err
@@ -88,12 +88,12 @@ func (d MySQLDriver) Open(dsn string) (driver.Conn, error) {
 }
 
 // This variable can be replaced with -ldflags like below:
-// go build "-ldflags=-X github.com/go-sql-driver/mysql.driverName=custom"
-var driverName = "mysql"
+// go build "-ldflags=-X github.com/aantich/go-mariadb.driverName=custom"
+var driverName = "mariadb"
 
 func init() {
 	if driverName != "" {
-		sql.Register(driverName, &MySQLDriver{})
+		sql.Register(driverName, &MariaDBDriver{})
 	}
 }
 
@@ -101,7 +101,7 @@ func init() {
 func NewConnector(cfg *Config) (driver.Connector, error) {
 	cfg = cfg.Clone()
 	// normalize the contents of cfg so calls to NewConnector have the same
-	// behavior as MySQLDriver.OpenConnector
+	// behavior as MariaDBDriver.OpenConnector
 	if err := cfg.normalize(); err != nil {
 		return nil, err
 	}
@@ -109,10 +109,14 @@ func NewConnector(cfg *Config) (driver.Connector, error) {
 }
 
 // OpenConnector implements driver.DriverContext.
-func (d MySQLDriver) OpenConnector(dsn string) (driver.Connector, error) {
+func (d MariaDBDriver) OpenConnector(dsn string) (driver.Connector, error) {
 	cfg, err := ParseDSN(dsn)
 	if err != nil {
 		return nil, err
 	}
 	return newConnector(cfg), nil
 }
+
+// MySQLDriver is retained for source migration from the upstream driver.
+// Deprecated: use MariaDBDriver. Both names connect to MariaDB and register only mariadb.
+type MySQLDriver = MariaDBDriver

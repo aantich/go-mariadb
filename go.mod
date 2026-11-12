@@ -1,4 +1,4 @@
-module github.com/go-sql-driver/mysql
+module github.com/aantich/go-mariadb
 
 go 1.25.0
 

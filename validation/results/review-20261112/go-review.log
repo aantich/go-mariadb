@@ -1,0 +1,64 @@
+=== RUN   TestReviewBulkTransports
+=== RUN   TestReviewBulkTransports/false
+=== RUN   TestReviewBulkTransports/true
+[mariadb] 2026/11/12 08:53:01 packets.go:73 [warn] unexpected sequence nr: expected 1, got 0
+    review_test.go:92: wrong counters: got 0 want 1
+    review_test.go:96: value=0 err=sql: no rows in result set
+--- FAIL: TestReviewBulkTransports (0.00s)
+    --- PASS: TestReviewBulkTransports/false (0.00s)
+    --- FAIL: TestReviewBulkTransports/true (0.00s)
+=== RUN   TestReviewExecOmittedMetadataLegacyEOF
+    review_test.go:116: Exec returned success with 19 unread response bytes
+--- FAIL: TestReviewExecOmittedMetadataLegacyEOF (0.00s)
+=== RUN   TestReviewExecOmittedMetadataLegacyEOFLive
+    review_test.go:142: next query after Exec: value=0 err=busy buffer
+--- FAIL: TestReviewExecOmittedMetadataLegacyEOFLive (0.00s)
+=== RUN   TestReviewTruncatedEOFCannotPanic
+=== RUN   TestReviewTruncatedEOFCannotPanic/deprecate=false/fe
+    review_test.go:152: peer packet panicked: runtime error: slice bounds out of range [3:1]
+=== RUN   TestReviewTruncatedEOFCannotPanic/deprecate=false/fe00
+    review_test.go:152: peer packet panicked: runtime error: slice bounds out of range [3:2]
+=== RUN   TestReviewTruncatedEOFCannotPanic/deprecate=false/fefc
+    review_test.go:152: peer packet panicked: runtime error: slice bounds out of range [3:2]
+=== RUN   TestReviewTruncatedEOFCannotPanic/deprecate=false/fe0000
+    review_test.go:152: peer packet panicked: runtime error: index out of range [0] with length 0
+=== RUN   TestReviewTruncatedEOFCannotPanic/deprecate=false/fe000000
+    review_test.go:152: peer packet panicked: runtime error: index out of range [1] with length 1
+=== RUN   TestReviewTruncatedEOFCannotPanic/deprecate=true/fe
+    review_test.go:152: peer packet panicked: runtime error: slice bounds out of range [2:1]
+=== RUN   TestReviewTruncatedEOFCannotPanic/deprecate=true/fe00
+    review_test.go:152: peer packet panicked: runtime error: slice bounds out of range [3:2]
+=== RUN   TestReviewTruncatedEOFCannotPanic/deprecate=true/fefc
+    review_test.go:152: peer packet panicked: runtime error: index out of range [1] with length 1
+=== RUN   TestReviewTruncatedEOFCannotPanic/deprecate=true/fe0000
+    review_test.go:152: peer packet panicked: runtime error: index out of range [0] with length 0
+=== RUN   TestReviewTruncatedEOFCannotPanic/deprecate=true/fe000000
+    review_test.go:152: peer packet panicked: runtime error: index out of range [1] with length 1
+--- FAIL: TestReviewTruncatedEOFCannotPanic (0.00s)
+    --- FAIL: TestReviewTruncatedEOFCannotPanic/deprecate=false/fe (0.00s)
+    --- FAIL: TestReviewTruncatedEOFCannotPanic/deprecate=false/fe00 (0.00s)
+    --- FAIL: TestReviewTruncatedEOFCannotPanic/deprecate=false/fefc (0.00s)
+    --- FAIL: TestReviewTruncatedEOFCannotPanic/deprecate=false/fe0000 (0.00s)
+    --- FAIL: TestReviewTruncatedEOFCannotPanic/deprecate=false/fe000000 (0.00s)
+    --- FAIL: TestReviewTruncatedEOFCannotPanic/deprecate=true/fe (0.00s)
+    --- FAIL: TestReviewTruncatedEOFCannotPanic/deprecate=true/fe00 (0.00s)
+    --- FAIL: TestReviewTruncatedEOFCannotPanic/deprecate=true/fefc (0.00s)
+    --- FAIL: TestReviewTruncatedEOFCannotPanic/deprecate=true/fe0000 (0.00s)
+    --- FAIL: TestReviewTruncatedEOFCannotPanic/deprecate=true/fe000000 (0.00s)
+=== RUN   TestReviewMalformedRowMustRetire
+    review_test.go:176: malformed row returned an error but left connection valid
+--- FAIL: TestReviewMalformedRowMustRetire (0.00s)
+=== RUN   TestReviewBulkZeroTimeParity
+    review_test.go:211: ordinary=0000-00-00 00:00:00 bulk=0001-01-01 00:00:00 for identical time.Time{}
+--- FAIL: TestReviewBulkZeroTimeParity (0.00s)
+=== RUN   TestReviewBulkCancellationControl
+--- PASS: TestReviewBulkCancellationControl (0.05s)
+=== RUN   TestReviewBulkIndicatorsControl
+--- PASS: TestReviewBulkIndicatorsControl (0.00s)
+=== RUN   TestReviewMalformedRowCloseDeadline
+    review_test.go:294: Rows.Close still blocked after query deadline; malformed connection was kept and drain disabled cancellation
+[mariadb] 2026/11/12 08:53:01 packets.go:63 io: read/write on closed pipe
+--- FAIL: TestReviewMalformedRowCloseDeadline (0.20s)
+FAIL
+FAIL	github.com/aantich/go-mariadb	0.550s
+FAIL

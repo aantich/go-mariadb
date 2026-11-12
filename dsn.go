@@ -6,7 +6,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-package mysql
+package mariadb
 
 import (
 	"bytes"
@@ -77,8 +77,13 @@ type Config struct {
 	// unexported fields. new options should be come here.
 	// boolean first. alphabetical order.
 
-	compress       bool // Enable compression
-	tinyInt1IsBool bool // Treat signed TINYINT(1) as boolean
+	compress          bool // Enable compression
+	bulkOperations    bool
+	receiveLimit      int
+	columnLimit       int
+	authLimit         int
+	metadataByteLimit int
+	tinyInt1IsBool    bool // Treat signed TINYINT(1) as boolean
 
 	beforeConnect     func(context.Context, *Config) error // Invoked before a connection is established
 	encodedAttributes string                               // Encoded connection attributes

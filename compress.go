@@ -6,7 +6,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-package mysql
+package mariadb
 
 import (
 	"bytes"
@@ -15,7 +15,7 @@ import (
 	"io"
 	"sync"
 
-	"github.com/go-sql-driver/mysql/internal/compression"
+	"github.com/aantich/go-mariadb/internal/compression"
 )
 
 var (
@@ -177,10 +177,7 @@ func (c *compIO) readCompressedPacket(limit int) error {
 			c.buff.Write(decoded)
 		}
 	} else {
-		decodeLimit := limit
-		if decodeLimit > 0 {
-			decodeLimit -= c.buff.Len()
-		}
+		decodeLimit := uncompressedLength
 		nread, err = zDecompress(comprData, &c.buff, decodeLimit)
 	}
 	if err != nil {

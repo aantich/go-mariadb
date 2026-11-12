@@ -6,7 +6,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-package mysql
+package mariadb
 
 import (
 	"bytes"
@@ -14,7 +14,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/go-sql-driver/mysql/internal/compression"
+	"github.com/aantich/go-mariadb/internal/compression"
 )
 
 // Only negotiation uses this codec. Real zstd exchanges are tested in mysql/zstd

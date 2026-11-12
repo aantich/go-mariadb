@@ -6,7 +6,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-package mysql
+package mariadb
 
 import (
 	"context"
@@ -274,7 +274,7 @@ func (c *connector) Connect(ctx context.Context) (driver.Conn, error) {
 }
 
 // Driver implements driver.Connector interface.
-// Driver returns &MySQLDriver{}.
+// Driver returns &MariaDBDriver{}.
 func (c *connector) Driver() driver.Driver {
-	return &MySQLDriver{}
+	return &MariaDBDriver{}
 }

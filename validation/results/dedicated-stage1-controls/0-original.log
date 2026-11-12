@@ -1,0 +1,9 @@
+goos: darwin
+goarch: arm64
+pkg: github.com/go-sql-driver/mysql/validation
+cpu: Apple M4 Max
+BenchmarkMariaDBRead/text/narrow/raw=false-4         	     823	    742768 ns/op	       742.8 ns/row	   36664 B/op	    4564 allocs/op
+BenchmarkMariaDBRead/text/narrow/raw=true-4          	     817	    678448 ns/op	       678.4 ns/row	   13072 B/op	    1664 allocs/op
+BenchmarkMariaDBRead/compressed/narrow/raw=false-4   	     327	   1886526 ns/op	      1887 ns/row	   26772 B/op	    2964 allocs/op
+BenchmarkMariaDBRead/compressed/narrow/raw=true-4    	     260	   2338839 ns/op	      2339 ns/row	   15466 B/op	    1710 allocs/op
+PASS

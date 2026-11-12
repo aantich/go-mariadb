@@ -6,7 +6,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-package mysql
+package mariadb
 
 import (
 	"crypto/tls"
@@ -528,37 +528,52 @@ func uint64ToString(n uint64) []byte {
 // the number of bytes read and an error, in case the string is longer than
 // the input slice
 func readLengthEncodedString(b []byte) ([]byte, bool, int, error) {
-	// Get length
-	num, isNull, n := readLengthEncodedInteger(b)
-	if num < 1 {
-		return b[n:n], isNull, n, nil
+	// Most row fields and identifiers have a one-byte length. Validate that
+	// complete case directly, avoiding repeated integer-header decoding on every
+	// scalar column. Long encodings and NULL still use the checked slow path.
+	if len(b) > 0 && b[0] < 0xfb {
+		end := int(b[0]) + 1
+		if end <= len(b) {
+			return b[1:end:end], false, end, nil
+		}
+		return nil, false, len(b), io.EOF
 	}
-
-	n += int(num)
-
-	// Check data length
-	if len(b) >= n {
-		return b[n-int(num) : n : n], false, n, nil
+	num, null, n := checkedLengthEncodedInteger(b)
+	if n == 0 || num > uint64(len(b)-n) {
+		return nil, false, len(b), io.EOF
 	}
-	return nil, false, n, io.EOF
+	end := n + int(num)
+	return b[n:end:end], null, end, nil
 }
 
-// returns the number of bytes skipped and an error, in case the string is
-// longer than the input slice
+// skipLengthEncodedString checks the encoded length before converting to int.
 func skipLengthEncodedString(b []byte) (int, error) {
-	// Get length
-	num, _, n := readLengthEncodedInteger(b)
-	if num < 1 {
-		return n, nil
-	}
+	_, _, n, err := readLengthEncodedString(b)
+	return n, err
+}
 
-	n += int(num)
-
-	// Check data length
-	if len(b) >= n {
-		return n, nil
+// checkedLengthEncodedInteger returns n == 0 for a truncated or reserved encoding.
+// Keeping the legacy helper separate preserves its historical empty-input
+// behavior while protocol boundaries can reject missing values explicitly.
+func checkedLengthEncodedInteger(b []byte) (uint64, bool, int) {
+	if len(b) == 0 {
+		return 0, false, 0
 	}
-	return n, io.EOF
+	n := 1
+	switch b[0] {
+	case 0xfc:
+		n = 3
+	case 0xfd:
+		n = 4
+	case 0xfe:
+		n = 9
+	case 0xff:
+		return 0, false, 0
+	}
+	if len(b) < n {
+		return 0, false, 0
+	}
+	return readLengthEncodedInteger(b)
 }
 
 // returns the number read, whether the value is NULL and the number of bytes read
@@ -566,6 +581,10 @@ func readLengthEncodedInteger(b []byte) (uint64, bool, int) {
 	// See issue #349
 	if len(b) == 0 {
 		return 0, true, 1
+	}
+
+	if (b[0] == 0xfc && len(b) < 3) || (b[0] == 0xfd && len(b) < 4) || (b[0] == 0xfe && len(b) < 9) {
+		return 0, false, 0
 	}
 
 	switch b[0] {

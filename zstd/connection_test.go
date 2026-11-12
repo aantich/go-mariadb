@@ -23,7 +23,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-sql-driver/mysql"
+	mysql "github.com/aantich/go-mariadb"
 )
 
 const (
@@ -218,7 +218,7 @@ func TestServerCompression(t *testing.T) {
 	if dsn == "" {
 		t.Skip("set MYSQL_ZSTD_TEST_DSN to test a MySQL or MariaDB server")
 	}
-	db, err := sql.Open("mysql", dsn)
+	db, err := sql.Open("mariadb", dsn)
 	if err != nil {
 		t.Fatal(err)
 	}

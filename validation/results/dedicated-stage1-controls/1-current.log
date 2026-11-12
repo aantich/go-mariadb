@@ -1,0 +1,9 @@
+goos: darwin
+goarch: arm64
+pkg: github.com/aantich/go-mariadb/validation
+cpu: Apple M4 Max
+BenchmarkMariaDBRead/text/narrow/raw=false-4         	     818	    757839 ns/op	       757.8 ns/row	   36664 B/op	    4564 allocs/op
+BenchmarkMariaDBRead/text/narrow/raw=true-4          	     890	    666044 ns/op	       666.0 ns/row	   13072 B/op	    1664 allocs/op
+BenchmarkMariaDBRead/compressed/narrow/raw=false-4   	     453	   2379304 ns/op	      2379 ns/row	   27108 B/op	    2966 allocs/op
+BenchmarkMariaDBRead/compressed/narrow/raw=true-4    	     244	   2853189 ns/op	      2853 ns/row	   15680 B/op	    1712 allocs/op
+PASS

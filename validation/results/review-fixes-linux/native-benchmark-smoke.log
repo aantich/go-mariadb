@@ -1,0 +1,21 @@
+goos: linux
+goarch: arm64
+pkg: github.com/aantich/go-mariadb/validation
+BenchmarkMariaDBNativeBulk/1/prepared-4         	       1	    657042 ns/op	    3792 B/op	      58 allocs/op
+BenchmarkMariaDBNativeBulk/1/text_batch-4       	       1	    583375 ns/op	    3600 B/op	      63 allocs/op
+BenchmarkMariaDBNativeBulk/1/local_infile-4     	       1	    842958 ns/op	   21760 B/op	      62 allocs/op
+BenchmarkMariaDBNativeBulk/1/native_bulk-4      	       1	   1083542 ns/op	    3424 B/op	      56 allocs/op
+BenchmarkMariaDBNativeBulk/16/prepared-4        	       1	   1572792 ns/op	    6048 B/op	     131 allocs/op
+BenchmarkMariaDBNativeBulk/16/text_batch-4      	       1	    494542 ns/op	    3232 B/op	      59 allocs/op
+BenchmarkMariaDBNativeBulk/16/local_infile-4    	       1	    507042 ns/op	   22224 B/op	      63 allocs/op
+BenchmarkMariaDBNativeBulk/16/native_bulk-4     	       1	    532625 ns/op	    3760 B/op	      56 allocs/op
+BenchmarkMariaDBNativeBulk/100/prepared-4       	       1	   4586042 ns/op	   20352 B/op	     550 allocs/op
+BenchmarkMariaDBNativeBulk/100/text_batch-4     	       1	    751791 ns/op	    3232 B/op	      59 allocs/op
+BenchmarkMariaDBNativeBulk/100/local_infile-4   	       1	   1511875 ns/op	   21744 B/op	      62 allocs/op
+BenchmarkMariaDBNativeBulk/100/native_bulk-4    	       1	    959792 ns/op	    9808 B/op	      59 allocs/op
+BenchmarkMariaDBNativeBulk/1000/prepared-4      	       1	  60498416 ns/op	  179280 B/op	    5052 allocs/op
+BenchmarkMariaDBNativeBulk/1000/text_batch-4    	       1	   3887583 ns/op	   25104 B/op	      61 allocs/op
+BenchmarkMariaDBNativeBulk/1000/local_infile-4  	       1	   2974208 ns/op	   22256 B/op	      64 allocs/op
+BenchmarkMariaDBNativeBulk/1000/native_bulk-4   	       1	   2600208 ns/op	   62736 B/op	      58 allocs/op
+PASS
+ok  	github.com/aantich/go-mariadb/validation	0.108s

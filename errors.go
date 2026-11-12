@@ -6,7 +6,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-package mysql
+package mariadb
 
 import (
 	"errors"
@@ -44,7 +44,7 @@ var (
 	errUnexpectedReadNonSocket = errors.New("unexpected read from non-socket")
 )
 
-var defaultLogger = Logger(log.New(os.Stderr, "[mysql] ", log.Ldate|log.Ltime))
+var defaultLogger = Logger(log.New(os.Stderr, "[mariadb] ", log.Ldate|log.Ltime))
 
 // Logger is used to log critical error messages.
 type Logger interface {

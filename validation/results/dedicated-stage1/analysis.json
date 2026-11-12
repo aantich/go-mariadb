@@ -1,0 +1,1471 @@
+{
+  "recorded_at": "2026-11-11T23:16:01.152353+00:00",
+  "source_fingerprint": "901628d5decc288cc479da04740fd57c5fc7f2a95526b4c0c32d3f89c9c61c1f",
+  "complete": true,
+  "exit_code": 1,
+  "profiles": 200,
+  "repetitions": [
+    7
+  ],
+  "lost_baseline_passes": [],
+  "conditions": "No fresh idle confirmation; background activity and unchanged-driver timing drift observed. Per-family CPU snapshots retained. Final source adds the checked short-string fast path; earlier full and diagnostic captures are preserved.",
+  "hardware": [
+    "Apple M4 Max",
+    "16",
+    "137438953472"
+  ],
+  "suites": {
+    "upstream": {
+      "pass": 668,
+      "skip": 7,
+      "failures": []
+    },
+    "protocol": {
+      "pass": 78,
+      "failures": []
+    },
+    "mariadb": {
+      "pass": 212,
+      "fail": 1,
+      "failures": [
+        "github.com/aantich/go-mariadb/validation/TestMariaDBDesiredCleanPoolReset"
+      ]
+    },
+    "race": {
+      "pass": 880,
+      "skip": 7,
+      "fail": 1,
+      "failures": [
+        "github.com/aantich/go-mariadb/validation/TestMariaDBDesiredCleanPoolReset"
+      ]
+    }
+  },
+  "original_profile_changes": {
+    "BenchmarkQuery": {
+      "time_percent": 2.8683430538292365,
+      "baseline_B/op": 571.0,
+      "current_B/op": 572.0,
+      "current_ns/op": 10759.0,
+      "baseline_ns/op": 10459.0
+    },
+    "BenchmarkQueryCompressed": {
+      "time_percent": 1.5148628048780477,
+      "baseline_B/op": 579.0,
+      "current_B/op": 579.0,
+      "current_ns/op": 10655.0,
+      "baseline_ns/op": 10496.0
+    },
+    "BenchmarkExec": {
+      "time_percent": 0.8037764735902009,
+      "baseline_B/op": 154.0,
+      "current_B/op": 154.0,
+      "current_ns/op": 7901.0,
+      "baseline_ns/op": 7838.0
+    },
+    "BenchmarkRoundtripTxt": {
+      "time_percent": -0.18199902651683253,
+      "baseline_B/op": 9815.0,
+      "current_B/op": 10596.0,
+      "current_ns/op": 47167.0,
+      "baseline_ns/op": 47253.0
+    },
+    "BenchmarkRoundtripBin": {
+      "time_percent": 1.2188200956679163,
+      "baseline_B/op": 581.0,
+      "current_B/op": 581.0,
+      "current_ns/op": 37454.0,
+      "baseline_ns/op": 37003.0
+    },
+    "BenchmarkInterpolation": {
+      "time_percent": -1.1271415689810604,
+      "baseline_B/op": 176.0,
+      "current_B/op": 176.0,
+      "current_ns/op": 219.3,
+      "baseline_ns/op": 221.8
+    },
+    "BenchmarkQueryContext/1": {
+      "time_percent": -11.831357048748348,
+      "baseline_B/op": 552.0,
+      "current_B/op": 552.0,
+      "current_ns/op": 10038.0,
+      "baseline_ns/op": 11385.0
+    },
+    "BenchmarkQueryContext/2": {
+      "time_percent": -2.06888444810156,
+      "baseline_B/op": 552.0,
+      "current_B/op": 552.0,
+      "current_ns/op": 8331.0,
+      "baseline_ns/op": 8507.0
+    },
+    "BenchmarkQueryContext/3": {
+      "time_percent": 1.7647816565760754,
+      "baseline_B/op": 552.0,
+      "current_B/op": 552.0,
+      "current_ns/op": 7900.0,
+      "baseline_ns/op": 7763.0
+    },
+    "BenchmarkQueryContext/4": {
+      "time_percent": -1.9959541469993236,
+      "baseline_B/op": 552.0,
+      "current_B/op": 552.0,
+      "current_ns/op": 7267.0,
+      "baseline_ns/op": 7415.0
+    },
+    "BenchmarkExecContext/1": {
+      "time_percent": -12.865157670729344,
+      "baseline_B/op": 152.0,
+      "current_B/op": 152.0,
+      "current_ns/op": 9008.0,
+      "baseline_ns/op": 10338.0
+    },
+    "BenchmarkExecContext/2": {
+      "time_percent": -0.7224713502740454,
+      "baseline_B/op": 152.0,
+      "current_B/op": 152.0,
+      "current_ns/op": 7970.0,
+      "baseline_ns/op": 8028.0
+    },
+    "BenchmarkExecContext/3": {
+      "time_percent": 0.19917673615721387,
+      "baseline_B/op": 152.0,
+      "current_B/op": 152.0,
+      "current_ns/op": 7546.0,
+      "baseline_ns/op": 7531.0
+    },
+    "BenchmarkExecContext/4": {
+      "time_percent": -1.716199246546668,
+      "baseline_B/op": 152.0,
+      "current_B/op": 152.0,
+      "current_ns/op": 7044.0,
+      "baseline_ns/op": 7167.0
+    },
+    "BenchmarkQueryRawBytes/size=100": {
+      "time_percent": 16.619051798409103,
+      "baseline_B/op": 3166.0,
+      "current_B/op": 3175.0,
+      "current_ns/op": 1302166.0,
+      "baseline_ns/op": 1116598.0
+    },
+    "BenchmarkQueryRawBytes/size=1000": {
+      "time_percent": -8.140507256669471,
+      "baseline_B/op": 3191.0,
+      "current_B/op": 3187.0,
+      "current_ns/op": 976550.0,
+      "baseline_ns/op": 1063091.0
+    },
+    "BenchmarkQueryRawBytes/size=2000": {
+      "time_percent": -12.211164681923059,
+      "baseline_B/op": 3191.0,
+      "current_B/op": 3188.0,
+      "current_ns/op": 1011287.0,
+      "baseline_ns/op": 1151954.0
+    },
+    "BenchmarkQueryRawBytes/size=4000": {
+      "time_percent": -9.632836915927466,
+      "baseline_B/op": 3194.0,
+      "current_B/op": 3190.0,
+      "current_ns/op": 1076516.0,
+      "baseline_ns/op": 1191269.0
+    },
+    "BenchmarkQueryRawBytes/size=8000": {
+      "time_percent": -15.559059220013472,
+      "baseline_B/op": 3241.0,
+      "current_B/op": 3234.0,
+      "current_ns/op": 1160585.0,
+      "baseline_ns/op": 1374434.0
+    },
+    "BenchmarkQueryRawBytes/size=12000": {
+      "time_percent": -13.095338081672725,
+      "baseline_B/op": 3276.0,
+      "current_B/op": 3261.0,
+      "current_ns/op": 1262358.0,
+      "baseline_ns/op": 1452578.0
+    },
+    "BenchmarkQueryRawBytes/size=16000": {
+      "time_percent": -4.071232680988879,
+      "baseline_B/op": 3307.0,
+      "current_B/op": 3299.0,
+      "current_ns/op": 1450230.0,
+      "baseline_ns/op": 1511778.0
+    },
+    "BenchmarkQueryRawBytes/size=32000": {
+      "time_percent": -12.939732146437732,
+      "baseline_B/op": 3457.0,
+      "current_B/op": 3428.0,
+      "current_ns/op": 1628202.0,
+      "baseline_ns/op": 1870201.0
+    },
+    "BenchmarkQueryRawBytes/size=64000": {
+      "time_percent": -12.292932730336537,
+      "baseline_B/op": 3882.0,
+      "current_B/op": 3747.0,
+      "current_ns/op": 1922681.0,
+      "baseline_ns/op": 2192162.0
+    },
+    "BenchmarkQueryRawBytes/size=256000": {
+      "time_percent": -11.302124745417274,
+      "baseline_B/op": 7796.0,
+      "current_B/op": 7796.0,
+      "current_ns/op": 3683511.0,
+      "baseline_ns/op": 4152874.0
+    },
+    "BenchmarkReceive10kRows/query": {
+      "time_percent": -0.7934969888266918,
+      "baseline_B/op": 608.0,
+      "current_B/op": 608.0,
+      "current_ns/op": 2155171.0,
+      "baseline_ns/op": 2172409.0
+    },
+    "BenchmarkReceive10kRowsCompressed/query": {
+      "time_percent": -6.043191014175853,
+      "baseline_B/op": 74370.0,
+      "current_B/op": 75203.0,
+      "current_ns/op": 5731122.0,
+      "baseline_ns/op": 6099741.0
+    },
+    "BenchmarkReceiveMetadata/query": {
+      "time_percent": -0.04616874618876832,
+      "baseline_B/op": 41406.0,
+      "current_B/op": 41403.0,
+      "current_ns/op": 863822.0,
+      "baseline_ns/op": 864221.0
+    },
+    "BenchmarkParseDSN": {
+      "time_percent": -5.027660266840217,
+      "baseline_B/op": 15978.0,
+      "current_B/op": 16618.0,
+      "current_ns/op": 5837.0,
+      "baseline_ns/op": 6146.0
+    },
+    "BenchmarkRowsNext/binary=false/columns=1/value=42": {
+      "time_percent": 6.326148078725402,
+      "baseline_B/op": 0.0,
+      "current_B/op": 0.0,
+      "current_ns/op": 45.38,
+      "baseline_ns/op": 42.68
+    },
+    "BenchmarkRowsNext/binary=false/columns=1/value=123456789": {
+      "time_percent": 4.853173905398278,
+      "baseline_B/op": 8.0,
+      "current_B/op": 8.0,
+      "current_ns/op": 59.63,
+      "baseline_ns/op": 56.87
+    },
+    "BenchmarkRowsNext/binary=false/columns=1/value=blob": {
+      "time_percent": -5.909537856440517,
+      "baseline_B/op": 24.0,
+      "current_B/op": 24.0,
+      "current_ns/op": 95.69,
+      "baseline_ns/op": 101.7
+    },
+    "BenchmarkRowsNext/binary=false/columns=32/value=42": {
+      "time_percent": 7.714939522719844,
+      "baseline_B/op": 0.0,
+      "current_B/op": 0.0,
+      "current_ns/op": 659.0,
+      "baseline_ns/op": 611.8
+    },
+    "BenchmarkRowsNext/binary=false/columns=32/value=123456789": {
+      "time_percent": 4.864359214218905,
+      "baseline_B/op": 256.0,
+      "current_B/op": 256.0,
+      "current_ns/op": 1121.0,
+      "baseline_ns/op": 1069.0
+    },
+    "BenchmarkRowsNext/binary=false/columns=32/value=blob": {
+      "time_percent": -2.871322226160933,
+      "baseline_B/op": 769.0,
+      "current_B/op": 769.0,
+      "current_ns/op": 2740.0,
+      "baseline_ns/op": 2821.0
+    },
+    "BenchmarkRowsNext/binary=true/columns=1/value=42": {
+      "time_percent": -0.45543266102796576,
+      "baseline_B/op": 0.0,
+      "current_B/op": 0.0,
+      "current_ns/op": 30.6,
+      "baseline_ns/op": 30.74
+    },
+    "BenchmarkRowsNext/binary=true/columns=1/value=123456789": {
+      "time_percent": -2.678093197643283,
+      "baseline_B/op": 8.0,
+      "current_B/op": 8.0,
+      "current_ns/op": 36.34,
+      "baseline_ns/op": 37.34
+    },
+    "BenchmarkRowsNext/binary=true/columns=1/value=blob": {
+      "time_percent": -9.709193245778602,
+      "baseline_B/op": 24.0,
+      "current_B/op": 24.0,
+      "current_ns/op": 96.25,
+      "baseline_ns/op": 106.6
+    },
+    "BenchmarkRowsNext/binary=true/columns=32/value=42": {
+      "time_percent": 1.3747228381374654,
+      "baseline_B/op": 0.0,
+      "current_B/op": 0.0,
+      "current_ns/op": 228.6,
+      "baseline_ns/op": 225.5
+    },
+    "BenchmarkRowsNext/binary=true/columns=32/value=123456789": {
+      "time_percent": -3.0245746691871522,
+      "baseline_B/op": 256.0,
+      "current_B/op": 256.0,
+      "current_ns/op": 410.4,
+      "baseline_ns/op": 423.2
+    },
+    "BenchmarkRowsNext/binary=true/columns=32/value=blob": {
+      "time_percent": 1.741912548880209,
+      "baseline_B/op": 769.0,
+      "current_B/op": 769.0,
+      "current_ns/op": 2862.0,
+      "baseline_ns/op": 2813.0
+    },
+    "BenchmarkRowsScan/int64/binary=false/rows=1/direct=false": {
+      "time_percent": -0.6674561309075289,
+      "baseline_B/op": 24.0,
+      "current_B/op": 24.0,
+      "current_ns/op": 92.27,
+      "baseline_ns/op": 92.89
+    },
+    "BenchmarkRowsScan/int64/binary=false/rows=1/direct=true": {
+      "time_percent": 1.814058956916087,
+      "baseline_B/op": 24.0,
+      "current_B/op": 24.0,
+      "current_ns/op": 62.86,
+      "baseline_ns/op": 61.74
+    },
+    "BenchmarkRowsScan/int64/binary=false/rows=100/direct=false": {
+      "time_percent": 0.7839294463498181,
+      "baseline_B/op": 816.0,
+      "current_B/op": 816.0,
+      "current_ns/op": 8228.0,
+      "baseline_ns/op": 8164.0
+    },
+    "BenchmarkRowsScan/int64/binary=false/rows=100/direct=true": {
+      "time_percent": 1.8905080740448943,
+      "baseline_B/op": 24.0,
+      "current_B/op": 24.0,
+      "current_ns/op": 5174.0,
+      "baseline_ns/op": 5078.0
+    },
+    "BenchmarkRowsScan/int64/binary=true/rows=1/direct=false": {
+      "time_percent": -1.0962241169305775,
+      "baseline_B/op": 24.0,
+      "current_B/op": 24.0,
+      "current_ns/op": 73.08,
+      "baseline_ns/op": 73.89
+    },
+    "BenchmarkRowsScan/int64/binary=true/rows=1/direct=true": {
+      "time_percent": -0.8312168090510275,
+      "baseline_B/op": 24.0,
+      "current_B/op": 24.0,
+      "current_ns/op": 42.95,
+      "baseline_ns/op": 43.31
+    },
+    "BenchmarkRowsScan/int64/binary=true/rows=100/direct=false": {
+      "time_percent": 0.2647691543935071,
+      "baseline_B/op": 816.0,
+      "current_B/op": 816.0,
+      "current_ns/op": 6059.0,
+      "baseline_ns/op": 6043.0
+    },
+    "BenchmarkRowsScan/int64/binary=true/rows=100/direct=true": {
+      "time_percent": 2.0915428917853918,
+      "baseline_B/op": 24.0,
+      "current_B/op": 24.0,
+      "current_ns/op": 3368.0,
+      "baseline_ns/op": 3299.0
+    },
+    "BenchmarkRowsScan/null-int64/binary=false/rows=1/direct=false": {
+      "time_percent": 0.29999999999998916,
+      "baseline_B/op": 24.0,
+      "current_B/op": 24.0,
+      "current_ns/op": 100.3,
+      "baseline_ns/op": 100.0
+    },
+    "BenchmarkRowsScan/null-int64/binary=false/rows=1/direct=true": {
+      "time_percent": -1.2784935579781997,
+      "baseline_B/op": 32.0,
+      "current_B/op": 32.0,
+      "current_ns/op": 99.61,
+      "baseline_ns/op": 100.9
+    },
+    "BenchmarkRowsScan/null-int64/binary=false/rows=100/direct=false": {
+      "time_percent": -1.0842834786496724,
+      "baseline_B/op": 816.0,
+      "current_B/op": 816.0,
+      "current_ns/op": 8849.0,
+      "baseline_ns/op": 8946.0
+    },
+    "BenchmarkRowsScan/null-int64/binary=false/rows=100/direct=true": {
+      "time_percent": 1.2760241773001946,
+      "baseline_B/op": 824.0,
+      "current_B/op": 824.0,
+      "current_ns/op": 9048.0,
+      "baseline_ns/op": 8934.0
+    },
+    "BenchmarkRowsScan/null-int64/binary=true/rows=1/direct=false": {
+      "time_percent": -3.7314348840063682,
+      "baseline_B/op": 24.0,
+      "current_B/op": 24.0,
+      "current_ns/op": 78.43,
+      "baseline_ns/op": 81.47
+    },
+    "BenchmarkRowsScan/null-int64/binary=true/rows=1/direct=true": {
+      "time_percent": -0.91363138019247,
+      "baseline_B/op": 32.0,
+      "current_B/op": 32.0,
+      "current_ns/op": 81.34,
+      "baseline_ns/op": 82.09
+    },
+    "BenchmarkRowsScan/null-int64/binary=true/rows=100/direct=false": {
+      "time_percent": -2.052533371609011,
+      "baseline_B/op": 816.0,
+      "current_B/op": 816.0,
+      "current_ns/op": 6824.0,
+      "baseline_ns/op": 6967.0
+    },
+    "BenchmarkRowsScan/null-int64/binary=true/rows=100/direct=true": {
+      "time_percent": -0.2422342547734435,
+      "baseline_B/op": 824.0,
+      "current_B/op": 824.0,
+      "current_ns/op": 7001.0,
+      "baseline_ns/op": 7018.0
+    },
+    "BenchmarkRowsScan/string/binary=false/rows=1/direct=false": {
+      "time_percent": -0.7356393801846939,
+      "baseline_B/op": 56.0,
+      "current_B/op": 56.0,
+      "current_ns/op": 63.42,
+      "baseline_ns/op": 63.89
+    },
+    "BenchmarkRowsScan/string/binary=false/rows=1/direct=true": {
+      "time_percent": 0.8879242304656643,
+      "baseline_B/op": 40.0,
+      "current_B/op": 40.0,
+      "current_ns/op": 51.13,
+      "baseline_ns/op": 50.68
+    },
+    "BenchmarkRowsScan/string/binary=false/rows=100/direct=false": {
+      "time_percent": 1.418573860412331,
+      "baseline_B/op": 4016.0,
+      "current_B/op": 4016.0,
+      "current_ns/op": 5362.0,
+      "baseline_ns/op": 5287.0
+    },
+    "BenchmarkRowsScan/string/binary=false/rows=100/direct=true": {
+      "time_percent": 3.1306132922761076,
+      "baseline_B/op": 1624.0,
+      "current_B/op": 1624.0,
+      "current_ns/op": 4019.0,
+      "baseline_ns/op": 3897.0
+    },
+    "BenchmarkRowsScan/string/binary=true/rows=1/direct=false": {
+      "time_percent": 0.7539917208752245,
+      "baseline_B/op": 56.0,
+      "current_B/op": 56.0,
+      "current_ns/op": 68.15,
+      "baseline_ns/op": 67.64
+    },
+    "BenchmarkRowsScan/string/binary=true/rows=1/direct=true": {
+      "time_percent": 1.427023121387272,
+      "baseline_B/op": 40.0,
+      "current_B/op": 40.0,
+      "current_ns/op": 56.15,
+      "baseline_ns/op": 55.36
+    },
+    "BenchmarkRowsScan/string/binary=true/rows=100/direct=false": {
+      "time_percent": 2.973977695167296,
+      "baseline_B/op": 4016.0,
+      "current_B/op": 4016.0,
+      "current_ns/op": 5817.0,
+      "baseline_ns/op": 5649.0
+    },
+    "BenchmarkRowsScan/string/binary=true/rows=100/direct=true": {
+      "time_percent": 4.752160072760336,
+      "baseline_B/op": 1624.0,
+      "current_B/op": 1624.0,
+      "current_ns/op": 4607.0,
+      "baseline_ns/op": 4398.0
+    },
+    "BenchmarkRowsScan/bytes/binary=false/rows=1/direct=false": {
+      "time_percent": 0.25710828796128293,
+      "baseline_B/op": 56.0,
+      "current_B/op": 56.0,
+      "current_ns/op": 66.29,
+      "baseline_ns/op": 66.12
+    },
+    "BenchmarkRowsScan/bytes/binary=false/rows=1/direct=true": {
+      "time_percent": 0.4155647903286708,
+      "baseline_B/op": 40.0,
+      "current_B/op": 40.0,
+      "current_ns/op": 53.16,
+      "baseline_ns/op": 52.94
+    },
+    "BenchmarkRowsScan/bytes/binary=false/rows=100/direct=false": {
+      "time_percent": 1.2880986937590766,
+      "baseline_B/op": 4016.0,
+      "current_B/op": 4016.0,
+      "current_ns/op": 5583.0,
+      "baseline_ns/op": 5512.0
+    },
+    "BenchmarkRowsScan/bytes/binary=false/rows=100/direct=true": {
+      "time_percent": 2.4005819592628486,
+      "baseline_B/op": 1624.0,
+      "current_B/op": 1624.0,
+      "current_ns/op": 4223.0,
+      "baseline_ns/op": 4124.0
+    },
+    "BenchmarkRowsScan/bytes/binary=true/rows=1/direct=false": {
+      "time_percent": 0.2423723980610193,
+      "baseline_B/op": 56.0,
+      "current_B/op": 56.0,
+      "current_ns/op": 70.31,
+      "baseline_ns/op": 70.14
+    },
+    "BenchmarkRowsScan/bytes/binary=true/rows=1/direct=true": {
+      "time_percent": 3.411662315056563,
+      "baseline_B/op": 40.0,
+      "current_B/op": 40.0,
+      "current_ns/op": 59.41,
+      "baseline_ns/op": 57.45
+    },
+    "BenchmarkRowsScan/bytes/binary=true/rows=100/direct=false": {
+      "time_percent": 1.8672551349516286,
+      "baseline_B/op": 4016.0,
+      "current_B/op": 4016.0,
+      "current_ns/op": 6001.0,
+      "baseline_ns/op": 5891.0
+    },
+    "BenchmarkRowsScan/bytes/binary=true/rows=100/direct=true": {
+      "time_percent": 5.354058721934374,
+      "baseline_B/op": 1624.0,
+      "current_B/op": 1624.0,
+      "current_ns/op": 4880.0,
+      "baseline_ns/op": 4632.0
+    },
+    "BenchmarkRowsScan/any/binary=false/rows=1/direct=false": {
+      "time_percent": -1.724591890468652,
+      "baseline_B/op": 80.0,
+      "current_B/op": 80.0,
+      "current_ns/op": 74.65,
+      "baseline_ns/op": 75.96
+    },
+    "BenchmarkRowsScan/any/binary=false/rows=1/direct=true": {
+      "time_percent": 0.5313154081468374,
+      "baseline_B/op": 64.0,
+      "current_B/op": 64.0,
+      "current_ns/op": 62.44,
+      "baseline_ns/op": 62.11
+    },
+    "BenchmarkRowsScan/any/binary=false/rows=100/direct=false": {
+      "time_percent": 0.17075442409189012,
+      "baseline_B/op": 6416.0,
+      "current_B/op": 6416.0,
+      "current_ns/op": 6453.0,
+      "baseline_ns/op": 6442.0
+    },
+    "BenchmarkRowsScan/any/binary=false/rows=100/direct=true": {
+      "time_percent": 1.6679748822606033,
+      "baseline_B/op": 4024.0,
+      "current_B/op": 4024.0,
+      "current_ns/op": 5181.0,
+      "baseline_ns/op": 5096.0
+    },
+    "BenchmarkRowsScan/any/binary=true/rows=1/direct=false": {
+      "time_percent": -1.1790989201936108,
+      "baseline_B/op": 80.0,
+      "current_B/op": 80.0,
+      "current_ns/op": 79.62,
+      "baseline_ns/op": 80.57
+    },
+    "BenchmarkRowsScan/any/binary=true/rows=1/direct=true": {
+      "time_percent": 1.6972063682787475,
+      "baseline_B/op": 64.0,
+      "current_B/op": 64.0,
+      "current_ns/op": 67.71,
+      "baseline_ns/op": 66.58
+    },
+    "BenchmarkRowsScan/any/binary=true/rows=100/direct=false": {
+      "time_percent": 1.6544655929721763,
+      "baseline_B/op": 6416.0,
+      "current_B/op": 6416.0,
+      "current_ns/op": 6943.0,
+      "baseline_ns/op": 6830.0
+    },
+    "BenchmarkRowsScan/any/binary=true/rows=100/direct=true": {
+      "time_percent": 1.7494751574527623,
+      "baseline_B/op": 4024.0,
+      "current_B/op": 4024.0,
+      "current_ns/op": 5816.0,
+      "baseline_ns/op": 5716.0
+    },
+    "BenchmarkRowsScan/date-string/binary=false/rows=1/direct=false": {
+      "time_percent": -0.9006211180124346,
+      "baseline_B/op": 56.0,
+      "current_B/op": 56.0,
+      "current_ns/op": 63.82,
+      "baseline_ns/op": 64.4
+    },
+    "BenchmarkRowsScan/date-string/binary=false/rows=1/direct=true": {
+      "time_percent": 1.8103109012199914,
+      "baseline_B/op": 40.0,
+      "current_B/op": 40.0,
+      "current_ns/op": 51.74,
+      "baseline_ns/op": 50.82
+    },
+    "BenchmarkRowsScan/date-string/binary=false/rows=100/direct=false": {
+      "time_percent": 1.0484927916120546,
+      "baseline_B/op": 4016.0,
+      "current_B/op": 4016.0,
+      "current_ns/op": 5397.0,
+      "baseline_ns/op": 5341.0
+    },
+    "BenchmarkRowsScan/date-string/binary=false/rows=100/direct=true": {
+      "time_percent": 3.108280254777074,
+      "baseline_B/op": 1624.0,
+      "current_B/op": 1624.0,
+      "current_ns/op": 4047.0,
+      "baseline_ns/op": 3925.0
+    },
+    "BenchmarkRowsScan/date-string/binary=true/rows=1/direct=false": {
+      "time_percent": 0.3231984677998456,
+      "baseline_B/op": 72.0,
+      "current_B/op": 72.0,
+      "current_ns/op": 83.81,
+      "baseline_ns/op": 83.54
+    },
+    "BenchmarkRowsScan/date-string/binary=true/rows=1/direct=true": {
+      "time_percent": 1.451544044400177,
+      "baseline_B/op": 56.0,
+      "current_B/op": 56.0,
+      "current_ns/op": 71.29,
+      "baseline_ns/op": 70.27
+    },
+    "BenchmarkRowsScan/date-string/binary=true/rows=100/direct=false": {
+      "time_percent": 1.3927192498621066,
+      "baseline_B/op": 5616.0,
+      "current_B/op": 5616.0,
+      "current_ns/op": 7353.0,
+      "baseline_ns/op": 7252.0
+    },
+    "BenchmarkRowsScan/date-string/binary=true/rows=100/direct=true": {
+      "time_percent": 1.947940010343041,
+      "baseline_B/op": 3224.0,
+      "current_B/op": 3224.0,
+      "current_ns/op": 5914.0,
+      "baseline_ns/op": 5801.0
+    },
+    "BenchmarkRowsScan/date-bytes/binary=false/rows=1/direct=false": {
+      "time_percent": -0.24013207263994252,
+      "baseline_B/op": 56.0,
+      "current_B/op": 56.0,
+      "current_ns/op": 66.47,
+      "baseline_ns/op": 66.63
+    },
+    "BenchmarkRowsScan/date-bytes/binary=false/rows=1/direct=true": {
+      "time_percent": 1.212234240954868,
+      "baseline_B/op": 40.0,
+      "current_B/op": 40.0,
+      "current_ns/op": 54.27,
+      "baseline_ns/op": 53.62
+    },
+    "BenchmarkRowsScan/date-bytes/binary=false/rows=100/direct=false": {
+      "time_percent": 0.4648667977829479,
+      "baseline_B/op": 4016.0,
+      "current_B/op": 4016.0,
+      "current_ns/op": 5619.0,
+      "baseline_ns/op": 5593.0
+    },
+    "BenchmarkRowsScan/date-bytes/binary=false/rows=100/direct=true": {
+      "time_percent": 1.82724252491695,
+      "baseline_B/op": 1624.0,
+      "current_B/op": 1624.0,
+      "current_ns/op": 4291.0,
+      "baseline_ns/op": 4214.0
+    },
+    "BenchmarkRowsScan/date-bytes/binary=true/rows=1/direct=false": {
+      "time_percent": 0.46210720887245316,
+      "baseline_B/op": 72.0,
+      "current_B/op": 72.0,
+      "current_ns/op": 86.96,
+      "baseline_ns/op": 86.56
+    },
+    "BenchmarkRowsScan/date-bytes/binary=true/rows=1/direct=true": {
+      "time_percent": 0.7799671592775059,
+      "baseline_B/op": 56.0,
+      "current_B/op": 56.0,
+      "current_ns/op": 73.65,
+      "baseline_ns/op": 73.08
+    },
+    "BenchmarkRowsScan/date-bytes/binary=true/rows=100/direct=false": {
+      "time_percent": -0.17134572294714712,
+      "baseline_B/op": 5616.0,
+      "current_B/op": 5616.0,
+      "current_ns/op": 7574.0,
+      "baseline_ns/op": 7587.0
+    },
+    "BenchmarkRowsScan/date-bytes/binary=true/rows=100/direct=true": {
+      "time_percent": 2.8429752066115643,
+      "baseline_B/op": 3224.0,
+      "current_B/op": 3224.0,
+      "current_ns/op": 6222.0,
+      "baseline_ns/op": 6050.0
+    },
+    "BenchmarkRowsScan/date-raw/binary=false/rows=1/direct=false": {
+      "time_percent": 1.3757203941253016,
+      "baseline_B/op": 40.0,
+      "current_B/op": 40.0,
+      "current_ns/op": 54.53,
+      "baseline_ns/op": 53.79
+    },
+    "BenchmarkRowsScan/date-raw/binary=false/rows=1/direct=true": {
+      "time_percent": 2.752513164193382,
+      "baseline_B/op": 24.0,
+      "current_B/op": 24.0,
+      "current_ns/op": 42.93,
+      "baseline_ns/op": 41.78
+    },
+    "BenchmarkRowsScan/date-raw/binary=false/rows=100/direct=false": {
+      "time_percent": 2.203350929538672,
+      "baseline_B/op": 2416.0,
+      "current_B/op": 2416.0,
+      "current_ns/op": 4453.0,
+      "baseline_ns/op": 4357.0
+    },
+    "BenchmarkRowsScan/date-raw/binary=false/rows=100/direct=true": {
+      "time_percent": 4.900662251655619,
+      "baseline_B/op": 24.0,
+      "current_B/op": 24.0,
+      "current_ns/op": 3168.0,
+      "baseline_ns/op": 3020.0
+    },
+    "BenchmarkRowsScan/date-raw/binary=true/rows=1/direct=false": {
+      "time_percent": 0.7277628032344996,
+      "baseline_B/op": 56.0,
+      "current_B/op": 56.0,
+      "current_ns/op": 74.74,
+      "baseline_ns/op": 74.2
+    },
+    "BenchmarkRowsScan/date-raw/binary=true/rows=1/direct=true": {
+      "time_percent": 0.6806028196402636,
+      "baseline_B/op": 40.0,
+      "current_B/op": 40.0,
+      "current_ns/op": 62.13,
+      "baseline_ns/op": 61.71
+    },
+    "BenchmarkRowsScan/date-raw/binary=true/rows=100/direct=false": {
+      "time_percent": 1.2295081967213184,
+      "baseline_B/op": 4016.0,
+      "current_B/op": 4016.0,
+      "current_ns/op": 6422.0,
+      "baseline_ns/op": 6344.0
+    },
+    "BenchmarkRowsScan/date-raw/binary=true/rows=100/direct=true": {
+      "time_percent": 2.610279239174429,
+      "baseline_B/op": 1624.0,
+      "current_B/op": 1624.0,
+      "current_ns/op": 5071.0,
+      "baseline_ns/op": 4942.0
+    },
+    "BenchmarkRowsScan/date-any/binary=false/rows=1/direct=false": {
+      "time_percent": -2.9108706852138178,
+      "baseline_B/op": 80.0,
+      "current_B/op": 80.0,
+      "current_ns/op": 75.38,
+      "baseline_ns/op": 77.64
+    },
+    "BenchmarkRowsScan/date-any/binary=false/rows=1/direct=true": {
+      "time_percent": 0.19002375296912621,
+      "baseline_B/op": 64.0,
+      "current_B/op": 64.0,
+      "current_ns/op": 63.27,
+      "baseline_ns/op": 63.15
+    },
+    "BenchmarkRowsScan/date-any/binary=false/rows=100/direct=false": {
+      "time_percent": -0.5191632310276417,
+      "baseline_B/op": 6416.0,
+      "current_B/op": 6416.0,
+      "current_ns/op": 6515.0,
+      "baseline_ns/op": 6549.0
+    },
+    "BenchmarkRowsScan/date-any/binary=false/rows=100/direct=true": {
+      "time_percent": 0.652340752110514,
+      "baseline_B/op": 4024.0,
+      "current_B/op": 4024.0,
+      "current_ns/op": 5246.0,
+      "baseline_ns/op": 5212.0
+    },
+    "BenchmarkRowsScan/date-any/binary=true/rows=1/direct=false": {
+      "time_percent": -1.6324000413265982,
+      "baseline_B/op": 96.0,
+      "current_B/op": 96.0,
+      "current_ns/op": 95.21,
+      "baseline_ns/op": 96.79
+    },
+    "BenchmarkRowsScan/date-any/binary=true/rows=1/direct=true": {
+      "time_percent": -1.2711356277731123,
+      "baseline_B/op": 80.0,
+      "current_B/op": 80.0,
+      "current_ns/op": 82.33,
+      "baseline_ns/op": 83.39
+    },
+    "BenchmarkRowsScan/date-any/binary=true/rows=100/direct=false": {
+      "time_percent": 0.0702247191011196,
+      "baseline_B/op": 8016.0,
+      "current_B/op": 8016.0,
+      "current_ns/op": 8550.0,
+      "baseline_ns/op": 8544.0
+    },
+    "BenchmarkRowsScan/date-any/binary=true/rows=100/direct=true": {
+      "time_percent": 1.5568529329997194,
+      "baseline_B/op": 5624.0,
+      "current_B/op": 5624.0,
+      "current_ns/op": 7306.0,
+      "baseline_ns/op": 7194.0
+    },
+    "BenchmarkRowsScan/datetime-string/binary=false/rows=1/direct=false": {
+      "time_percent": -0.27044225262488064,
+      "baseline_B/op": 64.0,
+      "current_B/op": 64.0,
+      "current_ns/op": 62.69,
+      "baseline_ns/op": 62.86
+    },
+    "BenchmarkRowsScan/datetime-string/binary=false/rows=1/direct=true": {
+      "time_percent": 1.516376870198144,
+      "baseline_B/op": 48.0,
+      "current_B/op": 48.0,
+      "current_ns/op": 50.21,
+      "baseline_ns/op": 49.46
+    },
+    "BenchmarkRowsScan/datetime-string/binary=false/rows=100/direct=false": {
+      "time_percent": 1.9115659393705409,
+      "baseline_B/op": 4816.0,
+      "current_B/op": 4816.0,
+      "current_ns/op": 5278.0,
+      "baseline_ns/op": 5179.0
+    },
+    "BenchmarkRowsScan/datetime-string/binary=false/rows=100/direct=true": {
+      "time_percent": 3.967204443268968,
+      "baseline_B/op": 2424.0,
+      "current_B/op": 2424.0,
+      "current_ns/op": 3931.0,
+      "baseline_ns/op": 3781.0
+    },
+    "BenchmarkRowsScan/datetime-string/binary=true/rows=1/direct=false": {
+      "time_percent": -0.32806092560047073,
+      "baseline_B/op": 88.0,
+      "current_B/op": 88.0,
+      "current_ns/op": 85.07,
+      "baseline_ns/op": 85.35
+    },
+    "BenchmarkRowsScan/datetime-string/binary=true/rows=1/direct=true": {
+      "time_percent": 1.4436424208772891,
+      "baseline_B/op": 72.0,
+      "current_B/op": 72.0,
+      "current_ns/op": 73.08,
+      "baseline_ns/op": 72.04
+    },
+    "BenchmarkRowsScan/datetime-string/binary=true/rows=100/direct=false": {
+      "time_percent": 0.5099986578982696,
+      "baseline_B/op": 7216.0,
+      "current_B/op": 7216.0,
+      "current_ns/op": 7489.0,
+      "baseline_ns/op": 7451.0
+    },
+    "BenchmarkRowsScan/datetime-string/binary=true/rows=100/direct=true": {
+      "time_percent": 2.421914147319182,
+      "baseline_B/op": 4824.0,
+      "current_B/op": 4824.0,
+      "current_ns/op": 6132.0,
+      "baseline_ns/op": 5987.0
+    },
+    "BenchmarkRowsScan/datetime-time/binary=false/rows=1/direct=false": {
+      "time_percent": -1.865171278800437,
+      "baseline_B/op": 40.0,
+      "current_B/op": 40.0,
+      "current_ns/op": 80.5,
+      "baseline_ns/op": 82.03
+    },
+    "BenchmarkRowsScan/datetime-time/binary=false/rows=1/direct=true": {
+      "time_percent": -2.5153553670663964,
+      "baseline_B/op": 24.0,
+      "current_B/op": 24.0,
+      "current_ns/op": 66.66,
+      "baseline_ns/op": 68.38
+    },
+    "BenchmarkRowsScan/datetime-time/binary=false/rows=100/direct=false": {
+      "time_percent": -1.2215669755686553,
+      "baseline_B/op": 2416.0,
+      "current_B/op": 2416.0,
+      "current_ns/op": 7035.0,
+      "baseline_ns/op": 7122.0
+    },
+    "BenchmarkRowsScan/datetime-time/binary=false/rows=100/direct=true": {
+      "time_percent": 0.5934184499190698,
+      "baseline_B/op": 24.0,
+      "current_B/op": 24.0,
+      "current_ns/op": 5594.0,
+      "baseline_ns/op": 5561.0
+    },
+    "BenchmarkRowsScan/datetime-time/binary=true/rows=1/direct=false": {
+      "time_percent": -0.9798352740698624,
+      "baseline_B/op": 40.0,
+      "current_B/op": 40.0,
+      "current_ns/op": 69.73,
+      "baseline_ns/op": 70.42
+    },
+    "BenchmarkRowsScan/datetime-time/binary=true/rows=1/direct=true": {
+      "time_percent": 1.6390553401480323,
+      "baseline_B/op": 24.0,
+      "current_B/op": 24.0,
+      "current_ns/op": 57.67,
+      "baseline_ns/op": 56.74
+    },
+    "BenchmarkRowsScan/datetime-time/binary=true/rows=100/direct=false": {
+      "time_percent": -0.7307756186680003,
+      "baseline_B/op": 2416.0,
+      "current_B/op": 2416.0,
+      "current_ns/op": 5977.0,
+      "baseline_ns/op": 6021.0
+    },
+    "BenchmarkRowsScan/datetime-time/binary=true/rows=100/direct=true": {
+      "time_percent": 0.5488474204171201,
+      "baseline_B/op": 24.0,
+      "current_B/op": 24.0,
+      "current_ns/op": 4580.0,
+      "baseline_ns/op": 4555.0
+    },
+    "BenchmarkRowsScan/datetime-nulltime/binary=false/rows=1/direct=false": {
+      "time_percent": -0.9912270707530979,
+      "baseline_B/op": 40.0,
+      "current_B/op": 40.0,
+      "current_ns/op": 86.9,
+      "baseline_ns/op": 87.77
+    },
+    "BenchmarkRowsScan/datetime-nulltime/binary=false/rows=1/direct=true": {
+      "time_percent": -0.4541326067211582,
+      "baseline_B/op": 48.0,
+      "current_B/op": 48.0,
+      "current_ns/op": 87.68,
+      "baseline_ns/op": 88.08
+    },
+    "BenchmarkRowsScan/datetime-nulltime/binary=false/rows=100/direct=false": {
+      "time_percent": -2.302506042488228,
+      "baseline_B/op": 2416.0,
+      "current_B/op": 2416.0,
+      "current_ns/op": 7680.0,
+      "baseline_ns/op": 7861.0
+    },
+    "BenchmarkRowsScan/datetime-nulltime/binary=false/rows=100/direct=true": {
+      "time_percent": 0.11769321302470548,
+      "baseline_B/op": 2424.0,
+      "current_B/op": 2424.0,
+      "current_ns/op": 7656.0,
+      "baseline_ns/op": 7647.0
+    },
+    "BenchmarkRowsScan/datetime-nulltime/binary=true/rows=1/direct=false": {
+      "time_percent": -0.8274078862314127,
+      "baseline_B/op": 40.0,
+      "current_B/op": 40.0,
+      "current_ns/op": 76.71,
+      "baseline_ns/op": 77.35
+    },
+    "BenchmarkRowsScan/datetime-nulltime/binary=true/rows=1/direct=true": {
+      "time_percent": 0.2986237340950382,
+      "baseline_B/op": 48.0,
+      "current_B/op": 48.0,
+      "current_ns/op": 77.25,
+      "baseline_ns/op": 77.02
+    },
+    "BenchmarkRowsScan/datetime-nulltime/binary=true/rows=100/direct=false": {
+      "time_percent": -0.5963918294319415,
+      "baseline_B/op": 2416.0,
+      "current_B/op": 2416.0,
+      "current_ns/op": 6667.0,
+      "baseline_ns/op": 6707.0
+    },
+    "BenchmarkRowsScan/datetime-nulltime/binary=true/rows=100/direct=true": {
+      "time_percent": -0.12196981247141192,
+      "baseline_B/op": 2424.0,
+      "current_B/op": 2424.0,
+      "current_ns/op": 6551.0,
+      "baseline_ns/op": 6559.0
+    },
+    "BenchmarkRowsScan/time-string/binary=false/rows=1/direct=false": {
+      "time_percent": 0.1283491095780409,
+      "baseline_B/op": 48.0,
+      "current_B/op": 48.0,
+      "current_ns/op": 62.41,
+      "baseline_ns/op": 62.33
+    },
+    "BenchmarkRowsScan/time-string/binary=false/rows=1/direct=true": {
+      "time_percent": 0.6633165829145637,
+      "baseline_B/op": 32.0,
+      "current_B/op": 32.0,
+      "current_ns/op": 50.08,
+      "baseline_ns/op": 49.75
+    },
+    "BenchmarkRowsScan/time-string/binary=false/rows=100/direct=false": {
+      "time_percent": -0.49420262307545704,
+      "baseline_B/op": 3216.0,
+      "current_B/op": 3216.0,
+      "current_ns/op": 5235.0,
+      "baseline_ns/op": 5261.0
+    },
+    "BenchmarkRowsScan/time-string/binary=false/rows=100/direct=true": {
+      "time_percent": 2.806189352216104,
+      "baseline_B/op": 824.0,
+      "current_B/op": 824.0,
+      "current_ns/op": 3920.0,
+      "baseline_ns/op": 3813.0
+    },
+    "BenchmarkRowsScan/time-string/binary=true/rows=1/direct=false": {
+      "time_percent": 1.2225226284236612,
+      "baseline_B/op": 64.0,
+      "current_B/op": 64.0,
+      "current_ns/op": 86.11,
+      "baseline_ns/op": 85.07
+    },
+    "BenchmarkRowsScan/time-string/binary=true/rows=1/direct=true": {
+      "time_percent": 1.4631401238041741,
+      "baseline_B/op": 48.0,
+      "current_B/op": 48.0,
+      "current_ns/op": 72.12,
+      "baseline_ns/op": 71.08
+    },
+    "BenchmarkRowsScan/time-string/binary=true/rows=100/direct=false": {
+      "time_percent": -0.10632642211589882,
+      "baseline_B/op": 4816.0,
+      "current_B/op": 4816.0,
+      "current_ns/op": 7516.0,
+      "baseline_ns/op": 7524.0
+    },
+    "BenchmarkRowsScan/time-string/binary=true/rows=100/direct=true": {
+      "time_percent": 2.4320697752432174,
+      "baseline_B/op": 2424.0,
+      "current_B/op": 2424.0,
+      "current_ns/op": 6107.0,
+      "baseline_ns/op": 5962.0
+    },
+    "BenchmarkMariaDBRead/text/narrow/raw=false": {
+      "time_percent": 21.53190276620125,
+      "baseline_B/op": 36664.0,
+      "current_B/op": 36664.0,
+      "current_ns/op": 622597.0,
+      "baseline_ns/op": 512291.0
+    },
+    "BenchmarkMariaDBRead/text/narrow/raw=true": {
+      "time_percent": 9.599806147365285,
+      "baseline_B/op": 13072.0,
+      "current_B/op": 13072.0,
+      "current_ns/op": 587992.0,
+      "baseline_ns/op": 536490.0
+    },
+    "BenchmarkMariaDBRead/text/wide/raw=false": {
+      "time_percent": 0.4892118548067481,
+      "baseline_B/op": 401865.0,
+      "current_B/op": 401865.0,
+      "current_ns/op": 2728672.0,
+      "baseline_ns/op": 2715388.0
+    },
+    "BenchmarkMariaDBRead/text/wide/raw=true": {
+      "time_percent": 2.5689363087890715,
+      "baseline_B/op": 196064.0,
+      "current_B/op": 196064.0,
+      "current_ns/op": 2088202.0,
+      "baseline_ns/op": 2035901.0
+    },
+    "BenchmarkMariaDBRead/text/blob/raw=false": {
+      "time_percent": 28.578699835750744,
+      "baseline_B/op": 2105889.0,
+      "current_B/op": 2105888.0,
+      "current_ns/op": 3071812.0,
+      "baseline_ns/op": 2389052.0
+    },
+    "BenchmarkMariaDBRead/text/blob/raw=true": {
+      "time_percent": 30.86962614104447,
+      "baseline_B/op": 1057297.0,
+      "current_B/op": 1057296.0,
+      "current_ns/op": 2969971.0,
+      "baseline_ns/op": 2269412.0
+    },
+    "BenchmarkMariaDBRead/prepared/narrow/raw=false": {
+      "time_percent": 1.108120035304494,
+      "baseline_B/op": 24048.0,
+      "current_B/op": 24048.0,
+      "current_ns/op": 229111.0,
+      "baseline_ns/op": 226600.0
+    },
+    "BenchmarkMariaDBRead/prepared/narrow/raw=true": {
+      "time_percent": 0.828218314532192,
+      "baseline_B/op": 12992.0,
+      "current_B/op": 12992.0,
+      "current_ns/op": 243117.0,
+      "baseline_ns/op": 241120.0
+    },
+    "BenchmarkMariaDBRead/prepared/wide/raw=false": {
+      "time_percent": 1.4138848572810891,
+      "baseline_B/op": 2608.0,
+      "current_B/op": 2608.0,
+      "current_ns/op": 503094.0,
+      "baseline_ns/op": 496080.0
+    },
+    "BenchmarkMariaDBRead/prepared/wide/raw=true": {
+      "time_percent": 1.65422193828193,
+      "baseline_B/op": 194216.0,
+      "current_B/op": 194216.0,
+      "current_ns/op": 1339763.0,
+      "baseline_ns/op": 1317961.0
+    },
+    "BenchmarkMariaDBRead/prepared/blob/raw=false": {
+      "time_percent": 8.725296511697177,
+      "baseline_B/op": 2105854.0,
+      "current_B/op": 2105856.0,
+      "current_ns/op": 2646614.0,
+      "baseline_ns/op": 2434221.0
+    },
+    "BenchmarkMariaDBRead/prepared/blob/raw=true": {
+      "time_percent": 35.72921991031088,
+      "baseline_B/op": 1057264.0,
+      "current_B/op": 1057264.0,
+      "current_ns/op": 3141370.0,
+      "baseline_ns/op": 2314439.0
+    },
+    "BenchmarkMariaDBRead/compressed/narrow/raw=false": {
+      "time_percent": 62.237849606737974,
+      "baseline_B/op": 26720.0,
+      "current_B/op": 26859.0,
+      "current_ns/op": 1947826.0,
+      "baseline_ns/op": 1200599.0
+    },
+    "BenchmarkMariaDBRead/compressed/narrow/raw=true": {
+      "time_percent": 64.9115162098143,
+      "baseline_B/op": 15464.0,
+      "current_B/op": 15512.0,
+      "current_ns/op": 2092803.0,
+      "baseline_ns/op": 1269046.0
+    },
+    "BenchmarkMariaDBRead/compressed/wide/raw=false": {
+      "time_percent": -5.458566540719634,
+      "baseline_B/op": 3496.0,
+      "current_B/op": 3904.0,
+      "current_ns/op": 1780028.0,
+      "baseline_ns/op": 1882802.0
+    },
+    "BenchmarkMariaDBRead/compressed/wide/raw=true": {
+      "time_percent": -4.31003759656986,
+      "baseline_B/op": 196469.0,
+      "current_B/op": 197150.0,
+      "current_ns/op": 1823111.0,
+      "baseline_ns/op": 1905227.0
+    },
+    "BenchmarkMariaDBRead/compressed/blob/raw=false": {
+      "time_percent": -0.3248843558940506,
+      "baseline_B/op": 1062888.0,
+      "current_B/op": 1059118.0,
+      "current_ns/op": 5090456.0,
+      "baseline_ns/op": 5107048.0
+    },
+    "BenchmarkMariaDBRead/compressed/blob/raw=true": {
+      "time_percent": 14.53230816809834,
+      "baseline_B/op": 600.0,
+      "current_B/op": 648.0,
+      "current_ns/op": 6066143.0,
+      "baseline_ns/op": 5296447.0
+    },
+    "BenchmarkMariaDBRead/socket/narrow/raw=false": {
+      "time_percent": 1.4451850801304733,
+      "baseline_B/op": 36664.0,
+      "current_B/op": 36664.0,
+      "current_ns/op": 286116.0,
+      "baseline_ns/op": 282040.0
+    },
+    "BenchmarkMariaDBRead/socket/narrow/raw=true": {
+      "time_percent": -1.1839219282052893,
+      "baseline_B/op": 13072.0,
+      "current_B/op": 13072.0,
+      "current_ns/op": 244636.0,
+      "baseline_ns/op": 247567.0
+    },
+    "BenchmarkMariaDBRead/socket/wide/raw=false": {
+      "time_percent": -1.4409851265507534,
+      "baseline_B/op": 401865.0,
+      "current_B/op": 401865.0,
+      "current_ns/op": 2315169.0,
+      "baseline_ns/op": 2349018.0
+    },
+    "BenchmarkMariaDBRead/socket/wide/raw=true": {
+      "time_percent": 5.10065855709827,
+      "baseline_B/op": 196064.0,
+      "current_B/op": 196064.0,
+      "current_ns/op": 1547088.0,
+      "baseline_ns/op": 1472006.0
+    },
+    "BenchmarkMariaDBRead/socket/blob/raw=false": {
+      "time_percent": 0.3753106655900451,
+      "baseline_B/op": 2105884.0,
+      "current_B/op": 2105887.0,
+      "current_ns/op": 3316597.0,
+      "baseline_ns/op": 3304196.0
+    },
+    "BenchmarkMariaDBRead/socket/blob/raw=true": {
+      "time_percent": 9.286729526985438,
+      "baseline_B/op": 1057296.0,
+      "current_B/op": 1057297.0,
+      "current_ns/op": 3553858.0,
+      "baseline_ns/op": 3251866.0
+    },
+    "BenchmarkMariaDBRead/tls/narrow/raw=false": {
+      "time_percent": 4.23692795610362,
+      "baseline_B/op": 36670.0,
+      "current_B/op": 36671.0,
+      "current_ns/op": 355622.0,
+      "baseline_ns/op": 341167.0
+    },
+    "BenchmarkMariaDBRead/tls/narrow/raw=true": {
+      "time_percent": 0.0679449272765309,
+      "baseline_B/op": 13074.0,
+      "current_B/op": 13074.0,
+      "current_ns/op": 268046.0,
+      "baseline_ns/op": 267864.0
+    },
+    "BenchmarkMariaDBRead/tls/wide/raw=false": {
+      "time_percent": 3.540631293935248,
+      "baseline_B/op": 401990.0,
+      "current_B/op": 401980.0,
+      "current_ns/op": 2487164.0,
+      "baseline_ns/op": 2402114.0
+    },
+    "BenchmarkMariaDBRead/tls/wide/raw=true": {
+      "time_percent": 10.136471577376206,
+      "baseline_B/op": 196415.0,
+      "current_B/op": 196445.0,
+      "current_ns/op": 1865366.0,
+      "baseline_ns/op": 1693686.0
+    },
+    "BenchmarkMariaDBRead/tls/blob/raw=false": {
+      "time_percent": 21.80852839893479,
+      "baseline_B/op": 2106332.0,
+      "current_B/op": 2106329.0,
+      "current_ns/op": 3283249.0,
+      "baseline_ns/op": 2695418.0
+    },
+    "BenchmarkMariaDBRead/tls/blob/raw=true": {
+      "time_percent": 27.793584857306076,
+      "baseline_B/op": 1057498.0,
+      "current_B/op": 1057497.0,
+      "current_ns/op": 3460649.0,
+      "baseline_ns/op": 2707999.0
+    },
+    "BenchmarkMariaDBWrite/sequential_prepared_100": {
+      "time_percent": 1.7756513937783547,
+      "baseline_B/op": 23126.0,
+      "current_B/op": 23086.0,
+      "current_ns/op": 3671005.0,
+      "baseline_ns/op": 3606958.0
+    },
+    "BenchmarkMariaDBWrite/text_batch_100": {
+      "time_percent": -2.925508571274249,
+      "baseline_B/op": 1384.0,
+      "current_B/op": 1360.0,
+      "current_ns/op": 431334.0,
+      "baseline_ns/op": 444333.0
+    },
+    "BenchmarkMariaDBWrite/load_data_reader_100": {
+      "time_percent": -4.263681018584197,
+      "baseline_B/op": 19826.0,
+      "current_B/op": 19824.0,
+      "current_ns/op": 431901.0,
+      "baseline_ns/op": 451136.0
+    },
+    "BenchmarkMariaDBConnect/text": {
+      "time_percent": 2.22571799068898,
+      "baseline_B/op": 6483.0,
+      "current_B/op": 6484.0,
+      "current_ns/op": 144264.0,
+      "baseline_ns/op": 141123.0
+    },
+    "BenchmarkMariaDBConnect/socket": {
+      "time_percent": -5.8812768681972045,
+      "baseline_B/op": 6226.0,
+      "current_B/op": 6227.0,
+      "current_ns/op": 72030.0,
+      "baseline_ns/op": 76531.0
+    },
+    "BenchmarkMariaDBConnect/tls": {
+      "time_percent": -4.623107109938907,
+      "baseline_B/op": 85969.0,
+      "current_B/op": 85900.0,
+      "current_ns/op": 1120668.0,
+      "baseline_ns/op": 1174989.0
+    },
+    "BenchmarkMariaDBPool/connections_1": {
+      "time_percent": 0.782537067545297,
+      "baseline_B/op": 664.0,
+      "current_B/op": 664.0,
+      "current_ns/op": 31811.0,
+      "baseline_ns/op": 31564.0
+    },
+    "BenchmarkMariaDBPool/connections_8": {
+      "time_percent": -15.252989880404789,
+      "baseline_B/op": 520.0,
+      "current_B/op": 520.0,
+      "current_ns/op": 9212.0,
+      "baseline_ns/op": 10870.0
+    },
+    "BenchmarkMariaDBMetadata/uncached": {
+      "time_percent": 0.08351477913324246,
+      "baseline_B/op": 3632.0,
+      "current_B/op": 3632.0,
+      "current_ns/op": 33555.0,
+      "baseline_ns/op": 33527.0
+    },
+    "BenchmarkMariaDBMetadata/cached": {
+      "time_percent": 4.031920713067549,
+      "baseline_B/op": 1840.0,
+      "current_B/op": 1840.0,
+      "current_ns/op": 32330.0,
+      "baseline_ns/op": 31077.0
+    }
+  },
+  "native_alternatives": {
+    "1": {
+      "prepared": {
+        "ns/op": 243309.0,
+        "iterations": 1057,
+        "B/op": 2376.0,
+        "gomaxprocs": 4,
+        "allocs/op": 50.0
+      },
+      "text_batch": {
+        "ns/op": 245988.0,
+        "iterations": 954,
+        "B/op": 2680.0,
+        "gomaxprocs": 4,
+        "allocs/op": 54.0
+      },
+      "local_infile": {
+        "ns/op": 281111.0,
+        "iterations": 889,
+        "B/op": 21192.0,
+        "gomaxprocs": 4,
+        "allocs/op": 57.0
+      },
+      "native_bulk": {
+        "ns/op": 274626.0,
+        "iterations": 877,
+        "B/op": 2360.0,
+        "gomaxprocs": 4,
+        "allocs/op": 50.0
+      },
+      "prepared_to_native_ratio": 0.8859649122807017
+    },
+    "16": {
+      "prepared": {
+        "ns/op": 787752.0,
+        "iterations": 312,
+        "B/op": 5025.0,
+        "gomaxprocs": 4,
+        "allocs/op": 126.0
+      },
+      "text_batch": {
+        "ns/op": 286799.0,
+        "iterations": 822,
+        "B/op": 2688.0,
+        "gomaxprocs": 4,
+        "allocs/op": 55.0
+      },
+      "local_infile": {
+        "ns/op": 307323.0,
+        "iterations": 772,
+        "B/op": 21200.0,
+        "gomaxprocs": 4,
+        "allocs/op": 58.0
+      },
+      "native_bulk": {
+        "ns/op": 305109.0,
+        "iterations": 768,
+        "B/op": 3216.0,
+        "gomaxprocs": 4,
+        "allocs/op": 52.0
+      },
+      "prepared_to_native_ratio": 2.5818707412760684
+    },
+    "100": {
+      "prepared": {
+        "ns/op": 3696109.0,
+        "iterations": 63,
+        "B/op": 19813.0,
+        "gomaxprocs": 4,
+        "allocs/op": 546.0
+      },
+      "text_batch": {
+        "ns/op": 459453.0,
+        "iterations": 520,
+        "B/op": 2688.0,
+        "gomaxprocs": 4,
+        "allocs/op": 55.0
+      },
+      "local_infile": {
+        "ns/op": 466644.0,
+        "iterations": 519,
+        "B/op": 21200.0,
+        "gomaxprocs": 4,
+        "allocs/op": 58.0
+      },
+      "native_bulk": {
+        "ns/op": 470242.0,
+        "iterations": 517,
+        "B/op": 8672.0,
+        "gomaxprocs": 4,
+        "allocs/op": 53.0
+      },
+      "prepared_to_native_ratio": 7.860014630764585
+    },
+    "1000": {
+      "prepared": {
+        "ns/op": 35067833.0,
+        "iterations": 6,
+        "B/op": 178269.0,
+        "gomaxprocs": 4,
+        "allocs/op": 5046.0
+      },
+      "text_batch": {
+        "ns/op": 2654112.0,
+        "iterations": 90,
+        "B/op": 2692.0,
+        "gomaxprocs": 4,
+        "allocs/op": 55.0
+      },
+      "local_infile": {
+        "ns/op": 2869802.0,
+        "iterations": 93,
+        "B/op": 21203.0,
+        "gomaxprocs": 4,
+        "allocs/op": 58.0
+      },
+      "native_bulk": {
+        "ns/op": 2966163.0,
+        "iterations": 82,
+        "B/op": 61716.0,
+        "gomaxprocs": 4,
+        "allocs/op": 53.0
+      },
+      "prepared_to_native_ratio": 11.822625054658156
+    }
+  },
+  "race_warnings": 0,
+  "time_investigation_counts": {
+    "slower_over_5_percent": 18,
+    "faster_over_5_percent": 17,
+    "slower_over_20_percent": 8
+  },
+  "capabilities": {
+    "SUPPORTED": 8,
+    "UNSUPPORTED_API": 10,
+    "ENVIRONMENT": 2
+  },
+  "fuzz_output": "fuzz: elapsed: 0s, gathering baseline coverage: 0/10 completed\nfuzz: elapsed: 0s, gathering baseline coverage: 10/10 completed, now fuzzing with 4 workers\nfuzz: elapsed: 3s, execs: 195925 (65267/sec), new interesting: 0 (total: 10)\nfuzz: elapsed: 6s, execs: 392190 (65421/sec), new interesting: 0 (total: 10)\nfuzz: elapsed: 8s, execs: 524294 (63790/sec), new interesting: 0 (total: 10)\nPASS\nok  \tgithub.com/aantich/go-mariadb\t8.460s\n"
+}

@@ -1,0 +1,3 @@
+# github.com/aantich/go-mariadb/validation/results/review-20261112
+# [github.com/aantich/go-mariadb/validation/results/review-20261112]
+vet: validation/results/review-20261112/review_test.go:34:9: undefined: NewConfig

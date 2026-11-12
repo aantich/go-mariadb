@@ -1,0 +1,9 @@
+goos: darwin
+goarch: arm64
+pkg: github.com/aantich/go-mariadb
+cpu: Apple M4 Max
+BenchmarkRowsScan/int64/binary=false/rows=100/direct=false-4         	   68956	      8553 ns/op	     816 B/op	     101 allocs/op
+BenchmarkRowsScan/int64/binary=false/rows=100/direct=true-4          	  112328	      5235 ns/op	      24 B/op	       1 allocs/op
+BenchmarkRowsScan/int64/binary=true/rows=100/direct=false-4          	   95743	      6323 ns/op	     816 B/op	     101 allocs/op
+BenchmarkRowsScan/int64/binary=true/rows=100/direct=true-4           	  178194	      3386 ns/op	      24 B/op	       1 allocs/op
+PASS

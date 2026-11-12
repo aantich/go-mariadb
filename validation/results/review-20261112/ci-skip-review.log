@@ -1,0 +1,40 @@
+=== RUN   TestMariaDBNativeBulk
+    native_test.go:18: ENVIRONMENT: set MARIADB_VALIDATION_CONFIG; run validation/provision.py first
+--- SKIP: TestMariaDBNativeBulk (0.00s)
+=== RUN   TestMariaDBNativeUnsignedResult
+    native_test.go:90: ENVIRONMENT: set MARIADB_VALIDATION_CONFIG; run validation/provision.py first
+--- SKIP: TestMariaDBNativeUnsignedResult (0.00s)
+=== RUN   TestMariaDBAuthentication
+=== RUN   TestMariaDBAuthentication/text
+    suite_test.go:476: ENVIRONMENT: set MARIADB_VALIDATION_CONFIG; run validation/provision.py first
+=== RUN   TestMariaDBAuthentication/socket
+    suite_test.go:476: ENVIRONMENT: set MARIADB_VALIDATION_CONFIG; run validation/provision.py first
+=== RUN   TestMariaDBAuthentication/tls
+    suite_test.go:476: ENVIRONMENT: set MARIADB_VALIDATION_CONFIG; run validation/provision.py first
+=== RUN   TestMariaDBAuthentication/x509
+    suite_test.go:476: ENVIRONMENT: set MARIADB_VALIDATION_CONFIG; run validation/provision.py first
+=== RUN   TestMariaDBAuthentication/ed25519
+    suite_test.go:480: ENVIRONMENT: set MARIADB_VALIDATION_CONFIG; run validation/provision.py first
+=== RUN   TestMariaDBAuthentication/parsec
+    suite_test.go:480: ENVIRONMENT: set MARIADB_VALIDATION_CONFIG; run validation/provision.py first
+=== RUN   TestMariaDBAuthentication/caching_sha2_password
+    suite_test.go:480: ENVIRONMENT: set MARIADB_VALIDATION_CONFIG; run validation/provision.py first
+=== RUN   TestMariaDBAuthentication/unix_socket_identity
+    suite_test.go:491: ENVIRONMENT: set MARIADB_VALIDATION_CONFIG; run validation/provision.py first
+=== RUN   TestMariaDBAuthentication/wrong_password_rejected
+    suite_test.go:498: ENVIRONMENT: set MARIADB_VALIDATION_CONFIG; run validation/provision.py first
+=== RUN   TestMariaDBAuthentication/tls_hostname_rejected
+    suite_test.go:511: ENVIRONMENT: set MARIADB_VALIDATION_CONFIG; run validation/provision.py first
+--- PASS: TestMariaDBAuthentication (0.00s)
+    --- SKIP: TestMariaDBAuthentication/text (0.00s)
+    --- SKIP: TestMariaDBAuthentication/socket (0.00s)
+    --- SKIP: TestMariaDBAuthentication/tls (0.00s)
+    --- SKIP: TestMariaDBAuthentication/x509 (0.00s)
+    --- SKIP: TestMariaDBAuthentication/ed25519 (0.00s)
+    --- SKIP: TestMariaDBAuthentication/parsec (0.00s)
+    --- SKIP: TestMariaDBAuthentication/caching_sha2_password (0.00s)
+    --- SKIP: TestMariaDBAuthentication/unix_socket_identity (0.00s)
+    --- SKIP: TestMariaDBAuthentication/wrong_password_rejected (0.00s)
+    --- SKIP: TestMariaDBAuthentication/tls_hostname_rejected (0.00s)
+PASS
+ok  	github.com/aantich/go-mariadb/validation	0.229s

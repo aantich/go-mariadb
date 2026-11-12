@@ -1,0 +1,250 @@
+{
+  "purpose": "Diagnostic interleaved comparison, not replacement of the full baseline/current capture",
+  "original_driver_revision": "e6232456bb6eb92a117563823ac6956937410b96",
+  "original_workload_hashes_match": true,
+  "current_input_fingerprint": "cc07a466efa7609f4880366163d35b19b0253c4eb1c2acf13393ad65728365c6",
+  "conditions": "Same current host; no idle confirmation; original/current order fixed in advance. No timing selected or reference advanced.",
+  "benchtime": "500ms",
+  "samples": [
+    {
+      "order": 0,
+      "variant": "original",
+      "exit_code": 0,
+      "benchmarks": {
+        "BenchmarkMariaDBRead/text/narrow/raw=false": {
+          "iterations": 823,
+          "gomaxprocs": 4,
+          "ns/op": 742768.0,
+          "ns/row": 742.8,
+          "B/op": 36664.0,
+          "allocs/op": 4564.0
+        },
+        "BenchmarkMariaDBRead/text/narrow/raw=true": {
+          "iterations": 817,
+          "gomaxprocs": 4,
+          "ns/op": 678448.0,
+          "ns/row": 678.4,
+          "B/op": 13072.0,
+          "allocs/op": 1664.0
+        },
+        "BenchmarkMariaDBRead/compressed/narrow/raw=false": {
+          "iterations": 327,
+          "gomaxprocs": 4,
+          "ns/op": 1886526.0,
+          "ns/row": 1887.0,
+          "B/op": 26772.0,
+          "allocs/op": 2964.0
+        },
+        "BenchmarkMariaDBRead/compressed/narrow/raw=true": {
+          "iterations": 260,
+          "gomaxprocs": 4,
+          "ns/op": 2338839.0,
+          "ns/row": 2339.0,
+          "B/op": 15466.0,
+          "allocs/op": 1710.0
+        }
+      },
+      "binary_sha256": "0bad12481a93ef8e6284590300798366dbc599a6a38da1916573cc24784344af"
+    },
+    {
+      "order": 1,
+      "variant": "current",
+      "exit_code": 0,
+      "benchmarks": {
+        "BenchmarkMariaDBRead/text/narrow/raw=false": {
+          "iterations": 818,
+          "gomaxprocs": 4,
+          "ns/op": 757839.0,
+          "ns/row": 757.8,
+          "B/op": 36664.0,
+          "allocs/op": 4564.0
+        },
+        "BenchmarkMariaDBRead/text/narrow/raw=true": {
+          "iterations": 890,
+          "gomaxprocs": 4,
+          "ns/op": 666044.0,
+          "ns/row": 666.0,
+          "B/op": 13072.0,
+          "allocs/op": 1664.0
+        },
+        "BenchmarkMariaDBRead/compressed/narrow/raw=false": {
+          "iterations": 453,
+          "gomaxprocs": 4,
+          "ns/op": 2379304.0,
+          "ns/row": 2379.0,
+          "B/op": 27108.0,
+          "allocs/op": 2966.0
+        },
+        "BenchmarkMariaDBRead/compressed/narrow/raw=true": {
+          "iterations": 244,
+          "gomaxprocs": 4,
+          "ns/op": 2853189.0,
+          "ns/row": 2853.0,
+          "B/op": 15680.0,
+          "allocs/op": 1712.0
+        }
+      },
+      "binary_sha256": "ba30e59cc000ffbee0bf65db80de3253ee8044835654e33fe9ffe7212e240e23"
+    },
+    {
+      "order": 2,
+      "variant": "current",
+      "exit_code": 0,
+      "benchmarks": {
+        "BenchmarkMariaDBRead/text/narrow/raw=false": {
+          "iterations": 840,
+          "gomaxprocs": 4,
+          "ns/op": 700604.0,
+          "ns/row": 700.6,
+          "B/op": 36664.0,
+          "allocs/op": 4564.0
+        },
+        "BenchmarkMariaDBRead/text/narrow/raw=true": {
+          "iterations": 831,
+          "gomaxprocs": 4,
+          "ns/op": 698175.0,
+          "ns/row": 698.2,
+          "B/op": 13072.0,
+          "allocs/op": 1664.0
+        },
+        "BenchmarkMariaDBRead/compressed/narrow/raw=false": {
+          "iterations": 223,
+          "gomaxprocs": 4,
+          "ns/op": 2292112.0,
+          "ns/row": 2292.0,
+          "B/op": 26571.0,
+          "allocs/op": 2966.0
+        },
+        "BenchmarkMariaDBRead/compressed/narrow/raw=true": {
+          "iterations": 236,
+          "gomaxprocs": 4,
+          "ns/op": 3276000.0,
+          "ns/row": 3276.0,
+          "B/op": 15686.0,
+          "allocs/op": 1712.0
+        }
+      },
+      "binary_sha256": "ba30e59cc000ffbee0bf65db80de3253ee8044835654e33fe9ffe7212e240e23"
+    },
+    {
+      "order": 3,
+      "variant": "original",
+      "exit_code": 0,
+      "benchmarks": {
+        "BenchmarkMariaDBRead/text/narrow/raw=false": {
+          "iterations": 810,
+          "gomaxprocs": 4,
+          "ns/op": 738191.0,
+          "ns/row": 738.2,
+          "B/op": 36664.0,
+          "allocs/op": 4564.0
+        },
+        "BenchmarkMariaDBRead/text/narrow/raw=true": {
+          "iterations": 962,
+          "gomaxprocs": 4,
+          "ns/op": 688753.0,
+          "ns/row": 688.8,
+          "B/op": 13072.0,
+          "allocs/op": 1664.0
+        },
+        "BenchmarkMariaDBRead/compressed/narrow/raw=false": {
+          "iterations": 370,
+          "gomaxprocs": 4,
+          "ns/op": 1433833.0,
+          "ns/row": 1434.0,
+          "B/op": 26632.0,
+          "allocs/op": 2964.0
+        },
+        "BenchmarkMariaDBRead/compressed/narrow/raw=true": {
+          "iterations": 326,
+          "gomaxprocs": 4,
+          "ns/op": 2316695.0,
+          "ns/row": 2317.0,
+          "B/op": 15590.0,
+          "allocs/op": 1710.0
+        }
+      },
+      "binary_sha256": "0bad12481a93ef8e6284590300798366dbc599a6a38da1916573cc24784344af"
+    },
+    {
+      "order": 4,
+      "variant": "original",
+      "exit_code": 0,
+      "benchmarks": {
+        "BenchmarkMariaDBRead/text/narrow/raw=false": {
+          "iterations": 889,
+          "gomaxprocs": 4,
+          "ns/op": 751749.0,
+          "ns/row": 751.7,
+          "B/op": 36664.0,
+          "allocs/op": 4564.0
+        },
+        "BenchmarkMariaDBRead/text/narrow/raw=true": {
+          "iterations": 919,
+          "gomaxprocs": 4,
+          "ns/op": 658444.0,
+          "ns/row": 658.4,
+          "B/op": 13072.0,
+          "allocs/op": 1664.0
+        },
+        "BenchmarkMariaDBRead/compressed/narrow/raw=false": {
+          "iterations": 374,
+          "gomaxprocs": 4,
+          "ns/op": 1732625.0,
+          "ns/row": 1733.0,
+          "B/op": 26848.0,
+          "allocs/op": 2964.0
+        },
+        "BenchmarkMariaDBRead/compressed/narrow/raw=true": {
+          "iterations": 264,
+          "gomaxprocs": 4,
+          "ns/op": 2845149.0,
+          "ns/row": 2845.0,
+          "B/op": 15465.0,
+          "allocs/op": 1710.0
+        }
+      },
+      "binary_sha256": "0bad12481a93ef8e6284590300798366dbc599a6a38da1916573cc24784344af"
+    },
+    {
+      "order": 5,
+      "variant": "current",
+      "exit_code": 0,
+      "benchmarks": {
+        "BenchmarkMariaDBRead/text/narrow/raw=false": {
+          "iterations": 838,
+          "gomaxprocs": 4,
+          "ns/op": 750757.0,
+          "ns/row": 750.8,
+          "B/op": 36664.0,
+          "allocs/op": 4564.0
+        },
+        "BenchmarkMariaDBRead/text/narrow/raw=true": {
+          "iterations": 1058,
+          "gomaxprocs": 4,
+          "ns/op": 631347.0,
+          "ns/row": 631.3,
+          "B/op": 13072.0,
+          "allocs/op": 1664.0
+        },
+        "BenchmarkMariaDBRead/compressed/narrow/raw=false": {
+          "iterations": 190,
+          "gomaxprocs": 4,
+          "ns/op": 3075340.0,
+          "ns/row": 3075.0,
+          "B/op": 26999.0,
+          "allocs/op": 2966.0
+        },
+        "BenchmarkMariaDBRead/compressed/narrow/raw=true": {
+          "iterations": 306,
+          "gomaxprocs": 4,
+          "ns/op": 2262870.0,
+          "ns/row": 2263.0,
+          "B/op": 15646.0,
+          "allocs/op": 1712.0
+        }
+      },
+      "binary_sha256": "ba30e59cc000ffbee0bf65db80de3253ee8044835654e33fe9ffe7212e240e23"
+    }
+  ]
+}

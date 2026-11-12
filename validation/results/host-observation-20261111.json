@@ -1,0 +1,17 @@
+{
+  "date": "2026-11-11",
+  "source": "local sysctl and a single ps snapshot during the final MariaDB benchmark family",
+  "hardware": {
+    "cpu": "Apple M4 Max",
+    "logical_cpus": 16,
+    "memory_bytes": 137438953472
+  },
+  "activity_percent_cpu": {
+    "background_virtualization_vm": 105.4,
+    "benchmark_process": 81.4,
+    "mariadbd": 75.4,
+    "WindowServer": 25.5
+  },
+  "interpretation": "One late snapshot; not a continuous load record. User-confirmed idle window is preserved separately. Concurrent activity is observed; its timing impact is not proven.",
+  "baseline_measurements_modified": false
+}

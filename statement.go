@@ -6,7 +6,7 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this file,
 // You can obtain one at http://mozilla.org/MPL/2.0/.
 
-package mysql
+package mariadb
 
 import (
 	"database/sql/driver"
@@ -77,8 +77,19 @@ func (stmt *mysqlStmt) Exec(args []driver.Value) (driver.Result, error) {
 			if stmt.columns, err = mc.readColumns(resLen, stmt.columns); err != nil {
 				return nil, err
 			}
-		} else {
+		} else if metadataFollows {
 			if err = mc.skipColumns(resLen); err != nil {
+				return nil, err
+			}
+		}
+
+		if !metadataFollows && len(stmt.columns) != resLen {
+			return nil, mc.protocolError()
+		}
+		if !metadataFollows {
+			// Omitting column definitions does not omit the metadata EOF when
+			// the peer uses legacy terminators. Do not confuse it with row EOF.
+			if err = mc.skipEof(); err != nil {
 				return nil, err
 			}
 		}
@@ -130,6 +141,9 @@ func (stmt *mysqlStmt) query(args []driver.Value) (*binaryRows, error) {
 			}
 			stmt.columns = rows.rs.columns
 		} else {
+			if len(stmt.columns) != resLen {
+				return nil, mc.protocolError()
+			}
 			if err = mc.skipEof(); err != nil {
 				return nil, err
 			}

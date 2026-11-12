@@ -1,0 +1,102 @@
+[
+  {
+    "name": "MariaDB metadata caching",
+    "status": "SUPPORTED",
+    "evidence": "packets.go:initCapabilities; validation metadata cached/uncached wire-byte control"
+  },
+  {
+    "name": "ed25519 authentication",
+    "status": "SUPPORTED",
+    "evidence": "auth_ed25519.go; real ed25519 account"
+  },
+  {
+    "name": "Unix/TLS/X.509 authentication",
+    "status": "SUPPORTED",
+    "evidence": "real socket identity and CA/hostname/client-certificate tests"
+  },
+  {
+    "name": "large []byte parameters",
+    "status": "SUPPORTED",
+    "evidence": "existing COM_STMT_SEND_LONG_DATA; 2 MiB value/checksum checks"
+  },
+  {
+    "name": "LOCAL INFILE reader",
+    "status": "SUPPORTED",
+    "evidence": "RegisterReaderHandler; real data/count/sum verification"
+  },
+  {
+    "name": "Go 1.27 direct typed row scanning",
+    "status": "SUPPORTED",
+    "evidence": "rows_column_scanner.go; inherited RowsScan and typed/RawBytes benchmarks"
+  },
+  {
+    "name": "native binary bulk execution",
+    "status": "SUPPORTED",
+    "evidence": "Opt-in BulkExec; real 1/16/100/1000-row tests, unsigned/NULL/DEFAULT/IGNORE, errors and validation-before-send. Aggregate results only."
+  },
+  {
+    "name": "per-unit bulk results",
+    "status": "UNSUPPORTED_API",
+    "evidence": "clientUnitBulkResult defined but not negotiated or exposed"
+  },
+  {
+    "name": "extended type metadata",
+    "status": "UNSUPPORTED_API",
+    "evidence": "clientExtendedMetadata defined but not negotiated/parsed/exposed"
+  },
+  {
+    "name": "session-state observation",
+    "status": "UNSUPPORTED_API",
+    "evidence": "clientSessionTrack not negotiated; OK state-change payload not exposed"
+  },
+  {
+    "name": "clean connection reset/restoration",
+    "status": "UNSUPPORTED_API",
+    "evidence": "ResetSession performs stale-connection checks only; desired-isolation assertion fails"
+  },
+  {
+    "name": "server cursor fetch",
+    "status": "UNSUPPORTED_API",
+    "evidence": "comStmtFetch constant exists; execute flags do not request cursors; no public fetch API"
+  },
+  {
+    "name": "io.Reader prepared parameters",
+    "status": "UNSUPPORTED_API",
+    "evidence": "large []byte parameters supported, but converter has no streamed io.Reader parameter contract"
+  },
+  {
+    "name": "progress callbacks",
+    "status": "UNSUPPORTED_API",
+    "evidence": "progressIndicator not negotiated; no callback/routing contract"
+  },
+  {
+    "name": "PARSEC authentication",
+    "status": "SUPPORTED",
+    "evidence": "Built-in parsec plugin; real MariaDB account succeeds, binary challenge/signature and malformed/work-factor unit checks."
+  },
+  {
+    "name": "interactive PAM authentication",
+    "status": "UNSUPPORTED_API",
+    "evidence": "generic plugin extension exists; no built-in dialog/prompt policy or real PAM fixture"
+  },
+  {
+    "name": "Kerberos GSSAPI authentication",
+    "status": "UNSUPPORTED_API",
+    "evidence": "generic plugin extension exists; no built-in GSSAPI/service-principal policy or real KDC fixture"
+  },
+  {
+    "name": "transaction-aware CDC/GTID resume",
+    "status": "UNSUPPORTED_API",
+    "evidence": "no binlog consumer API; separate optional extension scope beyond database/sql"
+  },
+  {
+    "name": "performance_schema instrumentation",
+    "status": "ENVIRONMENT",
+    "evidence": "local service has performance_schema=OFF; do not change shared server configuration"
+  },
+  {
+    "name": "PAM/Kerberos services",
+    "status": "ENVIRONMENT",
+    "evidence": "isolated service fixtures not provisioned in this first Mac profile; do not claim live coverage"
+  }
+]

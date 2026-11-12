@@ -8,7 +8,7 @@
 
 //go:build go1.27
 
-package mysql
+package mariadb
 
 import (
 	"bytes"
@@ -44,13 +44,11 @@ func (rows *textRows) NextRow() error {
 	for i := range rows.rawCols {
 		rows.rawCols[i], data, err = readColumnBytes(data)
 		if err != nil {
-			rows.rawCols = rows.rawCols[:0]
-			return err
+			return rows.malformedRow(err)
 		}
 	}
 	if len(data) != 0 {
-		rows.rawCols = rows.rawCols[:0]
-		return ErrMalformPkt
+		return rows.malformedRow(ErrMalformPkt)
 	}
 	return nil
 }
@@ -62,7 +60,7 @@ func (rows *binaryRows) NextRow() error {
 	}
 	reader, err := newBinaryRowReader(data, len(rows.rs.columns))
 	if err != nil {
-		return err
+		return rows.malformedRow(err)
 	}
 	rows.prepareRawColumns()
 	for i := range rows.rs.columns {
@@ -75,15 +73,13 @@ func (rows *binaryRows) NextRow() error {
 		if !fixed {
 			raw, err = reader.readVariableColumn(fieldType)
 			if err != nil {
-				rows.rawCols = rows.rawCols[:0]
-				return err
+				return rows.malformedRow(err)
 			}
 		}
 		rows.rawCols[i] = raw
 	}
 	if len(reader.data) != 0 {
-		rows.rawCols = rows.rawCols[:0]
-		return ErrMalformPkt
+		return rows.malformedRow(ErrMalformPkt)
 	}
 	return nil
 }
@@ -154,39 +150,39 @@ func (rows *textRows) ScanColumn(ctx driver.ScanContext, i int, dest any) error 
 		if rows.mc.parseTime {
 			value, err := parseDateTime(raw, rows.mc.cfg.Loc)
 			if err != nil {
-				return err
+				return rows.malformedRow(err)
 			}
 			return scanColumnValue(ctx, dest, value)
 		}
 	case fieldTypeTiny, fieldTypeShort, fieldTypeInt24, fieldTypeYear, fieldTypeLong:
 		value, err := strconv.ParseInt(string(raw), 10, 64)
 		if err != nil {
-			return err
+			return rows.malformedRow(err)
 		}
 		return rows.scanColumnInt64(ctx, i, dest, value)
 	case fieldTypeLongLong:
 		if col.flags&flagUnsigned != 0 {
 			value, err := strconv.ParseUint(string(raw), 10, 64)
 			if err != nil {
-				return err
+				return rows.malformedRow(err)
 			}
 			return scanColumnValue(ctx, dest, value)
 		}
 		value, err := strconv.ParseInt(string(raw), 10, 64)
 		if err != nil {
-			return err
+			return rows.malformedRow(err)
 		}
 		return rows.scanColumnInt64(ctx, i, dest, value)
 	case fieldTypeFloat:
 		value, err := strconv.ParseFloat(string(raw), 32)
 		if err != nil {
-			return err
+			return rows.malformedRow(err)
 		}
 		return scanColumnValue(ctx, dest, float32(value))
 	case fieldTypeDouble:
 		value, err := strconv.ParseFloat(string(raw), 64)
 		if err != nil {
-			return err
+			return rows.malformedRow(err)
 		}
 		return scanColumnValue(ctx, dest, value)
 	}
@@ -253,13 +249,13 @@ func (rows *binaryRows) ScanColumn(ctx driver.ScanContext, i int, dest any) erro
 		if col.fieldType != fieldTypeTime && rows.mc.parseTime {
 			value, err := parseBinaryDateTime(uint64(len(raw)), raw, rows.mc.cfg.Loc)
 			if err != nil {
-				return err
+				return rows.malformedRow(err)
 			}
 			return scanColumnValue(ctx, dest, value)
 		}
 		value, err := formatBinaryColumnDateTime(col, raw)
 		if err != nil {
-			return err
+			return rows.malformedRow(err)
 		}
 		return scanColumnBytes(ctx, dest, value)
 

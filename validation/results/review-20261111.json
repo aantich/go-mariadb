@@ -1,0 +1,28 @@
+{
+  "date": "2026-11-11",
+  "driver_commit": "e6232456bb6eb92a117563823ac6956937410b96",
+  "driver_production_inputs_match_commit": true,
+  "driver_production_input_count": 37,
+  "driver_fingerprint_sha256": "bc774d6ac3137368ad94f858276e119a0909b62133b22837963d56ed8eadf865",
+  "public_driver_upstream_at_review": "e6232456bb6eb92a117563823ac6956937410b96",
+  "server_checked_out_commit": "b439f350ce3a8306c77e64bc1679681320244d17",
+  "server_public_main_at_review": "ef4c7459b8433603b306dc46618eccae9d2b6957",
+  "runtime_server": "12.3.3-MariaDB-log",
+  "baseline_capture_sha256": "6a56e7b837ca8f653a6014e0f0b4e946eeb329c7849079286399e30b7a645fa0",
+  "baseline_profiles": 184,
+  "repetitions_per_profile": 7,
+  "ordinary_leaf_results": {
+    "pass": 865,
+    "fail": 79,
+    "skip": 7
+  },
+  "race_detector_warnings": 0,
+  "policy_tests_passed": 4,
+  "production_driver_modified": false,
+  "committed_or_pushed": false,
+  "measurement_scope": "One Mac/server/Go profile. Late VM CPU activity qualifies idle-window confirmation. Original artifacts and all measurements retained unchanged.",
+  "source_urls": [
+    "https://github.com/go-sql-driver/mysql/commit/e6232456bb6eb92a117563823ac6956937410b96",
+    "https://github.com/MariaDB/server/commit/ef4c7459b8433603b306dc46618eccae9d2b6957"
+  ]
+}

@@ -55,9 +55,6 @@ jobs:
               '1.25',
           ]
           mysql = [  # LTS versions
-              '9.7',
-              '8.4',
-              '8.0',
               'mariadb-12.3',
               'mariadb-11.8',
               'mariadb-11.4',
@@ -124,6 +121,40 @@ jobs:
           path-to-profile: coverage.out
           flag-name: ${{ runner.os }}-Go-${{ matrix.go }}-DB-${{ matrix.mysql }}
           parallel: true
+
+  # The original OS/server matrix exercises inherited compatibility. The full
+  # feature suite has explicit Linux MariaDB 12.3 fixtures, including verified
+  # TLS, client certificates, sockets and every implemented auth plugin.
+  mariadb-validation:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        go: ['1.25', '1.26', '1.27']
+    env:
+      GO_MARIADB_ISOLATED_CI: '1'
+      MARIADB_VALIDATION_CONFIG: ${{ github.workspace }}/validation/.local/ci-config.json
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-go@v7.0.0
+        with:
+          go-version: ${{ matrix.go }}
+      - name: Generate verified TLS fixtures
+        run: python3 validation/prepare_ci.py certificates --tls-dir '${{ runner.temp }}/go-mariadb-tls'
+      - uses: shogo82148/actions-setup-mysql@v1.56.2
+        with:
+          mysql-version: mariadb-12.3
+          my-cnf: |
+            innodb_buffer_pool_size=512MB
+            max_allowed_packet=48MB
+            local_infile=1
+            ssl_ca=${{ runner.temp }}/go-mariadb-tls/ca.pem
+            ssl_cert=${{ runner.temp }}/go-mariadb-tls/server-cert.pem
+            ssl_key=${{ runner.temp }}/go-mariadb-tls/server-key.pem
+      - name: Provision required isolated schemas and authentication accounts
+        run: python3 validation/prepare_ci.py provision --tls-dir '${{ runner.temp }}/go-mariadb-tls'
+      - name: Require live features, tagged protocol checks, race checks and benchmark smoke
+        run: python3 validation/ci.py
 
   # notifies that all test jobs are finished.
   finish:

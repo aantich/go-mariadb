@@ -7,3 +7,8 @@ Icon?
 ehthumbs.db
 Thumbs.db
 .idea
+
+# Private local database credentials and build artifacts for MariaDB validation.
+validation/.local/
+validation/results/runs/
+__pycache__/

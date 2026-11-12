@@ -140,7 +140,7 @@ parameters, pass `[]byte(rawJSON)` rather than `json.RawMessage` directly.
 The entire batch is checked before sending its execute command. Limits are
 65535 rows, 1,048,576 cells and `MaxAllowedPacket` payload bytes; oversized input
 is rejected rather than silently split. Keep caller data immutable during the
-call. Per-unit results and prepared-handle reuse are future APIs. The matched benchmark
+call. Prepared-handle reuse for bulk remains future work. The matched benchmark
 prebuilds SQL batches and TSV data, and prebuilds the native/prepared input matrix.
 Native packet encoding remains timed. Its results compare these API alternatives;
 they do not isolate wire-format costs.
@@ -150,6 +150,114 @@ transaction, execute BEGIN/COMMIT/ROLLBACK on the same pinned `sql.Conn`. A serv
 error may follow partial effects. An uncertain write outcome after disconnect or
 cancellation must be resolved by application policy; blindly retrying can duplicate
 effects. The driver retires canceled connections rather than attempting reuse.
+
+## Per-unit bulk results
+
+Apply `mariadb.WithBulkUnitResults(true)` before creating the connector. This
+requests both bulk capabilities; it also enables ordinary aggregate `BulkExec`.
+Use the pinned connection from the bulk example:
+
+```go
+units, err := mariadb.BulkExecUnits(ctx, conn,
+    "INSERT INTO people(name) VALUES (?)", [][]any{{"Ada"}, {"Grace"}})
+if err != nil { return err }
+for _, unit := range units {
+    fmt.Println(unit.InsertID, unit.RowsAffected) // uint64, server wire order
+}
+```
+
+These are server execution units, not per-row error records. Do not assume one
+unit per input for every DML optimization. Explicitly supplied IDs may have a
+zero insert-ID counter. A server error returns no complete unit slice and can
+follow partial effects. Use BEGIN/COMMIT/ROLLBACK on the same connection for
+atomicity. RETURNING and multiple result sets are excluded from this helper;
+use ordinary QueryContext for returning rows.
+
+## Stream prepared parameters
+
+`ExecStream` accepts ordinary arguments and explicit `StreamParam` values. It
+uses COM_STMT_SEND_LONG_DATA without materializing the complete reader:
+
+```go
+file, err := os.Open("attachment.bin")
+if err != nil { return err }
+defer file.Close()
+result, err := mariadb.ExecStream(ctx, conn,
+    "INSERT INTO attachments(id, body) VALUES (?, ?)", uint64(7),
+    mariadb.StreamParam{Reader: file, MaxBytes: 8 << 20, ChunkBytes: 64 << 10})
+if err != nil { return err }
+fmt.Println(result.RowsAffectedUnsigned())
+```
+
+No configuration flag is required. MaxBytes=0 uses the connection's outbound
+packet limit; positive limits must not exceed it. ChunkBytes=0 uses 64 KiB;
+explicit chunks may be at most 1 MiB and are clamped to the packet limit. The
+clamp reserves the LONG_DATA command header and keeps its body strictly below
+the maximum, including when MaxAllowedPacket is explicitly configured.
+The server still limits the **complete** parameter with `max_allowed_packet`.
+An empty reader binds an empty value; `nil` binds SQL NULL. Pass `StreamParam`
+as a value to this helper, not to ordinary Exec or through driver.Valuer.
+
+Readers remain caller-owned and are never closed. The driver checks cancellation
+around reads, but cannot forcibly interrupt an arbitrary blocking Read. Arrange
+for a network/pipe reader to return when its request is canceled. Reader errors
+reset the unexecuted upload; reset/transport failure retires the connection.
+Sources are one-shot: an error never requests automatic replay, and applications
+must resolve ambiguous execution before creating a new reader and retrying.
+The driver may consume one byte beyond MaxBytes to detect an oversized source.
+
+## Server cursors
+
+Create a separate SELECT pool with `cfg.Apply(mariadb.WithServerCursors(128))`
+before NewConnector. Its Query calls prepare a read-only cursor, including
+parameterless queries; Exec remains ordinary. Use the standard row loop shown
+above, including Scan, Scanner, RawBytes, ParseTime and deferred Close.
+
+Fetch size must be 1–65535 rows. Early Close drains only the already requested
+batch, then resets the statement and waits for its acknowledgement. Reusing
+prepared statements, managed-session reprepare and metadata changes are supported.
+Cancellation retires the connection through fetching and cleanup. Close rows
+before issuing another command on that connection.
+
+MariaDB materializes these cursors on the server. They bound in-flight client
+row counts, not individual row bytes or server storage, and add a round trip per
+fetch. Measure your workload before choosing them. Procedures, multi-result
+queries and queries that do not open a cursor are excluded; use an ordinary pool
+for those operations. No silent fallback changes the requested cursor semantics.
+If materialization fails after metadata is sent, the returned `*MySQLError`
+retains its MariaDB number and SQLSTATE. A complete SQL error leaves the
+connection synchronized; a malformed response retires it.
+
+## Progress reports
+
+Apply `mariadb.WithProgressReports(true)` before NewConnector. On a pinned
+connection:
+
+```go
+result, err := mariadb.ExecWithProgress(ctx, conn, func(p mariadb.Progress) error {
+    fmt.Printf("stage %d/%d: %.3f%% %s\n",
+        p.Stage, p.MaxStage, float64(p.Thousandths)/1000, p.Info)
+    return nil
+}, "ALTER TABLE people ADD COLUMN active BOOLEAN DEFAULT TRUE, ALGORITHM=COPY")
+// Inspect result even when err is non-nil: a callback can fail after SQL succeeds.
+if result != nil { fmt.Println(result.RowsAffectedUnsigned()) }
+if err != nil { return err }
+```
+
+Only selected MariaDB operations emit progress. No reports is a valid success;
+this option does not change global/session reporting settings. Progress describes
+the current stage, not total completion; snapshots own their message strings.
+Callbacks run synchronously, must return promptly/cooperate with cancellation
+and must not reenter this connection.
+
+A callback error suppresses later calls and is returned **after draining the
+terminal SQL response**. It does not cancel or roll back SQL. A callback panic
+becomes `*ProgressCallbackPanic`; its Error omits the panic value. If SQL also
+fails, errors.Join preserves both errors for errors.Is/errors.As, including
+MariaDB error number/SQLSTATE. A callback's own `driver.ErrBadConn`, including a
+wrapped one, remains an application error and does not retire a healthy connection
+or request automatic replay. Cancellation or protocol/transport failure retires
+the connection. Never infer that an error means the DDL had no effect.
 
 ## Unsigned IDs and counters
 

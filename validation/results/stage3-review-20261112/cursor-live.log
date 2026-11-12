@@ -1,0 +1,2 @@
+cursor=false rows=1 error_type=*mariadb.MySQLError sql_error=1242 error=Error 1242 (21000): Subquery returns more than 1 row
+cursor=true rows=0 error_type=*errors.errorString sql_error=0 error=malformed packet

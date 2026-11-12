@@ -2,8 +2,10 @@
 
 ## Current dedicated driver
 
-Session foundations add opt-in clean reuse, owned bounded session observations,
-native column attributes and isolated instrumentation. Run correctness without
+Native APIs add per-unit bulk counters, chunked reader parameters, cursor Rows
+and progress callbacks alongside session foundations. See the
+[Stage 3 contracts](../docs/STAGE3_NATIVE_APIS.md). Required native fixture/fault
+tests cannot disappear or skip in a passing capture. Run correctness without
 executing any benchmark functions:
 
 ```sh
@@ -19,6 +21,17 @@ The latest correctness pointer is `results/correctness-current.json`; the prior
 full timing capture stays in `results/current.json`. The generated live report
 identifies both source fingerprints, and verification checks them separately.
 No timing is claimed for a source tested only for correctness.
+
+**Stage 3 measurement follow-up, 12 November:** Anton subsequently authorized
+benchmarks. The [final measurement record](../docs/STAGE3_BENCHMARKS.md) covers
+all 200 existing profiles with seven process repetitions, full-run exit zero,
+fresh source hashes and retained active-desktop observations. `results/current.json`
+is now that complete full capture; `correctness-current.json` retains the earlier
+strict correctness-only receipt. The historical timing capture is preserved at
+`results/stage3-prebenchmark-history/current.json`. The runner protects historical
+PASS identities using all raw test events, including containers, while summary
+counts include leaves only. All 46 current harness checks pass. Original
+references and benchmark bodies remain unchanged.
 
 Correctness publication verifies the exact race/tag/package scope, harness-test
 discovery and vet commands. The runner sets `GOMAXPROCS=2`, clears `GOFLAGS` and
@@ -169,6 +182,30 @@ hashes, compiler, module graph, OS/architecture, server settings, commands,
 exit codes, leaf test cases and all benchmark samples. Baseline logs are compressed
 and checksummed. Private credentials are redacted before log writing. Local run
 binaries/caches are ignored; the initial evidence is retained under `baselines/`.
+
+### Full-capture check contract
+
+New full captures use `full-v1`. Collection and verification share exact test,
+race, vet, harness, fuzz, build and benchmark commands. Race checks include the
+tagged protocol suite. Required native fixtures must pass in both ordinary and
+race runs; historical PASS protection remains separate. `GOFLAGS` is cleared
+and `GOWORK=off`; GOMAXPROCS stays 4 for comparable benchmark execution.
+The preceding full receipt is retained as checksummed `prior-capture.json` so
+individual passing API subtests added after the immutable baselines cannot
+silently disappear on the next measurement.
+
+Checksummed raw logs must reproduce test summaries and every benchmark sample.
+Before/after snapshots use the configured TCP host, port, account and schema;
+the old administrative socket probe is no longer used. Recorded comparison
+settings must match those snapshots and the immutable environment profile.
+Failed checks, skipped required fixtures, changed settings or missing evidence
+cannot replace `results/current.json`. A successful full run copies logs and
+its receipt to `results/full/<run>/`, retaining no benchmark executables there.
+
+Earlier captures remain unchanged historical evidence. They do not satisfy
+`full-v1` retroactively and cannot establish freshness for changed source.
+Correctness-only publication continues to identify current code separately
+from those older timings. See the [Stage 3 review fixes](../docs/STAGE3_REVIEW_FIXES.md).
 
 ## Benchmark semantics
 

@@ -1,5 +1,26 @@
 # MariaDB Go coverage map
 
+**Stage 3 review fixes, 12 November 2026:** Added cursor materialization-error
+identity/reuse (including legacy/compressed/cached modes), direct/wrapped callback
+ErrBadConn identity on SQL success/failure, explicit/autodetected stream packet
+limits and exact rollback data assertions. Full-run publication shares strict
+fixture/command/raw-log checks with its verifier and probes the measured endpoint
+before/after. Regression negative controls and receipts are linked from the
+[fix record](../docs/STAGE3_REVIEW_FIXES.md).
+
+**Native APIs, 12 November 2026:** Per-unit bulk counters, one-shot reader uploads,
+read-only server cursor Rows and per-command progress callbacks now have live
+tests across TCP, zlib, TLS, Unix sockets, X.509, legacy EOF and uncached metadata.
+Fault tests cover malformed unit/progress/fetch responses and cancellation during
+upload, execute, fetch, drain and reset. Reader allocation is bounded against a
+materializing negative control. Real ALTER progress covers successful callbacks,
+callback errors/panics and terminal server-error preservation; deterministic peers
+require joined callback/server errors when a report precedes failure. No progress
+report is guaranteed for commands that fail early. See the
+[contracts and initial evidence](../docs/STAGE3_NATIVE_APIS.md). That initial
+receipt ran correctness only; the later [benchmark follow-up](../docs/STAGE3_BENCHMARKS.md)
+is recorded separately. Later rows below describe the historical initial review.
+
 **Session review corrections:** Retained/discarded extended metadata share
 attribute validation and fixed-tail checks, with prefix, duplicate/count, budget,
 EOF and malformed-stream retirement regressions. Publication tests reject

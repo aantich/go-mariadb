@@ -1,4 +1,64 @@
-# Current authorization, 11 November 2026
+# Current authorization, 12 November 2026
+
+Stage 3 publication authorization, later on 12 November: Anton requested commit
+and push of the complete native API stage, review fixes, documentation and saved
+validation evidence to the fork's existing `master`. This supersedes earlier
+uncommitted-only instructions for this delivery. Verify the completed receipt;
+do not repeat tests or benchmarks just for publication. No package release is
+authorized.
+
+Review-fix authorization, later on 12 November: Anton requested fixing all six
+Stage 3 findings. `docs/STAGE3_REVIEW_FIXES.md` records the corrections and new
+evidence. Keep all changes uncommitted on `master`; no push or release is
+authorized. This fix pass runs correctness/race/static/fuzz and regression
+negative controls only; timing captures and immutable references stay intact.
+
+Completed review-fix receipt: `validation/results/stage3-review-fixes-confirmation.json`.
+Exact source `e6959af1…a6dfe15` has 1,222 Mac / 1,225 Linux passing leaves,
+zero failures, no lost prior passes, race/vet/56 harness checks passing. The
+full collector also passes all check/fuzz stages under --correctness-only;
+its saved prior capture protects newly added pass identities. Restored defects
+fail 2 cursor / 6 stream / 4 callback / 14 rollback assertions. An isolated
+64 KiB packet regression passes; the container was removed. No benchmarks ran.
+
+Historical Stage 3 review, later on 12 November: `docs/STAGE3_CODE_REVIEW.md` recorded six
+pending P2 findings, with counterexamples in `results/stage3-review-20261112`.
+Three concern driver error/packet handling; three concern validation/provenance/
+rollback coverage. No production/harness fixes or benchmark reruns were made in
+this review. Retained cursor pointers were investigated but not established as
+an incremental leak. The subsequent authorized fixes above supersede that
+pending status; the original counterexamples remain preserved.
+
+Benchmark authorization, later on 12 November 2026: Anton explicitly authorized
+running the benchmarks. This supersedes the earlier correctness-only restriction
+for this measurement pass. Run the complete matching suite, preserve immutable
+references and previous captures, record actual host conditions and update the
+live report. Keep changes uncommitted; no commit/push or release is authorized.
+
+Completed benchmark follow-up: `docs/STAGE3_BENCHMARKS.md` and
+`validation/results/stage3-benchmark-confirmation.json`. Final full capture
+`stage3-benchmark-final/capture.json` has 200 profiles × seven repetitions,
+all stages exit zero, 1,196 ordinary passing leaves, eight skips, no lost passes,
+46 harness tests passing and source `d40de51e…c37a2a4`. Driver/Go workloads are
+unchanged from the initial Stage 3 correctness receipt; only reporting/audit
+Python changed. Thirty-three original profiles exceed +5% time; four exceed
++20%; host conditions and performance acceptance remain qualified. Old timing
+capture is preserved at `results/stage3-prebenchmark-history/current.json`.
+
+Stage 3 authorization, 12 November 2026: Anton approved implementing per-unit
+bulk results, streamed prepared parameters, server cursors and progress callbacks.
+Work directly on `master`, leave changes uncommitted, preserve frozen workloads
+and earlier captures, and run correctness/race/static checks only. No benchmark
+execution, including smoke, commit/push or release is authorized for this stage.
+
+Stage 3 final correctness receipt: `docs/STAGE3_NATIVE_APIS.md` and
+`validation/results/stage3-confirmation.json`. Identical fingerprint
+`b0fcfc8e76e78454c198168f8ebc2de60e7fc53830265597ff0cb019f02817b8`
+has 1,196 Mac / 1,199 Linux unique passing leaves, zero failures, no lost Stage 2
+passes, race/vet/44 harness checks passing. Timings remain historical and unchanged.
+Keep native lifetime/cancellation/retry comments public and helpful. Remaining
+API areas are interactive PAM, GSSAPI and optional CDC; performance work needs
+an authorized measurement window. Do not commit or push until Anton requests it.
 
 Session-stage publication authorization, 12 November 2026: Anton requested
 committing and pushing the completed session foundations, all four review fixes

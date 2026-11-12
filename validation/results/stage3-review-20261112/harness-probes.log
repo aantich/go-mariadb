@@ -1,0 +1,5 @@
+Historical-pass guard when new progress fixture is skipped: []
+Fresh dedicated-driver results; baseline checksums and original workload bodies intact.
+Seven repetitions per profile. Correctness exit: 0
+COUNTEREXAMPLE ACCEPTED: full-capture race stage replaced by true
+Full-run preflight targets administrative socket: True

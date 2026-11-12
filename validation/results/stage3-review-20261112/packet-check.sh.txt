@@ -1,0 +1,15 @@
+#!/bin/sh
+set -eu
+export GOMAXPROCS=2
+export GOPROXY=off
+export GOMODCACHE=/go/pkg/mod
+export GOCACHE=/run/gomdb/go-cache
+export MARIADB_VALIDATION_CONFIG=/run/gomdb/config-stage3.json
+mariadbd --no-defaults --user=root --datadir=/run/gomdb/data --socket=/run/gomdb/mysql.sock --pid-file=/run/gomdb/server.pid --port=3306 --bind-address=127.0.0.1 --max-allowed-packet=64K --innodb-buffer-pool-size=128M > /run/review/packet-server.log 2>&1 &
+gomdb_packet_pid=$!
+trap 'kill "$gomdb_packet_pid" 2>/dev/null || true; wait "$gomdb_packet_pid" 2>/dev/null || true' EXIT
+for gomdb_attempt in $(seq 1 30); do
+ if mariadb-admin --no-defaults --protocol=tcp --host=127.0.0.1 --user=root --skip-ssl ping >/dev/null 2>&1; then break; fi
+ sleep 1
+done
+go run /run/review/stream_packet_live.go

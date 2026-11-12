@@ -1,0 +1,70 @@
+{
+  "cursor": {
+    "command": [
+      "go",
+      "test",
+      "-overlay=/private/tmp/gomdb-stage3-fixes-20261112/cursor-overlay.json",
+      "-race",
+      "-count=1",
+      "-json",
+      "-timeout=60s",
+      "-p=1",
+      "-parallel=2",
+      "-run=^TestNativeCursorMaterializationError$",
+      "."
+    ],
+    "exit_code": 1,
+    "expected_failure": true
+  },
+  "stream": {
+    "command": [
+      "go",
+      "test",
+      "-overlay=/private/tmp/gomdb-stage3-fixes-20261112/stream-overlay.json",
+      "-race",
+      "-count=1",
+      "-json",
+      "-timeout=60s",
+      "-p=1",
+      "-parallel=2",
+      "-run=^TestNativeStreamPacketBoundary$",
+      "."
+    ],
+    "exit_code": 1,
+    "expected_failure": true
+  },
+  "progress": {
+    "command": [
+      "go",
+      "test",
+      "-overlay=/private/tmp/gomdb-stage3-fixes-20261112/progress-overlay.json",
+      "-race",
+      "-count=1",
+      "-json",
+      "-timeout=60s",
+      "-p=1",
+      "-parallel=2",
+      "-run=^TestNativeProgressCallbackBadConn$",
+      "."
+    ],
+    "exit_code": 1,
+    "expected_failure": true
+  },
+  "rollback": {
+    "command": [
+      "go",
+      "test",
+      "-overlay=/private/tmp/gomdb-stage3-fixes-20261112/rollback-overlay.json",
+      "-race",
+      "-count=1",
+      "-json",
+      "-timeout=60s",
+      "-p=1",
+      "-parallel=2",
+      "-run=^TestMariaDB(BulkUnits|StreamParameters)$",
+      "./validation"
+    ],
+    "exit_code": 1,
+    "expected_failure": true
+  }
+}

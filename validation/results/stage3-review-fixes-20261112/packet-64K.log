@@ -1,0 +1,16 @@
+{"Time":"2026-11-12T15:03:13.034537752Z","Action":"start","Package":"github.com/aantich/go-mariadb/validation"}
+{"Time":"2026-11-12T15:03:13.039594418Z","Action":"run","Package":"github.com/aantich/go-mariadb/validation","Test":"TestMariaDBStreamPacketBoundary"}
+{"Time":"2026-11-12T15:03:13.03978846Z","Action":"output","Package":"github.com/aantich/go-mariadb/validation","Test":"TestMariaDBStreamPacketBoundary","Output":"=== RUN   TestMariaDBStreamPacketBoundary\n","OutputType":"frame"}
+{"Time":"2026-11-12T15:03:13.040017543Z","Action":"run","Package":"github.com/aantich/go-mariadb/validation","Test":"TestMariaDBStreamPacketBoundary/automatic=false"}
+{"Time":"2026-11-12T15:03:13.040071502Z","Action":"output","Package":"github.com/aantich/go-mariadb/validation","Test":"TestMariaDBStreamPacketBoundary/automatic=false","Output":"=== RUN   TestMariaDBStreamPacketBoundary/automatic=false\n","OutputType":"frame"}
+{"Time":"2026-11-12T15:03:13.04968596Z","Action":"output","Package":"github.com/aantich/go-mariadb/validation","Test":"TestMariaDBStreamPacketBoundary/automatic=false","Output":"--- PASS: TestMariaDBStreamPacketBoundary/automatic=false (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T15:03:13.049848627Z","Action":"pass","Package":"github.com/aantich/go-mariadb/validation","Test":"TestMariaDBStreamPacketBoundary/automatic=false","Elapsed":0.01}
+{"Time":"2026-11-12T15:03:13.04993571Z","Action":"run","Package":"github.com/aantich/go-mariadb/validation","Test":"TestMariaDBStreamPacketBoundary/automatic=true"}
+{"Time":"2026-11-12T15:03:13.049993252Z","Action":"output","Package":"github.com/aantich/go-mariadb/validation","Test":"TestMariaDBStreamPacketBoundary/automatic=true","Output":"=== RUN   TestMariaDBStreamPacketBoundary/automatic=true\n","OutputType":"frame"}
+{"Time":"2026-11-12T15:03:13.058565918Z","Action":"output","Package":"github.com/aantich/go-mariadb/validation","Test":"TestMariaDBStreamPacketBoundary/automatic=true","Output":"--- PASS: TestMariaDBStreamPacketBoundary/automatic=true (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T15:03:13.058687543Z","Action":"pass","Package":"github.com/aantich/go-mariadb/validation","Test":"TestMariaDBStreamPacketBoundary/automatic=true","Elapsed":0.01}
+{"Time":"2026-11-12T15:03:13.058749543Z","Action":"output","Package":"github.com/aantich/go-mariadb/validation","Test":"TestMariaDBStreamPacketBoundary","Output":"--- PASS: TestMariaDBStreamPacketBoundary (0.02s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T15:03:13.058817835Z","Action":"pass","Package":"github.com/aantich/go-mariadb/validation","Test":"TestMariaDBStreamPacketBoundary","Elapsed":0.02}
+{"Time":"2026-11-12T15:03:13.058868793Z","Action":"output","Package":"github.com/aantich/go-mariadb/validation","Output":"PASS\n","OutputType":"frame"}
+{"Time":"2026-11-12T15:03:14.066239752Z","Action":"output","Package":"github.com/aantich/go-mariadb/validation","Output":"ok  \tgithub.com/aantich/go-mariadb/validation\t1.031s\n"}
+{"Time":"2026-11-12T15:03:14.066438169Z","Action":"pass","Package":"github.com/aantich/go-mariadb/validation","Elapsed":1.032}

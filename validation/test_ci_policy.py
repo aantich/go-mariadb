@@ -37,3 +37,7 @@ class CIPolicyTests(unittest.TestCase):
     def test_package_build_failure_and_race_are_rejected(self):
         self.assertTrue(ci.assess_tests(events([{'Package':ci.PACKAGE+'/broken', 'Action':'fail'}]), 1)[0])
         self.assertTrue(ci.assess_tests(events()+'\nWARNING: DATA RACE', 0)[0])
+
+    def test_passing_fault_parent_cannot_hide_a_skipped_required_subtest(self):
+        output=events([{'Package':ci.PACKAGE,'Test':'TestNativeCursorMaterializationError/legacy=true','Action':'skip'}])
+        self.assertTrue(any('Required fault test skipped' in issue for issue in ci.assess_tests(output,0)[0]))

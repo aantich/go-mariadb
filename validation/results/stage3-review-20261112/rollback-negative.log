@@ -1,0 +1,34 @@
+=== RUN   TestMariaDBBulkUnits
+=== RUN   TestMariaDBBulkUnits/text
+=== RUN   TestMariaDBBulkUnits/compressed
+=== RUN   TestMariaDBBulkUnits/tls
+=== RUN   TestMariaDBBulkUnits/socket
+=== RUN   TestMariaDBBulkUnits/x509
+=== RUN   TestMariaDBBulkUnits/legacy
+=== RUN   TestMariaDBBulkUnits/uncached
+--- PASS: TestMariaDBBulkUnits (0.06s)
+    --- PASS: TestMariaDBBulkUnits/text (0.01s)
+    --- PASS: TestMariaDBBulkUnits/compressed (0.01s)
+    --- PASS: TestMariaDBBulkUnits/tls (0.01s)
+    --- PASS: TestMariaDBBulkUnits/socket (0.00s)
+    --- PASS: TestMariaDBBulkUnits/x509 (0.02s)
+    --- PASS: TestMariaDBBulkUnits/legacy (0.00s)
+    --- PASS: TestMariaDBBulkUnits/uncached (0.00s)
+=== RUN   TestMariaDBStreamParameters
+=== RUN   TestMariaDBStreamParameters/text
+=== RUN   TestMariaDBStreamParameters/compressed
+=== RUN   TestMariaDBStreamParameters/tls
+=== RUN   TestMariaDBStreamParameters/socket
+=== RUN   TestMariaDBStreamParameters/x509
+=== RUN   TestMariaDBStreamParameters/legacy
+=== RUN   TestMariaDBStreamParameters/uncached
+--- PASS: TestMariaDBStreamParameters (0.08s)
+    --- PASS: TestMariaDBStreamParameters/text (0.01s)
+    --- PASS: TestMariaDBStreamParameters/compressed (0.03s)
+    --- PASS: TestMariaDBStreamParameters/tls (0.01s)
+    --- PASS: TestMariaDBStreamParameters/socket (0.00s)
+    --- PASS: TestMariaDBStreamParameters/x509 (0.01s)
+    --- PASS: TestMariaDBStreamParameters/legacy (0.01s)
+    --- PASS: TestMariaDBStreamParameters/uncached (0.01s)
+PASS
+ok  	github.com/aantich/go-mariadb/validation	1.403s

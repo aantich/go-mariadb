@@ -1,0 +1,301 @@
+// Copyright 2026 Anton Antich. SPDX-License-Identifier: MPL-2.0
+
+package validation
+
+import (
+	"bytes"
+	"context"
+	"database/sql"
+	"errors"
+	"fmt"
+	"io"
+	"strings"
+	"testing"
+
+	mariadb "github.com/aantich/go-mariadb"
+)
+
+var nativeModes = []string{"text", "compressed", "tls", "socket", "x509", "legacy", "uncached"}
+
+func stage3Config(t *testing.T, mode string, options ...mariadb.Option) *mariadb.Config {
+	t.Helper()
+	cfg := managedConfig(t, mode)
+	if err := cfg.Apply(options...); err != nil {
+		t.Fatal(err)
+	}
+	return cfg
+}
+
+func pinned(t *testing.T, db *sql.DB) *sql.Conn {
+	t.Helper()
+	conn, err := db.Conn(t.Context())
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { conn.Close() })
+	return conn
+}
+
+func TestMariaDBBulkUnits(t *testing.T) {
+	for _, mode := range nativeModes {
+		t.Run(mode, func(t *testing.T) {
+			conn := pinned(t, openConfig(t, stage3Config(t, mode, mariadb.WithBulkUnitResults(true))))
+			mustExec(t, conn, "CREATE TEMPORARY TABLE go_stage3_units(id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,v INT UNIQUE)")
+			units, err := mariadb.BulkExecUnits(t.Context(), conn, "INSERT INTO go_stage3_units(v) VALUES (?)", [][]any{{1}, {2}, {3}})
+			if err != nil || len(units) != 3 {
+				t.Fatalf("units=%v error=%v", units, err)
+			}
+			for i, unit := range units {
+				if unit.InsertID != uint64(i+1) || unit.RowsAffected != 1 {
+					t.Fatalf("unit %d: %+v", i, unit)
+				}
+			}
+			mustExec(t, conn, "START TRANSACTION")
+			units, err = mariadb.BulkExecUnits(t.Context(), conn, "UPDATE go_stage3_units SET v=v+10 WHERE id=?", [][]any{{1}, {9}, {3}})
+			if err != nil || len(units) != 3 || units[0].RowsAffected != 1 || units[1].RowsAffected != 0 || units[2].RowsAffected != 1 {
+				t.Fatalf("update units=%v error=%v", units, err)
+			}
+			mustExec(t, conn, "COMMIT")
+			// Check before subsequent writes can hide an accidentally committed
+			// update. Unit counters describe execution, not transaction durability.
+			var count, rolledBackSum int
+			if err := conn.QueryRowContext(t.Context(), "SELECT COUNT(*),SUM(v) FROM go_stage3_units WHERE (id=1 AND v=1) OR (id=2 AND v=2) OR (id=3 AND v=3)").Scan(&count, &rolledBackSum); err != nil || count != 3 || rolledBackSum != 6 {
+				t.Fatalf("bulk rollback count=%d sum=%d error=%v", count, rolledBackSum, err)
+			}
+			units, err = mariadb.BulkExecUnits(t.Context(), conn, "INSERT INTO go_stage3_units(v) VALUES (?)", [][]any{{4}, {2}})
+			var server *mariadb.MySQLError
+			if units != nil || !errors.As(err, &server) || server.Number != 1062 {
+				t.Fatalf("partial units=%v error=%v", units, err)
+			}
+			mustExec(t, conn, "ALTER TABLE go_stage3_units AUTO_INCREMENT=9223372036854775808")
+			units, err = mariadb.BulkExecUnits(t.Context(), conn, "INSERT INTO go_stage3_units(v) VALUES (?)", [][]any{{20}})
+			if err != nil || len(units) != 1 || units[0].InsertID != 1<<63 {
+				t.Fatalf("unsigned ID=%v error=%v", units, err)
+			}
+			var sum int
+			if err := conn.QueryRowContext(t.Context(), "SELECT SUM(v) FROM go_stage3_units").Scan(&sum); err != nil || sum < 6 {
+				t.Fatalf("reuse sum=%d error=%v", sum, err)
+			}
+		})
+	}
+}
+
+type failingStream struct {
+	calls int
+	err   error
+}
+
+func (r *failingStream) Read(p []byte) (int, error) {
+	r.calls++
+	if r.calls == 1 {
+		return copy(p, "partial"), nil
+	}
+	return 0, r.err
+}
+
+func TestMariaDBStreamParameters(t *testing.T) {
+	for _, mode := range nativeModes {
+		t.Run(mode, func(t *testing.T) {
+			conn := pinned(t, openConfig(t, stage3Config(t, mode)))
+			mustExec(t, conn, "CREATE TEMPORARY TABLE go_stage3_stream(id INT PRIMARY KEY,b LONGBLOB,n VARBINARY(20),empty BLOB)")
+			payload := bytes.Repeat([]byte("λ\x00😺"), 20000)
+			result, err := mariadb.ExecStream(t.Context(), conn, "INSERT INTO go_stage3_stream VALUES (?,?,?,?)", 1,
+				mariadb.StreamParam{Reader: bytes.NewReader(payload), MaxBytes: int64(len(payload)), ChunkBytes: 1024}, nil,
+				mariadb.StreamParam{Reader: strings.NewReader("")})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if n, err := result.RowsAffected(); err != nil || n != 1 {
+				t.Fatalf("affected=%d error=%v", n, err)
+			}
+			var actual, null, empty []byte
+			if err := conn.QueryRowContext(t.Context(), "SELECT b,n,empty FROM go_stage3_stream WHERE id=1").Scan(&actual, &null, &empty); err != nil || !bytes.Equal(actual, payload) || null != nil || empty == nil || len(empty) != 0 {
+				t.Fatalf("stream roundtrip error=%v sizes=%d/%d", err, len(actual), len(payload))
+			}
+			marker := errors.New("reader failed")
+			_, err = mariadb.ExecStream(t.Context(), conn, "INSERT INTO go_stage3_stream(id,b) VALUES (?,?)", 2, mariadb.StreamParam{Reader: &failingStream{err: marker}, ChunkBytes: 8})
+			if !errors.Is(err, marker) {
+				t.Fatalf("reader error=%v", err)
+			}
+			_, err = mariadb.ExecStream(t.Context(), conn, "INSERT INTO go_stage3_stream(id,b) VALUES (?,?)", 3, mariadb.StreamParam{Reader: strings.NewReader("abcd"), MaxBytes: 3, ChunkBytes: 2})
+			if err == nil {
+				t.Fatal("accepted over-limit stream")
+			}
+			var count int
+			if err := conn.QueryRowContext(t.Context(), "SELECT COUNT(*) FROM go_stage3_stream").Scan(&count); err != nil || count != 1 {
+				t.Fatalf("unexecuted uploads/reuse count=%d error=%v", count, err)
+			}
+			mustExec(t, conn, "START TRANSACTION")
+			if _, err := mariadb.ExecStream(t.Context(), conn, "INSERT INTO go_stage3_stream(id,b) VALUES (?,?)", 4, mariadb.StreamParam{Reader: strings.NewReader("rollback")}); err != nil {
+				t.Fatal(err)
+			}
+			mustExec(t, conn, "COMMIT")
+			if err := conn.QueryRowContext(t.Context(), "SELECT COUNT(*) FROM go_stage3_stream WHERE id=4").Scan(&count); err != nil || count != 0 {
+				t.Fatalf("stream rollback retained row: count=%d error=%v", count, err)
+			}
+		})
+	}
+}
+
+func TestMariaDBServerCursors(t *testing.T) {
+	for _, mode := range nativeModes {
+		for _, size := range []uint32{1, 3, 128} {
+			t.Run(fmt.Sprintf("%s/%d", mode, size), func(t *testing.T) {
+				conn := pinned(t, openConfig(t, stage3Config(t, mode, mariadb.WithServerCursors(size))))
+				mustExec(t, conn, "CREATE TEMPORARY TABLE go_stage3_cursor(id INT,b BOOLEAN,s VARCHAR(30),n INT)")
+				mustExec(t, conn, "INSERT INTO go_stage3_cursor VALUES (1,1,'one',NULL),(2,0,'λ',7),(3,1,'three',8),(4,0,'four',9),(5,1,'five',10),(6,0,'six',11)")
+				stmt, err := conn.PrepareContext(t.Context(), "SELECT id,b,s,n FROM go_stage3_cursor WHERE id>? ORDER BY id")
+				if err != nil {
+					t.Fatal(err)
+				}
+				defer stmt.Close()
+				for _, early := range []bool{false, true, false} {
+					rows, err := stmt.QueryContext(t.Context(), 0)
+					if err != nil {
+						t.Fatal(err)
+					}
+					count := 0
+					for rows.Next() {
+						var id int
+						var b bool
+						var s string
+						var n sql.NullInt64
+						if err := rows.Scan(&id, &b, &s, &n); err != nil {
+							t.Fatal(err)
+						}
+						count++
+						if id != count || b != (id%2 == 1) || (n.Valid != (id != 1)) || s == "" {
+							t.Fatalf("incorrect cursor row %d", id)
+						}
+						if early {
+							break
+						}
+					}
+					if err := rows.Err(); err != nil {
+						t.Fatal(err)
+					}
+					if err := rows.Close(); err != nil {
+						t.Fatal(err)
+					}
+					if !early && count != 6 {
+						t.Fatalf("rows=%d", count)
+					}
+				}
+				var v int
+				if err := conn.QueryRowContext(t.Context(), "SELECT 42").Scan(&v); err != nil || v != 42 {
+					t.Fatalf("parameterless/reuse %d: %v", v, err)
+				}
+				if err := conn.QueryRowContext(t.Context(), "SELECT id FROM go_stage3_cursor WHERE id<0").Scan(&v); !errors.Is(err, sql.ErrNoRows) {
+					t.Fatalf("empty cursor error=%v", err)
+				}
+				rows, err := stmt.QueryContext(t.Context(), 0)
+				if err != nil {
+					t.Fatal(err)
+				}
+				if err := rows.Close(); err != nil {
+					t.Fatal(err)
+				} // Close before the first FETCH.
+			})
+		}
+	}
+}
+
+func TestMariaDBProgressExecution(t *testing.T) {
+	for _, mode := range nativeModes {
+		t.Run(mode, func(t *testing.T) {
+			conn := pinned(t, openConfig(t, stage3Config(t, mode, mariadb.WithProgressReports(true))))
+			mustExec(t, conn, "CREATE TEMPORARY TABLE go_stage3_progress(v INT)")
+			calls := 0
+			result, err := mariadb.ExecWithProgress(t.Context(), conn, func(mariadb.Progress) error { calls++; return nil }, "INSERT INTO go_stage3_progress VALUES (?)", 7)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if n, _ := result.RowsAffected(); n != 1 {
+				t.Fatal(n)
+			}
+			_, err = mariadb.ExecWithProgress(t.Context(), conn, func(mariadb.Progress) error { return nil }, "INSERT INTO go_stage3_progress VALUES (9)")
+			if err != nil {
+				t.Fatal(err)
+			}
+			for i := 0; i < 64; i++ {
+				mustExec(t, conn, "INSERT INTO go_stage3_progress VALUES (?)", i)
+			}
+			result, err = mariadb.ExecWithProgress(t.Context(), conn, func(p mariadb.Progress) error {
+				calls++
+				if p.Stage == 0 || p.Stage > p.MaxStage || p.Thousandths > 100000 {
+					t.Errorf("invalid report: %+v", p)
+				}
+				return nil
+			}, "ALTER TABLE go_stage3_progress ADD COLUMN extra INT, ALGORITHM=COPY")
+			if err != nil || result == nil || calls == 0 {
+				t.Fatalf("real ALTER progress calls=%d error=%v", calls, err)
+			}
+			var total int
+			if err := conn.QueryRowContext(t.Context(), "SELECT SUM(v) FROM go_stage3_progress").Scan(&total); err != nil || total != 2032 {
+				t.Fatalf("total=%d error=%v", total, err)
+			}
+			marker := errors.New("stop observing")
+			result, err = mariadb.ExecWithProgress(t.Context(), conn, func(mariadb.Progress) error { return marker }, "ALTER TABLE go_stage3_progress ADD COLUMN next INT, ALGORITHM=COPY")
+			if !errors.Is(err, marker) || result == nil {
+				t.Fatalf("callback failure: result=%v error=%v", result, err)
+			}
+			errorReports := 0
+			_, err = mariadb.ExecWithProgress(t.Context(), conn, func(mariadb.Progress) error { errorReports++; return marker }, "ALTER TABLE go_stage3_progress ADD UNIQUE KEY(v), ALGORITHM=COPY")
+			var server *mariadb.MySQLError
+			// MariaDB may reject the unique key before emitting any report.
+			// Deterministic peer tests separately require the joined-error path.
+			if (errorReports > 0 && !errors.Is(err, marker)) || !errors.As(err, &server) || server.Number != 1062 {
+				t.Fatalf("joined server error=%v", err)
+			}
+			result, err = mariadb.ExecWithProgress(t.Context(), conn, func(mariadb.Progress) error { panic("callback panic") }, "ALTER TABLE go_stage3_progress ADD COLUMN final INT, ALGORITHM=COPY")
+			var panicErr *mariadb.ProgressCallbackPanic
+			if !errors.As(err, &panicErr) || result == nil {
+				t.Fatalf("panic result=%v error=%v", result, err)
+			}
+			if err := conn.PingContext(t.Context()); err != nil {
+				t.Fatal(err)
+			}
+			ctx, cancel := context.WithCancel(t.Context())
+			cancel()
+			if _, err := mariadb.ExecWithProgress(ctx, conn, func(mariadb.Progress) error { return nil }, "SELECT 1"); !errors.Is(err, context.Canceled) {
+				t.Fatal(err)
+			}
+		})
+	}
+}
+
+func TestMariaDBCursorManagedGenerations(t *testing.T) {
+	db := openConfig(t, stage3Config(t, "text", mariadb.WithServerCursors(2)))
+	db.SetMaxOpenConns(1)
+	db.SetMaxIdleConns(1)
+	stmt, err := db.PrepareContext(t.Context(), "SELECT CAST(? AS UNSIGNED)")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer stmt.Close()
+	for i := uint64(0); i < 5; i++ {
+		var got uint64
+		if err := stmt.QueryRowContext(t.Context(), i+1<<63).Scan(&got); err != nil || got != i+1<<63 {
+			t.Fatalf("generation value=%d error=%v", got, err)
+		}
+	}
+	conn := pinned(t, db)
+	mustExec(t, conn, "CREATE TEMPORARY TABLE go_stage3_ddl(v INT)")
+	mustExec(t, conn, "INSERT INTO go_stage3_ddl VALUES (7)")
+	query, err := conn.PrepareContext(t.Context(), "SELECT * FROM go_stage3_ddl")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer query.Close()
+	var first int
+	if err := query.QueryRowContext(t.Context()).Scan(&first); err != nil || first != 7 {
+		t.Fatalf("first=%d error=%v", first, err)
+	}
+	mustExec(t, conn, "ALTER TABLE go_stage3_ddl ADD extra VARCHAR(20) DEFAULT 'added'")
+	var extra string
+	if err := query.QueryRowContext(t.Context()).Scan(&first, &extra); err != nil || first != 7 || extra != "added" {
+		t.Fatalf("DDL reprepare=%d/%s error=%v", first, extra, err)
+	}
+}
+
+var _ io.Reader = (*failingStream)(nil)

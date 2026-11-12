@@ -1,0 +1,9 @@
+--- FAIL: TestReviewCursorOpenServerError (0.00s)
+    stage3_review_probe_test.go:17: terminal server error was lost: *errors.errorString malformed packet; closed=true
+--- FAIL: TestReviewProgressCallbackBadConnError (0.00s)
+    stage3_review_probe_test.go:26: server error lost when callback returns ErrBadConn: *errors.errorString invalid connection; closed=true
+--- FAIL: TestReviewCursorCloseRetention (0.00s)
+    stage3_review_probe_test.go:33: closed cursor retains connection and statement: owner=true stmt=true
+FAIL
+FAIL	github.com/aantich/go-mariadb	0.446s
+FAIL

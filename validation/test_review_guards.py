@@ -23,6 +23,31 @@ class ReviewGuardTests(unittest.TestCase):
     def test_complete_original_and_native_references(self):
         self.assertEqual(benchmark_issues(self.full, [self.original, self.native]), [])
 
+    def test_parent_pass_is_protected_without_counting_it_as_a_leaf(self):
+        def event(test, action):
+            return json.dumps({'Package':'github.com/aantich/go-mariadb','Test':test,'Action':action})
+        output='\n'.join(event(name,'pass') for name in ('TestParent','TestParent/a/b'))
+        all_cases=record.test_cases(output,include_containers=True)
+        self.assertEqual(len(record.test_cases(output)),1)
+        self.assertEqual(len(all_cases),2)
+        reference={'stages':{name:{'cases':[]} for name in ('upstream','protocol','mariadb')}}
+        reference['stages']['upstream']['cases']=[{'name':case['name'].replace('github.com/aantich/go-mariadb','github.com/go-sql-driver/mysql'),'status':'pass'} for case in all_cases]
+        self.assertEqual(record.lost_reference_passes([reference],{'upstream':all_cases}),[])
+        for name in ('TestParent','TestParent/a/b'):
+            changed=record.test_cases(output+'\n'+event(name,'fail'),include_containers=True)
+            self.assertEqual(record.lost_reference_passes([reference],{'upstream':changed}),['github.com/go-sql-driver/mysql/'+name])
+        self.assertEqual(len(record.lost_reference_passes([reference],{})),2)
+
+    def test_overview_distinguishes_historical_gap_from_managed_policy(self):
+        current=copy.deepcopy(self.native)
+        self.assertIn('assertion remains an API gap','\n'.join(record.overview(current,self.original)))
+        for case in current['stages']['mariadb']['cases']:
+            if case['name'].endswith('/TestMariaDBDesiredCleanPoolReset'):
+                case['status']='pass'
+        rendered='\n'.join(record.overview(current,self.original))
+        self.assertNotIn('assertion remains an API gap',rendered)
+        self.assertIn('ordinary pool checkout remains liveness-only',rendered)
+
     def test_entire_profile_cannot_disappear(self):
         for name in ('BenchmarkQuery', 'BenchmarkMariaDBNativeBulk/100/native_bulk'):
             current = dict(self.full)

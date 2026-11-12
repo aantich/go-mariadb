@@ -1,0 +1,28 @@
+import json,os,shutil,subprocess,sys
+from pathlib import Path
+root=Path.cwd(); temp=Path('/private/tmp/gomdb-stage3-fixes-20261112'); out=root/'validation/results/stage3-review-fixes-20261112'
+sys.path.insert(0,str(root/'validation'))
+from correctness import leaves
+from record import digest,inputs
+archive=out/'negative-controls-attempt2'; archive.mkdir()
+for path in list(out.glob('negative-*.log'))+[out/'negative-controls.json']:
+ shutil.copy2(path,archive/path.name)
+cfg=json.loads((root/'validation/.local/config.json').read_text())
+env={**os.environ,'GOMAXPROCS':'2','GOCACHE':'/private/tmp/go-mariadb-validation-20261111/go-cache','MARIADB_VALIDATION_CONFIG':str(root/'validation/.local/config.json'),'GOFLAGS':'','GOWORK':'off'}
+tests={'cursor':('^TestNativeCursorMaterializationError$','.',2),'stream':('^TestNativeStreamPacketBoundary$','.',6),'progress':('^TestNativeProgressCallbackBadConn$','.',4),'rollback':('^TestMariaDB(BulkUnits|StreamParameters)$','./validation',14)}
+receipts={'input_fingerprint':digest(json.dumps(inputs(),sort_keys=True).encode()),'controls':{}}
+for kind,(pattern,package,expected_failures) in tests.items():
+ argv=['go','test','-overlay='+str(temp/(kind+'-overlay.json')),'-race','-count=1','-json','-timeout=60s','-p=1','-parallel=2','-run='+pattern,package]
+ p=subprocess.run(argv,env=env,capture_output=True,text=True,timeout=90)
+ log=(p.stdout+p.stderr).replace(cfg['password'],'[redacted]'); (out/('negative-'+kind+'.log')).write_text(log)
+ records={}
+ for line in log.splitlines():
+  try: event=json.loads(line)
+  except ValueError: continue
+  if event.get('Test') and event.get('Action') in ('pass','fail','skip'):
+   records[event['Package']+'/'+event['Test']]={'status':event['Action']}
+ counts={status:sum(value['status']==status for value in leaves(records).values()) for status in ('pass','fail','skip')}
+ receipts['controls'][kind]={'command':argv,'exit_code':p.returncode,'leaves':counts,'expected_failure':p.returncode==1 and counts['fail']==expected_failures}
+ print(kind,'negative control',counts,flush=True)
+ assert receipts['controls'][kind]['expected_failure'],(kind,'regression did not detect restored bug by assertion')
+(out/'negative-controls.json').write_text(json.dumps(receipts,indent=2)+'\n')

@@ -36,8 +36,8 @@
   },
   {
     "name": "per-unit bulk results",
-    "status": "UNSUPPORTED_API",
-    "evidence": "clientUnitBulkResult defined but not negotiated or exposed"
+    "status": "SUPPORTED",
+    "evidence": "WithBulkUnitResults and BulkExecUnits; bounded owned uint64 Id/Affected_rows units, live insert/update/rollback/error/transport checks. No per-row error records or RETURNING contract."
   },
   {
     "name": "extended type metadata",
@@ -56,18 +56,18 @@
   },
   {
     "name": "server cursor fetch",
-    "status": "UNSUPPORTED_API",
-    "evidence": "comStmtFetch constant exists; execute flags do not request cursors; no public fetch API"
+    "status": "SUPPORTED",
+    "evidence": "WithServerCursors; ordinary database/sql.Rows over read-only COM_STMT_FETCH batches, metadata caching/legacy EOF, early close/reset and cancellation faults. Server materializes SELECT cursors; multiple result sets unsupported."
   },
   {
     "name": "io.Reader prepared parameters",
-    "status": "UNSUPPORTED_API",
-    "evidence": "large []byte parameters supported, but converter has no streamed io.Reader parameter contract"
+    "status": "SUPPORTED",
+    "evidence": "ExecStream and StreamParam; chunk-bounded one-shot upload, exact limits/empty/NULL/reader errors, live transport and transaction tests, cancellation phases and bounded allocation with materialization control. Server still bounds complete parameters."
   },
   {
     "name": "progress callbacks",
-    "status": "UNSUPPORTED_API",
-    "evidence": "progressIndicator not negotiated; no callback/routing contract"
+    "status": "SUPPORTED",
+    "evidence": "WithProgressReports and ExecWithProgress; owned validated reports, real ALTER COPY callbacks on all transport profiles, callback error/panic draining and server-error preservation; no report guarantee or global server-setting changes."
   },
   {
     "name": "PARSEC authentication",

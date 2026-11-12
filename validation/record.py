@@ -21,6 +21,9 @@ import statistics
 import subprocess
 import sys
 from evidence import benchmark_issues
+from contracts import FULL_CHECK_ENVIRONMENT, FULL_COMMANDS, measurement_commands
+import full_capture
+from provenance import read_server, server_command
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
@@ -112,8 +115,8 @@ def checkpoint(directory, state, progress):
     (directory/'capture.partial.json').write_text(json.dumps(partial, indent=2)+'\n')
 
 
-def test_cases(text):
-    """Count leaves once; retain parent failures separately in raw Go JSON."""
+def test_cases(text, include_containers=False):
+    """Count leaves once; use all events when protecting historical identities."""
     records = {}
     for line in text.splitlines():
         try:
@@ -128,6 +131,8 @@ def test_cases(text):
             item['output'] += event.get('Output', '')
         if event['Action'] in ['pass', 'fail', 'skip']:
             item['status'] = event['Action']
+    if include_containers:
+        return list(records.values())
     parents = set()
     for key in records:
         parent = key.rsplit('/', 1)[0]
@@ -135,6 +140,22 @@ def test_cases(text):
             parents.add(parent)
             parent = parent.rpartition('/')[0]
     return [value for key,value in sorted(records.items()) if key not in parents]
+
+
+def lost_reference_passes(references, observed):
+    """Protect every old PASS, even ancestors counted by a historical parser.
+
+    Summary counts deliberately exclude containers. Regression protection must
+    instead inspect their real raw statuses, not mistake filtering for removal.
+    Children remain independently protected and process failures still fail runs.
+    """
+    lost = []
+    for reference in references:
+        for name in ('upstream', 'protocol', 'mariadb'):
+            statuses = {case_key(case['name']):case.get('status') for case in observed.get(name, [])}
+            lost += [case['name'] for case in reference['stages'][name]['cases']
+                     if case.get('status') == 'pass' and statuses.get(case_key(case['name'])) != 'pass']
+    return sorted(set(lost))
 
 
 def benchmark_rows(text):
@@ -160,11 +181,11 @@ def render(current, baseline, correctness=None):
         counts = correctness['leaf_counts']
         server = correctness['server']['before']
         checked = [label for key,label in (('race','Race detection'),('vet','vet'),('harness_policy','harness policy checks')) if checks[key]]
-        latest = ['## Latest correctness — session foundations', '',
+        latest = ['## Latest correctness — native MariaDB APIs', '',
                   f"Recorded: **{correctness['recorded_at']}** · Source: `{correctness['input_fingerprint']}` · **{counts.get('pass',0)} PASS / {counts.get('fail',0)} FAIL / {counts.get('skip',0)} SKIP**, unique leaves.",
                   f"Server: **{server['version']}** · Go: `{correctness['go']}` · Host: `{correctness['host']}` · GOMAXPROCS: **{correctness['check_environment']['GOMAXPROCS']}** · performance_schema: **{server['performance_schema']}**. Server settings match before/after checks.",
                   ', '.join(checked)+' pass. No prior passing assertion was lost. Managed isolation is explicitly opted in; ordinary checkout remains liveness-only.',
-                  f"[Raw correctness receipt]({correctness['evidence_directory']}/capture.json) · [Implementation and contracts](../docs/STAGE2_SESSION_FOUNDATIONS.md).", '',
+                  f"[Raw correctness receipt]({correctness['evidence_directory']}/capture.json) · [Native API contracts](../docs/STAGE3_NATIVE_APIS.md) · [Session foundations](../docs/STAGE2_SESSION_FOUNDATIONS.md).", '',
                   '**No performance measurements were made for this source.** The timing tables and full-capture failures below belong to the earlier source fingerprint shown there. They are historical, qualified measurements; none were copied into a new baseline or presented as current-source timings.', '',
                   '<details><summary>Earlier full-capture results and historical failures</summary>', '',
                   '## Earlier full performance capture', '']
@@ -232,9 +253,10 @@ def overview(current, baseline):
     counts = Counter(case.get('status', 'incomplete') for case in cases)
     changes = [row['median']['ns/op']/baseline['benchmarks'][name]['median']['ns/op']-1
                for name,row in current['benchmarks'].items() if name in baseline['benchmarks']]
+    session_gap = any(case['name'].endswith('/TestMariaDBDesiredCleanPoolReset') and case.get('status') == 'fail' for case in cases)
     lines = ['## Current stage at a glance', '',
              f"🟢 **{counts['pass']} passing assertions** · 🔴 **{counts['fail']} failed assertions** · ⏭ **{counts['skip']} skips**.",
-             'Ordinary totals exclude repeated race checks. The desired clean-session assertion remains an API gap; other failures are listed below.',
+             'Ordinary totals exclude repeated race checks. ' + ('The desired clean-session assertion remains an API gap; other failures are listed below.' if session_gap else 'Clean session reuse is explicitly opted in; ordinary pool checkout remains liveness-only.'),
              f"The complete workflow exits **{current['exit_code']}**. Readiness remains **Alpha**; automated coverage does not establish production application readiness.", '',
              f"All **{len(current['benchmarks'])} benchmark profiles** require **seven independent process repetitions**. Original passing assertions lost: **{len(current.get('lost_baseline_passes', []))}**.",
              f"**Performance acceptance remains open:** {sum(c > .05 for c in changes)} original profiles exceed +5% time, {sum(c > .20 for c in changes)} exceed +20%, and {sum(c < -.05 for c in changes)} improve by more than 5%.",
@@ -274,11 +296,15 @@ def main():
     now=datetime.now(timezone.utc)
     run=HERE/'results'/'runs'/now.strftime('%Y%m%dT%H%M%S%fZ')
     run.mkdir(parents=True)
+    # Keep the previous receipt before current.json can be replaced. Immutable
+    # upstream references predate many API tests and cannot protect those names.
+    shutil.copy2(HERE/'results/current.json',run/'prior-capture.json')
     env=os.environ.copy()
-    env.update(GOCACHE='/private/tmp/go-mariadb-validation-20261111/go-cache',GOMAXPROCS='4',
+    env.update(GOCACHE='/private/tmp/go-mariadb-validation-20261111/go-cache',
                MYSQL_TEST_USER=cfg['user'],MYSQL_TEST_PASS=cfg['password'],
                MYSQL_TEST_ADDR=f"{cfg['host']}:{cfg['port']}",MYSQL_TEST_DBNAME=cfg['upstream_database'],
                MARIADB_VALIDATION_CONFIG=str(args.config.resolve()))
+    env.update(FULL_CHECK_ENVIRONMENT)
     # Inherited concurrency stress deliberately exhausts @@max_connections.
     # Keep it disabled on a shared service; the new suite tests a bounded pool.
     env.pop('MYSQL_TEST_CONCURRENT',None)
@@ -291,19 +317,43 @@ def main():
         output=(p.stdout+p.stderr).replace(cfg['password'],'[redacted]')
         with gzip.open(run/(name+'.log.gz'),'wt') as f:f.write(output)
         return p.returncode,output
-    code,preflight=command('preflight',['mariadb','--protocol=socket','--batch','--skip-column-names','-e',
-        "SELECT VERSION(),@@max_allowed_packet,@@local_infile,@@log_bin,@@performance_schema,@@innodb_flush_log_at_trx_commit,@@sync_binlog,@@sql_mode,@@time_zone,@@character_set_server,@@collation_server,@@max_connections"])
-    if code or 'MariaDB' not in preflight:raise SystemExit('MariaDB preflight failed; no synthetic baseline permitted.')
-    settings=preflight.strip().split('\t')
+    client = shutil.which('mariadb') or shutil.which('mysql')
+    if not client:
+        raise SystemExit('MariaDB client is required for read-only endpoint provenance.')
+    endpoint = {key:cfg[key] for key in ('host','port','user','database')}
+    server_argv = server_command(endpoint, client)
     before=inputs()
     state={'schema':1,'recorded_at':now.isoformat(),'commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
-           'go':subprocess.check_output(['go','version'],text=True).strip(),'host':platform.platform(),'conditions':args.conditions,
-           'server':dict(zip(['version','max_allowed_packet','local_infile','log_bin','performance_schema','innodb_flush_log_at_trx_commit','sync_binlog','sql_mode','time_zone','charset','collation','max_connections'],settings)),
+           'go':subprocess.check_output(['go','version'],env=env,text=True).strip(),'host':platform.platform(),'conditions':args.conditions,
+           'validation_contract':full_capture.CONTRACT, 'check_environment':dict(FULL_CHECK_ENVIRONMENT),
+           'server_provenance':{'endpoint':endpoint, 'command':server_argv},
+           'instrumentation_required':env.get('GO_MARIADB_REQUIRE_INSTRUMENTATION') == '1',
+           'execution_directory':str(run.resolve()),
+           'evidence_directory':str(Path('results')/'full'/run.name),
            'inputs':before,'stages':{},'benchmarks':{},'capabilities':json.loads((HERE/'capabilities.json').read_text()),
            'working_tree':subprocess.check_output(['git','status','--short'],cwd=ROOT,text=True),
            'host_observations':[],
            'hardware':subprocess.check_output(['sysctl','-n','machdep.cpu.brand_string','hw.ncpu','hw.memsize'],text=True).splitlines(),
            'method':{'process_repetitions':7,'benchtime':'200ms','gomaxprocs':4,'warmups':'original forty added serial profiles: two explicit warmups; native bulk and inherited/parallel profiles: Go benchmark calibration','profile':PROFILE}}
+    def server_snapshot(phase):
+        try:
+            snapshot, output = read_server(cfg, env, server_argv)
+        except (ValueError, OSError, subprocess.TimeoutExpired):
+            state['server_provenance']['error'] = 'Could not read '+phase+' server provenance.'
+            state.update(complete=False, exit_code=1)
+            (run/'capture.json').write_text(json.dumps(state,indent=2)+'\n')
+            raise SystemExit(state['server_provenance']['error']) from None
+        (run/('server-'+phase+'.log')).write_text(output)
+        state['server_provenance'][phase] = snapshot
+        return snapshot
+    state['server'] = full_capture.profile_server(server_snapshot('before'))
+    def finish_provenance():
+        server_snapshot('after')
+        provenance = state['server_provenance']
+        provenance['stable'] = provenance['before'] == provenance['after']
+        state['inputs_stable'] = before == inputs()
+        state['logs'] = {p.name:digest(p.read_bytes()) for p in run.iterdir()
+                         if p.name.endswith('.log.gz') or p.name in ('server-before.log','server-after.log','prior-capture.json')}
     if state['hardware'] != ['Apple M4 Max','16','137438953472']:
         raise SystemExit('Hardware differs from this M4 Max / 16-core / 128 GiB reference; use a separate profile.')
     state['modules']=subprocess.check_output(['go','list','-m','all'],cwd=ROOT,env=env,text=True).splitlines()
@@ -312,28 +362,35 @@ def main():
     state['input_fingerprint']=digest(json.dumps(before,sort_keys=True).encode())
     state['identity_migration']='identity-migration.json; frozen bodies verified by inverse metadata substitutions'
     checkpoint(run, state, {'command': 'source preflight complete'})
-    for name,argv in [
-        ('upstream',['go','test','-json','-count=1','-timeout=240s','.','./zstd','./internal/...']),
-        ('protocol',['go','test','-json','-count=1','-timeout=60s','-tags=mariadb_validation','-run=^TestMariaDB','.']),
-        ('mariadb',['go','test','-json','-count=1','-timeout=120s','./validation']),
-        ('race',['go','test','-race','-json','-count=1','-timeout=240s','.','./zstd','./validation']),
-        ('vet',['go','vet','./...']),
-        ('recorder',['python3','-m','unittest','discover','-s','validation','-p','test_*.py']),
-        ('fuzz',['go','test','-run=^$','-fuzz=^FuzzDedicatedLengthEncoding$','-fuzztime=8s','-parallel=4','.']),
-        ('fuzz-terminator',['go','test','-run=^$','-fuzz=^FuzzDedicatedTerminator$','-fuzztime=8s','-parallel=4','.']),
-    ]:
+    observed = {}
+    check_outputs = {}
+    commands = measurement_commands(run.resolve())
+    for name,command_argv in FULL_COMMANDS.items():
+        argv = list(command_argv)
         exit_code,output=command(name,argv)
+        check_outputs[name] = output
         state['stages'][name]={'command':argv,'exit_code':exit_code,'cases':test_cases(output)}
+        if name in ('upstream', 'protocol', 'mariadb'):
+            observed[name] = test_cases(output, include_containers=True)
         print(' ',name,exit_code,dict(Counter(c.get('status','incomplete') for c in state['stages'][name]['cases'])),flush=True)
-    if args.correctness_only:
-        state['complete'] = before == inputs()
-        state['exit_code'] = int(not state['complete'] or any(s['exit_code'] for s in state['stages'].values()))
+    state['check_issues'] = []
+    try:
+        full_capture.validate_checks(state, check_outputs)
+    except ValueError as error:
+        state['check_issues'].append(str(error))
+    if args.correctness_only or state['check_issues']:
+        finish_provenance()
+        state['lost_baseline_passes'] = lost_reference_passes([full_capture.prior_reference(state,run)],observed)
+        state['correctness_only'] = args.correctness_only
+        state['complete'] = state['inputs_stable'] and state['server_provenance']['stable'] and not state['check_issues'] and not state['lost_baseline_passes']
+        state['exit_code'] = int(not state['complete'])
         (run/'capture.json').write_text(json.dumps(state,indent=2)+'\n')
         print('Correctness evidence:', run, flush=True)
         return state['exit_code']
     for name,package in [('upstream','.'),('mariadb','./validation')]:
-        code,_=command('build-'+name,['go','test','-c','-o',str(run/(name+'.test')),package])
-        state['stages']['build-'+name]={'exit_code':code}
+        argv=list(commands['build-'+name])
+        code,_=command('build-'+name,argv)
+        state['stages']['build-'+name]={'command':argv,'exit_code':code}
         if code:raise SystemExit('Benchmark build failed; refusing partial baseline.')
     # Seven fresh processes for each family. Fixed seeded shuffling alternates
     # family order without selecting favorable repetitions or rerunning timings.
@@ -342,9 +399,10 @@ def main():
     failed_bench=False
     for rep,family in order:
         state['host_observations'].append({'at':datetime.now(timezone.utc).isoformat(),'before_family':family,'repetition':rep,'top_cpu':subprocess.check_output(['ps','-Ao','pid,pcpu,comm','-r'],text=True).splitlines()[:9]})
-        code,output=command(f'bench-{family}-{rep}',[str(run/(family+'.test')),'-test.run=^$','-test.bench=.','-test.benchtime=200ms','-test.benchmem','-test.count=1','-test.timeout=240s'])
+        argv=list(commands[f'bench-{family}-{rep}'])
+        code,output=command(f'bench-{family}-{rep}',argv)
         rows=benchmark_rows(output)
-        state['stages'][f'bench-{family}-{rep}']={'exit_code':code,'profiles':len(rows)}
+        state['stages'][f'bench-{family}-{rep}']={'command':argv,'exit_code':code,'profiles':len(rows)}
         failed_bench|=code!=0 or not rows
         for name,metrics in rows.items():
             state['benchmarks'].setdefault(name,{'samples':[]})['samples'].append({'repetition':rep,'family':family,**metrics})
@@ -354,8 +412,8 @@ def main():
         row['median']={k:statistics.median(s[k] for s in row['samples']) for k in metrics}
     references = [json.loads((path/'capture.json').read_text()) for path in (baseline_dir,NATIVE_BASELINE) if path.exists()]
     state['benchmark_issues'] = benchmark_issues(state['benchmarks'], references)
-    state['inputs_stable']=before==inputs()
-    state['complete']=not failed_bench and not state['benchmark_issues'] and state['inputs_stable']
+    finish_provenance()
+    state['complete']=not failed_bench and not state['benchmark_issues'] and state['inputs_stable'] and state['server_provenance']['stable']
     state['exit_code']=int(not state['complete'] or any(s['exit_code'] for s in state['stages'].values()))
     (run/'capture.json').write_text(json.dumps(state,indent=2)+'\n')
     if args.freeze_baseline:
@@ -369,16 +427,22 @@ def main():
     frozen_unchanged=baseline_workloads_match(baseline)
     modules_match=[case_key(m) for m in state['modules']]==baseline['modules']
     if not frozen_unchanged or not modules_match or baseline['server']!=state['server'] or baseline['go']!=state['go'] or baseline['host']!=state['host']:
+        state.update(complete=False,exit_code=1,validation_issues=['Workload/environment differs from the reference profile.'])
+        (run/'capture.json').write_text(json.dumps(state,indent=2)+'\n')
         raise SystemExit('Workload/environment differs from baseline; retain a separate profile, do not publish a false comparison.')
     if native_reference and (native_reference['hardware'] != state['hardware'] or not native_workloads_match(native_reference, state['inputs'])):
+        state.update(complete=False,exit_code=1,validation_issues=['Native workload/hardware differs from its first reference.'])
+        (run/'capture.json').write_text(json.dumps(state,indent=2)+'\n')
         raise SystemExit('Native workload differs from its first reference; retain a separate profile.')
     # Every original PASS remains protected independently of the aggregate count.
-    state['lost_baseline_passes']=[]
-    for reference in [baseline] + ([native_reference] if native_reference else []):
-        for name in ['upstream','protocol','mariadb']:
-            statuses={case_key(case['name']):case.get('status') for case in state['stages'][name]['cases']}
-            state['lost_baseline_passes'] += [case['name'] for case in reference['stages'][name]['cases'] if case.get('status')=='pass' and statuses.get(case_key(case['name']))!='pass']
-    if state['lost_baseline_passes']:state['exit_code']=1
+    state['lost_baseline_passes']=lost_reference_passes([baseline, full_capture.prior_reference(state,run)] + ([native_reference] if native_reference else []), observed)
+    if state['lost_baseline_passes']:
+        state.update(complete=False,exit_code=1)
+    if state['complete'] and state['exit_code'] == 0:
+        try:
+            full_capture.validate(state, run)
+        except (ValueError, OSError, KeyError) as error:
+            state.update(complete=False,exit_code=1,validation_issues=[str(error)])
     if args.freeze_native_baseline:
         relevant = [c for st in ('upstream','mariadb') for c in state['stages'][st]['cases'] if '/TestDedicated' in c['name'] or '/TestMariaDBNative' in c['name']]
         if not state['complete'] or state['lost_baseline_passes'] or not relevant or any(c.get('status') != 'pass' for c in relevant):
@@ -390,7 +454,14 @@ def main():
     (run/'capture.json').write_text(json.dumps(state,indent=2)+'\n')
     # An incomplete attempt is useful evidence, but must not replace the latest
     # complete live report. Raw commands and missing identities stay in the run.
-    if state['complete']:
+    if state['complete'] and state['exit_code'] == 0:
+        # Publish the small, checksummed evidence, not ignored build binaries.
+        # Verification must remain possible after the temporary runs are removed.
+        evidence = HERE/state['evidence_directory']
+        evidence.mkdir(parents=True)
+        for name in state['logs']:
+            shutil.copy2(run/name,evidence/name)
+        shutil.copy2(run/'capture.json',evidence/'capture.json')
         (HERE/'results'/'current.json').write_text(json.dumps(state,indent=2)+'\n')
         render(state,baseline)
     print(f"Complete={state['complete']}; exit={state['exit_code']}; profiles={len(state['benchmarks'])}; evidence={run}")

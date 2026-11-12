@@ -125,6 +125,18 @@ func (mc *mysqlConn) readPacketLimit(limit int) ([]byte, error) {
 					return nil, ErrPktSync
 				}
 			}
+			if data[0] == iERR && len(data) >= 3 && data[1] == 0xff && data[2] == 0xff && mc.extCapabilities&progressIndicator != 0 {
+				if invalidSequence {
+					return nil, ErrPktSync
+				}
+				if err := mc.consumeProgress(data); err != nil {
+					return nil, err
+				}
+				// Reports share the command's packet sequence. Iterate rather
+				// than recurse so arbitrarily many reports use bounded stack.
+				prevData = nil
+				continue
+			}
 			return data, nil
 		}
 
@@ -331,8 +343,14 @@ func (mc *mysqlConn) initCapabilities(serverCapabilities capabilityFlag, serverE
 
 	// set MariaDB extended clientCacheMetadata capability if server support it
 	mc.extCapabilities = clientCacheMetadata & serverExtCapabilities
-	if mc.cfg.bulkOperations {
+	if mc.cfg.bulkOperations || mc.cfg.bulkUnitResults {
 		mc.extCapabilities |= clientStmtBulkOperations & serverExtCapabilities
+	}
+	if mc.cfg.bulkUnitResults {
+		mc.extCapabilities |= clientUnitBulkResult & serverExtCapabilities
+	}
+	if mc.cfg.progressReports {
+		mc.extCapabilities |= progressIndicator & serverExtCapabilities
 	}
 	if mc.cfg.extendedMetadata {
 		mc.extCapabilities |= clientExtendedMetadata & serverExtCapabilities
@@ -706,6 +724,12 @@ func (mc *okHandler) handleOkPacket(data []byte) error {
 // Read Packets as Field Packets until EOF-Packet or an Error appears
 // https://dev.mysql.com/doc/dev/mysql-server/latest/page_protocol_com_query_response_text_resultset_column_definition.html#sect_protocol_com_query_response_text_resultset_column_definition_41
 func (mc *mysqlConn) readColumns(count int, old []mysqlField) ([]mysqlField, error) {
+	return mc.readColumnDefinitions(count, old, true)
+}
+
+// Cursor metadata has no separate metadata EOF, including on legacy peers.
+// Its one terminator announces CURSOR_EXISTS and must be consumed by the caller.
+func (mc *mysqlConn) readColumnDefinitions(count int, old []mysqlField, metadataEOF bool) ([]mysqlField, error) {
 	if count < 0 || count > mc.columnLimit() {
 		return nil, mc.protocolError()
 	}
@@ -831,8 +855,10 @@ func (mc *mysqlConn) readColumns(count int, old []mysqlField) ([]mysqlField, err
 	}
 
 	// skip EOF packet if client does not support deprecateEOF
-	if err := mc.skipEof(); err != nil {
-		return nil, err
+	if metadataEOF {
+		if err := mc.skipEof(); err != nil {
+			return nil, err
+		}
 	}
 	return columns, nil
 }
@@ -1050,11 +1076,16 @@ type stmtLongData struct {
 	paramID int
 	data    []byte
 	text    string
+	stream  *streamInput
 }
 
 // Execute Prepared Statement
 // https://dev.mysql.com/doc/dev/mysql-server/latest/page_protocol_com_stmt_execute.html
 func (stmt *mysqlStmt) writeExecutePacket(args []driver.Value) error {
+	return stmt.writeExecutePacketMode(args, 0)
+}
+
+func (stmt *mysqlStmt) writeExecutePacketMode(args []driver.Value, flags byte) error {
 	if len(args) != stmt.paramCount {
 		return fmt.Errorf(
 			"argument count mismatch (got: %d; has: %d)",
@@ -1090,7 +1121,7 @@ func (stmt *mysqlStmt) writeExecutePacket(args []driver.Value) error {
 	binary.LittleEndian.PutUint32(data[5:], stmt.id)
 
 	// flags (0: CURSOR_TYPE_NO_CURSOR) [1 byte]
-	data[9] = 0x00
+	data[9] = flags
 
 	// iteration_count (uint32(1)) [4 bytes]
 	binary.LittleEndian.PutUint32(data[10:], 1)
@@ -1144,6 +1175,10 @@ func (stmt *mysqlStmt) writeExecutePacket(args []driver.Value) error {
 			}
 			// cache types and values
 			switch v := arg.(type) {
+			case streamInput:
+				paramTypes[i+i] = byte(fieldTypeString)
+				paramTypes[i+i+1] = 0
+				longData = append(longData, stmtLongData{paramID: i, stream: &v})
 			case int64:
 				paramTypes[i+i] = byte(fieldTypeLongLong)
 				paramTypes[i+i+1] = 0x00
@@ -1251,7 +1286,9 @@ func (stmt *mysqlStmt) writeExecutePacket(args []driver.Value) error {
 	// associated with the statement on the server.
 	mc.resetSequence()
 	for _, param := range longData {
-		if param.data != nil {
+		if param.stream != nil {
+			err = stmt.writeStreamLongData(param.paramID, *param.stream)
+		} else if param.data != nil {
 			err = stmt.writeCommandLongData(param.paramID, param.data)
 		} else {
 			err = stmt.writeCommandLongData(param.paramID, []byte(param.text))

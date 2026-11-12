@@ -14,6 +14,10 @@ MySQL and TiDB are outside this project's support scope.
 **[Review corrections](docs/STAGE1_REVIEW_FIXES.md)** ·
 **[Session foundations](docs/STAGE2_SESSION_FOUNDATIONS.md)** ·
 **[Session review corrections](docs/STAGE2_REVIEW_FIXES.md)** ·
+**[Native bulk, streams, cursors and progress](docs/STAGE3_NATIVE_APIS.md)** ·
+**[Stage 3 benchmark follow-up](docs/STAGE3_BENCHMARKS.md)** ·
+**[Stage 3 review findings](docs/STAGE3_CODE_REVIEW.md)** ·
+**[Stage 3 review fixes](docs/STAGE3_REVIEW_FIXES.md)** ·
 **[Roadmap and remaining gaps](docs/ROADMAP.md)** ·
 **[Run validation](validation/README.md)**
 
@@ -52,6 +56,10 @@ create a registration collision.
 * Native binary batch DML through opt-in `BulkExec`, including unsigned values,
   NULL, DEFAULT and IGNORE indicators. Batches are validated and bounded before
   execution. Transaction boundaries remain explicit.
+* Owned per-unit bulk counters through `BulkExecUnits`; one-shot `io.Reader`
+  parameters through `ExecStream`, with bounded client staging and upload cleanup.
+* Opt-in server cursors using ordinary `sql.Rows`, bounded fetch counts and early
+  cleanup; per-command progress callbacks with error/panic draining.
 * Native/password, ed25519 and **PARSEC** authentication; authentication work and
   message sizes are bounded. Binary MariaDB challenges retain trailing zero bytes.
 * Checked metadata/OK/greeting/prepare parsing, receive and column limits, safe
@@ -74,8 +82,9 @@ capture against an immutable, unchanged-upstream baseline: the same workloads,
 seven repetitions per profile, source hashes and explicit host conditions.
 Negative elapsed-time changes mean faster execution. New feature benchmarks have
 separate first measurements; they are not old-versus-new driver improvements.
-Session foundations have correctness-only validation. The report labels the
-earlier timing source separately; no fresh performance run was authorized.
+The [Stage 3 benchmark follow-up](docs/STAGE3_BENCHMARKS.md) records the later
+authorized measurement of all 200 existing profiles. The original workloads and
+references remain fixed; host observations and remaining signals stay explicit.
 
 The inherited baseline already showed substantial differences between existing
 API alternatives: a prepared 1,000-row/32-integer read took about 0.496 ms versus
@@ -88,8 +97,9 @@ observed background VM activity. See the report for current results and limits.
 
 The current live profile is MariaDB 12.3.3, macOS arm64 and Go 1.27.4. The intended
 server range is MariaDB 10.11 and newer; broader CI is not equivalent to completed
-runtime validation. Per-unit bulk results, reader parameters, cursors, progress and
-external PAM/GSSAPI fixtures remain on the roadmap. CDC is optional future scope.
+runtime validation. Interactive PAM, GSSAPI and their external fixtures remain
+on the roadmap. CDC is optional future scope. Native API limits and ownership
+rules are documented in the guide; performance acceptance remains open.
 
 The fork preserves the upstream MPL-2.0 license and attribution. Internal names
 and migration aliases may still contain MySQL. The

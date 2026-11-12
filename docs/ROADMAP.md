@@ -18,8 +18,23 @@ The [session review corrections](STAGE2_REVIEW_FIXES.md) address all four review
 findings, preserve the original references and add exact-source Mac/Linux and
 source-export correctness receipts. Performance acceptance remains deferred.
 
-Next: per-unit bulk results, streamed parameters, cursor/progress APIs and
-reuse/pipelining performance work. The remaining stages and
+**Native APIs, 12 November 2026:** Anton approved per-unit bulk results, streamed
+parameters, server cursors and progress callbacks. Their implementation and
+correctness evidence are recorded in [Stage 3](STAGE3_NATIVE_APIS.md). The new
+work remains uncommitted for review. Anton later authorized the
+[full existing-suite benchmark follow-up](STAGE3_BENCHMARKS.md); references remain fixed.
+
+The [Stage 3 review](STAGE3_CODE_REVIEW.md) identified six corrections:
+cursor SQL errors, stream packet boundaries, callback error identity, full-run
+check/provenance validation and missing rollback assertions. Anton authorized
+[all six fixes](STAGE3_REVIEW_FIXES.md), now implemented with persistent
+regressions and newer correctness receipts. Anton subsequently authorized commit
+and push of the complete stage on 12 November. Timing captures and immutable
+references are preserved; publication does not repeat measurements.
+
+Next: prepare/bulk handle reuse and pipelining performance work when measurement
+is authorized, followed by interactive PAM/GSSAPI fixtures and optional CDC.
+The remaining stages and
 broader platform coverage remain open; this is not a claim they are complete.
 
 Proposed 11 November 2026, based on the unchanged driver and

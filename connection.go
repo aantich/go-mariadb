@@ -42,6 +42,7 @@ type mysqlConn struct {
 	compress         bool
 	generation       uint64 // Server statement IDs are valid only in this reset generation.
 	session          *sessionObservation
+	progress         *progressState // Present only during ExecWithProgress inside Conn.Raw.
 
 	// for context support (Go 1.8+)
 	watching bool
@@ -510,6 +511,10 @@ func (mc *mysqlConn) Query(query string, args []driver.Value) (driver.Rows, erro
 }
 
 func (mc *mysqlConn) query(query string, args []driver.Value) (*textRows, error) {
+	if mc.cfg.cursorFetchRows != 0 {
+		// Let database/sql prepare even parameterless SELECTs for cursor mode.
+		return nil, driver.ErrSkip
+	}
 	handleOk := mc.clearResult()
 
 	if mc.closed.Load() {
@@ -721,7 +726,7 @@ func (stmt *mysqlStmt) QueryContext(ctx context.Context, args []driver.NamedValu
 		stmt.mc.finish()
 		return nil, err
 	}
-	rows.finish = stmt.mc.finish
+	rows.setFinish(stmt.mc.finish)
 	return rows, err
 }
 

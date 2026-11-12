@@ -1,0 +1,57 @@
+{
+  "stage": "Native MariaDB APIs, Stage 3",
+  "parent_commit": "b33f66b0d491decfc6d84e50fc801e8fa2c818c1",
+  "input_fingerprint": "b0fcfc8e76e78454c198168f8ebc2de60e7fc53830265597ff0cb019f02817b8",
+  "input_counts": {
+    "driver": 51,
+    "workload": 67
+  },
+  "mac": "stage3-mac-final/capture.json",
+  "linux": "stage3-linux-final/capture.json",
+  "counts": {
+    "mac": {
+      "pass": 1196,
+      "skip": 8
+    },
+    "linux": {
+      "pass": 1199,
+      "skip": 5
+    }
+  },
+  "stage2_pass_protection": {
+    "mac": {
+      "previous_passing_leaves": 1070,
+      "lost": [],
+      "new_passing_leaves": 126
+    },
+    "linux": {
+      "previous_passing_leaves": 1073,
+      "lost": [],
+      "new_passing_leaves": 126
+    }
+  },
+  "benchmarks_executed": false,
+  "historical_timing_sha256": "5fa0ebf51e2ddc51b555ff1d1e5aab5e28a976247c1419f079d95c778d0e0b4c",
+  "actionlint": "1.7.12: pass; workflow unchanged",
+  "linux_profile": {
+    "image": "go-mariadb-review:20261112",
+    "cpus": 2,
+    "memory": "4 GiB",
+    "network": "bridge; no published host ports; GOPROXY=off; exact public modules mounted read-only",
+    "script_sha256": "1374bbe2a2968f4c55b911f30e9ed32fa60e5f637f12856bacc886bf435823b3"
+  },
+  "files": {
+    "stage3-mac-final/capture.json": "4fd5c97664b0c95edb56ccd0529a5c3fcb7299b17379f148cdbe16ce6204c924",
+    "stage3-mac-final/correctness.log": "2bce53dcc6e4f2d53a89f98eeda26ab1d08829ed402c97c78643dac7c811dec5",
+    "stage3-mac-final/recorder.log": "e833f2cfadf522c84390b44f0a8f792e28d6aa4551bedb265fd60ac7b8ef9f90",
+    "stage3-mac-final/server-after.log": "fc0dcfeb4c06669c9ac42344a1c1e763662af4ac5237d360eabd3f04cc0922d6",
+    "stage3-mac-final/server-before.log": "fc0dcfeb4c06669c9ac42344a1c1e763662af4ac5237d360eabd3f04cc0922d6",
+    "stage3-mac-final/vet.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stage3-linux-final/capture.json": "ef853de8cf4027e0003938a5af082a9a4b310fa2131adb69016227bf73883f8a",
+    "stage3-linux-final/correctness.log": "5a27b6918bae43428c68ec5cb364a9f2d16fa6b33f7b893331066876571fc5e8",
+    "stage3-linux-final/recorder.log": "b96e418b5038aef8663ca57b0b016574e85038085c2b03028e31e5b3dec67f3d",
+    "stage3-linux-final/server-after.log": "a38a08cf207926d05b6cfc46158b3b2b51de7b2171b6571a675fade7a50269b1",
+    "stage3-linux-final/server-before.log": "a38a08cf207926d05b6cfc46158b3b2b51de7b2171b6571a675fade7a50269b1",
+    "stage3-linux-final/vet.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

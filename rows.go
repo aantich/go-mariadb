@@ -37,6 +37,8 @@ type textRows struct {
 	mysqlRows
 }
 
+func (rows *mysqlRows) setFinish(f func()) { rows.finish = f }
+
 func (rows *mysqlRows) Columns() []string {
 	if rows.rs.columnNames != nil {
 		return rows.rs.columnNames

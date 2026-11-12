@@ -167,7 +167,8 @@ func (c *connector) Connect(ctx context.Context) (driver.Conn, error) {
 	// describes the transport that will actually carry its responses.
 	mc.initCapabilities(serverCapabilities, serverExtCapabilities)
 	if (cfg.sessionTracking && mc.capabilities&clientSessionTrack == 0) ||
-		(cfg.extendedMetadata && mc.extCapabilities&clientExtendedMetadata == 0) {
+		(cfg.extendedMetadata && mc.extCapabilities&clientExtendedMetadata == 0) ||
+		(cfg.progressReports && mc.extCapabilities&progressIndicator == 0) {
 		mc.cleanup()
 		return nil, ErrUnsupportedCapability
 	}

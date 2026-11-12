@@ -1,0 +1,27 @@
+{
+  "method": "Recheck every historical passing identity against all raw Go test events, including containers",
+  "original_exit": 1,
+  "reported_missing": [
+    "github.com/go-sql-driver/mysql/TestAuthSwitchRejectsShortChallenge",
+    "github.com/go-sql-driver/mysql/TestIdleErrorCompressedLimits",
+    "github.com/go-sql-driver/mysql/TestIdleErrorCompressionFrames",
+    "github.com/go-sql-driver/mysql/TestIdleErrorTransport",
+    "github.com/go-sql-driver/mysql/TestRowsColumnScannerConversions",
+    "github.com/go-sql-driver/mysql/TestRowsColumnScannerInvalidation",
+    "github.com/go-sql-driver/mysql/TestRowsColumnScannerNewDate",
+    "github.com/go-sql-driver/mysql/TestRowsColumnScannerNilDestinations",
+    "github.com/go-sql-driver/mysql/TestRowsDecodedValues",
+    "github.com/aantich/go-mariadb/TestAuthSwitchRejectsShortChallenge",
+    "github.com/aantich/go-mariadb/TestIdleErrorCompressedLimits",
+    "github.com/aantich/go-mariadb/TestIdleErrorCompressionFrames",
+    "github.com/aantich/go-mariadb/TestIdleErrorTransport",
+    "github.com/aantich/go-mariadb/TestRowsColumnScannerConversions",
+    "github.com/aantich/go-mariadb/TestRowsColumnScannerInvalidation",
+    "github.com/aantich/go-mariadb/TestRowsColumnScannerNewDate",
+    "github.com/aantich/go-mariadb/TestRowsColumnScannerNilDestinations",
+    "github.com/aantich/go-mariadb/TestRowsDecodedValues"
+  ],
+  "actual_missing": [],
+  "all_stages_pass": true,
+  "measurement_reused_for_publication": false
+}

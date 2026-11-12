@@ -1,0 +1,23 @@
+package main
+import (
+ "bytes"
+ "context"
+ "database/sql"
+ "encoding/json"
+ "errors"
+ "fmt"
+ "os"
+ "time"
+ mariadb "github.com/aantich/go-mariadb"
+)
+func main(){
+ var c struct{User,Password,Host,Database string;Port int};data,err:=os.ReadFile(os.Getenv("MARIADB_VALIDATION_CONFIG"));if err!=nil{panic("private config")};if json.Unmarshal(data,&c)!=nil{panic("config format")}
+ for _,stream:=range []bool{false,true}{
+  cfg:=mariadb.NewConfig();cfg.User,cfg.Passwd,cfg.DBName=c.User,c.Password,c.Database;cfg.Net,cfg.Addr="tcp",fmt.Sprintf("%s:%d",c.Host,c.Port);cfg.ReadTimeout,cfg.WriteTimeout,cfg.Timeout=2*time.Second,2*time.Second,2*time.Second;cfg.MaxAllowedPacket=65536
+  connector,err:=mariadb.NewConnector(cfg);if err!=nil{panic("connector")};db:=sql.OpenDB(connector);ctx,cancel:=context.WithTimeout(context.Background(),5*time.Second);conn,err:=db.Conn(ctx);if err!=nil{panic("connect")}
+  if _,err=conn.ExecContext(ctx,"CREATE TEMPORARY TABLE go_stage3_review_packet(b LONGBLOB)");err!=nil{panic("temporary table")}
+  payload:=bytes.Repeat([]byte{'x'},65529)
+  if stream{_,err=mariadb.ExecStream(ctx,conn,"INSERT INTO go_stage3_review_packet VALUES (?)",mariadb.StreamParam{Reader:bytes.NewReader(payload)})}else{_,err=conn.ExecContext(ctx,"INSERT INTO go_stage3_review_packet VALUES (?)",payload)}
+  var server *mariadb.MySQLError;number:=uint16(0);if errors.As(err,&server){number=server.Number};fmt.Printf("stream=%v bytes=%d sql_error=%d error=%v\n",stream,len(payload),number,err);conn.Close();cancel();db.Close()
+ }
+}

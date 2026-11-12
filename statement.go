@@ -128,7 +128,12 @@ func (stmt *mysqlStmt) Query(args []driver.Value) (driver.Rows, error) {
 	return stmt.query(args)
 }
 
-func (stmt *mysqlStmt) query(args []driver.Value) (*binaryRows, error) {
+type finishableRows interface {
+	driver.Rows
+	setFinish(func())
+}
+
+func (stmt *mysqlStmt) query(args []driver.Value) (finishableRows, error) {
 	if stmt.mc == nil || stmt.mc.closed.Load() {
 		return nil, driver.ErrBadConn
 	}
@@ -136,6 +141,9 @@ func (stmt *mysqlStmt) query(args []driver.Value) (*binaryRows, error) {
 		if err := stmt.ensurePrepared(); err != nil {
 			return nil, err
 		}
+	}
+	if stmt.mc.cfg.cursorFetchRows != 0 {
+		return stmt.queryCursor(args)
 	}
 	// Send command
 	err := stmt.writeExecutePacket(args)

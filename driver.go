@@ -14,6 +14,14 @@
 //	db, err := sql.Open("mariadb", "user:password@/dbname")
 //
 // The package is Alpha: automated coverage does not replace application validation.
+//
+// Configure native features with Config.Apply before NewConnector. BulkExec and
+// BulkExecUnits expose MariaDB binary batch DML; ExecStream accepts one-shot
+// StreamParam readers; ExecWithProgress observes optional command reports.
+// These helpers borrow a pinned sql.Conn only for the call. WithServerCursors
+// provides read-only fetch batches through ordinary sql.Rows on a separate pool.
+// WithSessionReset explicitly opts into managed clean pool reuse. Native options
+// are not serialized by Config.FormatDSN; retain the configured connector.
 package mariadb
 
 import (

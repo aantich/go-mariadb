@@ -1,0 +1,115 @@
+// Copyright 2026 Anton Antich. SPDX-License-Identifier: MPL-2.0
+
+package mariadb
+
+import (
+	"context"
+	"database/sql"
+	"database/sql/driver"
+	"errors"
+)
+
+// Progress is an owned snapshot of MariaDB's optional command progress report.
+// Stage is one-based and at most MaxStage. Thousandths ranges from 0 to 100000
+// (100.000 percent) within that stage; it is not overall command completion.
+// Info is the server's message. Reports are advisory and may never be emitted.
+type Progress struct {
+	Stage       uint8
+	MaxStage    uint8
+	Thousandths uint32
+	Info        string
+}
+
+// ProgressCallbackPanic records a recovered callback panic. Value is caller
+// supplied and is deliberately omitted from Error to avoid logging its contents.
+type ProgressCallbackPanic struct{ Value any }
+
+func (*ProgressCallbackPanic) Error() string { return "mariadb: progress callback panicked" }
+
+type progressState struct {
+	handler func(Progress) error
+	err     error
+}
+
+// WithProgressReports requests MariaDB progress packets. It does not change
+// progress_report_time or any other server setting. ExecWithProgress supplies a
+// per-command callback; reports on other commands are validated and discarded.
+// Connecting fails when the requested capability is unavailable.
+func WithProgressReports(enabled bool) Option {
+	return func(c *Config) error { c.progressReports = enabled; return nil }
+}
+
+// ExecWithProgress executes on a pinned connection and calls handler
+// synchronously for each report. The callback must return promptly, cooperate
+// with cancellation and never reenter conn. No reports is a valid success.
+//
+// A callback error or panic suppresses further callbacks but does not cancel or
+// roll back the command: its terminal response is drained before returning the
+// callback error. A successful command can therefore return both result and
+// error. A server error is joined with the callback error. Cancellation or a
+// malformed/failed transport retires the connection; writes are never replayed.
+// Close active rows first. conn remains caller-owned.
+func ExecWithProgress(ctx context.Context, conn *sql.Conn, handler func(Progress) error, query string, args ...any) (UnsignedResult, error) {
+	var result UnsignedResult
+	var callbackErr error
+	err := withNativeConn(ctx, conn, func(mc *mysqlConn) (err error) {
+		if mc.extCapabilities&progressIndicator == 0 {
+			return ErrUnsupportedCapability
+		}
+		if handler == nil {
+			return errors.New("mariadb: nil progress handler")
+		}
+		values, err := convertNativeArgs(args)
+		if err != nil {
+			return err
+		}
+		state := &progressState{handler: handler}
+		mc.progress = state
+		// Raw must see only the operation's transport/SQL error. An application
+		// callback may itself return ErrBadConn; joining it inside Raw would
+		// misclassify it as a driver failure and discard the terminal SQL error.
+		defer func() { mc.progress = nil; err = errors.Join(err, state.err) }()
+		out, err := mc.Exec(query, values)
+		if err == driver.ErrSkip {
+			var prepared driver.Stmt
+			prepared, err = mc.Prepare(query)
+			if err == nil {
+				stmt := prepared.(*mysqlStmt)
+				defer closeNativeStatement(stmt, &err)
+				out, err = stmt.Exec(values)
+			}
+		}
+		if out != nil {
+			result = out.(UnsignedResult)
+		}
+		return err
+	})
+	return result, errors.Join(err, callbackErr)
+}
+
+func (mc *mysqlConn) consumeProgress(data []byte) error {
+	// 0xff, 0xffff, field-count=1, stage, max-stage, progress[3], info[lenenc].
+	// Progress is a small control message, not a general error or row packet.
+	if len(data) < 10 || len(data) > 4096 || data[0] != iERR || data[1] != 0xff || data[2] != 0xff || data[3] != 1 {
+		return mc.protocolError()
+	}
+	info, rest, err := readColumnBytes(data[9:])
+	value := Progress{Stage: data[4], MaxStage: data[5], Thousandths: uint32(getUint24(data[6:9]))}
+	if err != nil || info == nil || len(rest) != 0 || value.Stage == 0 || value.Stage > value.MaxStage || value.Thousandths > 100000 {
+		return mc.protocolError()
+	}
+	if state := mc.progress; state != nil && state.err == nil {
+		value.Info = string(info) // Own only messages delivered to the caller.
+		state.call(value)
+	}
+	return nil
+}
+
+func (state *progressState) call(value Progress) {
+	defer func() {
+		if value := recover(); value != nil {
+			state.err = &ProgressCallbackPanic{Value: value}
+		}
+	}()
+	state.err = state.handler(value)
+}

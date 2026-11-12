@@ -1,0 +1,5 @@
+Isolated MariaDB 12.3.3-MariaDB-ubu2404 fixtures ready; native/TLS/auth tests are required.
+correctness: raw exit=0; unexpected issues=0
+recorder: raw exit=0; unexpected issues=0
+vet: raw exit=0; unexpected issues=0
+Isolated full correctness and 64 KiB packet regression passed.

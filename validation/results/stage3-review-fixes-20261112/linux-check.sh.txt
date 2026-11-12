@@ -1,0 +1,30 @@
+#!/bin/sh
+set -eu
+export GO_MARIADB_ISOLATED_CI=1
+export GO_MARIADB_REQUIRE_INSTRUMENTATION=1
+export MARIADB_VALIDATION_CONFIG=/run/gomdb/config-stage3.json
+export GOMAXPROCS=2
+export GOPROXY=off
+export GOMODCACHE=/go/pkg/mod
+export GOCACHE=/run/gomdb/go-cache
+export GIT_CONFIG_COUNT=1
+export GIT_CONFIG_KEY_0=safe.directory
+export GIT_CONFIG_VALUE_0=/work
+start_server() {
+    mariadbd --no-defaults --user=root --datadir=/run/gomdb/data --socket=/run/gomdb/mysql.sock --pid-file=/run/gomdb/server.pid --port=3306 --bind-address=127.0.0.1 --max-allowed-packet="$1" --local-infile=1 --innodb-buffer-pool-size=128M --performance-schema=ON --ssl-ca=/run/gomdb/tls/ca.pem --ssl-cert=/run/gomdb/tls/server-cert.pem --ssl-key=/run/gomdb/tls/server-key.pem > "/run/review/server-$1.log" 2>&1 &
+    gomdb_fix_server_pid=$!
+    for gomdb_fix_attempt in $(seq 1 30); do
+        if mariadb-admin --no-defaults --protocol=tcp --host=127.0.0.1 --user=root --skip-ssl ping >/dev/null 2>&1; then return 0; fi
+        sleep 1
+    done
+    return 1
+}
+trap 'kill "$gomdb_fix_server_pid" 2>/dev/null || true; wait "$gomdb_fix_server_pid" 2>/dev/null || true' EXIT
+start_server 48M
+python3 validation/prepare_ci.py provision --tls-dir /run/gomdb/tls --output "$MARIADB_VALIDATION_CONFIG"
+python3 validation/ci.py --correctness-only --output /run/gomdb/evidence-stage3-review-fixes-confirmed
+kill "$gomdb_fix_server_pid"
+wait "$gomdb_fix_server_pid"
+start_server 64K
+go test -race -json -count=1 -p=1 -parallel=2 -run '^TestMariaDBStreamPacketBoundary$' ./validation > /run/review/packet-64K.log 2>&1
+printf '%s\n' 'Isolated full correctness and 64 KiB packet regression passed.'

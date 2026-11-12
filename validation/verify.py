@@ -45,6 +45,16 @@ def main():
     issues = benchmark_issues(current['benchmarks'], references)
     if issues:
         raise SystemExit('\n'.join(issues))
+    if correctness is None:
+        from full_capture import validate
+        directory = HERE/current.get('evidence_directory', '')
+        if (not current.get('evidence_directory') or
+                not directory.resolve().is_relative_to((HERE/'results').resolve())):
+            raise SystemExit('Missing or invalid full-run evidence directory.')
+        try:
+            validate(current, directory)
+        except (ValueError, OSError, KeyError) as error:
+            raise SystemExit('Full-run verification failed: '+str(error)) from error
     if current.get('lost_baseline_passes'):
         raise SystemExit('Original passing assertions were lost.')
     print('Fresh correctness; immutable references and approved workload/contract migrations verified.' if correctness else 'Fresh dedicated-driver results; baseline checksums and original workload bodies intact.')

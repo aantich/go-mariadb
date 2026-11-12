@@ -1,0 +1,34 @@
+package mariadb
+
+import (
+ "database/sql/driver"
+ "errors"
+ "testing"
+)
+
+func TestReviewCursorOpenServerError(t *testing.T) {
+ peer,mc:=newRWMockConn(0);mc.cfg.cursorFetchRows=2;mc.capabilities=clientDeprecateEOF
+ response:=append(makePacket(1,[]byte{1}),makePacket(2,nativeColumn("v",fieldTypeLong))...)
+ response=append(response,makePacket(3,[]byte{iERR,0xda,0x04,'#','2','1','0','0','0','s','u','b','q','u','e','r','y'})...)
+ peer.queuedReplies=[][]byte{response}
+ stmt:=&mysqlStmt{mc:mc,id:1}
+ _,err:=stmt.queryCursor(nil)
+ var server *MySQLError
+ if !errors.As(err,&server)||server.Number!=1242 {t.Errorf("terminal server error was lost: %T %v; closed=%v",err,err,mc.closed.Load())}
+}
+
+func TestReviewProgressCallbackBadConnError(t *testing.T) {
+ peer,mc:=newRWMockConn(0);mc.extCapabilities=progressIndicator
+ response:=append(makePacket(1,progressPacket("copy")),makePacket(2,[]byte{iERR,0x26,0x04,'#','2','3','0','0','0','d','u','p'})...)
+ peer.queuedReplies=[][]byte{response}
+ _,err:=ExecWithProgress(t.Context(),nativeSQLConn(t,mc),func(Progress)error{return driver.ErrBadConn},"ALTER TABLE t ADD v INT")
+ var server *MySQLError
+ if !errors.As(err,&server)||server.Number!=1062 {t.Errorf("server error lost when callback returns ErrBadConn: %T %v; closed=%v",err,err,mc.closed.Load())}
+}
+
+func TestReviewCursorCloseRetention(t *testing.T) {
+ _,mc:=newRWMockConn(0)
+ rows:=&cursorRows{binaryRows:binaryRows{mysqlRows{mc:mc}},owner:mc,stmt:&mysqlStmt{mc:mc,id:1},done:true}
+ if err:=rows.Close();err!=nil {t.Fatal(err)}
+ if rows.owner!=nil || rows.stmt!=nil {t.Errorf("closed cursor retains connection and statement: owner=%v stmt=%v",rows.owner!=nil,rows.stmt!=nil)}
+}

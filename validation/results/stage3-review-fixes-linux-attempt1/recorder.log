@@ -1,0 +1,13 @@
+..............F.......................................
+======================================================================
+FAIL: test_collector_controls_environment_and_rejects_skips_or_setting_drift (test_full_capture.FullCaptureTests.test_collector_controls_environment_and_rejects_skips_or_setting_drift) (fault=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/work/validation/test_full_capture.py", line 249, in test_collector_controls_environment_and_rejects_skips_or_setting_drift
+    self.assertEqual(code,int(fault is not None))
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 54 tests in 9.837s
+
+FAILED (failures=1)

@@ -79,6 +79,9 @@ type Config struct {
 
 	compress          bool // Enable compression
 	bulkOperations    bool
+	bulkUnitResults   bool
+	cursorFetchRows   uint32
+	progressReports   bool
 	extendedMetadata  bool
 	sessionTracking   bool
 	sessionTrackLimit int

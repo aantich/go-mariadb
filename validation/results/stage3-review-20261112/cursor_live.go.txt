@@ -1,0 +1,22 @@
+package main
+import (
+ "context"
+ "database/sql"
+ "encoding/json"
+ "errors"
+ "fmt"
+ "os"
+ "time"
+ mariadb "github.com/aantich/go-mariadb"
+)
+func main(){
+ var c struct{User,Password,Host,Database string;Port int};data,err:=os.ReadFile("validation/.local/config.json");if err!=nil{panic(err)};if err=json.Unmarshal(data,&c);err!=nil{panic(err)}
+ query:="SELECT t.seq,(SELECT q.seq FROM seq_1_to_2 q WHERE q.seq<=t.seq) AS v FROM seq_1_to_3 t"
+ for _,cursor:=range []bool{false,true}{
+  cfg:=mariadb.NewConfig();cfg.User,cfg.Passwd,cfg.DBName=c.User,c.Password,c.Database;cfg.Net,cfg.Addr="tcp",fmt.Sprintf("%s:%d",c.Host,c.Port);cfg.ReadTimeout,cfg.WriteTimeout,cfg.Timeout=2*time.Second,2*time.Second,2*time.Second
+  if cursor {cfg.Apply(mariadb.WithServerCursors(2))};connector,err:=mariadb.NewConnector(cfg);if err!=nil{panic("connector")};db:=sql.OpenDB(connector)
+  ctx,cancel:=context.WithTimeout(context.Background(),5*time.Second);rows,err:=db.QueryContext(ctx,query);count:=0
+  if err==nil{for rows.Next(){var a,b int;if scanErr:=rows.Scan(&a,&b);scanErr!=nil{err=scanErr;break};count++};if err==nil{err=rows.Err()};rows.Close()}
+  var server *mariadb.MySQLError;number:=uint16(0);if errors.As(err,&server){number=server.Number};fmt.Printf("cursor=%v rows=%d error_type=%T sql_error=%d error=%v\n",cursor,count,err,number,err);cancel();db.Close()
+ }
+}

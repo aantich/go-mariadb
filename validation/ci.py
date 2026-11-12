@@ -32,9 +32,20 @@ REQUIRED |= {PACKAGE+'/validation/'+name for name in ('TestMariaDBDesiredCleanPo
             'TestMariaDBManagedSessionIsolation', 'TestMariaDBDefaultSessionPolicy',
             'TestMariaDBSessionObservations', 'TestMariaDBNativeTypeMetadata',
             'TestMariaDBManagedRestorationFailure', 'TestMariaDBManagedRoleAndSchema')}
+REQUIRED |= {PACKAGE+'/'+name for name in ('TestNativeProgressPackets', 'TestNativeProgressCallbacks',
+            'TestNativeStreamWire', 'TestNativeStreamBoundedStaging', 'TestNativeStreamCancellation',
+            'TestNativeCursorCancellation', 'TestNativeCursorMalformedFetch', 'TestNativeBulkUnsignedUnits',
+            'TestNativeOptionsAndPreflight', 'TestNativeBulkUnitMalformed', 'TestNativeNoReplay',
+            'TestNativeValuerPanicCleanup')}
+REQUIRED |= {PACKAGE+'/validation/'+name for name in ('TestMariaDBBulkUnits', 'TestMariaDBStreamParameters',
+            'TestMariaDBServerCursors', 'TestMariaDBProgressExecution', 'TestMariaDBCursorManagedGenerations')}
+REQUIRED |= {PACKAGE+'/'+name for name in ('TestNativeCursorMaterializationError',
+            'TestNativeProgressCallbackBadConn', 'TestNativeStreamPacketBoundary')}
+REQUIRED |= {PACKAGE+'/validation/'+name for name in ('TestMariaDBCursorMaterializationError',
+            'TestMariaDBStreamPacketBoundary')}
 
 
-def assess_tests(output, exit_code, require_instrumentation=False):
+def assess_tests(output, exit_code, require_instrumentation=False, required=None):
     records = {}
     failed_packages = set()
     for line in output.splitlines():
@@ -51,7 +62,8 @@ def assess_tests(output, exit_code, require_instrumentation=False):
             if event['Action'] in ('pass','fail','skip'):
                 record['status'] = event['Action']
     issues = []
-    for name in REQUIRED:
+    required_tests = REQUIRED if required is None else required
+    for name in required_tests:
         if records.get(name, {}).get('status') != 'pass':
             issues.append('Required test missing/not passing: '+name)
     if require_instrumentation and records.get(PACKAGE+'/validation/TestMariaDBSessionInstrumentation', {}).get('status') != 'pass':
@@ -64,6 +76,8 @@ def assess_tests(output, exit_code, require_instrumentation=False):
                         and 'PROFILE: performance_schema requires the isolated instrumentation fixture' in record['output'])
         if status == 'skip' and name.startswith(PACKAGE+'/validation/') and not profile_skip:
             issues.append('Required MariaDB fixture skipped: '+name)
+        elif status == 'skip' and any(name == test or name.startswith(test+'/') for test in required_tests):
+            issues.append('Required fault test skipped: '+name)
         if status not in ('pass','fail','skip'):
             issues.append('Test did not finish: '+name)
     if 'WARNING: DATA RACE' in output:

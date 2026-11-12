@@ -1,0 +1,21 @@
+import copy,gzip,json,sys,tempfile
+from pathlib import Path
+from unittest import mock
+sys.path.insert(0,'validation')
+import ci,record,verify
+root=Path('validation');capture=json.loads((root/'results/current.json').read_text())
+refs=[json.loads((p/'capture.json').read_text()) for p in (record.HERE/'baselines'/record.PROFILE,record.NATIVE_BASELINE)]
+raw={name:gzip.open(root/'results/stage3-benchmark-final'/(name+'.log.gz'),'rt').read() for name in ('upstream','protocol','mariadb')}
+observed={name:record.test_cases(text,include_containers=True) for name,text in raw.items()}
+for case in observed['mariadb']:
+ if '/TestMariaDBProgressExecution' in case['name']:case['status']='skip'
+print('Historical-pass guard when new progress fixture is skipped:',record.lost_reference_passes(refs,observed))
+modified=copy.deepcopy(capture);modified['stages']['race']={'command':['true'],'exit_code':0,'cases':[]}
+with tempfile.TemporaryDirectory() as directory:
+ dest=Path(directory);(dest/'results').mkdir();(dest/'results/current.json').write_text(json.dumps(modified));(dest/'baselines').symlink_to(record.HERE/'baselines',target_is_directory=True);(dest/'capabilities.json').symlink_to(record.HERE/'capabilities.json')
+ with mock.patch.object(verify,'HERE',dest):
+  try:verify.main();print('COUNTEREXAMPLE ACCEPTED: full-capture race stage replaced by true')
+  except SystemExit as err:print('Counterexample rejected:',err)
+# Record's preflight actually uses the administrative socket. This is independent
+# of the TCP endpoint selected from --config for both Go suites and timings.
+source=(root/'record.py').read_text();print('Full-run preflight targets administrative socket:',"command('preflight',['mariadb','--protocol=socket'" in source)

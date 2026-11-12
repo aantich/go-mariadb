@@ -1,0 +1,17 @@
+upstream
+  upstream 0 {'pass': 848, 'skip': 7}
+protocol
+  protocol 0 {'pass': 78}
+mariadb
+  mariadb 0 {'pass': 296, 'skip': 1}
+race
+  race 0 {'pass': 1222, 'skip': 8}
+vet
+  vet 0 {}
+recorder
+  recorder 0 {}
+fuzz
+  fuzz 0 {}
+fuzz-terminator
+  fuzz-terminator 0 {}
+Correctness evidence: /Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/runs/20261112T150326140187Z

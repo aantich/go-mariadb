@@ -1,0 +1,17 @@
+{
+  "status": "interrupted; not eligible for publication",
+  "reason": "Correct obsolete clean-session API-gap caption before capturing matching reporting source. No production or benchmark workload changes.",
+  "last_progress": {
+    "command": "bench-upstream-6",
+    "argv": [
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/runs/20261112T104142123277Z/upstream.test",
+      "-test.run=^$",
+      "-test.bench=.",
+      "-test.benchtime=200ms",
+      "-test.benchmem",
+      "-test.count=1",
+      "-test.timeout=240s"
+    ]
+  },
+  "complete": false
+}

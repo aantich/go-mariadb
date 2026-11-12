@@ -1,0 +1,109 @@
+{
+  "purpose": "Review-only counterexamples and focused correctness; no production/harness/frozen-test edits or benchmark execution",
+  "input_fingerprint": "d40de51ee6e045d07c242a9af50e0356a6cd5dd7e2d362570b9df7b1cc37a2a4",
+  "commands": {
+    "go-probes": {
+      "argv": [
+        "go",
+        "test",
+        "-overlay=/private/tmp/gomdb-stage3-review-20261112/overlay.json",
+        "-race",
+        "-p=1",
+        "-parallel=2",
+        "-count=1",
+        "-run=^TestReview",
+        "."
+      ],
+      "exit": 1
+    },
+    "cursor-live": {
+      "argv": [
+        "go",
+        "run",
+        "/private/tmp/gomdb-stage3-review-20261112/cursor_live.go"
+      ],
+      "exit": 0
+    },
+    "rollback-negative": {
+      "argv": [
+        "go",
+        "test",
+        "-overlay=/private/tmp/gomdb-stage3-review-20261112/transaction-overlay.json",
+        "-race",
+        "-count=1",
+        "-v",
+        "-p=1",
+        "-parallel=2",
+        "-run=^TestMariaDB(BulkUnits|StreamParameters)$",
+        "./validation"
+      ],
+      "exit": 0
+    },
+    "native-existing": {
+      "argv": [
+        "go",
+        "test",
+        "-race",
+        "-json",
+        "-count=1",
+        "-timeout=60s",
+        "-p=1",
+        "-parallel=2",
+        "-run=^TestNative",
+        "."
+      ],
+      "exit": 0
+    },
+    "harness-probes": {
+      "argv": [
+        "python3",
+        "/private/tmp/gomdb-stage3-review-20261112/harness_probes.py"
+      ],
+      "exit": 0
+    },
+    "harness-existing": {
+      "argv": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "validation",
+        "-p",
+        "test_*.py"
+      ],
+      "exit": 0
+    },
+    "freshness": {
+      "argv": [
+        "python3",
+        "validation/verify.py"
+      ],
+      "exit": 0
+    }
+  },
+  "packet-live": {
+    "exit": 0,
+    "fixture": "isolated MariaDB 12.3.3, max_allowed_packet=65536; temporary reserved-schema table; container removed",
+    "observed": "buffered 65529-byte parameter succeeds; streaming same bytes fails with SQL error 1153"
+  },
+  "files": {
+    "cursor-live.log": "26afa662b75a6e45b80fdbd80f80d7e47fa1e4aab1b5fa0b7c10610422c5a745",
+    "cursor_live.go.txt": "760b25125aef699d6cebbafa3c9967d399dba9ce84550b1fca66f6ea9c8195a7",
+    "freshness.log": "4ec0f2496248cb4b004962b8203a529e9b502345f5fe0b26c8b4bc9c37666b65",
+    "go-probes.log": "98435a7b8355e6099a6b3969aa91b7d01b02056f59dbb30139dc4f2fd4c7371f",
+    "harness-existing.log": "7987dd57b4dba72f7137c69da9951d517ccf1793de33efea44616eadbbf575a7",
+    "harness-probes.log": "aefb6327257cd0248ded9d37e70b2f022fc66564a2129ce905a074774f160af3",
+    "harness_probes.py.txt": "12a8ba33b68aa221b640ac5345041230a4fda64768014f83aa9fa8e782eef913",
+    "native-existing.log": "3ae5998fc65cac3ffbaeb40aec3367dd56ec54360ef53a2866fe5769a9bf29b1",
+    "overlay.json.txt": "288f3f9b76b048d03e2252f5eb068f2214241c23902059c8c2ac45da8673d426",
+    "packet-check.sh.txt": "d5ce66ab4a3bdb5421076616a846cf394ef17eb16ea660c8994e7a8c895d61c2",
+    "packet-live.log": "b37cee2010a4b1e9a5d4534a9c339b0e0766b74476988589db9f073af5d1b56d",
+    "probes_test.go.txt": "c63b2b794168aa8fc3116b73b4d859c7cd4d5e0cbb4183cce695ca50d50ee15e",
+    "rollback-negative.log": "6e425b3f60ae2ac7e8da7dc72cefe0cbe0ad9d67f1aea0be746b14ef1917e97a",
+    "stream_packet_live.go.txt": "a6fec516160b691a42494eaec55ef0be2f4f8de03562166c39887ab4614f697b",
+    "transaction-overlay.json.txt": "3c118437073c7a2fed05b18dc06e6a65a77a272b1724c55100c222f892dab2eb"
+  },
+  "recorded_at": "2026-11-12T11:23:13.334378+00:00",
+  "rejected_probe": "Cursor retained-pointer probe failed its exploratory assertion, but no incremental public API leak was established: database/sql.Rows already retains its driver connection."
+}

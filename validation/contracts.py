@@ -12,6 +12,35 @@ CORRECTNESS_COMMANDS = {
     'vet': ('go', 'vet', './...'),
 }
 
+# Timed workloads keep GOMAXPROCS=4 to match the immutable Mac references.
+# Compilation flags and external workspaces must not silently change the code
+# that either the tests or the separately built benchmark binaries execute.
+FULL_CHECK_ENVIRONMENT = {'GOMAXPROCS': '4', 'GOFLAGS': '', 'GOWORK': 'off'}
+FULL_COMMANDS = {
+    'upstream': ('go', 'test', '-json', '-count=1', '-timeout=240s', '.', './zstd', './internal/...'),
+    'protocol': ('go', 'test', '-json', '-count=1', '-timeout=60s', '-tags=mariadb_validation', '-run=^TestMariaDB', '.'),
+    'mariadb': ('go', 'test', '-json', '-count=1', '-timeout=120s', './validation'),
+    # Require the complete tagged suite with race detection, including protocol
+    # fault tests; ordinary counts still come from the three preceding commands.
+    'race': CORRECTNESS_COMMANDS['correctness'],
+    'vet': CORRECTNESS_COMMANDS['vet'],
+    'recorder': CORRECTNESS_COMMANDS['recorder'],
+    'fuzz': ('go', 'test', '-run=^$', '-fuzz=^FuzzDedicatedLengthEncoding$', '-fuzztime=8s', '-parallel=4', '.'),
+    'fuzz-terminator': ('go', 'test', '-run=^$', '-fuzz=^FuzzDedicatedTerminator$', '-fuzztime=8s', '-parallel=4', '.'),
+}
+
+
+def measurement_commands(directory):
+    """The binaries that are checked and timed belong to this exact run."""
+    commands = dict(FULL_COMMANDS)
+    for family, package in (('upstream', '.'), ('mariadb', './validation')):
+        binary = str(directory/(family+'.test'))
+        commands['build-'+family] = ('go', 'test', '-c', '-o', binary, package)
+        for repetition in range(7):
+            commands[f'bench-{family}-{repetition}'] = (binary, '-test.run=^$', '-test.bench=.',
+                '-test.benchtime=200ms', '-test.benchmem', '-test.count=1', '-test.timeout=240s')
+    return commands
+
 
 def verified_checks(capture):
     """Return report claims only for the complete, successful check contract."""

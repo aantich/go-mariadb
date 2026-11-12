@@ -1,0 +1,362 @@
+{"Time":"2026-11-12T12:19:41.047243+01:00","Action":"start","Package":"github.com/aantich/go-mariadb"}
+{"Time":"2026-11-12T12:19:41.339427+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeValuerPanicCleanup"}
+{"Time":"2026-11-12T12:19:41.339503+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeValuerPanicCleanup","Output":"=== RUN   TestNativeValuerPanicCleanup\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.340197+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeValuerPanicCleanup","Output":"--- PASS: TestNativeValuerPanicCleanup (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.340208+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeValuerPanicCleanup","Elapsed":0}
+{"Time":"2026-11-12T12:19:41.34022+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation"}
+{"Time":"2026-11-12T12:19:41.340222+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation","Output":"=== RUN   TestNativeStreamCancellation\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.340334+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/prepare_write"}
+{"Time":"2026-11-12T12:19:41.340338+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/prepare_write","Output":"=== RUN   TestNativeStreamCancellation/prepare_write\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.391667+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/prepare_write","Output":"--- PASS: TestNativeStreamCancellation/prepare_write (0.05s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.391699+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/prepare_write","Elapsed":0.05}
+{"Time":"2026-11-12T12:19:41.391719+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/prepare_reply"}
+{"Time":"2026-11-12T12:19:41.391723+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/prepare_reply","Output":"=== RUN   TestNativeStreamCancellation/prepare_reply\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.443229+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/prepare_reply","Output":"--- PASS: TestNativeStreamCancellation/prepare_reply (0.05s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.443288+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/prepare_reply","Elapsed":0.05}
+{"Time":"2026-11-12T12:19:41.443304+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/upload_write"}
+{"Time":"2026-11-12T12:19:41.44331+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/upload_write","Output":"=== RUN   TestNativeStreamCancellation/upload_write\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.494388+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/upload_write","Output":"--- PASS: TestNativeStreamCancellation/upload_write (0.05s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.494876+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/upload_write","Elapsed":0.05}
+{"Time":"2026-11-12T12:19:41.494907+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/upload_midway"}
+{"Time":"2026-11-12T12:19:41.494911+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/upload_midway","Output":"=== RUN   TestNativeStreamCancellation/upload_midway\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.546408+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/upload_midway","Output":"--- PASS: TestNativeStreamCancellation/upload_midway (0.05s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.546462+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/upload_midway","Elapsed":0.05}
+{"Time":"2026-11-12T12:19:41.54658+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/execute_write"}
+{"Time":"2026-11-12T12:19:41.546603+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/execute_write","Output":"=== RUN   TestNativeStreamCancellation/execute_write\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.597995+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/execute_write","Output":"--- PASS: TestNativeStreamCancellation/execute_write (0.05s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.59802+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/execute_write","Elapsed":0.05}
+{"Time":"2026-11-12T12:19:41.598027+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/execute_reply"}
+{"Time":"2026-11-12T12:19:41.59803+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/execute_reply","Output":"=== RUN   TestNativeStreamCancellation/execute_reply\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.649749+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/execute_reply","Output":"--- PASS: TestNativeStreamCancellation/execute_reply (0.05s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.649824+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/execute_reply","Elapsed":0.05}
+{"Time":"2026-11-12T12:19:41.649835+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/reset_reply"}
+{"Time":"2026-11-12T12:19:41.649839+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/reset_reply","Output":"=== RUN   TestNativeStreamCancellation/reset_reply\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.701359+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/reset_reply","Output":"--- PASS: TestNativeStreamCancellation/reset_reply (0.05s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.701389+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/reset_reply","Elapsed":0.05}
+{"Time":"2026-11-12T12:19:41.701395+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/close_write"}
+{"Time":"2026-11-12T12:19:41.7014+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/close_write","Output":"=== RUN   TestNativeStreamCancellation/close_write\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.753047+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/close_write","Output":"--- PASS: TestNativeStreamCancellation/close_write (0.05s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.753113+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation/close_write","Elapsed":0.05}
+{"Time":"2026-11-12T12:19:41.753233+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation","Output":"--- PASS: TestNativeStreamCancellation (0.41s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.753263+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamCancellation","Elapsed":0.41}
+{"Time":"2026-11-12T12:19:41.753328+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation"}
+{"Time":"2026-11-12T12:19:41.75335+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation","Output":"=== RUN   TestNativeCursorCancellation\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.753491+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/execute_write"}
+{"Time":"2026-11-12T12:19:41.753509+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/execute_write","Output":"=== RUN   TestNativeCursorCancellation/execute_write\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.805094+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/execute_write","Output":"--- PASS: TestNativeCursorCancellation/execute_write (0.05s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.805195+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/execute_write","Elapsed":0.05}
+{"Time":"2026-11-12T12:19:41.805217+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/open_reply"}
+{"Time":"2026-11-12T12:19:41.805222+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/open_reply","Output":"=== RUN   TestNativeCursorCancellation/open_reply\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.856912+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/open_reply","Output":"--- PASS: TestNativeCursorCancellation/open_reply (0.05s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.856978+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/open_reply","Elapsed":0.05}
+{"Time":"2026-11-12T12:19:41.856999+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/fetch_write"}
+{"Time":"2026-11-12T12:19:41.857005+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/fetch_write","Output":"=== RUN   TestNativeCursorCancellation/fetch_write\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.908283+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/fetch_write","Output":"--- PASS: TestNativeCursorCancellation/fetch_write (0.05s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.908352+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/fetch_write","Elapsed":0.05}
+{"Time":"2026-11-12T12:19:41.908382+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/fetch_reply"}
+{"Time":"2026-11-12T12:19:41.90839+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/fetch_reply","Output":"=== RUN   TestNativeCursorCancellation/fetch_reply\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.959954+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/fetch_reply","Output":"--- PASS: TestNativeCursorCancellation/fetch_reply (0.05s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:41.96001+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/fetch_reply","Elapsed":0.05}
+{"Time":"2026-11-12T12:19:41.960074+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/drain"}
+{"Time":"2026-11-12T12:19:41.960104+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/drain","Output":"=== RUN   TestNativeCursorCancellation/drain\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.011394+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/drain","Output":"--- PASS: TestNativeCursorCancellation/drain (0.05s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.011429+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/drain","Elapsed":0.05}
+{"Time":"2026-11-12T12:19:42.011479+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/reset_write"}
+{"Time":"2026-11-12T12:19:42.011488+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/reset_write","Output":"=== RUN   TestNativeCursorCancellation/reset_write\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.062838+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/reset_write","Output":"--- PASS: TestNativeCursorCancellation/reset_write (0.05s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.062879+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/reset_write","Elapsed":0.05}
+{"Time":"2026-11-12T12:19:42.063031+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/reset_ack"}
+{"Time":"2026-11-12T12:19:42.063044+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/reset_ack","Output":"=== RUN   TestNativeCursorCancellation/reset_ack\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.113447+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/reset_ack","Output":"--- PASS: TestNativeCursorCancellation/reset_ack (0.05s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.11348+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation/reset_ack","Elapsed":0.05}
+{"Time":"2026-11-12T12:19:42.113492+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation","Output":"--- PASS: TestNativeCursorCancellation (0.36s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.113505+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorCancellation","Elapsed":0.36}
+{"Time":"2026-11-12T12:19:42.113564+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch"}
+{"Time":"2026-11-12T12:19:42.113579+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch","Output":"=== RUN   TestNativeCursorMalformedFetch\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.113675+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/empty_open_batch"}
+{"Time":"2026-11-12T12:19:42.113686+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/empty_open_batch","Output":"=== RUN   TestNativeCursorMalformedFetch/empty_open_batch\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.113985+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/empty_open_batch","Output":"--- PASS: TestNativeCursorMalformedFetch/empty_open_batch (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.113999+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/empty_open_batch","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.114034+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/no_flags"}
+{"Time":"2026-11-12T12:19:42.114042+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/no_flags","Output":"=== RUN   TestNativeCursorMalformedFetch/no_flags\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.114129+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/no_flags","Output":"--- PASS: TestNativeCursorMalformedFetch/no_flags (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.114153+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/no_flags","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.114183+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/both_flags"}
+{"Time":"2026-11-12T12:19:42.114193+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/both_flags","Output":"=== RUN   TestNativeCursorMalformedFetch/both_flags\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.11426+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/both_flags","Output":"--- PASS: TestNativeCursorMalformedFetch/both_flags (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.114292+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/both_flags","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.114324+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/more_results"}
+{"Time":"2026-11-12T12:19:42.11433+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/more_results","Output":"=== RUN   TestNativeCursorMalformedFetch/more_results\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.114418+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/more_results","Output":"--- PASS: TestNativeCursorMalformedFetch/more_results (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.114432+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/more_results","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.114526+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/extra_row"}
+{"Time":"2026-11-12T12:19:42.114542+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/extra_row","Output":"=== RUN   TestNativeCursorMalformedFetch/extra_row\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.114604+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/extra_row","Output":"--- PASS: TestNativeCursorMalformedFetch/extra_row (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.114623+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/extra_row","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.114643+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/truncated_row"}
+{"Time":"2026-11-12T12:19:42.114649+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/truncated_row","Output":"=== RUN   TestNativeCursorMalformedFetch/truncated_row\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.11471+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/truncated_row","Output":"--- PASS: TestNativeCursorMalformedFetch/truncated_row (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.114718+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/truncated_row","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.114756+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/short_open_batch"}
+{"Time":"2026-11-12T12:19:42.114762+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/short_open_batch","Output":"=== RUN   TestNativeCursorMalformedFetch/short_open_batch\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.114799+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/short_open_batch","Output":"--- PASS: TestNativeCursorMalformedFetch/short_open_batch (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.11482+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch/short_open_batch","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.114849+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch","Output":"--- PASS: TestNativeCursorMalformedFetch (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.114859+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeCursorMalformedFetch","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.114865+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamBoundedStaging"}
+{"Time":"2026-11-12T12:19:42.114867+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamBoundedStaging","Output":"=== RUN   TestNativeStreamBoundedStaging\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.149192+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamBoundedStaging","Output":"--- PASS: TestNativeStreamBoundedStaging (0.03s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.149218+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamBoundedStaging","Elapsed":0.03}
+{"Time":"2026-11-12T12:19:42.149226+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets"}
+{"Time":"2026-11-12T12:19:42.149229+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets","Output":"=== RUN   TestNativeProgressPackets\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.149283+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/owned_ordered_iterative"}
+{"Time":"2026-11-12T12:19:42.149291+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/owned_ordered_iterative","Output":"=== RUN   TestNativeProgressPackets/owned_ordered_iterative\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.153665+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/owned_ordered_iterative","Output":"--- PASS: TestNativeProgressPackets/owned_ordered_iterative (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.153678+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/owned_ordered_iterative","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.153685+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/capability_gate"}
+{"Time":"2026-11-12T12:19:42.153687+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/capability_gate","Output":"=== RUN   TestNativeProgressPackets/capability_gate\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.153735+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/capability_gate","Output":"--- PASS: TestNativeProgressPackets/capability_gate (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.153744+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/capability_gate","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.153758+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/0"}
+{"Time":"2026-11-12T12:19:42.153762+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/0","Output":"=== RUN   TestNativeProgressPackets/truncated/0\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.153821+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/0","Output":"--- PASS: TestNativeProgressPackets/truncated/0 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.153825+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/0","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.153833+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/1"}
+{"Time":"2026-11-12T12:19:42.153834+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/1","Output":"=== RUN   TestNativeProgressPackets/truncated/1\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.153869+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/1","Output":"--- PASS: TestNativeProgressPackets/truncated/1 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.153873+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/1","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.15389+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/2"}
+{"Time":"2026-11-12T12:19:42.153896+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/2","Output":"=== RUN   TestNativeProgressPackets/truncated/2\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.153915+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/2","Output":"--- PASS: TestNativeProgressPackets/truncated/2 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.153919+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/2","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.153936+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/3"}
+{"Time":"2026-11-12T12:19:42.153939+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/3","Output":"=== RUN   TestNativeProgressPackets/truncated/3\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.153964+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/3","Output":"--- PASS: TestNativeProgressPackets/truncated/3 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.153967+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/3","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.153981+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/4"}
+{"Time":"2026-11-12T12:19:42.153983+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/4","Output":"=== RUN   TestNativeProgressPackets/truncated/4\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154006+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/4","Output":"--- PASS: TestNativeProgressPackets/truncated/4 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154016+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/4","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.154024+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/5"}
+{"Time":"2026-11-12T12:19:42.154026+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/5","Output":"=== RUN   TestNativeProgressPackets/truncated/5\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.15405+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/5","Output":"--- PASS: TestNativeProgressPackets/truncated/5 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154058+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/5","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.15408+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/6"}
+{"Time":"2026-11-12T12:19:42.154082+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/6","Output":"=== RUN   TestNativeProgressPackets/truncated/6\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154098+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/6","Output":"--- PASS: TestNativeProgressPackets/truncated/6 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154101+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/6","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.154117+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/7"}
+{"Time":"2026-11-12T12:19:42.154135+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/7","Output":"=== RUN   TestNativeProgressPackets/truncated/7\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154139+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/7","Output":"--- PASS: TestNativeProgressPackets/truncated/7 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154151+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/7","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.154163+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/8"}
+{"Time":"2026-11-12T12:19:42.154165+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/8","Output":"=== RUN   TestNativeProgressPackets/truncated/8\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154181+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/8","Output":"--- PASS: TestNativeProgressPackets/truncated/8 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154192+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/8","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.154203+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/9"}
+{"Time":"2026-11-12T12:19:42.154205+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/9","Output":"=== RUN   TestNativeProgressPackets/truncated/9\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154223+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/9","Output":"--- PASS: TestNativeProgressPackets/truncated/9 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.15423+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/9","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.154244+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/10"}
+{"Time":"2026-11-12T12:19:42.154246+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/10","Output":"=== RUN   TestNativeProgressPackets/truncated/10\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154273+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/10","Output":"--- PASS: TestNativeProgressPackets/truncated/10 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154277+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/10","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.154287+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/11"}
+{"Time":"2026-11-12T12:19:42.15429+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/11","Output":"=== RUN   TestNativeProgressPackets/truncated/11\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154318+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/11","Output":"--- PASS: TestNativeProgressPackets/truncated/11 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154323+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/11","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.154338+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/12"}
+{"Time":"2026-11-12T12:19:42.154341+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/12","Output":"=== RUN   TestNativeProgressPackets/truncated/12\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154362+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/12","Output":"--- PASS: TestNativeProgressPackets/truncated/12 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154373+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/12","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.154378+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/13"}
+{"Time":"2026-11-12T12:19:42.154379+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/13","Output":"=== RUN   TestNativeProgressPackets/truncated/13\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.15441+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/13","Output":"--- PASS: TestNativeProgressPackets/truncated/13 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154413+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/13","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.154422+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/14"}
+{"Time":"2026-11-12T12:19:42.154424+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/14","Output":"=== RUN   TestNativeProgressPackets/truncated/14\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154443+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/14","Output":"--- PASS: TestNativeProgressPackets/truncated/14 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154454+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/14","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.154476+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/15"}
+{"Time":"2026-11-12T12:19:42.154479+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/15","Output":"=== RUN   TestNativeProgressPackets/truncated/15\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154521+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/15","Output":"--- PASS: TestNativeProgressPackets/truncated/15 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154558+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/15","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.154564+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/16"}
+{"Time":"2026-11-12T12:19:42.154566+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/16","Output":"=== RUN   TestNativeProgressPackets/truncated/16\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154568+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/16","Output":"--- PASS: TestNativeProgressPackets/truncated/16 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.15457+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/truncated/16","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.154573+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/fields"}
+{"Time":"2026-11-12T12:19:42.154575+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/fields","Output":"=== RUN   TestNativeProgressPackets/fields\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154595+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/fields","Output":"--- PASS: TestNativeProgressPackets/fields (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154599+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/fields","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.154601+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/stage_zero"}
+{"Time":"2026-11-12T12:19:42.154602+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/stage_zero","Output":"=== RUN   TestNativeProgressPackets/stage_zero\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154635+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/stage_zero","Output":"--- PASS: TestNativeProgressPackets/stage_zero (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154639+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/stage_zero","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.154647+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/stage_range"}
+{"Time":"2026-11-12T12:19:42.154649+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/stage_range","Output":"=== RUN   TestNativeProgressPackets/stage_range\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154679+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/stage_range","Output":"--- PASS: TestNativeProgressPackets/stage_range (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154683+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/stage_range","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.154691+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/percent"}
+{"Time":"2026-11-12T12:19:42.154695+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/percent","Output":"=== RUN   TestNativeProgressPackets/percent\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154717+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/percent","Output":"--- PASS: TestNativeProgressPackets/percent (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154729+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/percent","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.154739+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/null_info"}
+{"Time":"2026-11-12T12:19:42.154741+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/null_info","Output":"=== RUN   TestNativeProgressPackets/null_info\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154765+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/null_info","Output":"--- PASS: TestNativeProgressPackets/null_info (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154769+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/null_info","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.154794+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/trailing"}
+{"Time":"2026-11-12T12:19:42.154804+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/trailing","Output":"=== RUN   TestNativeProgressPackets/trailing\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154819+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/trailing","Output":"--- PASS: TestNativeProgressPackets/trailing (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154827+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/trailing","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.15483+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/oversized"}
+{"Time":"2026-11-12T12:19:42.154832+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/oversized","Output":"=== RUN   TestNativeProgressPackets/oversized\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.15488+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/oversized","Output":"--- PASS: TestNativeProgressPackets/oversized (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.154886+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/oversized","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.154898+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/sequence"}
+{"Time":"2026-11-12T12:19:42.154901+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/sequence","Output":"=== RUN   TestNativeProgressPackets/sequence\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.155138+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/sequence","Output":"[mariadb] 2026/11/12 12:19:42 packets.go:73 [warn] unexpected sequence nr: expected 0, got 7\n"}
+{"Time":"2026-11-12T12:19:42.155152+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/sequence","Output":"--- PASS: TestNativeProgressPackets/sequence (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.155161+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets/sequence","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.155173+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets","Output":"--- PASS: TestNativeProgressPackets (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.15518+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressPackets","Elapsed":0.01}
+{"Time":"2026-11-12T12:19:42.155191+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressCallbacks"}
+{"Time":"2026-11-12T12:19:42.155194+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressCallbacks","Output":"=== RUN   TestNativeProgressCallbacks\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.15521+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressCallbacks/error"}
+{"Time":"2026-11-12T12:19:42.155212+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressCallbacks/error","Output":"=== RUN   TestNativeProgressCallbacks/error\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.155338+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressCallbacks/error","Output":"--- PASS: TestNativeProgressCallbacks/error (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.155341+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressCallbacks/error","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.155351+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressCallbacks/panic"}
+{"Time":"2026-11-12T12:19:42.155354+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressCallbacks/panic","Output":"=== RUN   TestNativeProgressCallbacks/panic\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.155451+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressCallbacks/panic","Output":"--- PASS: TestNativeProgressCallbacks/panic (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.155455+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressCallbacks/panic","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.155468+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressCallbacks/error_and_server"}
+{"Time":"2026-11-12T12:19:42.15547+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressCallbacks/error_and_server","Output":"=== RUN   TestNativeProgressCallbacks/error_and_server\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.155547+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressCallbacks/error_and_server","Output":"--- PASS: TestNativeProgressCallbacks/error_and_server (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.155553+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressCallbacks/error_and_server","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.155565+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressCallbacks/normal"}
+{"Time":"2026-11-12T12:19:42.155568+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressCallbacks/normal","Output":"=== RUN   TestNativeProgressCallbacks/normal\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.155631+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressCallbacks/normal","Output":"--- PASS: TestNativeProgressCallbacks/normal (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.155635+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressCallbacks/normal","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.155649+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressCallbacks","Output":"--- PASS: TestNativeProgressCallbacks (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.155652+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeProgressCallbacks","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.155665+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire"}
+{"Time":"2026-11-12T12:19:42.155667+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire","Output":"=== RUN   TestNativeStreamWire\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.155688+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/maximum_limit"}
+{"Time":"2026-11-12T12:19:42.15569+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/maximum_limit","Output":"=== RUN   TestNativeStreamWire/maximum_limit\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.155722+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/maximum_limit","Output":"--- PASS: TestNativeStreamWire/maximum_limit (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.155726+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/maximum_limit","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.155738+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/0"}
+{"Time":"2026-11-12T12:19:42.155742+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/0","Output":"=== RUN   TestNativeStreamWire/0\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.15578+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/0","Output":"--- PASS: TestNativeStreamWire/0 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.155788+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/0","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.155798+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/1"}
+{"Time":"2026-11-12T12:19:42.155801+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/1","Output":"=== RUN   TestNativeStreamWire/1\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.155829+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/1","Output":"--- PASS: TestNativeStreamWire/1 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.155832+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/1","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.155848+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/7"}
+{"Time":"2026-11-12T12:19:42.15585+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/7","Output":"=== RUN   TestNativeStreamWire/7\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.155882+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/7","Output":"--- PASS: TestNativeStreamWire/7 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.155887+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/7","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.155891+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/8"}
+{"Time":"2026-11-12T12:19:42.155896+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/8","Output":"=== RUN   TestNativeStreamWire/8\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.15592+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/8","Output":"--- PASS: TestNativeStreamWire/8 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.155924+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/8","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.155937+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/9"}
+{"Time":"2026-11-12T12:19:42.155939+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/9","Output":"=== RUN   TestNativeStreamWire/9\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.15597+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/9","Output":"--- PASS: TestNativeStreamWire/9 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.155973+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/9","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.155986+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/1024"}
+{"Time":"2026-11-12T12:19:42.155988+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/1024","Output":"=== RUN   TestNativeStreamWire/1024\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156105+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/1024","Output":"--- PASS: TestNativeStreamWire/1024 (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156108+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/1024","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.156115+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/stalled"}
+{"Time":"2026-11-12T12:19:42.156118+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/stalled","Output":"=== RUN   TestNativeStreamWire/stalled\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156162+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/stalled","Output":"--- PASS: TestNativeStreamWire/stalled (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156166+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/stalled","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.156172+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/invalid_count"}
+{"Time":"2026-11-12T12:19:42.156175+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/invalid_count","Output":"=== RUN   TestNativeStreamWire/invalid_count\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156208+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/invalid_count","Output":"--- PASS: TestNativeStreamWire/invalid_count (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156214+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/invalid_count","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.156216+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/overflow"}
+{"Time":"2026-11-12T12:19:42.156217+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/overflow","Output":"=== RUN   TestNativeStreamWire/overflow\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156247+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/overflow","Output":"--- PASS: TestNativeStreamWire/overflow (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156252+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/overflow","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.156265+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/bad_ordinary_argument"}
+{"Time":"2026-11-12T12:19:42.156267+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/bad_ordinary_argument","Output":"=== RUN   TestNativeStreamWire/bad_ordinary_argument\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156298+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/bad_ordinary_argument","Output":"--- PASS: TestNativeStreamWire/bad_ordinary_argument (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156301+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/bad_ordinary_argument","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.156312+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/reader_panic"}
+{"Time":"2026-11-12T12:19:42.156315+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/reader_panic","Output":"=== RUN   TestNativeStreamWire/reader_panic\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156364+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/reader_panic","Output":"--- PASS: TestNativeStreamWire/reader_panic (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156367+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire/reader_panic","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.156379+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire","Output":"--- PASS: TestNativeStreamWire (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156382+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeStreamWire","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.156394+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnsignedUnits"}
+{"Time":"2026-11-12T12:19:42.156395+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnsignedUnits","Output":"=== RUN   TestNativeBulkUnsignedUnits\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156492+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnsignedUnits","Output":"--- PASS: TestNativeBulkUnsignedUnits (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156495+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnsignedUnits","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.15651+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeOptionsAndPreflight"}
+{"Time":"2026-11-12T12:19:42.156513+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeOptionsAndPreflight","Output":"=== RUN   TestNativeOptionsAndPreflight\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156548+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeOptionsAndPreflight","Output":"--- PASS: TestNativeOptionsAndPreflight (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156553+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeOptionsAndPreflight","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.156555+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed"}
+{"Time":"2026-11-12T12:19:42.156556+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed","Output":"=== RUN   TestNativeBulkUnitMalformed\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156583+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/column_count"}
+{"Time":"2026-11-12T12:19:42.156586+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/column_count","Output":"=== RUN   TestNativeBulkUnitMalformed/column_count\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156652+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/column_count","Output":"--- PASS: TestNativeBulkUnitMalformed/column_count (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156659+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/column_count","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.156668+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/column_name"}
+{"Time":"2026-11-12T12:19:42.15667+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/column_name","Output":"=== RUN   TestNativeBulkUnitMalformed/column_name\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156733+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/column_name","Output":"--- PASS: TestNativeBulkUnitMalformed/column_name (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156737+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/column_name","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.156749+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/column_type"}
+{"Time":"2026-11-12T12:19:42.156751+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/column_type","Output":"=== RUN   TestNativeBulkUnitMalformed/column_type\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156817+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/column_type","Output":"--- PASS: TestNativeBulkUnitMalformed/column_type (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.15682+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/column_type","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.156829+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/null_unit"}
+{"Time":"2026-11-12T12:19:42.15683+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/null_unit","Output":"=== RUN   TestNativeBulkUnitMalformed/null_unit\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156893+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/null_unit","Output":"--- PASS: TestNativeBulkUnitMalformed/null_unit (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156897+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/null_unit","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.15691+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/short_unit"}
+{"Time":"2026-11-12T12:19:42.156912+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/short_unit","Output":"=== RUN   TestNativeBulkUnitMalformed/short_unit\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156973+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/short_unit","Output":"--- PASS: TestNativeBulkUnitMalformed/short_unit (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.156977+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/short_unit","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.156987+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/too_many_units"}
+{"Time":"2026-11-12T12:19:42.156991+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/too_many_units","Output":"=== RUN   TestNativeBulkUnitMalformed/too_many_units\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.157055+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/too_many_units","Output":"--- PASS: TestNativeBulkUnitMalformed/too_many_units (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.157059+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/too_many_units","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.157071+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/more_results"}
+{"Time":"2026-11-12T12:19:42.157075+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/more_results","Output":"=== RUN   TestNativeBulkUnitMalformed/more_results\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.157165+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/more_results","Output":"--- PASS: TestNativeBulkUnitMalformed/more_results (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.157184+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/more_results","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.157198+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/unavailable"}
+{"Time":"2026-11-12T12:19:42.1572+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/unavailable","Output":"=== RUN   TestNativeBulkUnitMalformed/unavailable\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.157228+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/unavailable","Output":"--- PASS: TestNativeBulkUnitMalformed/unavailable (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.157236+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed/unavailable","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.157252+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed","Output":"--- PASS: TestNativeBulkUnitMalformed (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.157269+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeBulkUnitMalformed","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.157277+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeNoReplay"}
+{"Time":"2026-11-12T12:19:42.157286+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeNoReplay","Output":"=== RUN   TestNativeNoReplay\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.15729+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeNoReplay/stream"}
+{"Time":"2026-11-12T12:19:42.157292+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeNoReplay/stream","Output":"=== RUN   TestNativeNoReplay/stream\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.157356+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeNoReplay/stream","Output":"[mariadb] 2026/11/12 12:19:42 packets.go:177 io: read/write on closed pipe\n"}
+{"Time":"2026-11-12T12:19:42.157361+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeNoReplay/stream","Output":"[mariadb] 2026/11/12 12:19:42 connection.go:231 bad connection\n"}
+{"Time":"2026-11-12T12:19:42.157396+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeNoReplay/stream","Output":"--- PASS: TestNativeNoReplay/stream (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.157409+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeNoReplay/stream","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.157419+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeNoReplay/progress"}
+{"Time":"2026-11-12T12:19:42.15742+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeNoReplay/progress","Output":"=== RUN   TestNativeNoReplay/progress\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.157463+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeNoReplay/progress","Output":"[mariadb] 2026/11/12 12:19:42 packets.go:177 io: read/write on closed pipe\n"}
+{"Time":"2026-11-12T12:19:42.157489+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeNoReplay/progress","Output":"--- PASS: TestNativeNoReplay/progress (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.157493+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeNoReplay/progress","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.157509+01:00","Action":"run","Package":"github.com/aantich/go-mariadb","Test":"TestNativeNoReplay/units"}
+{"Time":"2026-11-12T12:19:42.157513+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeNoReplay/units","Output":"=== RUN   TestNativeNoReplay/units\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.157555+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeNoReplay/units","Output":"[mariadb] 2026/11/12 12:19:42 packets.go:177 io: read/write on closed pipe\n"}
+{"Time":"2026-11-12T12:19:42.157558+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeNoReplay/units","Output":"[mariadb] 2026/11/12 12:19:42 connection.go:231 bad connection\n"}
+{"Time":"2026-11-12T12:19:42.157591+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeNoReplay/units","Output":"--- PASS: TestNativeNoReplay/units (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.157595+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeNoReplay/units","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.157613+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Test":"TestNativeNoReplay","Output":"--- PASS: TestNativeNoReplay (0.00s)\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:42.157616+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Test":"TestNativeNoReplay","Elapsed":0}
+{"Time":"2026-11-12T12:19:42.157751+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Output":"PASS\n","OutputType":"frame"}
+{"Time":"2026-11-12T12:19:43.174547+01:00","Action":"output","Package":"github.com/aantich/go-mariadb","Output":"ok  \tgithub.com/aantich/go-mariadb\t2.127s\n"}
+{"Time":"2026-11-12T12:19:43.174567+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb","Elapsed":2.127}

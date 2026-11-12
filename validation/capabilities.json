@@ -1,5 +1,10 @@
 [
   {
+    "name": "reusable native statements",
+    "status": "SUPPORTED",
+    "evidence": "PrepareNative bulk/unit/stream handle reuse; database/sql-owned cleanup, reset generations, fresh reader recovery, type changes, concurrency and phase faults. Throughput/allocation effects remain unmeasured."
+  },
+  {
     "name": "MariaDB metadata caching",
     "status": "SUPPORTED",
     "evidence": "packets.go:initCapabilities; validation metadata cached/uncached wire-byte control"

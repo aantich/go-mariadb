@@ -1,5 +1,55 @@
 # Current authorization, 12 November 2026
 
+Stage 4 publication authorization, later on 12 November: Anton requested commit
+and push of the complete Stage 4 implementation, all four review corrections,
+documentation and saved evidence to the fork's existing `master`. This supersedes
+the earlier uncommitted-only instructions for this delivery. Verify the existing
+source receipt; do not repeat tests or benchmarks just for publication. The
+benchmark/profiling restriction remains in force. No package release is authorized.
+Earlier uncommitted status in receipts describes their original capture context.
+
+Stage 4 correction authorization, later on 12 November: Anton requested fixing
+all four findings. `docs/STAGE4_REVIEW_FIXES.md` records safe deferred cleanup,
+independent correctness history, mandatory unit validation and failed diagnostic
+receipts. Keep all changes uncommitted on `master`. Correctness/race/static checks
+and focused regression controls only; no benchmark or profiling workload execution.
+
+Completed correction receipt: `validation/results/stage4-review-fixes-confirmation.json`.
+Final source `d48b4500…1603fc7` has 1,304 Mac / 1,307 Linux PASS, zero failures,
+44 added passes per profile and no lost earlier passes. Race/vet/69 harness checks
+and static checks pass. Restoring unsafe close/nil-unit acceptance makes the new
+regressions fail. An initial Linux synthetic-fixture flag mismatch is corrected
+and preserved as an earlier attempt; both final profiles are green. No benchmarks
+or profiling workloads ran. Old timings/references are unchanged, all four
+findings below are resolved, and the stage remains uncommitted on `master`.
+
+Stage 4 review, later on 12 November: `docs/STAGE4_CODE_REVIEW.md` records four
+pending findings: unsafe old-handle close during the next borrower's active Rows
+(live protocol corruption), missing newer correctness-leaf protection, nil unit
+results escaping benchmark assertions, and lost diagnostic receipts on exceptions.
+Evidence is in `validation/results/stage4-review-20261112`. Existing native race
+tests and 62 harness checks still pass; the new live cleanup probe fails. No
+production/harness fixes, benchmarks, profiling workloads, commit or push were
+performed. The earlier green Stage 4 receipt remains historical recorded coverage;
+it does not cover the newly reproduced cleanup case. Keep changes uncommitted.
+
+Stage 4 authorization, later on 12 November: Anton approved the performance and
+statement-reuse stage but is heavily using the Mac. Implement reusable native
+statements, benchmark workloads/tooling and correctness coverage only. Do not
+execute any benchmark function, including one-iteration smoke or profiling runs.
+Do not invent timings or freeze unmeasured references. Keep work uncommitted on
+`master`. Use bounded correctness/race/static checks and preserve prior captures.
+
+Completed Stage 4 receipt: `docs/STAGE4_STATEMENT_REUSE.md` and
+`validation/results/stage4-confirmation.json`. Final source `4d2c8a29…18e147c`
+has 1,260 Mac / 1,263 Linux passing leaves, zero failures and 38 new passes per
+profile, retaining all 1,222/1,225 earlier passes. Race/vet/62 harness checks and
+static checks pass. Reusable native handles and 62 additive profiles are ready;
+new profiles are unmeasured, no Stage 4 reference exists, and all old timings/
+references are unchanged. Text-read attribution, pipelining, PAM/GSSAPI and CDC
+remain later work. Keep this stage uncommitted and do not run benchmarks until
+Anton authorizes them.
+
 Stage 3 publication authorization, later on 12 November: Anton requested commit
 and push of the complete native API stage, review fixes, documentation and saved
 validation evidence to the fork's existing `master`. This supersedes earlier

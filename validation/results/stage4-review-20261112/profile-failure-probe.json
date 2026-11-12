@@ -1,0 +1,19 @@
+{
+  "synthetic_policy_counterexample": true,
+  "subprocesses_and_server_probes_mocked": true,
+  "benchmark_or_profile_workloads_executed": false,
+  "cases": [
+    {
+      "fault": "build_timeout",
+      "uncaught_exception": "TimeoutExpired",
+      "capture_present": false,
+      "cpu_and_heap_artifacts_present": false
+    },
+    {
+      "fault": "final_server_probe_failure",
+      "uncaught_exception": "ValueError",
+      "capture_present": false,
+      "cpu_and_heap_artifacts_present": true
+    }
+  ]
+}

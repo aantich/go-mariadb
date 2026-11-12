@@ -1,0 +1,36 @@
+package validation
+
+import (
+    "database/sql"
+    "testing"
+
+    mariadb "github.com/aantich/go-mariadb"
+)
+
+// A public, documented lifetime: return the connection, then close its handle.
+// The next borrower is entitled to finish a query already started on the pool.
+func TestStage4ReviewCloseAfterReturn(t *testing.T) {
+    db := openConfig(t, driverConfig(t, "text"))
+    db.SetMaxOpenConns(1)
+    conn := pinned(t, db)
+    stmt, err := mariadb.PrepareNative(t.Context(), conn, "DO ?")
+    if err != nil { t.Fatal(err) }
+    defer stmt.Close()
+    if err := conn.Close(); err != nil { t.Fatal(err) }
+    next := pinned(t, db)
+    rows, err := next.QueryContext(t.Context(), "SELECT seq,REPEAT('x',32) FROM seq_1_to_1000")
+    if err != nil { t.Fatal(err) }
+    defer rows.Close()
+    if !rows.Next() { t.Fatal("missing first row", rows.Err()) }
+    var id int
+    var value sql.RawBytes
+    if err := rows.Scan(&id, &value); err != nil { t.Fatal(err) }
+    if err := stmt.Close(); err != nil { t.Errorf("old handle close interfered with next borrower: %v", err) }
+    count := 1
+    for rows.Next() {
+        if err := rows.Scan(&id,&value); err != nil { t.Fatal(err) }
+        count++
+    }
+    if err := rows.Err(); err != nil { t.Errorf("next borrower's rows were corrupted: %v",err) }
+    if count != 1000 { t.Errorf("next borrower consumed %d/1000 rows",count) }
+}

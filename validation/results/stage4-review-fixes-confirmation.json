@@ -1,0 +1,158 @@
+{
+  "recorded_at": "2026-11-12T16:30:15.424991+00:00",
+  "status": "All four Stage 4 findings fixed; uncommitted on master; no benchmarks, profiling workloads, commit, push or release",
+  "input_fingerprint": "d48b450072dd1b8e7405efdaa5888e01c18849b6e40d8ec927fbb62e41603fc7",
+  "production_inputs": 53,
+  "workload_inputs": 81,
+  "profiles": {
+    "mac": {
+      "capture": "validation/results/stage4-review-fixes-mac-confirmed/capture.json",
+      "leaf_counts": {
+        "pass": 1304,
+        "fail": 0,
+        "skip": 8
+      },
+      "protected_initial_stage4_receipt": "validation/results/stage4-mac-confirmed/capture.json",
+      "initial_stage4_passing_leaves": 1260,
+      "added_passing_leaves": 44,
+      "initial_stage4_passes_lost": [],
+      "history_contract": "correctness-history-v1",
+      "automatically_protected_prior_source": "results/stage4-review-fixes-mac-final/capture.json",
+      "automatically_protected_prior_leaves": 1304,
+      "lost_correctness_passes": [],
+      "prior_snapshot_sha256": "21ac5760bfc61676a6e7f13a96d67069a26cf80adfb1e2d55fce7e80894a061f",
+      "stages": {
+        "correctness": 0,
+        "recorder": 0,
+        "vet": 0
+      },
+      "skips": [
+        "github.com/aantich/go-mariadb/FuzzFormatDSN/seed#1",
+        "github.com/aantich/go-mariadb/FuzzFormatDSN/seed#15",
+        "github.com/aantich/go-mariadb/FuzzFormatDSN/seed#2",
+        "github.com/aantich/go-mariadb/TestConcurrent",
+        "github.com/aantich/go-mariadb/TestConnectionAttributes",
+        "github.com/aantich/go-mariadb/TestContextCancelBegin",
+        "github.com/aantich/go-mariadb/validation/TestMariaDBSessionInstrumentation",
+        "github.com/aantich/go-mariadb/zstd/TestServerCompression"
+      ]
+    },
+    "linux": {
+      "capture": "validation/results/stage4-review-fixes-linux-confirmed/capture.json",
+      "leaf_counts": {
+        "pass": 1307,
+        "fail": 0,
+        "skip": 5
+      },
+      "protected_initial_stage4_receipt": "validation/results/stage4-linux-confirmed/capture.json",
+      "initial_stage4_passing_leaves": 1263,
+      "added_passing_leaves": 44,
+      "initial_stage4_passes_lost": [],
+      "history_contract": "correctness-history-v1",
+      "automatically_protected_prior_source": "results/stage4-linux-confirmed/capture.json",
+      "automatically_protected_prior_leaves": 1263,
+      "lost_correctness_passes": [],
+      "prior_snapshot_sha256": "ab57896339198b3b720a2f9f504ed8a8b680e58b8e5ccd85d7da360e54594272",
+      "stages": {
+        "correctness": 0,
+        "recorder": 0,
+        "vet": 0
+      },
+      "skips": [
+        "github.com/aantich/go-mariadb/FuzzFormatDSN/seed#1",
+        "github.com/aantich/go-mariadb/FuzzFormatDSN/seed#15",
+        "github.com/aantich/go-mariadb/FuzzFormatDSN/seed#2",
+        "github.com/aantich/go-mariadb/TestConcurrent",
+        "github.com/aantich/go-mariadb/zstd/TestServerCompression"
+      ],
+      "failed_attempt_go_passes_preserved": 1307
+    }
+  },
+  "harness_tests": 69,
+  "benchmark_functions_executed": false,
+  "profiling_workloads_executed": false,
+  "new_benchmark_profiles_unmeasured": 62,
+  "stage4_baseline_exists": false,
+  "negative_controls": "validation/results/stage4-review-fixes-20261112/negative-controls.json",
+  "negative_control_source_note": "Controls used the preceding 5504e8c8 source, with identical production and all Go workload inputs; only the synthetic Linux instrumentation environment was subsequently corrected in test_stage4_review_fixes.py.",
+  "static_checks": {
+    "gofmt": true,
+    "diff_check": true,
+    "actionlint": true
+  },
+  "linux_fixture": {
+    "image": "go-mariadb-review:20261112",
+    "image_id": "sha256:0dc8f8292298201f3c9c9d9a3bb4a059e0d5c97d8e826b2cbfb493595cc7c41a",
+    "cpus": 2,
+    "memory": "4 GiB",
+    "source_mount": "read-only",
+    "published_ports": false,
+    "dependency_fetching": false,
+    "shared_server_globals_changed": false,
+    "container_removed": true
+  },
+  "earlier_attempts": {
+    "mac": "validation/results/stage4-review-fixes-mac-final/capture.json",
+    "linux": "validation/results/stage4-review-fixes-linux-attempt1/capture.json",
+    "linux_issue": "Go correctness/race and vet passed; one synthetic collector-history test inherited the isolated instrumentation flag. Its fixture now explicitly uses its matching synthetic profile. Final confirmations reran both platforms."
+  },
+  "preserved_timing_capture": {
+    "path": "validation/results/current.json",
+    "sha256": "02fea12c04c5c42f1596bdb0c56ddd3839afb26a86f7e3e61f0b7e798adea7ed",
+    "unchanged": true
+  },
+  "immutable_references": {
+    "validation/baselines/native-bulk-stage1-macos-arm64-mariadb-12.3.3-go1.27.4": {
+      "sha256sums": "4e5433d8844a176b5692d254c0215803ecce56c11bcdb8adae6ec88c2fd480db",
+      "checksums_verified": true
+    },
+    "validation/baselines/macos-arm64-mariadb-12.3.3-go1.27.4": {
+      "sha256sums": "00b8619a1fb31568f7eeb8fcb9d1ba26bbd1e412c18bc0d2ad3e21d5ff0fee49",
+      "checksums_verified": true
+    }
+  },
+  "files": {
+    "validation/results/stage4-review-fixes-20261112/linux-check-attempt1.sh.txt": "94466160d6e0007ecdf12a2cb92dadcd8e671f53afb07ea3ef6255ee0d100d1b",
+    "validation/results/stage4-review-fixes-20261112/linux-check-confirmed.sh.txt": "19d130af687d29679462d1e98918f8cc87294bc0547c31a233f09ee357e93e47",
+    "validation/results/stage4-review-fixes-20261112/linux-console-attempt1.log": "a2048c3b3c4a2b36309d4bc5e1285ea439e3b7ef52d1b0bbfed9c6e8f776f94e",
+    "validation/results/stage4-review-fixes-20261112/linux-console-confirmed.log": "8359c3d26f3adb780c56883319bf86841fbce14e4c98cfc553ec48eef706b22e",
+    "validation/results/stage4-review-fixes-20261112/mac-console-confirmed.log": "a264034ca72801379091e8beb083bb797ce95c068d83c924a58425ce3b48bc81",
+    "validation/results/stage4-review-fixes-20261112/mac-console-initial.log": "2936fe93f775412bcd8159cf7edb83bc49089a86f9281775f3d0bbbb7c069e1a",
+    "validation/results/stage4-review-fixes-20261112/negative-controls.json": "da4036e35672ef2c77aca443224c191da6b67d0783a6519bedba20e9d671da06",
+    "validation/results/stage4-review-fixes-20261112/negative-controls.py.txt": "e0dc36a964a8fc3a41e17f4f3edeeec412ace688de0bc687a9c09232c859f927",
+    "validation/results/stage4-review-fixes-20261112/nil-units-negative.log": "f0bfa2eca4e25e6d927358fa6cfc18cf2ff3e31bf3f503e553b24abe11f18a9c",
+    "validation/results/stage4-review-fixes-20261112/nil-units-overlay.json": "1dc0656ad4992a81cdc235bc02b87504997056b2670da1652907870a8d73c98a",
+    "validation/results/stage4-review-fixes-20261112/nil-units.go.txt": "47de92d329029c35807e23740946ceedea6aa1fe1be5efacdafb35532e28fad7",
+    "validation/results/stage4-review-fixes-20261112/unsafe-close-negative.log": "71719a7885cf282b62bb262c72d3fd80dcb202cfcca65c0d5f1bbcf505ec3907",
+    "validation/results/stage4-review-fixes-20261112/unsafe-close-overlay.json": "6f97066b509519704b44e460f2dfb74a2adc3ebc0dff7fdb7d9f505074fdfb7d",
+    "validation/results/stage4-review-fixes-20261112/unsafe-close.go.txt": "b85b4c884f8d7c9585682e36a61d0c41a4b4c7b8f96978866c6c09fc3dbb4a9b",
+    "validation/results/stage4-review-fixes-linux-attempt1/capture.json": "cf1ae184bddd36a68054eff958c872e39545ca07bc127b055f242dff2b83e881",
+    "validation/results/stage4-review-fixes-linux-attempt1/correctness.log": "ef775b1be664f0cf0bdefa95914056dd63a71d970ca7138c7ef4e050d3e07329",
+    "validation/results/stage4-review-fixes-linux-attempt1/prior-correctness.json": "ab57896339198b3b720a2f9f504ed8a8b680e58b8e5ccd85d7da360e54594272",
+    "validation/results/stage4-review-fixes-linux-attempt1/recorder.log": "3671eb3be020723b7406848da2b0f62cc37ae5adc3cc4bea3b042e01f1b43d19",
+    "validation/results/stage4-review-fixes-linux-attempt1/server-after.log": "a38a08cf207926d05b6cfc46158b3b2b51de7b2171b6571a675fade7a50269b1",
+    "validation/results/stage4-review-fixes-linux-attempt1/server-before.log": "a38a08cf207926d05b6cfc46158b3b2b51de7b2171b6571a675fade7a50269b1",
+    "validation/results/stage4-review-fixes-linux-attempt1/vet.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "validation/results/stage4-review-fixes-linux-confirmed/capture.json": "5d4b1ebe20ecad49a59fa188482df9ccedf2ce5f7403748375757cb1f229c8aa",
+    "validation/results/stage4-review-fixes-linux-confirmed/correctness.log": "e1b38f317802289e9796da1107f441f26bc192815dc3288526b8757da1af343a",
+    "validation/results/stage4-review-fixes-linux-confirmed/prior-correctness.json": "ab57896339198b3b720a2f9f504ed8a8b680e58b8e5ccd85d7da360e54594272",
+    "validation/results/stage4-review-fixes-linux-confirmed/recorder.log": "fcbf8a88c971cb646d63d67db3d8da4c84549fbd4f5da17b4cde349371c57ac8",
+    "validation/results/stage4-review-fixes-linux-confirmed/server-after.log": "a38a08cf207926d05b6cfc46158b3b2b51de7b2171b6571a675fade7a50269b1",
+    "validation/results/stage4-review-fixes-linux-confirmed/server-before.log": "a38a08cf207926d05b6cfc46158b3b2b51de7b2171b6571a675fade7a50269b1",
+    "validation/results/stage4-review-fixes-linux-confirmed/vet.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "validation/results/stage4-review-fixes-mac-confirmed/capture.json": "c7cb1ee935e2802179bc8de49c90e4620c492b67b7e838e7a387dbacf88e63b8",
+    "validation/results/stage4-review-fixes-mac-confirmed/correctness.log": "89c423cb892f3e493eb52f92b6b10c9d8542752574a33c840a3aa302320e19a9",
+    "validation/results/stage4-review-fixes-mac-confirmed/prior-correctness.json": "21ac5760bfc61676a6e7f13a96d67069a26cf80adfb1e2d55fce7e80894a061f",
+    "validation/results/stage4-review-fixes-mac-confirmed/recorder.log": "5f68fefd965115d88d2b90d4799d80dd8180d98b4bdb2813a6d285c5d9d4d1cd",
+    "validation/results/stage4-review-fixes-mac-confirmed/server-after.log": "fc0dcfeb4c06669c9ac42344a1c1e763662af4ac5237d360eabd3f04cc0922d6",
+    "validation/results/stage4-review-fixes-mac-confirmed/server-before.log": "fc0dcfeb4c06669c9ac42344a1c1e763662af4ac5237d360eabd3f04cc0922d6",
+    "validation/results/stage4-review-fixes-mac-confirmed/vet.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "validation/results/stage4-review-fixes-mac-final/capture.json": "bfeca2885a99e6aecdb2386643d7ba7c4e68c9ccc8800ffadf644ae4bced5f47",
+    "validation/results/stage4-review-fixes-mac-final/correctness.log": "6a0b50cf31075f82cf9d307000494ba00048ffec0c570cad4d25628edb331a10",
+    "validation/results/stage4-review-fixes-mac-final/prior-correctness.json": "8da14de910019f04c1af0c7a45efa3c0260f37b13241d3e4de191152f1c38f26",
+    "validation/results/stage4-review-fixes-mac-final/recorder.log": "62f32790770b29681a5be795c524e57f1df2e499255d82209c05a408bd6f2797",
+    "validation/results/stage4-review-fixes-mac-final/server-after.log": "fc0dcfeb4c06669c9ac42344a1c1e763662af4ac5237d360eabd3f04cc0922d6",
+    "validation/results/stage4-review-fixes-mac-final/server-before.log": "fc0dcfeb4c06669c9ac42344a1c1e763662af4ac5237d360eabd3f04cc0922d6",
+    "validation/results/stage4-review-fixes-mac-final/vet.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

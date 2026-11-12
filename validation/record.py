@@ -24,11 +24,14 @@ from evidence import benchmark_issues
 from contracts import FULL_CHECK_ENVIRONMENT, FULL_COMMANDS, measurement_commands
 import full_capture
 from provenance import read_server, server_command
+from stage4_workloads import STAGE4_PROFILES, STAGE4_WORKLOAD_INPUTS, stage4_issues
+import pass_history
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 PROFILE = 'macos-arm64-mariadb-12.3.3-go1.27.4'
 NATIVE_BASELINE = HERE/'baselines'/('native-bulk-stage1-'+PROFILE)
+STAGE4_BASELINE = HERE/'baselines'/('native-stage4-'+PROFILE)
 
 
 def digest(data):
@@ -174,6 +177,8 @@ def benchmark_rows(text):
 
 def render(current, baseline, correctness=None):
     features = json.loads((NATIVE_BASELINE/'capture.json').read_text())['benchmarks'] if NATIVE_BASELINE.exists() else {}
+    if STAGE4_BASELINE.exists():
+        features = {**features, **json.loads((STAGE4_BASELINE/'capture.json').read_text())['benchmarks']}
     latest = []
     if correctness is not None:
         from contracts import verified_checks
@@ -185,7 +190,7 @@ def render(current, baseline, correctness=None):
                   f"Recorded: **{correctness['recorded_at']}** · Source: `{correctness['input_fingerprint']}` · **{counts.get('pass',0)} PASS / {counts.get('fail',0)} FAIL / {counts.get('skip',0)} SKIP**, unique leaves.",
                   f"Server: **{server['version']}** · Go: `{correctness['go']}` · Host: `{correctness['host']}` · GOMAXPROCS: **{correctness['check_environment']['GOMAXPROCS']}** · performance_schema: **{server['performance_schema']}**. Server settings match before/after checks.",
                   ', '.join(checked)+' pass. No prior passing assertion was lost. Managed isolation is explicitly opted in; ordinary checkout remains liveness-only.',
-                  f"[Raw correctness receipt]({correctness['evidence_directory']}/capture.json) · [Native API contracts](../docs/STAGE3_NATIVE_APIS.md) · [Session foundations](../docs/STAGE2_SESSION_FOUNDATIONS.md).", '',
+                  f"[Raw correctness receipt]({correctness['evidence_directory']}/capture.json) · [Reusable statements](../docs/STAGE4_STATEMENT_REUSE.md) · [Native API contracts](../docs/STAGE3_NATIVE_APIS.md) · [Session foundations](../docs/STAGE2_SESSION_FOUNDATIONS.md).", '',
                   '**No performance measurements were made for this source.** The timing tables and full-capture failures below belong to the earlier source fingerprint shown there. They are historical, qualified measurements; none were copied into a new baseline or presented as current-source timings.', '',
                   '<details><summary>Earlier full-capture results and historical failures</summary>', '',
                   '## Earlier full performance capture', '']
@@ -227,7 +232,9 @@ def render(current, baseline, correctness=None):
     lines += ['', 'Inventory entries are source-reviewed API gaps, not passing feature tests. Missing external services are recorded separately from missing APIs. See [coverage and limits](COVERAGE.md).', '',
               '## Benchmark comparison', '',
               f"Last measured source: `{current.get('input_fingerprint','historical')}`. Current source has **no performance measurements**." if correctness else '', '',
+              '**Stage 4: 62 new profiles are UNMEASURED.** No benchmark or profiling workload ran during this implementation. Their first reference is pending an authorized measurement window; the 200-profile historical capture below is unchanged. See [workload units and limits](../docs/STAGE4_STATEMENT_REUSE.md#additive-benchmark-workloads-still-unmeasured).' if not set(STAGE4_PROFILES) <= current['benchmarks'].keys() else 'Stage 4 profiles use a separate first reference; their first measurements do not establish an improvement over the original driver.', '',
               'Baseline = immutable unchanged-upstream capture for original workloads; [first native-bulk capture](baselines/native-bulk-stage1-macos-arm64-mariadb-12.3.3-go1.27.4/capture.json) for the new matched bulk profiles. Current = latest complete capture. Change = `(Current / Baseline - 1) × 100`; negative means less time. Units are **ns/operation**. The original added live reads consume 1,000 rows, BLOB reads consume 1 MiB, and original added writes replace 100 rows transactionally. Native bulk alternatives use **1/16/100/1000 rows per transaction**. Inherited workloads retain their own row counts and decoder/scanner units; do not apply the live-read row count to every inherited benchmark. Connection operations establish and close one connection.', '',
+              'When present, the independent Stage 4 reference is `baselines/native-stage4-'+PROFILE+'/capture.json`. Stage 4 bulk uses 1/16/100/1,000 rows, uploads 64 KiB/1 MiB/16 MiB, cursor reads 1,000/10,000 rows, ALTER progress two DDL commands plus verification, and quiet progress one command per operation. See the operation metrics in raw samples.', '',
               '| Benchmark | Baseline ns/op | Last measured ns/op | Change vs baseline | Last measured B/op | Last measured allocs/op |' if correctness else '| Benchmark | Baseline ns/op | Current ns/op | Change vs baseline | Current B/op | Current allocs/op |',
               '| --- | ---: | ---: | ---: | ---: | ---: |']
     for name in sorted(current['benchmarks'].keys() | baseline['benchmarks'].keys() | features.keys()):
@@ -281,8 +288,11 @@ def main():
     parser.add_argument('--freeze-baseline',action='store_true')
     parser.add_argument('--correctness-only',action='store_true')
     parser.add_argument('--freeze-native-baseline',action='store_true')
+    parser.add_argument('--freeze-stage4-baseline',action='store_true',help='Freeze the first complete Stage 4 measurements; never permitted with --correctness-only.')
     parser.add_argument('--conditions',required=True,help='Observed/confirmed host conditions; never infer idle from silence')
     args=parser.parse_args()
+    if args.freeze_stage4_baseline and (args.correctness_only or STAGE4_BASELINE.exists()):
+        raise SystemExit('Stage 4 reference already exists or measurement is disabled; refusing freeze.')
     if args.freeze_native_baseline and NATIVE_BASELINE.exists(): raise SystemExit('Native baseline already exists; refusing overwrite.')
     for reference in (HERE/'baselines').iterdir():
         if (reference/'SHA256SUMS').exists() and not reference_hashes_match(reference):
@@ -334,7 +344,7 @@ def main():
            'working_tree':subprocess.check_output(['git','status','--short'],cwd=ROOT,text=True),
            'host_observations':[],
            'hardware':subprocess.check_output(['sysctl','-n','machdep.cpu.brand_string','hw.ncpu','hw.memsize'],text=True).splitlines(),
-           'method':{'process_repetitions':7,'benchtime':'200ms','gomaxprocs':4,'warmups':'original forty added serial profiles: two explicit warmups; native bulk and inherited/parallel profiles: Go benchmark calibration','profile':PROFILE}}
+           'method':{'process_repetitions':7,'benchtime':'200ms','gomaxprocs':4,'warmups':'original forty added serial profiles: two explicit warmups; native bulk, Stage 4 and inherited/parallel profiles: Go benchmark calibration','profile':PROFILE}}
     def server_snapshot(phase):
         try:
             snapshot, output = read_server(cfg, env, server_argv)
@@ -347,6 +357,7 @@ def main():
         state['server_provenance'][phase] = snapshot
         return snapshot
     state['server'] = full_capture.profile_server(server_snapshot('before'))
+    pass_history.preserve(state, run, HERE)
     def finish_provenance():
         server_snapshot('after')
         provenance = state['server_provenance']
@@ -374,6 +385,10 @@ def main():
             observed[name] = test_cases(output, include_containers=True)
         print(' ',name,exit_code,dict(Counter(c.get('status','incomplete') for c in state['stages'][name]['cases'])),flush=True)
     state['check_issues'] = []
+    actual_statuses = {case['name']:case.get('status') for cases in observed.values() for case in cases}
+    state['lost_correctness_passes'] = pass_history.lost(state, run, actual_statuses)
+    if state['lost_correctness_passes']:
+        state['check_issues'].append('Prior correctness passing leaves lost: '+', '.join(state['lost_correctness_passes']))
     try:
         full_capture.validate_checks(state, check_outputs)
     except ValueError as error:
@@ -410,8 +425,8 @@ def main():
         if len(row['samples'])!=7:failed_bench=True
         metrics=set.intersection(*(set(s) for s in row['samples']))-{'family','repetition'}
         row['median']={k:statistics.median(s[k] for s in row['samples']) for k in metrics}
-    references = [json.loads((path/'capture.json').read_text()) for path in (baseline_dir,NATIVE_BASELINE) if path.exists()]
-    state['benchmark_issues'] = benchmark_issues(state['benchmarks'], references)
+    references = [json.loads((path/'capture.json').read_text()) for path in (baseline_dir,NATIVE_BASELINE,STAGE4_BASELINE) if path.exists()]
+    state['benchmark_issues'] = benchmark_issues(state['benchmarks'], references) + stage4_issues(state['benchmarks'])
     finish_provenance()
     state['complete']=not failed_bench and not state['benchmark_issues'] and state['inputs_stable'] and state['server_provenance']['stable']
     state['exit_code']=int(not state['complete'] or any(s['exit_code'] for s in state['stages'].values()))
@@ -451,6 +466,14 @@ def main():
         native = {**state, 'native_workload_inputs':{'validation/native_test.go':state['inputs']['workload']['validation/native_test.go']}, 'benchmarks':{k:v for k,v in state['benchmarks'].items() if k.startswith('BenchmarkMariaDBNativeBulk/')}}
         (NATIVE_BASELINE/'capture.json').write_text(json.dumps(native,indent=2)+'\n')
         (NATIVE_BASELINE/'SHA256SUMS').write_text(digest((NATIVE_BASELINE/'capture.json').read_bytes())+'  capture.json\n')
+    if args.freeze_stage4_baseline:
+        if not state['complete'] or state['exit_code']:
+            raise SystemExit('Incomplete Stage 4 evidence; reference not frozen.')
+        STAGE4_BASELINE.mkdir()
+        native = {**state, 'native_workload_inputs':{path:state['inputs']['workload'][path] for path in STAGE4_WORKLOAD_INPUTS},
+                  'benchmarks':{name:state['benchmarks'][name] for name in STAGE4_PROFILES}}
+        (STAGE4_BASELINE/'capture.json').write_text(json.dumps(native,indent=2)+'\n')
+        (STAGE4_BASELINE/'SHA256SUMS').write_text(digest((STAGE4_BASELINE/'capture.json').read_bytes())+'  capture.json\n')
     (run/'capture.json').write_text(json.dumps(state,indent=2)+'\n')
     # An incomplete attempt is useful evidence, but must not replace the latest
     # complete live report. Raw commands and missing identities stay in the run.
@@ -461,6 +484,7 @@ def main():
         evidence.mkdir(parents=True)
         for name in state['logs']:
             shutil.copy2(run/name,evidence/name)
+        shutil.copy2(run/pass_history.FILENAME,evidence/pass_history.FILENAME)
         shutil.copy2(run/'capture.json',evidence/'capture.json')
         (HERE/'results'/'current.json').write_text(json.dumps(state,indent=2)+'\n')
         render(state,baseline)

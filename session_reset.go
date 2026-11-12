@@ -78,7 +78,7 @@ func (mc *mysqlConn) resetSession(ctx context.Context) (err error) {
 	if err = mc.error(); err != nil {
 		return err
 	}
-	if mc.buf.busy() {
+	if mc.activeRows != nil || mc.buf.busy() {
 		return errors.New("mariadb: reset requires a command boundary")
 	}
 	if err = mc.watchCancel(ctx); err != nil {
@@ -194,6 +194,6 @@ func (stmt *mysqlStmt) ensurePrepared() error {
 		return errors.New("mariadb: prepared parameter count changed after session reset")
 	}
 	stmt.id, stmt.columns = replacement.id, replacement.columns
-	stmt.session.generation = replacement.session.generation
+	stmt.session.generation = stmt.mc.generation
 	return nil
 }

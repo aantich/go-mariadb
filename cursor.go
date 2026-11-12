@@ -84,8 +84,10 @@ func (stmt *mysqlStmt) queryCursor(args []driver.Value) (finishableRows, error) 
 		return nil, mc.protocolError()
 	}
 	mc.status = status
-	return &cursorRows{binaryRows: binaryRows{mysqlRows{mc: mc, rs: resultSet{columns: stmt.columns}}},
-		owner: mc, stmt: stmt, fetch: mc.cfg.cursorFetchRows}, nil
+	rows := &cursorRows{binaryRows: binaryRows{mysqlRows{mc: mc, rs: resultSet{columns: stmt.columns}}},
+		owner: mc, stmt: stmt, fetch: mc.cfg.cursorFetchRows}
+	mc.trackRows(&rows.mysqlRows)
+	return rows, nil
 }
 
 func (rows *cursorRows) next(read func() error) error {
@@ -167,6 +169,7 @@ func (rows *cursorRows) Close() (err error) {
 		rows.finish = nil
 		defer f() // Keep cancellation active through drain and RESET's ACK.
 	}
+	defer rows.releaseStatements(&err)
 	mc := rows.owner
 	if err := mc.error(); err != nil {
 		return err

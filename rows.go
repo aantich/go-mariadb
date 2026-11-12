@@ -24,6 +24,7 @@ type resultSet struct {
 
 type mysqlRows struct {
 	mc      *mysqlConn
+	owner   *mysqlConn // Retained until Close, even when a wire EOF clears mc.
 	rs      resultSet
 	finish  func()
 	rawCols [][]byte // buffered per-column raw bytes for RowsColumnScanner (Go 1.27+)
@@ -150,6 +151,7 @@ func (rows *mysqlRows) Close() (err error) {
 		defer f()
 	}
 	defer func() { rows.mc = nil }()
+	defer rows.releaseStatements(&err)
 
 	mc := rows.mc
 	if mc == nil {

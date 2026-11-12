@@ -1,0 +1,5 @@
+{
+  "Replace": {
+    "/Users/aantich/dev/mariadbnew/projects/go-mariadb/statement.go": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage4-review-fixes-20261112/unsafe-close.go.txt"
+  }
+}

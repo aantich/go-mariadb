@@ -2,7 +2,7 @@
 """Verify current dedicated-driver inputs and every immutable baseline artifact."""
 import json
 from pathlib import Path
-from record import HERE, PROFILE, NATIVE_BASELINE, baseline_workloads_match, digest, inputs, native_workloads_match, reference_hashes_match
+from record import HERE, PROFILE, NATIVE_BASELINE, STAGE4_BASELINE, baseline_workloads_match, digest, inputs, native_workloads_match, reference_hashes_match
 from evidence import benchmark_issues
 
 
@@ -42,6 +42,11 @@ def main():
         references.append(native)
         if not native_workloads_match(native, current['inputs']):
             raise SystemExit('Native workload changed after its first reference.')
+    if STAGE4_BASELINE.exists() and current.get('validation_contract'):
+        stage4 = json.loads((STAGE4_BASELINE/'capture.json').read_text())
+        references.append(stage4)
+        if not native_workloads_match(stage4,current['inputs']):
+            raise SystemExit('Stage 4 workload changed after its first reference.')
     issues = benchmark_issues(current['benchmarks'], references)
     if issues:
         raise SystemExit('\n'.join(issues))

@@ -2,6 +2,23 @@
 
 ## Current dedicated driver
 
+**Stage 4, 12 November:** Explicit `PrepareNative` bulk/unit/stream handles and
+62 additive benchmark profiles are implemented. Anton excluded all benchmark
+execution while using the Mac. Run correctness only; **do not invoke benchmark
+functions, benchmark smoke or profiling execution during this pass**. New
+workloads have no timings/reference yet. The [stage record](../docs/STAGE4_STATEMENT_REUSE.md)
+documents lifetime, coverage, structural command savings and measurement limits.
+The live report preserves the previous 200-profile timings separately.
+
+The [Stage 4 corrections](../docs/STAGE4_REVIEW_FIXES.md) fix deferred statement
+cleanup and strengthen both recording paths. Each new run retains a checksummed
+`prior-correctness.json` for its newest successful matching compiler/host/server/
+instrumentation profile. Its passing leaves remain mandatory even if no timing
+capture has measured them. The collector and publication verifier reject missing,
+skipped or changed-history cases independently of older timing references.
+Fresh profiles explicitly record that no matching prior receipt exists.
+Historical receipts preserve their original schema and samples.
+
 Native APIs add per-unit bulk counters, chunked reader parameters, cursor Rows
 and progress callbacks alongside session foundations. See the
 [Stage 3 contracts](../docs/STAGE3_NATIVE_APIS.md). Required native fixture/fault
@@ -87,7 +104,8 @@ The original baseline is immutable. Exact inverse identity substitutions and
 the one approved contract migration verify original workload bodies; every
 original passing test remains protected.
 All tracked and untracked production Go files are fingerprinted. Native helpers
-add sixteen matched bulk profiles and independent first measurements.
+add sixteen matched bulk profiles and independent first measurements. Stage 4
+adds 62 further profiles in a new file without changing those 200 workloads.
 
 The earlier full performance capture retains its original clean-pool failure.
 The latest correctness-only receipt tests the implemented managed policy and
@@ -209,6 +227,34 @@ from those older timings. See the [Stage 3 review fixes](../docs/STAGE3_REVIEW_F
 
 ## Benchmark semantics
 
+Stage 4 adds **62 unmeasured profiles**, bringing the next full capture to
+**262**. Bulk aggregate/unit one-shot/reused alternatives and a prepared-loop
+control use 1/16/100/1,000 rows per transaction. Upload alternatives use fresh
+generated 64 KiB/1 MiB/16 MiB payloads and server digest verification. Cursor
+alternatives consume 1,000/10,000 rows with fetch sizes 0 (ordinary)/1/16/128/1,024.
+Progress workloads distinguish two ALTER COPY commands with verified data from
+one quiet DO command. Every sample retains `rows/op`, `payload-B/op` or
+`commands/op` as appropriate. Retained prepare/close are outside timing; one-shot
+prepare/close and all equivalent transaction/verification work are timed.
+
+After benchmark execution is authorized, a first complete matched run may use
+`record.py --freeze-stage4-baseline --conditions 'actual observed conditions'`.
+It requires all existing and new profiles, seven repetitions, strict source/raw
+log/provenance checks and passing correctness. The flag refuses an existing
+reference or correctness-only collection; first measurements never replace the
+original or native Stage 1 references. No Stage 4 reference is frozen yet.
+
+For future read diagnostics, this command only prints a plan:
+
+```sh
+python3 validation/profile_reads.py --case text-blob-borrowed \
+  --output validation/.local/profiles/example-not-executed
+```
+
+`--execute` and `--conditions` are required to run it after authorization. Those
+instrumented CPU/heap results remain separate diagnostics, with source/endpoint
+provenance, and cannot update the live timing pointer or any reference.
+
 * Added narrow/wide reads consume **1,000 rows per operation**. Every result is
   counted and checksummed; wide results verify every column. BLOB reads validate
   **1 MiB per operation**. Typed and borrowed `sql.RawBytes` scans are separate.
@@ -216,7 +262,9 @@ from those older timings. See the [Stage 3 review fixes](../docs/STAGE3_REVIEW_F
 * Added writes replace **100 rows in one transaction per operation**. BEGIN,
   DELETE, insert(s), COMMIT and count/sum/content verification are timed for all
   alternatives: prepared loop, text batch and reader-based LOCAL INFILE. Native
-  binary bulk has no implementation or fabricated timing.
+  binary bulk was absent from the original 184-profile baseline. Its later
+  sixteen profiles have an independent reference; the Stage 4 profiles above
+  remain unmeasured.
 * Connection cases include opening/authenticating/initializing and closing one
   connection. The TLS configuration/CA is constructed outside timing. Bounded
   parallel pool cases measure single-scalar requests with one or eight connections.

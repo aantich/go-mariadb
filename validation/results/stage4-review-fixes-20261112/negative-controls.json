@@ -1,0 +1,45 @@
+{
+  "benchmark_functions_executed": false,
+  "profiling_workloads_executed": false,
+  "controls": {
+    "unsafe-close": {
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "-p=1",
+        "-parallel=2",
+        "-count=1",
+        "-timeout=30s",
+        "-overlay",
+        "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage4-review-fixes-20261112/unsafe-close-overlay.json",
+        "-run",
+        "^TestMariaDBNativeCloseAfterReturn$/^text$/^text_full$",
+        "-v",
+        "./validation"
+      ],
+      "exit_code": 1,
+      "expected_regression_rejected": true
+    },
+    "nil-units": {
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "-p=1",
+        "-parallel=2",
+        "-count=1",
+        "-timeout=30s",
+        "-overlay",
+        "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage4-review-fixes-20261112/nil-units-overlay.json",
+        "-run",
+        "^TestMariaDBStage4UnitValidation$",
+        "-v",
+        "./validation"
+      ],
+      "exit_code": 1,
+      "expected_regression_rejected": true
+    }
+  },
+  "inputs_stable": true
+}

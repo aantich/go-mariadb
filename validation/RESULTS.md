@@ -2,10 +2,10 @@
 
 ## Latest correctness — native MariaDB APIs
 
-Recorded: **2026-11-12T15:02:36.212585+00:00** · Source: `e6959af17eae99bc6ca106025097630ccd3a4ce7f69f23ec167aa6eb4a6dfe15` · **1222 PASS / 0 FAIL / 8 SKIP**, unique leaves.
+Recorded: **2026-11-12T16:27:12.184780+00:00** · Source: `d48b450072dd1b8e7405efdaa5888e01c18849b6e40d8ec927fbb62e41603fc7` · **1304 PASS / 0 FAIL / 8 SKIP**, unique leaves.
 Server: **12.3.3-MariaDB-log** · Go: `go version go1.27.4 darwin/arm64` · Host: `macOS-26.4-arm64-arm-64bit-Mach-O` · GOMAXPROCS: **2** · performance_schema: **0**. Server settings match before/after checks.
 Race detection, vet, harness policy checks pass. No prior passing assertion was lost. Managed isolation is explicitly opted in; ordinary checkout remains liveness-only.
-[Raw correctness receipt](results/stage3-review-fixes-mac-confirmed/capture.json) · [Native API contracts](../docs/STAGE3_NATIVE_APIS.md) · [Session foundations](../docs/STAGE2_SESSION_FOUNDATIONS.md).
+[Raw correctness receipt](results/stage4-review-fixes-mac-confirmed/capture.json) · [Reusable statements](../docs/STAGE4_STATEMENT_REUSE.md) · [Native API contracts](../docs/STAGE3_NATIVE_APIS.md) · [Session foundations](../docs/STAGE2_SESSION_FOUNDATIONS.md).
 
 **No performance measurements were made for this source.** The timing tables and full-capture failures below belong to the earlier source fingerprint shown there. They are historical, qualified measurements; none were copied into a new baseline or presented as current-source timings.
 
@@ -89,6 +89,7 @@ Historical totals retain the parser used by that capture; latest correctness exc
 
 | Capability | Baseline | Current | Evidence / next step |
 | --- | --- | --- | --- |
+| reusable native statements | new inventory | SUPPORTED | PrepareNative bulk/unit/stream handle reuse; database/sql-owned cleanup, reset generations, fresh reader recovery, type changes, concurrency and phase faults. Throughput/allocation effects remain unmeasured. |
 | MariaDB metadata caching | SUPPORTED | SUPPORTED | packets.go:initCapabilities; validation metadata cached/uncached wire-byte control |
 | ed25519 authentication | SUPPORTED | SUPPORTED | auth_ed25519.go; real ed25519 account |
 | Unix/TLS/X.509 authentication | SUPPORTED | SUPPORTED | real socket identity and CA/hostname/client-certificate tests |
@@ -116,7 +117,11 @@ Inventory entries are source-reviewed API gaps, not passing feature tests. Missi
 
 Last measured source: `d40de51ee6e045d07c242a9af50e0356a6cd5dd7e2d362570b9df7b1cc37a2a4`. Current source has **no performance measurements**.
 
+**Stage 4: 62 new profiles are UNMEASURED.** No benchmark or profiling workload ran during this implementation. Their first reference is pending an authorized measurement window; the 200-profile historical capture below is unchanged. See [workload units and limits](../docs/STAGE4_STATEMENT_REUSE.md#additive-benchmark-workloads-still-unmeasured).
+
 Baseline = immutable unchanged-upstream capture for original workloads; [first native-bulk capture](baselines/native-bulk-stage1-macos-arm64-mariadb-12.3.3-go1.27.4/capture.json) for the new matched bulk profiles. Current = latest complete capture. Change = `(Current / Baseline - 1) × 100`; negative means less time. Units are **ns/operation**. The original added live reads consume 1,000 rows, BLOB reads consume 1 MiB, and original added writes replace 100 rows transactionally. Native bulk alternatives use **1/16/100/1000 rows per transaction**. Inherited workloads retain their own row counts and decoder/scanner units; do not apply the live-read row count to every inherited benchmark. Connection operations establish and close one connection.
+
+When present, the independent Stage 4 reference is `baselines/native-stage4-macos-arm64-mariadb-12.3.3-go1.27.4/capture.json`. Stage 4 bulk uses 1/16/100/1,000 rows, uploads 64 KiB/1 MiB/16 MiB, cursor reads 1,000/10,000 rows, ALTER progress two DDL commands plus verification, and quiet progress one command per operation. See the operation metrics in raw samples.
 
 | Benchmark | Baseline ns/op | Last measured ns/op | Change vs baseline | Last measured B/op | Last measured allocs/op |
 | --- | ---: | ---: | ---: | ---: | ---: |

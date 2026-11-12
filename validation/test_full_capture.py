@@ -20,6 +20,8 @@ import provenance
 import record
 from test_provenance import sample_server
 import verify
+import pass_history
+from stage4_workloads import STAGE4_PROFILES
 
 
 class FullCaptureTests(unittest.TestCase):
@@ -39,6 +41,12 @@ class FullCaptureTests(unittest.TestCase):
                    'hardware':copy.deepcopy(self.native['hardware']),
                    **{key:copy.deepcopy(self.original[key]) for key in ('go','host','modules','server')}}
         capture['benchmarks'] = copy.deepcopy({**self.original['benchmarks'], **self.native['benchmarks']})
+        if record.STAGE4_BASELINE.exists():
+            capture['benchmarks'].update(json.loads((record.STAGE4_BASELINE/'capture.json').read_text())['benchmarks'])
+        else:
+            for name, units in STAGE4_PROFILES.items():
+                metrics={'ns/op':100.,'B/op':0.,'allocs/op':0.,**units}
+                capture['benchmarks'][name]={'samples':[{'family':'mariadb','repetition':r,'iterations':1,'gomaxprocs':4,**metrics} for r in range(7)],'median':metrics}
         identities = {name:set() for name in full_capture.ORDINARY}
         for reference in (self.original, self.native):
             for name in identities:
@@ -85,6 +93,7 @@ class FullCaptureTests(unittest.TestCase):
         path=directory/'prior-capture.json'
         path.write_text(json.dumps({'complete':True,'stages':{name:capture['stages'][name] for name in full_capture.ORDINARY}}))
         capture['logs'][path.name]=record.digest(path.read_bytes())
+        pass_history.write_snapshot(capture,directory)
         return capture, outputs
 
     def write_log(self, capture, directory, name, output):

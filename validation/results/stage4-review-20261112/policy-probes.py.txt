@@ -1,0 +1,67 @@
+"""Synthetic review counterexamples: no server or benchmark process is launched."""
+import json
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+import tempfile
+from unittest import mock
+
+sys.path.insert(0, 'validation')
+import correctness
+import profile_reads
+import record
+
+out = Path('validation/results/stage4-review-20261112')
+capture_path = Path('validation/results/stage4-mac-confirmed/capture.json')
+original = json.loads(capture_path.read_text())
+case = 'github.com/aantich/go-mariadb/TestNativeStatementLifetime/stale_close_does_not_close_reused_id'
+assert case in original['stages']['correctness']['cases']
+with tempfile.TemporaryDirectory(prefix='stage4-review-', dir='validation/.local') as directory:
+    root = Path(directory)
+    for name in original['logs']:
+        shutil.copy2(capture_path.parent/name, root/name)
+    lines = (root/'correctness.log').read_text().splitlines()
+    events = [json.loads(line) for line in lines]
+    events = [event for event in events if event.get('Package', '')+'/'+event.get('Test', '') != case]
+    (root/'correctness.log').write_text('\n'.join(json.dumps(event) for event in events)+'\n')
+    del original['stages']['correctness']['cases'][case]
+    original['logs']['correctness.log'] = record.digest((root/'correctness.log').read_bytes())
+    summary = correctness.summarize(original, root)
+    proof = {'synthetic_policy_counterexample': True, 'no_measurements_or_source_changes': True,
+             'removed_previously_passing_leaf': case, 'validator_accepted': True,
+             'previous_leaf_count': 1260, 'accepted_leaf_counts': summary['leaf_counts'],
+             'reported_prior_passes_lost': summary['prior_passes_lost']}
+    (out/'pass-protection-probe.json').write_text(json.dumps(proof, indent=2)+'\n')
+
+proof = {'synthetic_policy_counterexample': True, 'subprocesses_and_server_probes_mocked': True,
+         'benchmark_or_profile_workloads_executed': False, 'cases': []}
+for fault in ('build_timeout', 'final_server_probe_failure'):
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        output = root/'diagnostic'
+        cfg = root/'config.json'
+        cfg.write_text(json.dumps({'database': 'go_mariadb_validation', 'upstream_database': 'go_mariadb_upstream',
+                                   'host': '127.0.0.1', 'port': 3306, 'user': 'synthetic', 'password': 'synthetic-only'}))
+        def run(command, **kwargs):
+            if fault == 'build_timeout':
+                raise subprocess.TimeoutExpired(command, 180, output='partial synthetic build output')
+            for arg in command:
+                if arg.startswith(('-test.cpuprofile=', '-test.memprofile=')):
+                    Path(arg.split('=', 1)[1]).write_bytes(b'synthetic profile, never measured')
+            return subprocess.CompletedProcess(command, 0, stdout='', stderr='')
+        servers = [({'version': 'synthetic'}, 'synthetic server provenance\n'), ValueError('synthetic final probe unavailable')]
+        argv = ['profile_reads.py', '--case', 'text-narrow-owned', '--config', str(cfg), '--output', str(output),
+                '--execute', '--conditions', 'synthetic failure test, no commands executed']
+        with mock.patch('sys.argv', argv), mock.patch.object(profile_reads.shutil, 'which', return_value='/synthetic/mariadb'), \
+             mock.patch.object(profile_reads, 'read_server', side_effect=servers), \
+             mock.patch.object(profile_reads.subprocess, 'run', side_effect=run):
+            try:
+                profile_reads.main()
+            except (subprocess.TimeoutExpired, ValueError) as error:
+                actual_output = output.resolve()
+                proof['cases'].append({'fault': fault, 'uncaught_exception': type(error).__name__,
+                    'capture_present': (actual_output/'capture.json').exists(),
+                    'cpu_and_heap_artifacts_present': (actual_output/'cpu.pprof').exists() and (actual_output/'heap.pprof').exists()})
+(out/'profile-failure-probe.json').write_text(json.dumps(proof, indent=2)+'\n')
+print(json.dumps(proof, indent=2))

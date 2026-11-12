@@ -32,8 +32,26 @@ regressions and newer correctness receipts. Anton subsequently authorized commit
 and push of the complete stage on 12 November. Timing captures and immutable
 references are preserved; publication does not repeat measurements.
 
-Next: prepare/bulk handle reuse and pipelining performance work when measurement
-is authorized, followed by interactive PAM/GSSAPI fixtures and optional CDC.
+**Reusable native statements, later on 12 November:** Anton approved Stage 4
+implementation but excluded all benchmarks while using the Mac. Explicit
+`PrepareNative` bulk/unit/stream reuse, regression coverage, 62 additive benchmark
+profiles and dry-run profiling tooling are implemented.
+See the [contracts, coverage and measurement limits](STAGE4_STATEMENT_REUSE.md).
+The original 200 timing profiles/references remain unchanged; no Stage 4 timings
+or accepted speedup exist. Read-path changes requiring profiles remain deferred.
+
+The [four Stage 4 review corrections](STAGE4_REVIEW_FIXES.md) are implemented:
+deferred close respects active Rows after pool return, newer correctness passes
+have an independent history reference, unit benchmarks reject missing results,
+and diagnostic exceptions retain evidence. Matching-source Mac/Linux checks
+pass. Anton subsequently authorized commit and push of the complete stage and
+corrections to `master`. Saved receipts retain their original prepublication
+context; no tests or measurements are repeated for publication. The new profiles
+remain unmeasured.
+
+Next: authorized first measurements for the new profiles and attribution of the
+remaining text-read signals. Evaluate pipelining independently after that,
+followed by interactive PAM/GSSAPI fixtures and optional CDC.
 The remaining stages and
 broader platform coverage remain open; this is not a claim they are complete.
 

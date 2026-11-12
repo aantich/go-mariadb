@@ -11,6 +11,8 @@ from pathlib import Path
 from contracts import FULL_CHECK_ENVIRONMENT, FULL_COMMANDS, measurement_commands
 from evidence import benchmark_issues
 from provenance import validate_server
+from stage4_workloads import stage4_issues
+import pass_history
 
 CONTRACT = 'full-v1'
 ORDINARY = ('upstream', 'protocol', 'mariadb')
@@ -75,6 +77,8 @@ def validate_passes(capture, directory, outputs, references):
     lost = record.lost_reference_passes([*references, previous], observed)
     if lost or capture.get('lost_baseline_passes') != []:
         raise ValueError('Prior passing assertions lost or missing audit: '+', '.join(lost))
+    pass_history.validate(capture, directory,
+                          {case['name']:case.get('status') for cases in observed.values() for case in cases})
 
 
 def validate(capture, directory):
@@ -108,7 +112,7 @@ def validate(capture, directory):
     validate_checks(capture, outputs)
     validate_provenance(capture, directory)
     references = [json.loads((path/'capture.json').read_text()) for path in
-                  (record.HERE/'baselines'/record.PROFILE, record.NATIVE_BASELINE) if path.exists()]
+                  (record.HERE/'baselines'/record.PROFILE, record.NATIVE_BASELINE, record.STAGE4_BASELINE) if path.exists()]
     if not references:
         raise ValueError('Missing immutable measurement reference.')
     original = references[0]
@@ -120,8 +124,9 @@ def validate(capture, directory):
     for path in (record.HERE/'baselines').iterdir():
         if (path/'SHA256SUMS').exists() and not record.reference_hashes_match(path):
             raise ValueError('Immutable measurement reference checksum mismatch.')
-    if record.NATIVE_BASELINE.exists() and not record.native_workloads_match(references[-1], capture['inputs']):
-        raise ValueError('Native workload differs from its first reference.')
+    for reference in references[1:]:
+        if not record.native_workloads_match(reference, capture['inputs']):
+            raise ValueError('Native workload differs from its first reference.')
     validate_passes(capture, directory, outputs, references)
     actual_samples = {}
     for family in ('upstream', 'mariadb'):
@@ -139,7 +144,7 @@ def validate(capture, directory):
         recorded = benchmarks[name].get('samples', [])
         if sorted(recorded, key=lambda s:(s['family'],s['repetition'])) != sorted(samples, key=lambda s:(s['family'],s['repetition'])):
             raise ValueError('Raw benchmark samples differ from receipt: '+name)
-    issues = benchmark_issues(benchmarks, references)
+    issues = benchmark_issues(benchmarks, references) + stage4_issues(benchmarks)
     if issues:
         raise ValueError('\n'.join(issues))
     return {'race': True, 'vet': True, 'harness_policy': True, 'server_stable': True}

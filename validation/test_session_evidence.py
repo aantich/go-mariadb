@@ -12,6 +12,7 @@ import prepare_sessions
 import record
 from contracts import CHECK_ENVIRONMENT, CORRECTNESS_COMMANDS
 import provenance
+import pass_history
 from test_ci_policy import events
 from test_provenance import sample_server
 
@@ -34,12 +35,14 @@ class SessionEvidenceTests(unittest.TestCase):
             path.write_text(json.dumps(server)+'\n')
             logs[path.name]=record.digest(path.read_bytes())
         source=record.inputs()
-        return {'exit_code':0,'inputs_stable':True,'inputs':source,
+        capture = {'exit_code':0,'inputs_stable':True,'inputs':source,'go':'synthetic compiler','host':'synthetic host',
                 'input_fingerprint':record.digest(json.dumps(source,sort_keys=True).encode()),
                 'method':'correctness only, no benchmarks','capabilities':json.loads((record.HERE/'capabilities.json').read_text()),
                 'check_environment':dict(CHECK_ENVIRONMENT),
                 'server':{'endpoint':endpoint,'command':provenance.server_command(endpoint,'mariadb'),'before':server.copy(),'after':server.copy(),'stable':True},
                 'stages':{name:{'command':command,'exit_code':0,'issues':[],**({'cases':cases} if name=='correctness' else {})} for name,command in commands.items()},'logs':logs}
+        pass_history.write_snapshot(capture,directory)
+        return capture
 
     def test_complete_receipt_passes_and_rejects_benchmark_commands(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -1,0 +1,102 @@
+{
+  "recorded_at": "2026-11-12T16:02:46.956374+00:00",
+  "method": "Review only; focused correctness plus mocked policy/tool counterexamples; no benchmark or profiling workload execution",
+  "input_fingerprint": "4d2c8a294bd0495610075aced928a321daf12aab7e44cd048703a04e618e147c",
+  "production_inputs": 52,
+  "workload_inputs": 77,
+  "production_or_harness_fixes": false,
+  "new_findings": [
+    {
+      "priority": "P1",
+      "file": "native_statement.go",
+      "line": 183,
+      "finding": "Close after connection return corrupts next borrower active Rows",
+      "evidence": "close-after-return.log",
+      "live_probe_exit": 1,
+      "consumed_rows": 1,
+      "expected_rows": 1000
+    },
+    {
+      "priority": "P2",
+      "file": "validation/correctness.py",
+      "line": 52,
+      "finding": "Latest correctness-only passing leaf identities not protected",
+      "evidence": "pass-protection-probe.json",
+      "synthetic": true
+    },
+    {
+      "priority": "P2",
+      "file": "validation/stage4_bench_test.go",
+      "line": 101,
+      "finding": "Nil unit result bypasses unit-result assertions",
+      "source_inspection": true
+    },
+    {
+      "priority": "P3",
+      "file": "validation/profile_reads.py",
+      "line": 81,
+      "finding": "Exceptions bypass diagnostic receipt finalization",
+      "evidence": "profile-failure-probe.json",
+      "synthetic": true
+    }
+  ],
+  "checks": {
+    "native_statement_race": {
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "-p=1",
+        "-parallel=2",
+        "-count=1",
+        "-timeout=60s",
+        "-run",
+        "^TestNativeStatement",
+        "."
+      ],
+      "exit_code": 0,
+      "GOMAXPROCS": 2
+    },
+    "harness": {
+      "command": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "validation",
+        "-p",
+        "test_*.py"
+      ],
+      "exit_code": 0,
+      "tests": 62
+    },
+    "existing_correctness_and_reference_verifier": {
+      "command": [
+        "python3",
+        "validation/verify.py"
+      ],
+      "exit_code": 0
+    },
+    "diff_check": true
+  },
+  "full_suite_repeated": false,
+  "benchmark_functions_executed": false,
+  "profiling_workloads_executed": false,
+  "existing_timing_pointer": {
+    "sha256": "02fea12c04c5c42f1596bdb0c56ddd3839afb26a86f7e3e61f0b7e798adea7ed",
+    "unchanged": true
+  },
+  "immutable_references": {
+    "validation/baselines/native-bulk-stage1-macos-arm64-mariadb-12.3.3-go1.27.4": true,
+    "validation/baselines/macos-arm64-mariadb-12.3.3-go1.27.4": true
+  },
+  "files": {
+    "policy-probes.py.txt": "b21b3bbb9e760a8817174899b466a24478e7f598625afab0214ca4340b30e469",
+    "pass-protection-probe.json": "05760903ab47e67ef69107b81b7c71daf4be6425daa68b1b0b466c39ffceed7e",
+    "close-overlay.json": "6da494acb98ecae16a3468e275d02e425a9f778200654fff56ea2c699430ad53",
+    "profile-failure-probe.json": "c8a08aade4e4ed1e3a6116e4e27b1feb8ed66c3707e2ab3d756b9a42fecd9ab5",
+    "close-after-return_test.go.txt": "58989f1cc27f8c895babec3c919ff3d0668e7d08408ef571c530fd01eb4669f3",
+    "close-after-return.log": "6c2e6697ca6d20d0d3bdaf26dd401a948d3f9b3c6eb35b973bc8435763662011"
+  }
+}

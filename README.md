@@ -18,6 +18,9 @@ MySQL and TiDB are outside this project's support scope.
 **[Stage 3 benchmark follow-up](docs/STAGE3_BENCHMARKS.md)** ·
 **[Stage 3 review findings](docs/STAGE3_CODE_REVIEW.md)** ·
 **[Stage 3 review fixes](docs/STAGE3_REVIEW_FIXES.md)** ·
+**[Reusable native statements and measurement preparation](docs/STAGE4_STATEMENT_REUSE.md)** ·
+**[Stage 4 review findings](docs/STAGE4_CODE_REVIEW.md)** ·
+**[Stage 4 review corrections](docs/STAGE4_REVIEW_FIXES.md)** ·
 **[Roadmap and remaining gaps](docs/ROADMAP.md)** ·
 **[Run validation](validation/README.md)**
 
@@ -58,6 +61,8 @@ create a registration collision.
   execution. Transaction boundaries remain explicit.
 * Owned per-unit bulk counters through `BulkExecUnits`; one-shot `io.Reader`
   parameters through `ExecStream`, with bounded client staging and upload cleanup.
+* Explicit `PrepareNative` handles reuse bulk/unit/stream statements safely across
+  calls and managed resets, with normal `database/sql` statement ownership.
 * Opt-in server cursors using ordinary `sql.Rows`, bounded fetch counts and early
   cleanup; per-command progress callbacks with error/panic draining.
 * Native/password, ed25519 and **PARSEC** authentication; authentication work and
@@ -85,6 +90,11 @@ separate first measurements; they are not old-versus-new driver improvements.
 The [Stage 3 benchmark follow-up](docs/STAGE3_BENCHMARKS.md) records the later
 authorized measurement of all 200 existing profiles. The original workloads and
 references remain fixed; host observations and remaining signals stay explicit.
+
+[Stage 4](docs/STAGE4_STATEMENT_REUSE.md) adds 62 profiles for native reuse,
+per-unit bulk, uploads, cursors and progress. **They have not been measured.**
+Current correctness is recorded separately; the last 200-profile timing capture
+remains unchanged. No throughput gain is claimed for the new reusable handles yet.
 
 The inherited baseline already showed substantial differences between existing
 API alternatives: a prepared 1,000-row/32-integer read took about 0.496 ms versus

@@ -1,0 +1,12 @@
+correctness: raw exit=0; unexpected issues=0
+recorder: raw exit=0; unexpected issues=0
+vet: raw exit=0; unexpected issues=0
+{
+  "input_fingerprint": "5504e8c89531de66c2edf69fe2f11f25cf6cbd92fad469251e7ba5b12ed70577",
+  "leaf_counts": {
+    "pass": 1304,
+    "skip": 8
+  },
+  "prior_passes_lost": [],
+  "performance_measured": false
+}

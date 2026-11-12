@@ -1,0 +1,9 @@
+=== RUN   TestStage4ReviewCloseAfterReturn
+    zz_stage4_review_test.go:28: old handle close interfered with next borrower: busy buffer
+[mariadb] 2026/11/12 16:58:47 packets.go:73 [warn] unexpected sequence nr: expected 0, got 5
+    zz_stage4_review_test.go:34: next borrower's rows were corrupted: commands out of sync. You can't run this command now
+    zz_stage4_review_test.go:35: next borrower consumed 1/1000 rows
+--- FAIL: TestStage4ReviewCloseAfterReturn (0.00s)
+FAIL
+FAIL	github.com/aantich/go-mariadb/validation	0.414s
+FAIL

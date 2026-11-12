@@ -1,0 +1,12 @@
+{
+  "synthetic_policy_counterexample": true,
+  "no_measurements_or_source_changes": true,
+  "removed_previously_passing_leaf": "github.com/aantich/go-mariadb/TestNativeStatementLifetime/stale_close_does_not_close_reused_id",
+  "validator_accepted": true,
+  "previous_leaf_count": 1260,
+  "accepted_leaf_counts": {
+    "pass": 1259,
+    "skip": 8
+  },
+  "reported_prior_passes_lost": []
+}

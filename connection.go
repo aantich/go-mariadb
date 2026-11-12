@@ -42,7 +42,10 @@ type mysqlConn struct {
 	compress         bool
 	generation       uint64 // Server statement IDs are valid only in this reset generation.
 	session          *sessionObservation
-	progress         *progressState // Present only during ExecWithProgress inside Conn.Raw.
+	progress         *progressState                     // Present only during ExecWithProgress inside Conn.Raw.
+	nativeStatements map[*nativeStatementKey]*mysqlStmt // Allocated only by PrepareNative.
+	activeRows       *mysqlRows                         // Includes borrowed values and open cursor batches.
+	deferredCloses   []statementClose                   // Server cleanup waiting for activeRows.Close.
 
 	// for context support (Go 1.8+)
 	watching bool
@@ -180,6 +183,7 @@ func (mc *mysqlConn) Close() (err error) {
 func (mc *mysqlConn) close() {
 	mc.cleanup()
 	mc.clearResult()
+	mc.deferredCloses = nil
 }
 
 // Closes the network connection and unsets internal variables. Do not call this
@@ -552,6 +556,7 @@ func (mc *mysqlConn) query(query string, args []driver.Value) (*textRows, error)
 
 		switch err := rows.NextResultSet(); err {
 		case nil, io.EOF:
+			mc.trackRows(&rows.mysqlRows)
 			return rows, nil
 		default:
 			return nil, err
@@ -560,6 +565,9 @@ func (mc *mysqlConn) query(query string, args []driver.Value) (*textRows, error)
 
 	// Columns
 	rows.rs.columns, err = mc.readColumns(resLen, nil)
+	if err == nil {
+		mc.trackRows(&rows.mysqlRows)
+	}
 	return rows, err
 }
 
@@ -695,9 +703,9 @@ func (mc *mysqlConn) PrepareContext(ctx context.Context, query string) (driver.S
 	if err := mc.watchCancel(ctx); err != nil {
 		return nil, err
 	}
+	defer mc.finish()
 
 	stmt, err := mc.Prepare(query)
-	mc.finish()
 	if err != nil {
 		return nil, err
 	}
@@ -705,8 +713,23 @@ func (mc *mysqlConn) PrepareContext(ctx context.Context, query string) (driver.S
 	select {
 	default:
 	case <-ctx.Done():
+		// Keep cancellation active through preparation and retire before any
+		// cleanup write. A peer need not read CLOSE after a canceled prepare.
+		mc.close()
 		stmt.Close()
 		return nil, ctx.Err()
+	}
+	if key, ok := ctx.Value(nativePrepareContextKey{}).(*nativeStatementKey); ok {
+		native := stmt.(*mysqlStmt)
+		if mc.nativeStatements == nil {
+			mc.nativeStatements = make(map[*nativeStatementKey]*mysqlStmt)
+		}
+		native.nativeKey = key
+		if native.session == nil {
+			native.session = &statementSession{queryText: query, generation: mc.generation}
+		}
+		mc.nativeStatements[key] = native
+		key.registered = true
 	}
 	return stmt, nil
 }

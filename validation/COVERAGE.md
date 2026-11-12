@@ -1,5 +1,24 @@
 # MariaDB Go coverage map
 
+**Stage 4 review corrections:** Old-handle close during the next borrower's active
+Rows now has live regressions in all seven transport/metadata modes, with ordinary/
+prepared/cursor reads, early close, borrowed values and same-connection reuse.
+Faults cover empty buffers, stale generations, retirement, owner transfer and
+cancellation during queued cleanup. Both publishers reject lost newer correctness
+leaves; unit-bulk validation rejects nil results, and mocked diagnostic failures
+retain redacted receipts. See the [fix record](../docs/STAGE4_REVIEW_FIXES.md).
+
+**Reusable native statements, 12 November 2026:** New protocol/live tests assert
+one PREPARE/CLOSE across repeated bulk/unit/stream calls, unsigned unit ownership,
+ordinary preparation without a native registry, type/NULL/signedness changes,
+reader-error recovery, SQL errors and exact rollback. Reset generations, recycled
+IDs, connection-return cleanup, canceled gate waits, concurrent calls, transport
+failure and panic retirement preserve lifetime/replay contracts. Seven transport/
+metadata modes are covered. See the [stage record](../docs/STAGE4_STATEMENT_REUSE.md)
+and final confirmation receipt. Sixty-two additive benchmark profiles are
+compiled only; no benchmark functions or profiling workloads ran. Existing
+200-profile timings and immutable references remain unchanged.
+
 **Stage 3 review fixes, 12 November 2026:** Added cursor materialization-error
 identity/reuse (including legacy/compressed/cached modes), direct/wrapped callback
 ErrBadConn identity on SQL success/failure, explicit/autodetected stream packet

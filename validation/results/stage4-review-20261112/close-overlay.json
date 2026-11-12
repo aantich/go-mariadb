@@ -1,0 +1,5 @@
+{
+  "Replace": {
+    "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/zz_stage4_review_test.go": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage4-review-20261112/close-after-return_test.go.txt"
+  }
+}

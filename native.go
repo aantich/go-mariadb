@@ -27,7 +27,7 @@ func withNativeConn(ctx context.Context, conn *sql.Conn, operation func(*mysqlCo
 		if err := mc.error(); err != nil {
 			return err
 		}
-		if mc.buf.busy() {
+		if mc.activeRows != nil || mc.buf.busy() {
 			return errors.New("mariadb: native operation requires a command boundary")
 		}
 		if err := mc.watchCancel(ctx); err != nil {

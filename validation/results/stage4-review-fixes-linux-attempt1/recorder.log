@@ -1,0 +1,19 @@
+........................................................E............
+======================================================================
+ERROR: test_collector_rejects_an_omitted_correctness_only_leaf (test_stage4_review_fixes.CorrectnessHistoryTests.test_collector_rejects_an_omitted_correctness_only_leaf)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/work/validation/test_stage4_review_fixes.py", line 143, in test_collector_rejects_an_omitted_correctness_only_leaf
+    self.assertEqual(record.main(),1)
+                     ^^^^^^^^^^^^^
+  File "/work/validation/record.py", line 389, in main
+    state['lost_correctness_passes'] = pass_history.lost(state, run, actual_statuses)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/validation/pass_history.py", line 172, in lost
+    raise ValueError('Prior correctness snapshot is incomplete or mismatched.')
+ValueError: Prior correctness snapshot is incomplete or mismatched.
+
+----------------------------------------------------------------------
+Ran 69 tests in 15.957s
+
+FAILED (errors=1)

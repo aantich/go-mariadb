@@ -1,0 +1,34 @@
+"""Restore reviewed defects through overlays; never invoke benchmark functions."""
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+sys.path.insert(0,'validation')
+import record
+
+root=Path.cwd()
+directory=root/'validation/results/stage4-review-fixes-20261112'
+cfgpath=root/'validation/.local/config.json'
+secret=json.loads(cfgpath.read_text())['password']
+env={**os.environ,'GOCACHE':'/private/tmp/go-mariadb-validation-20261111/go-cache',
+     'GOMAXPROCS':'2','GOWORK':'off','GOFLAGS':'','MARIADB_VALIDATION_CONFIG':str(cfgpath)}
+before=record.inputs()
+cases=[('unsafe-close','^TestMariaDBNativeCloseAfterReturn$/^text$/^text_full$','unsafe-close-overlay.json',
+        ('old close: busy buffer','read 1/1000')),
+       ('nil-units','^TestMariaDBStage4UnitValidation$','nil-units-overlay.json',('accepted invalid units',))]
+proof={'benchmark_functions_executed':False,'profiling_workloads_executed':False,'controls':{}}
+for name,pattern,overlay,expected in cases:
+    command=['go','test','-race','-p=1','-parallel=2','-count=1','-timeout=30s',
+             '-overlay',str(directory/overlay),'-run',pattern,'-v','./validation']
+    result=subprocess.run(command,cwd=root,env=env,capture_output=True,text=True,timeout=90)
+    output=(result.stdout+result.stderr).replace(secret,'[redacted]')
+    (directory/(name+'-negative.log')).write_text(output)
+    proof['controls'][name]={'command':command,'exit_code':result.returncode,
+        'expected_regression_rejected':result.returncode==1 and all(text in output for text in expected)}
+    assert proof['controls'][name]['expected_regression_rejected'],name
+proof['inputs_stable']=before==record.inputs()
+assert proof['inputs_stable']
+(directory/'negative-controls.json').write_text(json.dumps(proof,indent=2)+'\n')
+print(json.dumps({name:value['expected_regression_rejected'] for name,value in proof['controls'].items()}))

@@ -17,6 +17,7 @@ import sys
 from record import benchmark_rows, digest, inputs
 from contracts import CHECK_ENVIRONMENT, CORRECTNESS_COMMANDS
 from provenance import read_server, revision_info, server_command
+import pass_history
 
 ROOT = Path(__file__).resolve().parent.parent
 PACKAGE = 'github.com/aantich/go-mariadb'
@@ -43,6 +44,15 @@ REQUIRED |= {PACKAGE+'/'+name for name in ('TestNativeCursorMaterializationError
             'TestNativeProgressCallbackBadConn', 'TestNativeStreamPacketBoundary')}
 REQUIRED |= {PACKAGE+'/validation/'+name for name in ('TestMariaDBCursorMaterializationError',
             'TestMariaDBStreamPacketBoundary')}
+REQUIRED |= {PACKAGE+'/'+name for name in ('TestNativeStatementReuse', 'TestNativeStatementLifetime',
+            'TestNativeStatementResetAndValidation', 'TestNativeStatementCanceledWait', 'TestNativeStatementNoReplay',
+            'TestNativeStatementCancellation', 'TestNativeStatementOrdinaryPreparation', 'TestNativeStatementCloseTimeout')}
+REQUIRED |= {PACKAGE+'/'+name for name in ('TestNativeStatementDeferredClose', 'TestNativeStatementCloseOwnerTransfer',
+            'TestNativeStatementDeferredCloseCancellation')}
+REQUIRED |= {PACKAGE+'/validation/'+name for name in ('TestMariaDBNativeStatementReuse',
+            'TestMariaDBNativeStatementReset', 'TestMariaDBNativeStatementConcurrent', 'TestMariaDBNativeStatementCancellation')}
+REQUIRED |= {PACKAGE+'/validation/'+name for name in ('TestMariaDBNativeCloseAfterReturn',
+            'TestMariaDBNativeDeferredCloseCancellation', 'TestMariaDBStage4UnitValidation')}
 
 
 def assess_tests(output, exit_code, require_instrumentation=False, required=None):
@@ -111,6 +121,8 @@ def main():
     env.update(CHECK_ENVIRONMENT)
     env.pop('MYSQL_TEST_CONCURRENT', None) # bounded-pool tests run; no global saturation
     target = args.output
+    if (target/'capture.json').exists():
+        raise SystemExit('Retain earlier attempts; use a new output directory.')
     target.mkdir(parents=True, exist_ok=True)
     source = inputs()
     capture = {'stages':{}, 'inputs':source, 'input_fingerprint':digest(json.dumps(source, sort_keys=True).encode()),
@@ -142,6 +154,7 @@ def main():
         return snapshot
     before = server_snapshot('before')
     capture['server']['before'] = before
+    pass_history.preserve(capture, target, ROOT/'validation')
     commands = [(name,list(argv)) for name,argv in CORRECTNESS_COMMANDS.items()]
     if not args.correctness_only:
         commands.insert(1, ('native-benchmark-smoke',['go','test','-run=^$','-bench=^BenchmarkMariaDBNativeBulk$','-benchtime=1x','-benchmem','-count=1','./validation']))
@@ -170,7 +183,8 @@ def main():
     capture['server'].update(after=after, stable=before == after)
     capture['inputs_stable'] = source == inputs()
     capture['logs'] = {path.name:digest(path.read_bytes()) for path in target.glob('*.log')}
-    capture['exit_code'] = int(not capture['inputs_stable'] or not capture['server']['stable'] or any(s['issues'] for s in capture['stages'].values()))
+    capture['lost_correctness_passes'] = pass_history.lost(capture, target, pass_history.statuses(capture))
+    capture['exit_code'] = int(not capture['inputs_stable'] or not capture['server']['stable'] or capture['lost_correctness_passes'] or any(s['issues'] for s in capture['stages'].values()))
     (target/'capture.json').write_text(json.dumps(capture, indent=2)+'\n')
     return capture['exit_code']
 

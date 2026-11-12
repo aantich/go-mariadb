@@ -140,7 +140,7 @@ parameters, pass `[]byte(rawJSON)` rather than `json.RawMessage` directly.
 The entire batch is checked before sending its execute command. Limits are
 65535 rows, 1,048,576 cells and `MaxAllowedPacket` payload bytes; oversized input
 is rejected rather than silently split. Keep caller data immutable during the
-call. Prepared-handle reuse for bulk remains future work. The matched benchmark
+call. Use `PrepareNative` below to retain the server statement. The matched benchmark
 prebuilds SQL batches and TSV data, and prebuilds the native/prepared input matrix.
 Native packet encoding remains timed. Its results compare these API alternatives;
 they do not isolate wire-format costs.
@@ -205,6 +205,61 @@ reset the unexecuted upload; reset/transport failure retires the connection.
 Sources are one-shot: an error never requests automatic replay, and applications
 must resolve ambiguous execution before creating a new reader and retrying.
 The driver may consume one byte beyond MaxBytes to detect an oversized source.
+
+## Reuse a native prepared statement
+
+For repeated bulk/unit/stream executions of the same SQL, prepare once on a
+pinned `sql.Conn`. Enable `WithBulkUnitResults(true)` for both bulk methods, or
+`WithBulkOperations(true)` for aggregate bulk only; streamed execution needs no
+additional capability. With `conn` obtained from the configured pool:
+
+```go
+stmt, err := mariadb.PrepareNative(ctx, conn,
+    "INSERT INTO people(id, name) VALUES (?, ?)")
+if err != nil { return err }
+defer stmt.Close() // Prefer closing before returning conn to the pool.
+
+for _, batch := range [][][]any{
+    {{uint64(1), "Ada"}, {uint64(2), "Grace"}},
+    {{uint64(3), "Edsger"}},
+} {
+    result, err := stmt.BulkExec(ctx, batch)
+    if err != nil { return err }
+    fmt.Println(result.RowsAffectedUnsigned())
+}
+// On a connection with unit results enabled:
+units, err := stmt.BulkExecUnits(ctx, [][]any{{uint64(4), "Barbara"}})
+if err != nil { return err }
+fmt.Println(units)
+
+// A handle can also execute ordinary/reader parameters. Supply a fresh source
+// on every call; the driver never closes the reader or automatically replays it.
+_, err = stmt.ExecStream(ctx, uint64(5),
+    mariadb.StreamParam{Reader: strings.NewReader("Margaret"), MaxBytes: 100})
+if err != nil { return err }
+```
+
+These methods preserve the one-shot helpers' validation, unsigned results,
+transaction, partial-failure and reader contracts. Empty bulk input sends nothing.
+Types, signedness and NULL status may change between calls. Managed reset reparses
+the query lazily and checks arity; a stale close cannot close a recycled ID.
+Use ordinary `sql.Stmt` for queries returning rows and ordinary scalar execution.
+
+The handle owns a normal `sql.Stmt`, leaves its connection open on close and can
+be closed safely after `conn.Close`; further nonempty executions then return
+`sql.ErrConnDone`. Methods serialize concurrent calls; canceling a queued call
+leaves the active call running. Do not reenter the same handle from a reader or
+Valuer. `Close` is idempotent and waits for active work. It has no context, as
+with `sql.Stmt.Close`; use execution cancellation and a configured `WriteTimeout`
+to bound stalled cleanup. Close active Rows before preparing/using the handle.
+
+If its physical connection has another caller's active Rows, `Close` releases the
+handle locally and defers server cleanup until those Rows close. It preserves
+their packet sequence and borrowed values. A deferred cleanup failure retires
+the connection and is reported by `Rows.Close`/`Rows.Err`; check those errors.
+
+Reusing the handle removes repeated prepare/close commands. Its throughput and
+allocation effects are [not measured yet](STAGE4_STATEMENT_REUSE.md).
 
 ## Server cursors
 

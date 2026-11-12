@@ -84,38 +84,44 @@ func BulkExec(ctx context.Context, conn *sql.Conn, query string, rows [][]any) (
 				err = closeErr
 			}
 		}()
-		packet, err := stmt.encodeBulk(rows)
-		if err != nil {
-			return err
-		}
-		if err := ctx.Err(); err != nil {
-			return err
-		}
-		mc.resetSequence()
-		if err := mc.writePacket(packet); err != nil {
-			return err
-		}
-		// Compression shares scratch storage between writes and reads. Finish
-		// the command exactly as ordinary execution does before reading a reply.
-		mc.syncSequence()
-		handler := mc.clearResult()
-		columns, _, err := handler.readResultSetHeaderPacket()
-		if err != nil {
-			return err
-		}
-		// Bulk SELECT is outside this DML API. Retire rather than returning a
-		// connection with unread metadata/rows to database/sql's pool.
-		if columns != 0 {
-			return mc.protocolError()
-		}
-		if err := handler.discardResults(); err != nil {
-			return err
-		}
-		copied := mc.result
-		result = &copied
-		return nil
+		result, err = stmt.execBulk(ctx, rows)
+		return err
 	})
 	return result, err
+}
+
+// execBulk shares the validated wire path; its caller owns the command boundary.
+func (stmt *mysqlStmt) execBulk(ctx context.Context, rows [][]any) (UnsignedResult, error) {
+	mc := stmt.mc
+	packet, err := stmt.encodeBulk(rows)
+	if err != nil {
+		return nil, err
+	}
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	mc.resetSequence()
+	if err := mc.writePacket(packet); err != nil {
+		return nil, err
+	}
+	// Compression shares scratch storage between writes and reads. Finish
+	// the command exactly as ordinary execution does before reading a reply.
+	mc.syncSequence()
+	handler := mc.clearResult()
+	columns, _, err := handler.readResultSetHeaderPacket()
+	if err != nil {
+		return nil, err
+	}
+	// Bulk SELECT is outside this DML API. Retire rather than returning a
+	// connection with unread metadata/rows to database/sql's pool.
+	if columns != 0 {
+		return nil, mc.protocolError()
+	}
+	if err := handler.discardResults(); err != nil {
+		return nil, err
+	}
+	copied := mc.result
+	return &copied, nil
 }
 
 func bulkType(value driver.Value) (uint16, int, error) {

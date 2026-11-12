@@ -1,0 +1,12 @@
+=== RUN   TestMariaDBNativeCloseAfterReturn
+=== RUN   TestMariaDBNativeCloseAfterReturn/text/text_full
+    stage4_review_fixes_test.go:87: old close: busy buffer
+    stage4_review_fixes_test.go:87: old close: busy buffer
+    stage4_review_fixes_test.go:87: old close: busy buffer
+[mariadb] 2026/11/12 17:23:46 packets.go:73 [warn] unexpected sequence nr: expected 0, got 5
+    stage4_review_fixes_test.go:104: read 1/1000: commands out of sync. You can't run this command now
+--- FAIL: TestMariaDBNativeCloseAfterReturn (0.01s)
+    --- FAIL: TestMariaDBNativeCloseAfterReturn/text/text_full (0.00s)
+FAIL
+FAIL	github.com/aantich/go-mariadb/validation	0.366s
+FAIL

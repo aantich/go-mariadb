@@ -12,7 +12,8 @@ import (
 	"io"
 )
 
-// StreamParam supplies one one-shot BLOB/TEXT parameter to ExecStream. The
+// StreamParam supplies one one-shot BLOB/TEXT parameter to ExecStream or
+// NativeStmt.ExecStream. The
 // reader remains caller-owned and is not closed. MaxBytes=0 uses MaxAllowedPacket;
 // a positive limit must not exceed it. ChunkBytes=0 uses 64 KiB; at most 1 MiB
 // is permitted. Chunking bounds client staging, not server storage or packet
@@ -32,7 +33,8 @@ type streamInput struct {
 }
 
 // ExecStream executes a prepared statement on a pinned connection. Only this
-// helper accepts StreamParam values; ordinary Exec/Valuer contracts are unchanged.
+// helper and NativeStmt.ExecStream accept StreamParam values; ordinary
+// Exec/Valuer contracts are unchanged.
 // All ordinary arguments and stream limits are validated before reading sources
 // or sending parameter data. Reader errors reset unexecuted uploads; reset or
 // transport failure retires the connection. Cancellation never revives it.
@@ -41,36 +43,9 @@ type streamInput struct {
 func ExecStream(ctx context.Context, conn *sql.Conn, query string, args ...any) (UnsignedResult, error) {
 	var result UnsignedResult
 	err := withNativeConn(ctx, conn, func(mc *mysqlConn) (err error) {
-		if len(args) > 65535 {
-			return errors.New("mariadb: too many prepared parameters")
-		}
-		values := make([]driver.Value, len(args))
-		for i, arg := range args {
-			if stream, ok := arg.(StreamParam); ok {
-				if stream.Reader == nil || stream.MaxBytes < 0 || stream.MaxBytes > int64(mc.maxAllowedPacket) || stream.ChunkBytes < 0 || stream.ChunkBytes > 1<<20 {
-					return fmt.Errorf("mariadb: invalid stream parameter %d", i)
-				}
-				if stream.MaxBytes == 0 {
-					stream.MaxBytes = int64(mc.maxAllowedPacket)
-				}
-				if stream.ChunkBytes == 0 {
-					stream.ChunkBytes = 64 << 10
-				}
-				// MariaDB rejects a command body whose size reaches the server
-				// maximum. Reserve LONG_DATA's seven bytes and one spare byte,
-				// as the ordinary buffered parameter path does.
-				stream.ChunkBytes = min(stream.ChunkBytes, mc.maxAllowedPacket-1-7)
-				if stream.ChunkBytes < 1 {
-					return ErrPktTooLarge
-				}
-				values[i] = streamInput{stream, ctx}
-			} else {
-				value, err := (converter{}).ConvertValue(arg)
-				if err != nil {
-					return err
-				}
-				values[i] = value
-			}
+		values, err := streamArgs(ctx, mc, args)
+		if err != nil {
+			return err
 		}
 		prepared, err := mc.Prepare(query)
 		if err != nil {
@@ -144,4 +119,41 @@ func (stmt *mysqlStmt) writeStreamLongData(paramID int, input streamInput) error
 			return nil
 		}
 	}
+}
+
+// streamArgs performs all conversion/limit checks before any reader is consumed.
+// One-shot and reusable handles deliberately share this validation.
+func streamArgs(ctx context.Context, mc *mysqlConn, args []any) ([]driver.Value, error) {
+	if len(args) > 65535 {
+		return nil, errors.New("mariadb: too many prepared parameters")
+	}
+	values := make([]driver.Value, len(args))
+	for i, arg := range args {
+		if stream, ok := arg.(StreamParam); ok {
+			if stream.Reader == nil || stream.MaxBytes < 0 || stream.MaxBytes > int64(mc.maxAllowedPacket) || stream.ChunkBytes < 0 || stream.ChunkBytes > 1<<20 {
+				return nil, fmt.Errorf("mariadb: invalid stream parameter %d", i)
+			}
+			if stream.MaxBytes == 0 {
+				stream.MaxBytes = int64(mc.maxAllowedPacket)
+			}
+			if stream.ChunkBytes == 0 {
+				stream.ChunkBytes = 64 << 10
+			}
+			// MariaDB rejects a command body whose size reaches the server
+			// maximum. Reserve LONG_DATA's seven bytes and one spare byte,
+			// as the ordinary buffered parameter path does.
+			stream.ChunkBytes = min(stream.ChunkBytes, mc.maxAllowedPacket-1-7)
+			if stream.ChunkBytes < 1 {
+				return nil, ErrPktTooLarge
+			}
+			values[i] = streamInput{stream, ctx}
+		} else {
+			value, err := (converter{}).ConvertValue(arg)
+			if err != nil {
+				return nil, err
+			}
+			values[i] = value
+		}
+	}
+	return values, nil
 }

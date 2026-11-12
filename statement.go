@@ -21,7 +21,8 @@ type mysqlStmt struct {
 	id         uint32
 	paramCount int
 	columns    []mysqlField
-	session    *statementSession // Only managed sessions retain reprepare state.
+	session    *statementSession // Managed sessions and explicit native reuse retain reprepare state.
+	nativeKey  *nativeStatementKey
 }
 
 type statementSession struct {
@@ -30,6 +31,15 @@ type statementSession struct {
 }
 
 func (stmt *mysqlStmt) Close() error {
+	// NativeStmt holds only an opaque key and sql.Stmt. Remove the association
+	// even on an already retired connection; cancellation never mutates this map.
+	if stmt.mc != nil && stmt.nativeKey != nil {
+		delete(stmt.mc.nativeStatements, stmt.nativeKey)
+		if len(stmt.mc.nativeStatements) == 0 {
+			stmt.mc.nativeStatements = nil
+		}
+		stmt.nativeKey = nil
+	}
 	if stmt.mc == nil || stmt.mc.closed.Load() {
 		// driver.Stmt.Close could be called more than once, thus this function
 		// had to be idempotent. See also Issue #450 and golang/go#16019.
@@ -43,7 +53,13 @@ func (stmt *mysqlStmt) Close() error {
 	// close a different statement if the server subsequently reused that ID.
 	var err error
 	if stmt.session == nil || stmt.session.generation == stmt.mc.generation {
-		err = stmt.mc.writeCommandPacketUint32(comStmtClose, stmt.id)
+		if stmt.mc.activeRows != nil {
+			// This also covers closing an old native handle after its sql.Conn
+			// was returned to the pool. Do not touch read buffers or sequences.
+			stmt.mc.deferredCloses = append(stmt.mc.deferredCloses, statementClose{stmt.id, stmt.mc.generation})
+		} else {
+			err = stmt.mc.writeCommandPacketUint32(comStmtClose, stmt.id)
+		}
 	}
 	stmt.mc = nil
 	return err
@@ -161,9 +177,9 @@ func (stmt *mysqlStmt) query(args []driver.Value) (finishableRows, error) {
 	}
 
 	rows := new(binaryRows)
+	rows.mc = mc
 
 	if resLen > 0 {
-		rows.mc = mc
 		if metadataFollows {
 			if rows.rs.columns, err = mc.readColumns(resLen, stmt.columns); err != nil {
 				return nil, err
@@ -183,12 +199,14 @@ func (stmt *mysqlStmt) query(args []driver.Value) (finishableRows, error) {
 
 		switch err := rows.NextResultSet(); err {
 		case nil, io.EOF:
+			mc.trackRows(&rows.mysqlRows)
 			return rows, nil
 		default:
 			return nil, err
 		}
 	}
 
+	mc.trackRows(&rows.mysqlRows)
 	return rows, err
 }
 

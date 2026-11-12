@@ -49,58 +49,66 @@ func BulkExecUnits(ctx context.Context, conn *sql.Conn, query string, rows [][]a
 		}
 		stmt := prepared.(*mysqlStmt)
 		defer closeNativeStatement(stmt, &err)
-		packet, err := stmt.encodeBulk(rows)
-		if err != nil {
-			return err
-		}
-		packet[9] |= 64 // STMT_BULK_FLAG_SEND_UNIT_RESULTS; existing flag is 128.
-		if err := ctx.Err(); err != nil {
-			return err
-		}
-		mc.resetSequence()
-		if err := mc.writePacket(packet); err != nil {
-			return err
-		}
-		mc.syncSequence()
-		n, follows, err := mc.clearResult().readResultSetHeaderPacket()
-		if err != nil {
-			return err
-		}
-		if n != 2 || !follows {
-			return mc.protocolError()
-		}
-		columns, err := mc.readColumns(n, nil)
-		if err != nil {
-			return err
-		}
-		if !strings.EqualFold(columns[0].name, "Id") || !strings.EqualFold(columns[1].name, "Affected_rows") ||
-			columns[0].fieldType != fieldTypeLongLong || columns[1].fieldType != fieldTypeLongLong {
-			return mc.protocolError()
-		}
-		resultRows := &binaryRows{mysqlRows{mc: mc, rs: resultSet{columns: columns}}}
-		units = make([]BulkUnitResult, 0, len(rows))
-		for {
-			data, readErr := resultRows.readRowPacket(true)
-			if readErr == io.EOF {
-				break
-			}
-			if readErr != nil {
-				return readErr
-			}
-			// Unit counters are unsigned even on peers whose metadata declares
-			// BIGINT without UNSIGNED. Do not pass them through signed scanning.
-			if len(data) != 18 || data[1] != 0 || len(units) >= len(rows) {
-				return mc.protocolError()
-			}
-			units = append(units, BulkUnitResult{binary.LittleEndian.Uint64(data[2:10]), binary.LittleEndian.Uint64(data[10:18])})
-		}
-		if mc.status&statusMoreResultsExists != 0 {
-			return mc.protocolError() // RETURNING/multiple result sets are not units.
-		}
-		return nil
+		units, err = stmt.execBulkUnits(ctx, rows)
+		return err
 	})
 	if err != nil {
 		return nil, err
+	}
+	return units, nil
+}
+
+// execBulkUnits retains the same schema, bounds and complete-response contract
+// for both one-shot calls and a retained prepared statement.
+func (stmt *mysqlStmt) execBulkUnits(ctx context.Context, rows [][]any) ([]BulkUnitResult, error) {
+	mc := stmt.mc
+	packet, err := stmt.encodeBulk(rows)
+	if err != nil {
+		return nil, err
+	}
+	packet[9] |= 64 // STMT_BULK_FLAG_SEND_UNIT_RESULTS; existing flag is 128.
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	mc.resetSequence()
+	if err := mc.writePacket(packet); err != nil {
+		return nil, err
+	}
+	mc.syncSequence()
+	n, follows, err := mc.clearResult().readResultSetHeaderPacket()
+	if err != nil {
+		return nil, err
+	}
+	if n != 2 || !follows {
+		return nil, mc.protocolError()
+	}
+	columns, err := mc.readColumns(n, nil)
+	if err != nil {
+		return nil, err
+	}
+	if !strings.EqualFold(columns[0].name, "Id") || !strings.EqualFold(columns[1].name, "Affected_rows") ||
+		columns[0].fieldType != fieldTypeLongLong || columns[1].fieldType != fieldTypeLongLong {
+		return nil, mc.protocolError()
+	}
+	resultRows := &binaryRows{mysqlRows{mc: mc, rs: resultSet{columns: columns}}}
+	units := make([]BulkUnitResult, 0, len(rows))
+	for {
+		data, readErr := resultRows.readRowPacket(true)
+		if readErr == io.EOF {
+			break
+		}
+		if readErr != nil {
+			return nil, readErr
+		}
+		// Unit counters are unsigned even on peers whose metadata declares
+		// BIGINT without UNSIGNED. Do not pass them through signed scanning.
+		if len(data) != 18 || data[1] != 0 || len(units) >= len(rows) {
+			return nil, mc.protocolError()
+		}
+		units = append(units, BulkUnitResult{binary.LittleEndian.Uint64(data[2:10]), binary.LittleEndian.Uint64(data[10:18])})
+	}
+	if mc.status&statusMoreResultsExists != 0 {
+		return nil, mc.protocolError() // RETURNING/multiple result sets are not units.
 	}
 	return units, nil
 }

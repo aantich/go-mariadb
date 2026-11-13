@@ -1,0 +1,63 @@
+{
+  "date": "2026-11-13",
+  "type": "review only; synthetic counterexamples are not real server receipts",
+  "branch": "master",
+  "parent_commit": "ec42783deb9727a529f3f9c29a80e7ed4d585e7a",
+  "input_fingerprint": "98ba80ed279200ff93c51231f27cd9568f56f8fe8d67b7b7335f079f0526635f",
+  "findings": [
+    {
+      "priority": "P2",
+      "name": "Compatibility history can be reset by inventory growth or output naming",
+      "status": "pending"
+    },
+    {
+      "priority": "P2",
+      "name": "Standard verifier omits compatibility cohort",
+      "status": "pending"
+    },
+    {
+      "priority": "P3",
+      "name": "Setup failures lose phase and diagnostic",
+      "status": "pending"
+    }
+  ],
+  "fresh_checks": {
+    "harness_tests": 99,
+    "harness": "pass",
+    "cdc_race": "pass",
+    "actionlint": "pass",
+    "go_format": "pass",
+    "python_syntax": "pass",
+    "git_diff_check": "pass"
+  },
+  "existing_evidence": {
+    "stage7_artifact_hashes_verified": 360,
+    "compatibility_profiles_validated": 12,
+    "full_mac_prior_passes": 1637,
+    "full_linux_prior_passes": 1640,
+    "full_suites_rerun": false
+  },
+  "source_unchanged": true,
+  "prior_artifacts_unchanged": true,
+  "production_or_permanent_test_fixes_made": false,
+  "real_Docker_or_database_fixtures_started_for_review": false,
+  "benchmarks_executed": false,
+  "benchmark_smoke_executed": false,
+  "profiling_executed": false,
+  "fuzz_campaigns_executed": false,
+  "timing_pointer_sha256": "02fea12c04c5c42f1596bdb0c56ddd3839afb26a86f7e3e61f0b7e798adea7ed",
+  "committed": false,
+  "pushed": false,
+  "artifacts": {
+    "docs/STAGE7_CODE_REVIEW.md": "9a7e2a61bda9f3061b5bea286e6bc0f35846f0af55e58a48f3cfa651c7ac796e",
+    "validation/results/stage7-review-20261113/cdc-race.log": "5c7d94692f835a5527853b5093316a60bbfba27dbd911b2813f4fbb384c7731a",
+    "validation/results/stage7-review-20261113/harness.log": "7b593bab5b352a0d41e0d89f411f4a9487ecf91a0e260e3b1c37a8bc139930e5",
+    "validation/results/stage7-review-20261113/history-probe.json": "9382e07cf197555ffed6c97842b6bd2edb5b53703fd802bcae99351cbb720c3c",
+    "validation/results/stage7-review-20261113/history-probe.py.txt": "dca46240f70ffc9e77ac9e8fd88c455061c2bfb2adeff52fea6f41b45ec6a5b4",
+    "validation/results/stage7-review-20261113/pre-review-verification.json": "bf8e27d6b4ee34394f3ffa66c103527dde10a00285363ede09317c05edeaaba5",
+    "validation/results/stage7-review-20261113/setup-failure-probe.json": "77f7349adc81faca74b43991f79d9e92ff5940ec198a6cf525252aa06d691111",
+    "validation/results/stage7-review-20261113/setup-failure-probe.py.txt": "1f91292b6842b8de3ac53cddaa3ef7f9a626a8b44ea0f0514316ca06afd5ca4b",
+    "validation/results/stage7-review-20261113/verification-probe.json": "81e74475c2f211b944d9037eeb694f6bda3f6599962d08a1bf259ed7eb8ae7b0",
+    "validation/results/stage7-review-20261113/verification-probe.py.txt": "1d263f54215f551e6e2198d5b8bf1620f846529654cc06092e381a9b2ea91278"
+  }
+}

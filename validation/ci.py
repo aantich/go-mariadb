@@ -73,6 +73,9 @@ REQUIRED |= {PACKAGE+'/TestReplicationEOFValidation',
              PACKAGE+'/validation/TestMariaDBCDC/cursor_config_remains_reusable'}
 REQUIRED |= {PACKAGE+'/cdc/'+name for name in ('TestCDCFileCoordinates', 'TestCDCExpansionIntegrity',
              'TestCDCFuzzSeedReachability', 'TestCDCSourceEndValidation')}
+REQUIRED.add(PACKAGE+'/cdc/TestCDCGTIDListPadding')
+REQUIRED |= {PACKAGE+'/validation/'+name for name in ('TestMariaDBStage7Compatibility',
+             'TestMariaDBFailureRecovery','TestMariaDBStage7CDC','TestMariaDBStage7Restart','TestRecoveryFaultBoundary')}
 
 
 def assess_tests(output, exit_code, require_instrumentation=False, required=None):

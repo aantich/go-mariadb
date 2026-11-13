@@ -1,0 +1,9 @@
+{
+  "exit_code": 1,
+  "error_type": "RuntimeError",
+  "saved_stages": [],
+  "saved_logs": [],
+  "console": "Compatibility profile failed; inspect saved stages and server.log.",
+  "failed_operation_recorded": false,
+  "original_diagnostic_recorded": false
+}

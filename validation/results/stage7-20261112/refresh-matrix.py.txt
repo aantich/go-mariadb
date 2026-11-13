@@ -1,0 +1,21 @@
+"""Refresh only cells collected before the read-only harness correction."""
+import json,os,subprocess,sys
+from pathlib import Path
+root=Path.cwd();sys.path.insert(0,'validation');import compatibility as matrix;import record
+source=record.inputs();out=root/'validation/results/stage7-matrix-refreshed';out.mkdir(exist_ok=False)
+results=[]
+for compiler,binary in [('1.27','/opt/homebrew/bin/go'),
+                       ('1.26','/private/tmp/go-mariadb-stage7-toolchains-20261112/1.26/go/bin/go')]:
+    for family in ('10.11','11.4','11.8','12.3'):
+        old=root/'validation/results/stage7-matrix-final'/('go'+compiler+'-mariadb'+family)/'capture.json'
+        if not old.exists():continue
+        capture=json.loads(old.read_text())
+        if capture.get('inputs')==source and capture.get('exit_code')==0:continue
+        directory=out/old.parent.name
+        command=[sys.executable,'validation/compatibility.py','--family',family,'--go',binary,'--output',str(directory)]
+        env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1','GOCACHE':'/private/tmp/go-mariadb-validation-20261111/go-cache','GOPROXY':'off'}
+        with (out/(directory.name+'-launch.log')).open('w') as log:
+            result=subprocess.run(command,env=env,stdout=log,stderr=subprocess.STDOUT,timeout=1200)
+        item={'compiler':compiler,'family':family,'command':command,'exit_code':result.returncode,'directory':str(directory.relative_to(root))}
+        results.append(item);(out/'matrix.json').write_text(json.dumps(results,indent=2)+'\n');print(json.dumps(item),flush=True)
+raise SystemExit(1 if any(item['exit_code'] for item in results) else 0)

@@ -1,0 +1,22 @@
+{
+  "1.25": {
+    "version": "go1.25.14",
+    "filename": "go1.25.14.darwin-arm64.tar.gz",
+    "os": "darwin",
+    "arch": "arm64",
+    "sha256": "5b26c0b6f308240fca2614fb02f622cfcc8c0cc3b69c78bba4845489a4590259",
+    "size": 58123934,
+    "kind": "archive",
+    "url": "https://go.dev/dl/go1.25.14.darwin-arm64.tar.gz"
+  },
+  "1.26": {
+    "version": "go1.26.11",
+    "filename": "go1.26.11.darwin-arm64.tar.gz",
+    "os": "darwin",
+    "arch": "arm64",
+    "sha256": "e3a42e67a7a8acf450ebada2b074c7ca863000ca514907b7185b45e8f5cdff57",
+    "size": 64730001,
+    "kind": "archive",
+    "url": "https://go.dev/dl/go1.26.11.darwin-arm64.tar.gz"
+  }
+}

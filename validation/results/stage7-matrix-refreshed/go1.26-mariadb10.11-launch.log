@@ -1,0 +1,16 @@
+10.11 go version go1.26.11 darwin/arm64: root exit=0, issues=0
+10.11 go version go1.26.11 darwin/arm64: integration exit=0, issues=0
+10.11 go version go1.26.11 darwin/arm64: vet exit=0, issues=0
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/compatibility.py", line 442, in <module>
+    parser.add_argument('--go',default='go')
+                                         ^^^
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/compatibility.py", line 439, in main
+    def main():
+    
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/compatibility.py", line 425, in run
+    capture['cleanup_error_type']=type(error).__name__;capture['exit_code']=1
+    ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/compatibility.py", line 113, in validate
+    raise ValueError('Failed/incomplete compatibility profile.')
+ValueError: Failed/incomplete compatibility profile.

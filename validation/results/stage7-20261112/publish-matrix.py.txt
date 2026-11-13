@@ -1,0 +1,89 @@
+"""Publish only a complete, exact-source correctness cohort; never run tests."""
+import json,re,sys,time
+from collections import Counter
+from pathlib import Path
+sys.path.insert(0,'validation')
+import compatibility,correctness,record
+root=Path.cwd();directory=root/'validation/results/stage7-matrix-confirmed'
+deadline=time.monotonic()+900
+while True:
+    try:cells=json.loads((directory/'matrix.json').read_text())
+    except (OSError,ValueError):cells=[]
+    if len(cells)==12:break
+    if time.monotonic()>deadline:raise RuntimeError('Final matrix cohort did not complete')
+    time.sleep(0.5)
+expected={(compiler,family) for compiler in ('1.25','1.26','1.27') for family in ('10.11','11.4','11.8','12.3')}
+assert len(cells)==12 and {(c['compiler'],c['family']) for c in cells}==expected
+source=record.inputs();fingerprint=record.digest(json.dumps(source,sort_keys=True).encode())
+profiles={};compilers={};server_versions={};artifacts={}
+for cell in cells:
+    assert cell['exit_code']==0
+    path=root/cell['directory']/'capture.json'
+    capture=json.loads(path.read_text());compatibility.validate(capture,path.parent)
+    assert capture['inputs']==source
+    compiler=cell['compiler'];family=cell['family']
+    assert capture['compiler']['version'].startswith('go version go'+compiler+'.')
+    prior=compilers.setdefault(compiler,capture['compiler'])
+    assert prior==capture['compiler']
+    version=capture['server']['before']['version'];server_versions.setdefault(family,version)
+    assert server_versions[family]==version
+    counts=Counter(value['status'] for name in ('root','integration')
+                   for value in correctness.leaves(capture['stages'][name]['cases']).values())
+    assert counts['fail']==0
+    key='go'+compiler+'-mariadb'+family
+    profiles[key]={'compiler_family':compiler,'server_family':family,'server_version':version,
+        'compiler':capture['compiler'],'host':capture['host'],'image':capture['image'],
+        'image_reference':capture['image_reference'],'leaf_counts':{k:counts[k] for k in ('pass','fail','skip')},
+        'input_fingerprint':fingerprint,'evidence_directory':str(path.parent.relative_to(record.HERE)),
+        'capture_sha256':record.digest(path.read_bytes()),'prior_passes_lost':capture['lost_prior_passes'],
+        'restart_count':capture['restart_count'],'checks':{'race':True,'vet':True},'resources_cleaned':True}
+    for artifact in path.parent.glob('*'):
+        if artifact.is_file():artifacts[str(artifact.relative_to(root))]=record.digest(artifact.read_bytes())
+summary={'contract':'stage7-compatibility-cohort-v1','input_fingerprint':fingerprint,'inputs':source,
+    'profile_count':12,'profiles':profiles,'compilers':compilers,'server_versions':server_versions,
+    'platform_scope':'macOS arm64 clients; Linux arm64 Docker servers. Full current-version Linux coverage is separate.',
+    'performance_measured':False,'artifacts':artifacts}
+(record.HERE/'results/compatibility-current.json').write_text(json.dumps(summary,indent=2)+'\n')
+lines=['# MariaDB compatibility and failure recovery','',
+    '**All 12 compiler/server profiles pass.** Correctness only; readiness remains **Alpha**.','',
+    'Source: `'+fingerprint+'`. Counts are unique passing/skipped test leaves, not benchmark samples.','',
+    '| MariaDB tested | Go 1.25.14 PASS / SKIP | Go 1.26.11 PASS / SKIP | Go 1.27.4 PASS / SKIP |',
+    '| --- | ---: | ---: | ---: |']
+for family in ('10.11','11.4','11.8','12.3'):
+    values=[]
+    for compiler in ('1.25','1.26','1.27'):
+        p=profiles['go'+compiler+'-mariadb'+family];counts=p['leaf_counts']
+        link=p['evidence_directory']+'/capture.json'
+        values.append('[✅ '+format(counts['pass'],',')+' / '+str(counts['skip'])+']('+link+')')
+    lines.append('| '+server_versions[family].split('-MariaDB',1)[0]+' | '+' | '.join(values)+' |')
+lines += ['', 'Every cell has **zero failures**, race detection and vet passing, exactly one owned restart,',
+    'cleaned-up resources and no lost earlier matching-profile passes. Integration fixtures and',
+    'new fault/capability cases cannot skip. Skips shown above belong to the inherited root suite.','',
+    'Go 1.27 includes 84 additional direct row-scanning test leaves. Older compiler',
+    'profiles use the legacy scanning path; no passing case was lost within a matching profile.','',
+    '**Platform scope:** these matrix clients run on macOS arm64; servers run in digest-pinned',
+    'Linux arm64 Docker images. The [complete current-version suite](RESULTS.md) separately',
+    'passes on Mac and isolated Linux, including real PAM/KDC/native-provider and instrumentation',
+    'coverage. The new CI declares all 12 Go/server combinations on Linux runners; no remote run',
+    'of this uncommitted CI change is claimed. Windows/386 cross-builds are not runtime coverage.','',
+    '| Server feature | 10.11 / 11.4 | 11.8 / 12.3 |',
+    '| --- | --- | --- |',
+    '| Bulk unit results | Explicit request rejected; no rows changed | Native units verified |',
+    '| PARSEC | Absent in the profile plugin inventory | Real verified-TLS authentication passes |',
+    '| VECTOR | SQL rejection checked | Value roundtrip passes |','',
+    'The matrix covers inherited SQL/protocol/CDC unit tests and selected integration suites,',
+    'including native bulk/stream/reuse/cursor/progress/reset/metadata, precise values and TLS/zlib.',
+    'Recovery tests distinguish no-send retry from partial/lost-response ambiguity, inspect real',
+    'database effects, handle lock timeout/deadlock, restart prepared connections and resume CDC',
+    'from persisted GTIDs across a killed source and schema change. The full 12.3 suite retains',
+    'its broader latest-feature/authentication contract; this matrix does not replace it.','',
+    '[Stage 7 implementation and limits](../docs/STAGE7_COMPATIBILITY.md) ·',
+    '[Machine-readable current profiles](results/compatibility-current.json) ·',
+    '[Confirmation](results/stage7-confirmation.json) · [Run the suite](README.md)','',
+    'Earlier failed/in-progress-source attempts remain preserved. Only complete successful',
+    'receipts with the same final inputs appear here; two exact-source cells were reused after',
+    'validation rather than repeated. Historical timings and baseline bytes remain unchanged.',
+    'This stage is uncommitted; no benchmarks, profiling, package release or new push occurred.','']
+(record.HERE/'COMPATIBILITY.md').write_text('\n'.join(lines))
+print(json.dumps({'input_fingerprint':fingerprint,'profiles':len(profiles),
+    'counts':{key:p['leaf_counts'] for key,p in profiles.items()}},indent=2))

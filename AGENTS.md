@@ -1,5 +1,29 @@
 # Current authorization, 12 November 2026
 
+Stage 7 is complete and uncommitted on `master`, parent `ec42783d`. Final source
+`98ba80ed…526635f` passes all 12 MariaDB 10.11.19/11.4.13/11.8.9/12.3.3 ×
+Go 1.25.14/1.26.11/1.27.4 correctness profiles. Full current-version checks pass
+1,637 Mac / 1,640 Linux leaves, zero failures, unchanged 8/5 skips, race/vet and
+all 99 harness tests. All 1,588/1,591 Stage 6 passes survive, with 49 added leaves
+per profile. See `docs/STAGE7_COMPATIBILITY.md`, `validation/COMPATIBILITY.md`
+and `validation/results/stage7-confirmation.json`. Empty GTID-list padding,
+Darwin zombie reaping, stable restart endpoints and owned-only diagnostics are
+corrected with regressions. Failed and stale-source attempts remain preserved.
+No benchmarks, smoke runs or profiling occurred; references/timing bytes stay
+unchanged. Stage 7 is not committed, pushed or released. Earlier publication
+authorization applies to Stage 6; wait for a new instruction before publishing
+this stage. Preserve source/evidence and the inherited branch.
+
+Stage 6 publication is complete in user-authorized commit `ec42783deb9727a529f3f9c29a80e7ed4d585e7a`,
+pushed to the fork's `master`. Prior uncommitted statements describe capture time.
+Anton then authorized Stage 7 and selected version compatibility and failure
+recovery: MariaDB 10.11/11.4/11.8/12.3, capability-aware API assertions and
+deterministic disconnect/transaction recovery. See `docs/STAGE7_COMPATIBILITY.md`.
+Implement directly on `master`; leave the new stage uncommitted for review.
+Correctness/race/static checks only: no benchmarks, smoke benchmarks or profiling.
+Preserve all earlier receipts, reference bytes, frozen workloads and pass history.
+No release or upstream submissions are authorized.
+
 Stage 6 review corrections are complete under Anton's subsequent “fix all”
 instruction. `docs/STAGE6_REVIEW_FIXES.md` and
 `validation/results/stage6-review-fixes-confirmation.json` record corrected

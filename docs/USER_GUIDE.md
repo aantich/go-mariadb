@@ -708,6 +708,58 @@ fuzz and fixture coverage. Compressed payloads inflate directly into one bounded
 final event buffer, with exact length and complete zlib checksum validation;
 no measured CDC speedup is claimed.
 
+## Transaction errors and uncertain outcomes
+
+MariaDB error 1213 (`40001`) selects a deadlock victim and rolls back that
+transaction. Error 1205 (`HY000`) is a lock-wait timeout; normally only the
+statement is rolled back, and server configuration can change that policy.
+Explicitly roll back unfinished work before retrying an entire application
+transaction. The driver preserves the server number and SQLSTATE: use
+`errors.As` with a `*mariadb.MySQLError` variable. A SQL error alone does not retire a healthy
+connection or trigger transaction replay.
+
+A connection error does not establish whether a write committed. The server
+may have completed it before its OK response was lost. Do not retry `Commit`
+on the same `sql.Tx`, or blindly replay a transaction after a connection error.
+Reconcile it using a stable operation ID and application state. For example,
+an application table can give each order a unique `operation_id`:
+
+```go
+func insertOrder(ctx context.Context, db *sql.DB, operationID string, payload []byte) error {
+    tx, err := db.BeginTx(ctx, nil)
+    if err != nil { return err }
+    defer tx.Rollback()
+    _, err = tx.ExecContext(ctx,
+        "INSERT INTO orders(operation_id,payload) VALUES(?,?)", operationID, payload)
+    if err != nil { return err }
+    if err := tx.Commit(); err != nil {
+        return fmt.Errorf("commit failed; reconcile operation %q before retry: %w", operationID, err)
+    }
+    return nil
+}
+```
+
+`orders` is an application-owned InnoDB table with a unique `operation_id`.
+After an uncertain result, query that ID through a fresh connection and verify
+the stored payload agrees with the intended operation. More complex transactions
+need an operation ledger/idempotency contract covering all their effects.
+The driver does not supply a generic transaction retry policy.
+
+Ordinary `database/sql` calls may retry when the driver can establish that no
+command bytes were sent. Partial writes and lost responses are not replayable.
+Native bulk/stream helpers deliberately expose no automatic-replay marker,
+including after earlier parameter upload or reader consumption. Failed physical
+connections retire; a pool can open a new connection for later operations.
+Prepared handles recover through normal pool ownership/reprepare contracts;
+they do not make a failed transaction reusable.
+
+CDC reconnect remains explicit from application-persisted `Resume`, with
+destination changes/checkpoint committed atomically. Stream receipt and observed
+progress are separate from sink durability. The
+[compatibility report](../validation/COMPATIBILITY.md) records real fault,
+restart, schema-change and GTID-resume checks across the four MariaDB lines;
+it does not certify production failover topologies.
+
 ## Migration and readiness
 
 Change the module import and SQL registration name from the original driver to

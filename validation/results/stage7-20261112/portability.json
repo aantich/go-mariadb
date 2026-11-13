@@ -1,0 +1,62 @@
+{
+  "cgo-disabled": {
+    "command": [
+      "go",
+      "test",
+      "./gssapi",
+      "./cdc"
+    ],
+    "environment": {
+      "CGO_ENABLED": "0"
+    },
+    "exit_code": 0
+  },
+  "windows-root": {
+    "command": [
+      "go",
+      "test",
+      "-c",
+      "-o",
+      "/private/tmp/go-mariadb-stage7-portability-20261112/root.exe",
+      "."
+    ],
+    "environment": {
+      "CGO_ENABLED": "0",
+      "GOOS": "windows",
+      "GOARCH": "amd64"
+    },
+    "exit_code": 0
+  },
+  "windows-cdc": {
+    "command": [
+      "go",
+      "test",
+      "-c",
+      "-o",
+      "/private/tmp/go-mariadb-stage7-portability-20261112/cdc.exe",
+      "./cdc"
+    ],
+    "environment": {
+      "CGO_ENABLED": "0",
+      "GOOS": "windows",
+      "GOARCH": "amd64"
+    },
+    "exit_code": 0
+  },
+  "linux-386-cdc": {
+    "command": [
+      "go",
+      "test",
+      "-c",
+      "-o",
+      "/private/tmp/go-mariadb-stage7-portability-20261112/cdc-386",
+      "./cdc"
+    ],
+    "environment": {
+      "CGO_ENABLED": "0",
+      "GOOS": "linux",
+      "GOARCH": "386"
+    },
+    "exit_code": 0
+  }
+}

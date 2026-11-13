@@ -1,0 +1,4 @@
+# github.com/aantich/go-mariadb/validation [github.com/aantich/go-mariadb/validation.test]
+validation/stage7_recovery_test.go:295:170: unknown field Length in struct literal of type mariadb.StreamParam
+FAIL	github.com/aantich/go-mariadb/validation [build failed]
+FAIL

@@ -1,5 +1,16 @@
 # MariaDB Go driver implementation roadmap
 
+**Current stage, later on 12 November:** Stage 6 and all seven review corrections
+are published in [`ec42783d`](https://github.com/aantich/go-mariadb/commit/ec42783deb9727a529f3f9c29a80e7ed4d585e7a).
+Anton selected [Stage 7: version compatibility and failure recovery](STAGE7_COMPATIBILITY.md).
+It adds a digest-pinned MariaDB 10.11/11.4/11.8/12.3 correctness matrix across
+Go 1.25/1.26/1.27, explicit capability differences, real disconnect/lost-response
+and transaction recovery tests, CDC resume and owned restart. The matrix found
+and fixed empty-GTID-list padding compatibility; controller tests also corrected
+Darwin zombie-leader probing and restart endpoint stability. See the
+[version profile report](../validation/COMPATIBILITY.md) for exact coverage.
+The new work remains uncommitted on `master`; benchmarks stay deferred.
+
 **Current decision, 11 November 2026:** Anton declined upstream PRs and authorized
 a dedicated MariaDB driver. The [first implementation stage](DEDICATED_DRIVER.md)
 adds independent identity, protocol/result hardening, PARSEC and aggregate native

@@ -2,6 +2,36 @@
 
 ## Current dedicated driver
 
+**Stage 7: version compatibility and failure recovery.** The dedicated
+correctness-only matrix is independent of the complete current-version suite:
+
+```sh
+python3 validation/compatibility.py --family 10.11 \
+  --output validation/results/stage7-unique-10.11
+```
+
+Repeat with `11.4`, `11.8` and `12.3`; `--go /absolute/path/to/go` selects an
+installed compiler. Go 1.25/1.26/1.27 are supported matrix families. Docker,
+OpenSSL and the MariaDB CLI must be installed. The image lock file records
+immutable distribution digests; update it deliberately for a new patch profile.
+The runner creates labelled private containers/volumes, loopback-only endpoints,
+temporary credentials/TLS and a bounded restart control. It rejects existing
+output directories and retains failed attempts. It never executes benchmarks.
+
+Each profile runs the inherited SQL/protocol/CDC unit suite with race detection,
+version-aware integration/native API/recovery tests and vet. Real PAM/KDC/native
+provider checks remain required in the separate full current-version fixture;
+the older-server matrix does not silently skip them or claim they ran there.
+Prior matching compiler/server/image profiles retain independently protected
+passing leaves. Publication validation checks raw events, required cases, source,
+image/compiler identity, expected server features, stable settings and cleanup.
+
+The workflow declares all twelve compiler/server combinations and keeps
+sanitized raw receipts/logs in the downloadable job log, including failed jobs.
+Local final receipts and exact platform/version scope are linked from the
+[compatibility report](COMPATIBILITY.md) and
+[Stage 7 implementation record](../docs/STAGE7_COMPATIBILITY.md).
+
 **Stage 6, correctness only:** Optional [CDC](../docs/STAGE6_CDC.md) has its own
 disposable, socket-only MariaDB with binlogging, TLS and semisync. Its globals,
 log rotations, purges and restart controls affect only that private datadir.

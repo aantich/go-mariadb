@@ -1,0 +1,66 @@
+=== RUN   TestMariaDBFailureRecovery
+=== RUN   TestMariaDBFailureRecovery/lock_timeout_requires_explicit_rollback
+=== RUN   TestMariaDBFailureRecovery/deadlock_victim_and_survivor
+=== RUN   TestMariaDBFailureRecovery/autocommit/before_write
+[mariadb] 2026/11/12 22:39:22 connection.go:205 closing connection:close tcp 127.0.0.1:51425->127.0.0.1:3306: use of closed network connection
+[mariadb] 2026/11/12 22:39:22 packets.go:177 validation: injected connection loss
+    stage7_recovery_test.go:333: RECOVERY_FAULT operation=autocommit phase=before write bytes=0 server_ok=false effects=1
+=== RUN   TestMariaDBFailureRecovery/autocommit/partial_write
+[mariadb] 2026/11/12 22:39:22 connection.go:205 closing connection:close tcp 127.0.0.1:51427->127.0.0.1:3306: use of closed network connection
+    stage7_recovery_test.go:333: RECOVERY_FAULT operation=autocommit phase=partial write bytes=25 server_ok=false effects=0
+=== RUN   TestMariaDBFailureRecovery/autocommit/lost_OK
+[mariadb] 2026/11/12 22:39:22 connection.go:205 closing connection:close tcp 127.0.0.1:51429->127.0.0.1:3306: use of closed network connection
+[mariadb] 2026/11/12 22:39:22 packets.go:63 validation: injected connection loss
+    stage7_recovery_test.go:333: RECOVERY_FAULT operation=autocommit phase=lost OK bytes=51 server_ok=true effects=1
+=== RUN   TestMariaDBFailureRecovery/transaction_commit/before_write
+[mariadb] 2026/11/12 22:39:22 connection.go:205 closing connection:close tcp 127.0.0.1:51431->127.0.0.1:3306: use of closed network connection
+[mariadb] 2026/11/12 22:39:22 packets.go:177 validation: injected connection loss
+    stage7_recovery_test.go:333: RECOVERY_FAULT operation=transaction commit phase=before write bytes=0 server_ok=false effects=0
+=== RUN   TestMariaDBFailureRecovery/transaction_commit/partial_write
+[mariadb] 2026/11/12 22:39:22 connection.go:205 closing connection:close tcp 127.0.0.1:51433->127.0.0.1:3306: use of closed network connection
+    stage7_recovery_test.go:333: RECOVERY_FAULT operation=transaction commit phase=partial write bytes=5 server_ok=false effects=0
+=== RUN   TestMariaDBFailureRecovery/transaction_commit/lost_OK
+[mariadb] 2026/11/12 22:39:22 connection.go:205 closing connection:close tcp 127.0.0.1:51435->127.0.0.1:3306: use of closed network connection
+[mariadb] 2026/11/12 22:39:22 packets.go:63 validation: injected connection loss
+    stage7_recovery_test.go:333: RECOVERY_FAULT operation=transaction commit phase=lost OK bytes=11 server_ok=true effects=1
+=== RUN   TestMariaDBFailureRecovery/native_bulk/before_write
+[mariadb] 2026/11/12 22:39:22 connection.go:205 closing connection:close tcp 127.0.0.1:51437->127.0.0.1:3306: use of closed network connection
+[mariadb] 2026/11/12 22:39:22 packets.go:177 validation: injected connection loss
+    stage7_recovery_test.go:333: RECOVERY_FAULT operation=native bulk phase=before write bytes=0 server_ok=false effects=0
+=== RUN   TestMariaDBFailureRecovery/native_bulk/partial_write
+[mariadb] 2026/11/12 22:39:22 connection.go:205 closing connection:close tcp 127.0.0.1:51439->127.0.0.1:3306: use of closed network connection
+    stage7_recovery_test.go:333: RECOVERY_FAULT operation=native bulk phase=partial write bytes=11 server_ok=false effects=0
+=== RUN   TestMariaDBFailureRecovery/native_bulk/lost_OK
+[mariadb] 2026/11/12 22:39:22 connection.go:205 closing connection:close tcp 127.0.0.1:51441->127.0.0.1:3306: use of closed network connection
+[mariadb] 2026/11/12 22:39:22 packets.go:63 validation: injected connection loss
+    stage7_recovery_test.go:333: RECOVERY_FAULT operation=native bulk phase=lost OK bytes=22 server_ok=true effects=1
+=== RUN   TestMariaDBFailureRecovery/native_stream/before_write
+[mariadb] 2026/11/12 22:39:22 connection.go:205 closing connection:close tcp 127.0.0.1:51443->127.0.0.1:3306: use of closed network connection
+[mariadb] 2026/11/12 22:39:22 packets.go:177 validation: injected connection loss
+    stage7_recovery_test.go:333: RECOVERY_FAULT operation=native stream phase=before write bytes=0 server_ok=false effects=0
+=== RUN   TestMariaDBFailureRecovery/native_stream/partial_write
+[mariadb] 2026/11/12 22:39:22 connection.go:205 closing connection:close tcp 127.0.0.1:51445->127.0.0.1:3306: use of closed network connection
+    stage7_recovery_test.go:333: RECOVERY_FAULT operation=native stream phase=partial write bytes=9 server_ok=false effects=0
+=== RUN   TestMariaDBFailureRecovery/native_stream/lost_OK
+[mariadb] 2026/11/12 22:39:22 connection.go:205 closing connection:close tcp 127.0.0.1:51447->127.0.0.1:3306: use of closed network connection
+[mariadb] 2026/11/12 22:39:22 packets.go:63 validation: injected connection loss
+    stage7_recovery_test.go:333: RECOVERY_FAULT operation=native stream phase=lost OK bytes=18 server_ok=true effects=1
+--- PASS: TestMariaDBFailureRecovery (1.24s)
+    --- PASS: TestMariaDBFailureRecovery/lock_timeout_requires_explicit_rollback (1.08s)
+    --- PASS: TestMariaDBFailureRecovery/deadlock_victim_and_survivor (0.00s)
+    --- PASS: TestMariaDBFailureRecovery/autocommit/before_write (0.00s)
+    --- PASS: TestMariaDBFailureRecovery/autocommit/partial_write (0.00s)
+    --- PASS: TestMariaDBFailureRecovery/autocommit/lost_OK (0.00s)
+    --- PASS: TestMariaDBFailureRecovery/transaction_commit/before_write (0.00s)
+    --- PASS: TestMariaDBFailureRecovery/transaction_commit/partial_write (0.00s)
+    --- PASS: TestMariaDBFailureRecovery/transaction_commit/lost_OK (0.00s)
+    --- PASS: TestMariaDBFailureRecovery/native_bulk/before_write (0.00s)
+    --- PASS: TestMariaDBFailureRecovery/native_bulk/partial_write (0.00s)
+    --- PASS: TestMariaDBFailureRecovery/native_bulk/lost_OK (0.00s)
+    --- PASS: TestMariaDBFailureRecovery/native_stream/before_write (0.00s)
+    --- PASS: TestMariaDBFailureRecovery/native_stream/partial_write (0.00s)
+    --- PASS: TestMariaDBFailureRecovery/native_stream/lost_OK (0.00s)
+=== RUN   TestRecoveryFaultBoundary
+--- PASS: TestRecoveryFaultBoundary (0.00s)
+PASS
+ok  	github.com/aantich/go-mariadb/validation	2.656s

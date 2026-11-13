@@ -1,0 +1,14 @@
+test_complete_profile_and_protected_required_cases (test_compatibility.CompatibilityEvidenceTests.test_complete_profile_and_protected_required_cases) ... ok
+test_matrix_source_locks_are_fingerprinted_and_immutable (test_compatibility.CompatibilityEvidenceTests.test_matrix_source_locks_are_fingerprinted_and_immutable) ... ok
+test_prior_profile_and_newer_passing_leaf_cannot_be_omitted (test_compatibility.CompatibilityEvidenceTests.test_prior_profile_and_newer_passing_leaf_cannot_be_omitted) ... ok
+test_raw_events_and_unavailable_feature_expectations_are_verified (test_compatibility.CompatibilityEvidenceTests.test_raw_events_and_unavailable_feature_expectations_are_verified) ... ok
+test_skips_and_data_races_cannot_pass (test_compatibility.CompatibilityEvidenceTests.test_skips_and_data_races_cannot_pass) ... ok
+test_wrong_sources_commands_runtime_and_cleanup_are_rejected (test_compatibility.CompatibilityEvidenceTests.test_wrong_sources_commands_runtime_and_cleanup_are_rejected) ... ok
+test_controller_failure_retains_output_redacts_secret_and_reaps_child (test_compatibility.CompatibilityOwnershipTests.test_controller_failure_retains_output_redacts_secret_and_reaps_child) ... ok
+test_foreign_container_is_never_removed_and_owned_volume_is_still_cleaned (test_compatibility.CompatibilityOwnershipTests.test_foreign_container_is_never_removed_and_owned_volume_is_still_cleaned) ... ok
+test_foreign_volume_and_duplicate_restart_are_rejected (test_compatibility.CompatibilityOwnershipTests.test_foreign_volume_and_duplicate_restart_are_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.655s
+
+OK

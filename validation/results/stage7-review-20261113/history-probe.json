@@ -1,0 +1,14 @@
+{
+  "unchanged_contract_control": {
+    "prior_discovered": true,
+    "current_status": "Earlier matrix passes lost."
+  },
+  "new_required_case": {
+    "prior_discovered": false,
+    "current_status": "accepted despite missing previously passing leaf"
+  },
+  "other_output_name": {
+    "prior_discovered": false,
+    "current_status": "accepted despite missing previously passing leaf"
+  }
+}

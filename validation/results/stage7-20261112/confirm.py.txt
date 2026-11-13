@@ -1,0 +1,94 @@
+"""Seal successful exact-source checks and verify preserved history/reference bytes."""
+import ast,hashlib,json,re,subprocess,sys
+from pathlib import Path
+sys.path.insert(0,'validation')
+import compatibility,correctness,record
+ROOT=Path.cwd();OUT=Path('validation/results/stage7-20261112')
+def digest(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+source=json.loads((OUT/'source.json').read_text())
+assert record.inputs()==source['inputs']
+cohort=json.loads(Path('validation/results/compatibility-current.json').read_text())
+assert cohort['inputs']==source['inputs'] and cohort['profile_count']==12
+assert set((p['compiler_family'],p['server_family']) for p in cohort['profiles'].values())=={
+    (g,s) for g in ('1.25','1.26','1.27') for s in ('10.11','11.4','11.8','12.3')}
+for p in cohort['profiles'].values():
+    directory=record.HERE/p['evidence_directory']
+    capture=json.loads((directory/'capture.json').read_text())
+    compatibility.validate(capture,directory)
+    assert digest(directory/'capture.json')==p['capture_sha256']
+for path,expected in cohort['artifacts'].items():assert digest(path)==expected,path
+profiles={}
+for name in ('mac','linux'):
+    directory=Path('validation/results')/('stage7-'+name+'-final-3')
+    capture=json.loads((directory/'capture.json').read_text())
+    summary=correctness.summarize(capture,directory)
+    prior=json.loads((Path('validation/results')/('stage6-review-fixes-'+name+'-final/capture.json')).read_text())
+    before={k for k,v in correctness.leaves(prior['stages']['correctness']['cases']).items() if v.get('status')=='pass'}
+    after={k for k,v in correctness.leaves(capture['stages']['correctness']['cases']).items() if v.get('status')=='pass'}
+    assert not before-after and len(after-before)==49
+    assert 'Ran 99 tests' in (directory/'recorder.log').read_text()
+    profiles[name]={'directory':str(directory),'input_fingerprint':summary['input_fingerprint'],
+        'leaf_counts':summary['leaf_counts'],'prior_stage6_passing_leaves':len(before),'new_passing_leaves':49,
+        'prior_passes_lost':[],'checks':summary['verified_checks'],'harness_tests':99,
+        'go':capture['go'],'host':capture['host'],'server':capture['server'],'cdc_fixture':capture['cdc_fixture']}
+first=json.loads((OUT/'source-first.json').read_text())
+differences={kind:sorted(path for path in set(first['inputs'][kind])|set(source['inputs'][kind])
+            if first['inputs'][kind].get(path)!=source['inputs'][kind].get(path)) for kind in source['inputs']}
+assert differences=={'driver':[],'workload':['validation/compatibility.py','validation/test_compatibility.py']}
+fuzz={}
+for name in ('decode','sequence','values'):
+    text=(OUT/('fuzz-'+name+'.log')).read_text();assert '\nPASS\n' in text
+    fuzz[name]={'log':str(OUT/('fuzz-'+name+'.log')),'executions':int(re.findall(r'execs: (\d+)',text)[-1]),
+        'duration_seconds':8,'exit_code':0,'driver_and_Go_test_inputs_match_final':True}
+for file in Path('validation').glob('*.py'):ast.parse(file.read_text(),filename=str(file))
+files=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','--','*.go'],text=True).splitlines()
+files=[p for p in files if not p.startswith('validation/results/')]
+assert not subprocess.check_output(['gofmt','-l',*files],text=True)
+subprocess.run(['git','diff','--check'],check=True)
+subprocess.run(['/private/tmp/gomdb-review-tools/actionlint'],check=True)
+subprocess.run(['git','diff','--exit-code','HEAD','--','validation/baselines','validation/results/stage6*'],check=True,stdout=subprocess.DEVNULL)
+assert digest('validation/results/current.json')=='02fea12c04c5c42f1596bdb0c56ddd3839afb26a86f7e3e61f0b7e798adea7ed'
+published='ec42783deb9727a529f3f9c29a80e7ed4d585e7a'
+assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()==published
+assert subprocess.check_output(['git','rev-parse','origin/master'],text=True).strip()==published
+old=json.loads(Path('validation/results/stage6-review-fixes-confirmation.json').read_text())
+for path,expected in old['artifacts'].items():
+    raw=subprocess.check_output(['git','show',published+':'+path])
+    assert hashlib.sha256(raw).hexdigest()==expected,path
+def passwords(value):
+    if isinstance(value,dict):
+        return [v for k,v in value.items() if 'pass' in k.lower() and isinstance(v,str) and v]+[p for v in value.values() for p in passwords(v)]
+    if isinstance(value,list):return [p for v in value for p in passwords(v)]
+    return []
+secrets=passwords(json.loads(Path('validation/.local/config.json').read_text()));assert secrets
+paths=[p for directory in Path('validation/results').glob('stage7*') for p in (directory.rglob('*') if directory.is_dir() else [directory]) if p.is_file() and p.name!='stage7-confirmation.json']
+for p in paths:assert not any(s.encode() in p.read_bytes() for s in secrets),'Configured secret leaked: '+str(p)
+paths += [Path(p) for p in ('AGENTS.md','README.md','docs/ROADMAP.md','docs/USER_GUIDE.md','docs/STAGE7_COMPATIBILITY.md',
+    'validation/README.md','validation/COVERAGE.md','validation/RESULTS.md','validation/COMPATIBILITY.md',
+    'validation/results/correctness-current.json','validation/results/compatibility-current.json')]
+result={'date':'2026-11-12','stage6_published_commit':published,'parent_commit':published,'branch':'master',
+    'status':'Stage 7 implemented and validated; new work remains uncommitted for review.',
+    'input_fingerprint':source['input_fingerprint'],'input_counts':source['input_counts'],'inputs':source['inputs'],
+    'profiles':profiles,'compatibility':cohort,'fuzz':fuzz,'fuzz_input_differences_from_final':differences,
+    'negative_controls':json.loads((OUT/'negative-controls.json').read_text()),
+    'portability':json.loads((OUT/'portability.json').read_text()),
+    'static':{'actionlint':'pass','gofmt':'pass','git_diff_check':'pass','python_ast':'pass'},
+    'historical_stage6_artifact_count':len(old['artifacts']),'historical_stage6_artifacts_preserved_in_commit':True,
+    'saved_stage6_results_unchanged':True,'immutable_references_verified':True,
+    'timing_pointer_sha256':digest('validation/results/current.json'),
+    'configured_secret_absent_from_public_stage7_artifacts':True,
+    'performance_measured':False,'benchmark_smoke_executed':False,'profiling_executed':False,
+    'remote_stage7_CI_executed':False,'stage7_committed':False,'stage7_pushed':False,
+    'cleanup':{'owned_containers_and_volumes_removed':True,'owned_servers_and_children_reaped':True,
+        'temporary_toolchains_cross_builds_and_run_directories_removed':True,'prior_caches_retained':True},
+    'limits':['Alpha; application and production topology pilots remain open',
+        'Matrix clients macOS arm64 / servers Linux arm64; full Linux current-version suite separate',
+        'New Linux CI matrix declared but not remotely executed before publication',
+        'Windows/386 cross-compilation is not runtime coverage',
+        'XA/two-phase ALTER/engine-specific binlogs and live 13.2 partial-row validation remain out of scope',
+        'No benchmark or performance claim; measurement-dependent read/pipelining work stays deferred'],
+    'artifacts':{str(p):digest(p) for p in sorted(set(paths))}}
+Path('validation/results/stage7-confirmation.json').write_text(json.dumps(result,indent=2)+'\n')
+print(json.dumps({'source':result['input_fingerprint'],'current_version_counts':{k:v['leaf_counts'] for k,v in profiles.items()},
+    'matrix_profiles':cohort['profile_count'],'artifacts':len(result['artifacts']),'fuzz_executions':{k:v['executions'] for k,v in fuzz.items()},
+    'stage6_published':published,'stage7_uncommitted':True},indent=2))

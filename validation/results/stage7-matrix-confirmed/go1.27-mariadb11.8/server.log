@@ -1,0 +1,371 @@
+2026-11-12 22:03:38+00:00 [Note] [Entrypoint]: Entrypoint script for MariaDB Server 1:11.8.9+maria~ubu2404 started.
+2026-11-12 22:03:38+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+2026-11-12 22:03:38+00:00 [Note] [Entrypoint]: Entrypoint script for MariaDB Server 1:11.8.9+maria~ubu2404 started.
+2026-11-12 22:03:38+00:00 [Note] [Entrypoint]: Initializing database files
+2026-11-12 22:03:39+00:00 [Note] [Entrypoint]: Database files initialized
+2026-11-12 22:03:39+00:00 [Note] [Entrypoint]: Starting temporary server
+2026-11-12 22:03:39+00:00 [Note] [Entrypoint]: Waiting for server startup
+2026-11-12 22:03:42+00:00 [Note] [Entrypoint]: Temporary server started.
+2026-11-12 22:03:42+00:00 [Note] [Entrypoint]: Securing system users (equivalent to running mysql_secure_installation)
+
+2026-11-12 22:03:42+00:00 [Note] [Entrypoint]: Stopping temporary server
+2026-11-12 22:03:42+00:00 [Note] [Entrypoint]: Temporary server stopped
+
+2026-11-12 22:03:42+00:00 [Note] [Entrypoint]: MariaDB init process done. Ready for start up.
+
+2026-11-12 22:04:08+00:00 [Note] [Entrypoint]: Entrypoint script for MariaDB Server 1:11.8.9+maria~ubu2404 started.
+2026-11-12 22:04:08+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+2026-11-12 22:04:08+00:00 [Note] [Entrypoint]: Entrypoint script for MariaDB Server 1:11.8.9+maria~ubu2404 started.
+2026-11-12 22:04:08+00:00 [Note] [Entrypoint]: MariaDB upgrade not required
+2026-11-12 22:03:38+00:00 [Warn] [Entrypoint]: /sys/fs/cgroup///memory.pressure not writable, functionality unavailable to MariaDB
+2026-11-12 22:03:38 0 [Warning] mariadbd: io_uring_queue_init() failed with EPERM: sysctl kernel.io_uring_disabled has the value 2, or 1 and the user of the process is not a member of sysctl kernel.io_uring_group. (see man 2 io_uring_setup).
+create_uring failed: falling back to libaio
+2026-11-12 22:03:39 0 [Note] Starting MariaDB 11.8.9-MariaDB-ubu2404-log source revision bf9193a939f515e95dd8def1a5468088c91cede6 server_uid rY0FdeBv+SYeI2FaUaicBNP26L4= as process 91
+2026-11-12 22:03:39 0 [Note] InnoDB: Compressed tables use zlib 1.3
+2026-11-12 22:03:39 0 [Note] InnoDB: Number of transaction pools: 1
+2026-11-12 22:03:39 0 [Note] InnoDB: Using ARMv8 crc32 + pmull instructions
+2026-11-12 22:03:39 0 [Warning] mariadbd: io_uring_queue_init() failed with EPERM: sysctl kernel.io_uring_disabled has the value 2, or 1 and the user of the process is not a member of sysctl kernel.io_uring_group. (see man 2 io_uring_setup).
+create_uring failed: falling back to libaio
+2026-11-12 22:03:39 0 [Note] InnoDB: Using Linux native AIO
+2026-11-12 22:03:39 0 [Note] InnoDB: innodb_buffer_pool_size_max=8388608m, innodb_buffer_pool_size=64m
+2026-11-12 22:03:39 0 [Note] InnoDB: Completed initialization of buffer pool
+2026-11-12 22:03:39 0 [Note] InnoDB: File system buffers for log disabled (block size=512 bytes)
+2026-11-12 22:03:39 0 [Note] InnoDB: End of log at LSN=45093
+2026-11-12 22:03:39 0 [Note] InnoDB: Opened 3 undo tablespaces
+2026-11-12 22:03:39 0 [Note] InnoDB: 128 rollback segments in 3 undo tablespaces are active.
+2026-11-12 22:03:39 0 [Note] InnoDB: Setting file './ibtmp1' size to 12.000MiB. Physically writing the file full; Please wait ...
+2026-11-12 22:03:39 0 [Note] InnoDB: File './ibtmp1' size is now 12.000MiB.
+2026-11-12 22:03:39 0 [Note] InnoDB: log sequence number 45093; transaction id 14
+2026-11-12 22:03:39 0 [Note] Plugin 'FEEDBACK' is disabled.
+2026-11-12 22:03:39 0 [Note] Plugin 'wsrep-provider' is disabled.
+2026-11-12 22:03:41 0 [Note] mariadbd: Event Scheduler: Loaded 0 events
+2026-11-12 22:03:41 0 [Note] mariadbd: ready for connections.
+Version: '11.8.9-MariaDB-ubu2404-log'  socket: '/run/mysqld/mysqld.sock'  port: 0  mariadb.org binary distribution
+2026-11-12 22:03:42 0 [Note] mariadbd (initiated by: unknown): Normal shutdown
+2026-11-12 22:03:42 0 [Note] InnoDB: FTS optimize thread exiting.
+2026-11-12 22:03:42 0 [Note] InnoDB: Starting shutdown...
+2026-11-12 22:03:42 0 [Note] InnoDB: Dumping buffer pool(s) to /var/lib/mysql/ib_buffer_pool
+2026-11-12 22:03:42 0 [Note] InnoDB: Buffer pool(s) dump completed at 261112 22:03:42
+2026-11-12 22:03:42 0 [Note] InnoDB: Removed temporary tablespace data file: "./ibtmp1"
+2026-11-12 22:03:42 0 [Note] Shutdown completed; log sequence number 45450; transaction id 15
+2026-11-12 22:03:42 0 [Note] mariadbd: Shutdown complete
+2026-11-12 22:03:42 0 [Note] Starting MariaDB 11.8.9-MariaDB-ubu2404-log source revision bf9193a939f515e95dd8def1a5468088c91cede6 server_uid rY0FdeBv+SYeI2FaUaicBNP26L4= as process 1
+2026-11-12 22:03:42 0 [Note] InnoDB: Compressed tables use zlib 1.3
+2026-11-12 22:03:42 0 [Note] InnoDB: Number of transaction pools: 1
+2026-11-12 22:03:42 0 [Note] InnoDB: Using ARMv8 crc32 + pmull instructions
+2026-11-12 22:03:42 0 [Warning] mariadbd: io_uring_queue_init() failed with EPERM: sysctl kernel.io_uring_disabled has the value 2, or 1 and the user of the process is not a member of sysctl kernel.io_uring_group. (see man 2 io_uring_setup).
+create_uring failed: falling back to libaio
+2026-11-12 22:03:42 0 [Note] InnoDB: Using Linux native AIO
+2026-11-12 22:03:42 0 [Note] InnoDB: innodb_buffer_pool_size_max=8388608m, innodb_buffer_pool_size=64m
+2026-11-12 22:03:42 0 [Note] InnoDB: Completed initialization of buffer pool
+2026-11-12 22:03:42 0 [Note] InnoDB: File system buffers for log disabled (block size=512 bytes)
+2026-11-12 22:03:42 0 [Note] InnoDB: End of log at LSN=45450
+2026-11-12 22:03:42 0 [Note] InnoDB: Opened 3 undo tablespaces
+2026-11-12 22:03:42 0 [Note] InnoDB: 128 rollback segments in 3 undo tablespaces are active.
+2026-11-12 22:03:42 0 [Note] InnoDB: Setting file './ibtmp1' size to 12.000MiB. Physically writing the file full; Please wait ...
+2026-11-12 22:03:42 0 [Note] InnoDB: File './ibtmp1' size is now 12.000MiB.
+2026-11-12 22:03:42 0 [Note] InnoDB: log sequence number 45450; transaction id 16
+2026-11-12 22:03:42 0 [Note] Plugin 'FEEDBACK' is disabled.
+2026-11-12 22:03:42 0 [Note] Plugin 'wsrep-provider' is disabled.
+2026-11-12 22:03:42 0 [Note] InnoDB: Loading buffer pool(s) from /var/lib/mysql/ib_buffer_pool
+2026-11-12 22:03:42 0 [Note] InnoDB: Buffer pool(s) load completed at 261112 22:03:42
+2026-11-12 22:03:42 0 [Note] Server socket created on IP: '0.0.0.0', port: '3306'.
+2026-11-12 22:03:42 0 [Note] Server socket created on IP: '::', port: '3306'.
+2026-11-12 22:03:42 0 [Note] mariadbd: Event Scheduler: Loaded 0 events
+2026-11-12 22:03:42 0 [Note] mariadbd: ready for connections.
+Version: '11.8.9-MariaDB-ubu2404-log'  socket: '/run/mysqld/mysqld.sock'  port: 3306  mariadb.org binary distribution
+2026-11-12 22:03:43 14 [Warning] Aborted connection 14 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:53 119 [Warning] Access denied for user 'root'@'172.17.0.1' (using password: NO)
+2026-11-12 22:03:54 130 [Warning] Aborted connection 130 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 131 [Warning] Aborted connection 131 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 132 [Warning] Aborted connection 132 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 133 [Warning] Aborted connection 133 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 134 [Warning] Aborted connection 134 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 135 [Warning] Aborted connection 135 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 136 [Warning] Aborted connection 136 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 137 [Warning] Aborted connection 137 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 138 [Warning] Aborted connection 138 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 139 [Warning] Aborted connection 139 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 140 [Warning] Aborted connection 140 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 141 [Warning] Aborted connection 141 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 142 [Warning] Aborted connection 142 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 143 [Warning] Aborted connection 143 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 144 [Warning] Aborted connection 144 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 145 [Warning] Aborted connection 145 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 146 [Warning] Aborted connection 146 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 147 [Warning] Aborted connection 147 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 148 [Warning] Aborted connection 148 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 149 [Warning] Aborted connection 149 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 151 [Warning] Aborted connection 151 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 152 [Warning] Aborted connection 152 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 153 [Warning] Aborted connection 153 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 154 [Warning] Aborted connection 154 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 155 [Warning] Aborted connection 155 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 156 [Warning] Aborted connection 156 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 157 [Warning] Aborted connection 157 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 158 [Warning] Aborted connection 158 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 159 [Warning] Aborted connection 159 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 160 [Warning] Aborted connection 160 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 161 [Warning] Aborted connection 161 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 162 [Warning] Aborted connection 162 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 163 [Warning] Aborted connection 163 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 164 [Warning] Aborted connection 164 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 165 [Warning] Aborted connection 165 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 166 [Warning] Aborted connection 166 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 167 [Warning] Aborted connection 167 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 168 [Warning] Aborted connection 168 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 169 [Warning] Aborted connection 169 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 170 [Warning] Aborted connection 170 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 172 [Warning] Aborted connection 172 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 173 [Warning] Aborted connection 173 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 174 [Warning] Aborted connection 174 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 175 [Warning] Aborted connection 175 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 176 [Warning] Aborted connection 176 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 177 [Warning] Aborted connection 177 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 178 [Warning] Aborted connection 178 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 179 [Warning] Aborted connection 179 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 180 [Warning] Aborted connection 180 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 181 [Warning] Aborted connection 181 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 182 [Warning] Aborted connection 182 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 183 [Warning] Aborted connection 183 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 184 [Warning] Aborted connection 184 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 185 [Warning] Aborted connection 185 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 186 [Warning] Aborted connection 186 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 187 [Warning] Aborted connection 187 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 188 [Warning] Aborted connection 188 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 189 [Warning] Aborted connection 189 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 190 [Warning] Aborted connection 190 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 191 [Warning] Aborted connection 191 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 195 [Warning] Aborted connection 195 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 200 [Warning] Aborted connection 200 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 201 [Warning] Aborted connection 201 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 202 [Warning] Aborted connection 202 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 203 [Warning] Aborted connection 203 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 204 [Warning] Aborted connection 204 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 205 [Warning] Aborted connection 205 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 206 [Warning] Aborted connection 206 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 207 [Warning] Aborted connection 207 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 208 [Warning] Aborted connection 208 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 209 [Warning] Aborted connection 209 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 210 [Warning] Aborted connection 210 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 211 [Warning] Aborted connection 211 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 212 [Warning] Aborted connection 212 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 213 [Warning] Aborted connection 213 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 214 [Warning] Aborted connection 214 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 215 [Warning] Aborted connection 215 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 216 [Warning] Aborted connection 216 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 218 [Warning] Aborted connection 218 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 217 [Warning] Aborted connection 217 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 219 [Warning] Aborted connection 219 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 220 [Warning] Aborted connection 220 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 221 [Warning] Aborted connection 221 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 222 [Warning] Aborted connection 222 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 223 [Warning] Aborted connection 223 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 224 [Warning] Aborted connection 224 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 225 [Warning] Aborted connection 225 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 226 [Warning] Aborted connection 226 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 227 [Warning] Aborted connection 227 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 228 [Warning] Aborted connection 228 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 229 [Warning] Aborted connection 229 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 230 [Warning] Aborted connection 230 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 231 [Warning] Aborted connection 231 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 232 [Warning] Aborted connection 232 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 233 [Warning] Aborted connection 233 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 234 [Warning] Aborted connection 234 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 235 [Warning] Aborted connection 235 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 236 [Warning] Aborted connection 236 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 239 [Warning] Aborted connection 239 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 240 [Warning] Aborted connection 240 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 241 [Warning] Aborted connection 241 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 242 [Warning] Aborted connection 242 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 243 [Warning] Aborted connection 243 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 244 [Warning] Aborted connection 244 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 245 [Warning] Aborted connection 245 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 246 [Warning] Aborted connection 246 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 247 [Warning] Aborted connection 247 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 248 [Warning] Aborted connection 248 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 250 [Warning] Aborted connection 250 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 251 [Warning] Aborted connection 251 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 252 [Warning] Aborted connection 252 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 254 [Warning] Aborted connection 254 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 257 [Warning] Aborted connection 257 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 258 [Warning] Aborted connection 258 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 260 [Warning] Aborted connection 260 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 261 [Warning] Aborted connection 261 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 265 [Warning] Aborted connection 265 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 266 [Warning] Aborted connection 266 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 267 [Warning] Aborted connection 267 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 268 [Warning] Aborted connection 268 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 269 [Warning] Aborted connection 269 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 271 [Warning] Aborted connection 271 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 272 [Warning] Aborted connection 272 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 275 [Warning] Aborted connection 275 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 276 [Warning] Aborted connection 276 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 277 [Warning] Aborted connection 277 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 281 [Warning] Aborted connection 281 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 282 [Warning] Aborted connection 282 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 283 [Warning] Aborted connection 283 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 286 [Warning] Aborted connection 286 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 287 [Warning] Aborted connection 287 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 289 [Warning] Aborted connection 289 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 290 [Warning] Aborted connection 290 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 291 [Warning] Aborted connection 291 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 292 [Warning] Aborted connection 292 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 295 [Warning] Aborted connection 295 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 297 [Warning] Aborted connection 297 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 298 [Warning] Aborted connection 298 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 299 [Warning] Aborted connection 299 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 300 [Warning] Aborted connection 300 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 301 [Warning] Aborted connection 301 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 302 [Warning] Aborted connection 302 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 303 [Warning] Aborted connection 303 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 305 [Warning] Aborted connection 305 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 306 [Warning] Aborted connection 306 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 309 [Warning] Aborted connection 309 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 310 [Warning] Aborted connection 310 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 311 [Warning] Aborted connection 311 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 312 [Warning] Aborted connection 312 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 313 [Warning] Aborted connection 313 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 314 [Warning] Aborted connection 314 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 315 [Warning] Aborted connection 315 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 316 [Warning] Aborted connection 316 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 317 [Warning] Aborted connection 317 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 319 [Warning] Aborted connection 319 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 318 [Warning] Aborted connection 318 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 320 [Warning] Aborted connection 320 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 321 [Warning] Aborted connection 321 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 322 [Warning] Aborted connection 322 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 323 [Warning] Aborted connection 323 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 324 [Warning] Aborted connection 324 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 325 [Warning] Aborted connection 325 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 326 [Warning] Aborted connection 326 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 327 [Warning] Aborted connection 327 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 332 [Warning] Aborted connection 332 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 333 [Warning] Aborted connection 333 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 334 [Warning] Aborted connection 334 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 335 [Warning] Aborted connection 335 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 337 [Warning] Aborted connection 337 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 336 [Warning] Aborted connection 336 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 338 [Warning] Aborted connection 338 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 339 [Warning] Aborted connection 339 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 340 [Warning] Aborted connection 340 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 341 [Warning] Aborted connection 341 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 342 [Warning] Aborted connection 342 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 343 [Warning] Aborted connection 343 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 344 [Warning] Aborted connection 344 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 345 [Warning] Aborted connection 345 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 346 [Warning] Aborted connection 346 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 347 [Warning] Aborted connection 347 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 348 [Warning] Aborted connection 348 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 349 [Warning] Aborted connection 349 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 350 [Warning] Aborted connection 350 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 351 [Warning] Aborted connection 351 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 352 [Warning] Aborted connection 352 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 353 [Warning] Aborted connection 353 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 354 [Warning] Aborted connection 354 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 355 [Warning] Aborted connection 355 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 356 [Warning] Aborted connection 356 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 357 [Warning] Aborted connection 357 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 358 [Warning] Aborted connection 358 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 359 [Warning] Aborted connection 359 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 360 [Warning] Aborted connection 360 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 361 [Warning] Aborted connection 361 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 362 [Warning] Aborted connection 362 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 363 [Warning] Aborted connection 363 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 364 [Warning] Aborted connection 364 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 365 [Warning] Aborted connection 365 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 366 [Warning] Aborted connection 366 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 367 [Warning] Aborted connection 367 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 368 [Warning] Aborted connection 368 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 369 [Warning] Aborted connection 369 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 370 [Warning] Aborted connection 370 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 371 [Warning] Aborted connection 371 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 372 [Warning] Aborted connection 372 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 373 [Warning] Aborted connection 373 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 374 [Warning] Aborted connection 374 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 375 [Warning] Aborted connection 375 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 376 [Warning] Aborted connection 376 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 377 [Warning] Aborted connection 377 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 378 [Warning] Aborted connection 378 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 379 [Warning] Aborted connection 379 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 380 [Warning] Aborted connection 380 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 381 [Warning] Aborted connection 381 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 382 [Warning] Aborted connection 382 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 384 [Warning] Aborted connection 384 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 385 [Warning] Aborted connection 385 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 386 [Warning] Aborted connection 386 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 387 [Warning] Aborted connection 387 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 388 [Warning] Aborted connection 388 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 389 [Warning] Aborted connection 389 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 390 [Warning] Aborted connection 390 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 391 [Warning] Aborted connection 391 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 392 [Warning] Aborted connection 392 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 393 [Warning] Aborted connection 393 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:54 394 [Warning] Aborted connection 394 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:54 395 [Warning] Aborted connection 395 to db: 'unconnected' user: 'unauthenticated' host: '172.17.0.1' (This connection closed normally without authentication)
+2026-11-12 22:03:57 407 [Warning] Aborted connection 407 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:57 406 [Warning] Aborted connection 406 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:57 414 [Warning] Aborted connection 414 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:58 412 [Warning] Aborted connection 412 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:03:59 416 [Warning] Aborted connection 416 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:04:01 446 [Warning] Aborted connection 446 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got timeout reading communication packets)
+2026-11-12 22:04:03 117 [Warning] Aborted connection 117 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:04:03 441 [Warning] Aborted connection 441 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:04:03 125 [Warning] Aborted connection 125 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:04:03 113 [Warning] Aborted connection 113 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:04:03 123 [Warning] Aborted connection 123 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:04:03 115 [Warning] Aborted connection 115 to db: 'go_mariadb_upstream' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:04:07 474 [Note] Start binlog_dump to slave_server(731710), pos(, 4), using_gtid(1), gtid('0-731700-444')
+2026-11-12 22:04:07 475 [Note] Start binlog_dump to slave_server(731720), pos(, 4), using_gtid(1), gtid('0-731700-445')
+2026-11-12 22:04:07 477 [Note] Start binlog_dump to slave_server(731711), pos(, 4), using_gtid(1), gtid('0-731700-450')
+2026-11-12 22:04:07 478 [Note] Start binlog_dump to slave_server(731721), pos(, 4), using_gtid(1), gtid('0-731700-451')
+2026-11-12 22:04:07 480 [Note] Start binlog_dump to slave_server(731712), pos(, 4), using_gtid(1), gtid('0-731700-456')
+2026-11-12 22:04:07 481 [Note] Start binlog_dump to slave_server(731722), pos(, 4), using_gtid(1), gtid('0-731700-457')
+2026-11-12 22:04:07 483 [Note] Start binlog_dump to slave_server(731713), pos(, 4), using_gtid(1), gtid('0-731700-462')
+2026-11-12 22:04:07 484 [Note] Start binlog_dump to slave_server(731723), pos(, 4), using_gtid(1), gtid('0-731700-463')
+2026-11-12 22:04:07 0 [Note] mariadbd (initiated by: unknown): Normal shutdown
+2026-11-12 22:04:07 0 [Note] InnoDB: FTS optimize thread exiting.
+2026-11-12 22:04:07 0 [Note] InnoDB: Starting shutdown...
+2026-11-12 22:04:07 0 [Note] InnoDB: Dumping buffer pool(s) to /var/lib/mysql/ib_buffer_pool
+2026-11-12 22:04:07 0 [Note] InnoDB: Buffer pool(s) dump completed at 261112 22:04:07
+2026-11-12 22:04:07 0 [Note] InnoDB: Removed temporary tablespace data file: "./ibtmp1"
+2026-11-12 22:04:07 0 [Note] Shutdown completed; log sequence number 202780240; transaction id 1042
+2026-11-12 22:04:07 0 [Note] mariadbd: Shutdown complete
+2026-11-12 22:04:08+00:00 [Warn] [Entrypoint]: /sys/fs/cgroup///memory.pressure not writable, functionality unavailable to MariaDB
+2026-11-12 22:04:08 0 [Note] Starting MariaDB 11.8.9-MariaDB-ubu2404-log source revision bf9193a939f515e95dd8def1a5468088c91cede6 server_uid IBd+38T6WT1hZAE+vqz4vIhYgks= as process 1
+2026-11-12 22:04:08 0 [Note] InnoDB: Compressed tables use zlib 1.3
+2026-11-12 22:04:08 0 [Note] InnoDB: Number of transaction pools: 1
+2026-11-12 22:04:08 0 [Note] InnoDB: Using ARMv8 crc32 + pmull instructions
+2026-11-12 22:04:08 0 [Warning] mariadbd: io_uring_queue_init() failed with EPERM: sysctl kernel.io_uring_disabled has the value 2, or 1 and the user of the process is not a member of sysctl kernel.io_uring_group. (see man 2 io_uring_setup).
+create_uring failed: falling back to libaio
+2026-11-12 22:04:08 0 [Note] InnoDB: Using Linux native AIO
+2026-11-12 22:04:08 0 [Note] InnoDB: innodb_buffer_pool_size_max=8388608m, innodb_buffer_pool_size=64m
+2026-11-12 22:04:08 0 [Note] InnoDB: Completed initialization of buffer pool
+2026-11-12 22:04:08 0 [Note] InnoDB: File system buffers for log disabled (block size=512 bytes)
+2026-11-12 22:04:08 0 [Note] InnoDB: End of log at LSN=202780240
+2026-11-12 22:04:08 0 [Note] InnoDB: Opened 3 undo tablespaces
+2026-11-12 22:04:08 0 [Note] InnoDB: 128 rollback segments in 3 undo tablespaces are active.
+2026-11-12 22:04:08 0 [Note] InnoDB: Setting file './ibtmp1' size to 12.000MiB. Physically writing the file full; Please wait ...
+2026-11-12 22:04:08 0 [Note] InnoDB: File './ibtmp1' size is now 12.000MiB.
+2026-11-12 22:04:08 0 [Note] InnoDB: log sequence number 202780240; transaction id 1042
+2026-11-12 22:04:08 0 [Note] Plugin 'FEEDBACK' is disabled.
+2026-11-12 22:04:08 0 [Note] Plugin 'wsrep-provider' is disabled.
+2026-11-12 22:04:08 0 [Note] InnoDB: Loading buffer pool(s) from /var/lib/mysql/ib_buffer_pool
+2026-11-12 22:04:08 0 [Note] InnoDB: Buffer pool(s) load completed at 261112 22:04:08
+2026-11-12 22:04:08 0 [Note] Server socket created on IP: '0.0.0.0', port: '3306'.
+2026-11-12 22:04:08 0 [Note] Server socket created on IP: '::', port: '3306'.
+2026-11-12 22:04:08 0 [Note] mariadbd: Event Scheduler: Loaded 0 events
+2026-11-12 22:04:08 0 [Note] mariadbd: ready for connections.
+Version: '11.8.9-MariaDB-ubu2404-log'  socket: '/run/mysqld/mysqld.sock'  port: 3306  mariadb.org binary distribution
+2026-11-12 22:04:09 9 [Warning] Aborted connection 9 to db: 'go_mariadb_validation' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:04:09 11 [Warning] Aborted connection 11 to db: 'go_mariadb_validation' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:04:09 13 [Warning] Aborted connection 13 to db: 'go_mariadb_validation' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:04:09 15 [Warning] Aborted connection 15 to db: 'go_mariadb_validation' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:04:09 17 [Warning] Aborted connection 17 to db: 'go_mariadb_validation' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:04:09 19 [Warning] Aborted connection 19 to db: 'go_mariadb_validation' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:04:09 21 [Warning] Aborted connection 21 to db: 'go_mariadb_validation' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:04:09 23 [Warning] Aborted connection 23 to db: 'go_mariadb_validation' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:04:09 25 [Warning] Aborted connection 25 to db: 'go_mariadb_validation' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:04:09 27 [Warning] Aborted connection 27 to db: 'go_mariadb_validation' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:04:09 29 [Warning] Aborted connection 29 to db: 'go_mariadb_validation' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)
+2026-11-12 22:04:09 31 [Warning] Aborted connection 31 to db: 'go_mariadb_validation' user: 'root' host: '172.17.0.1' (Got an error reading communication packets)

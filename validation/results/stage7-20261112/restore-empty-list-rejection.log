@@ -1,0 +1,8 @@
+=== RUN   TestCDCGTIDListPadding
+=== RUN   TestCDCGTIDListPadding/padded_empty
+    compatibility_test.go:30: <nil> mariadb/cdc: malformed event: trailing payload: event 163 at position 29
+--- FAIL: TestCDCGTIDListPadding (0.00s)
+    --- FAIL: TestCDCGTIDListPadding/padded_empty (0.00s)
+FAIL
+FAIL	github.com/aantich/go-mariadb/cdc	0.331s
+FAIL

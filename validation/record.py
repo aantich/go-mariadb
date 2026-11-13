@@ -62,6 +62,7 @@ def inputs():
     workload.update({str(p.relative_to(ROOT)):digest(p.read_bytes()) for p in (HERE/'auth_fixture').glob('*') if p.is_file()})
     workload['validation/identity-migration.json'] = digest((HERE/'identity-migration.json').read_bytes())
     workload['validation/contract-migrations.json'] = digest((HERE/'contract-migrations.json').read_bytes())
+    workload['validation/compatibility-images.json'] = digest((HERE/'compatibility-images.json').read_bytes())
     for path in ('.github/workflows/test.yml', '.github/workflows/actions.lock'):
         workload[path] = digest((ROOT/path).read_bytes())
     return {'driver':dict(sorted(driver.items())), 'workload':dict(sorted(workload.items()))}

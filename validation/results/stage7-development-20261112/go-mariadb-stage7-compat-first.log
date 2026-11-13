@@ -1,0 +1,53 @@
+=== RUN   TestMariaDBStage7Compatibility
+=== RUN   TestMariaDBStage7Compatibility/values/text
+=== RUN   TestMariaDBStage7Compatibility/values/text/prepared=false
+=== RUN   TestMariaDBStage7Compatibility/values/text/prepared=true
+=== RUN   TestMariaDBStage7Compatibility/values/compressed
+=== RUN   TestMariaDBStage7Compatibility/values/compressed/prepared=false
+=== RUN   TestMariaDBStage7Compatibility/values/compressed/prepared=true
+=== RUN   TestMariaDBStage7Compatibility/values/tls
+=== RUN   TestMariaDBStage7Compatibility/values/tls/prepared=false
+=== RUN   TestMariaDBStage7Compatibility/values/tls/prepared=true
+=== RUN   TestMariaDBStage7Compatibility/values/tls_compressed
+=== RUN   TestMariaDBStage7Compatibility/values/tls_compressed/prepared=false
+=== RUN   TestMariaDBStage7Compatibility/values/tls_compressed/prepared=true
+=== RUN   TestMariaDBStage7Compatibility/bulk_units_capability
+=== RUN   TestMariaDBStage7Compatibility/native_metadata
+=== RUN   TestMariaDBStage7Compatibility/authentication/ed25519
+=== RUN   TestMariaDBStage7Compatibility/authentication/parsec
+=== RUN   TestMariaDBStage7Compatibility/vector_availability
+=== NAME  TestMariaDBStage7Compatibility
+    stage7_compat_test.go:185: MARIADB_COMPATIBILITY {"expected_features":{"bulk_units":true,"parsec":true,"vector":true},"family":"12.3","version":"12.3.3-MariaDB-log"}
+--- PASS: TestMariaDBStage7Compatibility (0.27s)
+    --- PASS: TestMariaDBStage7Compatibility/values/text (0.00s)
+        --- PASS: TestMariaDBStage7Compatibility/values/text/prepared=false (0.00s)
+        --- PASS: TestMariaDBStage7Compatibility/values/text/prepared=true (0.00s)
+    --- PASS: TestMariaDBStage7Compatibility/values/compressed (0.00s)
+        --- PASS: TestMariaDBStage7Compatibility/values/compressed/prepared=false (0.00s)
+        --- PASS: TestMariaDBStage7Compatibility/values/compressed/prepared=true (0.00s)
+    --- PASS: TestMariaDBStage7Compatibility/values/tls (0.01s)
+        --- PASS: TestMariaDBStage7Compatibility/values/tls/prepared=false (0.00s)
+        --- PASS: TestMariaDBStage7Compatibility/values/tls/prepared=true (0.00s)
+    --- PASS: TestMariaDBStage7Compatibility/values/tls_compressed (0.01s)
+        --- PASS: TestMariaDBStage7Compatibility/values/tls_compressed/prepared=false (0.00s)
+        --- PASS: TestMariaDBStage7Compatibility/values/tls_compressed/prepared=true (0.00s)
+    --- PASS: TestMariaDBStage7Compatibility/bulk_units_capability (0.00s)
+    --- PASS: TestMariaDBStage7Compatibility/native_metadata (0.00s)
+    --- PASS: TestMariaDBStage7Compatibility/authentication/ed25519 (0.02s)
+    --- PASS: TestMariaDBStage7Compatibility/authentication/parsec (0.02s)
+    --- PASS: TestMariaDBStage7Compatibility/vector_availability (0.10s)
+=== RUN   TestMariaDBStage7CDC
+=== RUN   TestMariaDBStage7CDC/text
+=== RUN   TestMariaDBStage7CDC/compressed
+=== RUN   TestMariaDBStage7CDC/tls
+=== RUN   TestMariaDBStage7CDC/tls_compressed
+--- PASS: TestMariaDBStage7CDC (0.60s)
+    --- PASS: TestMariaDBStage7CDC/text (0.14s)
+    --- PASS: TestMariaDBStage7CDC/compressed (0.14s)
+    --- PASS: TestMariaDBStage7CDC/tls (0.15s)
+    --- PASS: TestMariaDBStage7CDC/tls_compressed (0.16s)
+=== RUN   TestMariaDBStage7Restart
+[mariadb] 2026/11/12 22:41:25 packets.go:177 write unix ->/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/go-mariadb-cdc-hfsx2xrf/server.sock: write: broken pipe
+--- PASS: TestMariaDBStage7Restart (0.63s)
+PASS
+ok  	github.com/aantich/go-mariadb/validation	2.878s

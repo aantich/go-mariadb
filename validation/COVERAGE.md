@@ -1,5 +1,15 @@
 # MariaDB Go coverage map
 
+**Stage 7 compatibility and recovery:** A twelve-cell server/compiler matrix
+adds text/prepared/zlib/verified-TLS values, native bulk/stream/reuse/cursor/reset/
+progress/metadata policies, expected bulk-unit/PARSEC/VECTOR differences, lock
+timeout/deadlock handling, deterministic before/partial/after-success transport
+faults, uncertain COMMIT, independent effect checks, pool recovery, CDC killed
+source/resume/schema changes and owned server restart. Empty GTID-list padding
+has strict positive/malformed regressions. Profile validators protect earlier
+passing leaves and reject missing cases, markers, stale inputs or cleanup facts.
+See the [actual compiler/server/platform profiles](COMPATIBILITY.md).
+
 **Stage 6 review corrections:** Live cursor-enabled Config reuse and unchanged
 SQL fetch routing; requested-start/equal/backward file positions, artificial
 bootstrap and rotation, zero-position cached events and rollover rejection;

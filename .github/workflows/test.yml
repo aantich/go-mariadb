@@ -180,6 +180,49 @@ jobs:
       - name: Require live features, managed sessions, instrumentation and race checks
         run: python3 validation/auth_fixture.py -- python3 validation/cdc_fixture.py -- python3 validation/ci.py --correctness-only
 
+  # Version compatibility has its own explicit feature contract. The full
+  # current-version auth/CDC/instrumentation job above remains independently
+  # mandatory, including native Kerberos provider checks.
+  mariadb-compatibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        go: ['1.25', '1.26', '1.27']
+        mariadb: ['10.11', '11.4', '11.8', '12.3']
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-go@v7.0.0
+        with:
+          go-version: ${{ matrix.go }}
+      - name: Install matrix client and native build headers
+        run: sudo apt-get update && sudo apt-get install -y mariadb-client libkrb5-dev
+      - name: Download the declared Go modules
+        run: go mod download
+      - name: Require version-aware correctness, real failure recovery and restart
+        env:
+          GOPROXY: 'off'
+        run: python3 validation/compatibility.py --family '${{ matrix.mariadb }}' --output 'validation/results/stage7-ci-${{ matrix.mariadb }}-go${{ matrix.go }}'
+      - name: Preserve profile diagnostics in the downloadable job log
+        if: always()
+        env:
+          PROFILE_DIRECTORY: validation/results/stage7-ci-${{ matrix.mariadb }}-go${{ matrix.go }}
+        run: |
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          directory = Path(os.environ['PROFILE_DIRECTORY'])
+          # Collector files are already credential-redacted. Include failed
+          # attempts too; private TLS/configuration files never live here.
+          for path in sorted(directory.glob('*')):
+              if path.suffix in ('.json', '.log'):
+                  print(f'Evidence file: {path.name}', flush=True)
+                  print(path.read_text(), flush=True)
+          PY
+
   # notifies that all test jobs are finished.
   finish:
     needs: test

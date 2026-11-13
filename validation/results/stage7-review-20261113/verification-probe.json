@@ -1,0 +1,12 @@
+{
+  "missing_compatibility_report": {
+    "verifier_succeeded": true,
+    "compatibility_reads": 0,
+    "verifier_output": "Fresh correctness; immutable references and approved workload/contract migrations verified.\nHistorical timing capture: seven repetitions per profile; not measured for current source."
+  },
+  "stale_incomplete_compatibility_report": {
+    "verifier_succeeded": true,
+    "compatibility_reads": 0,
+    "verifier_output": "Fresh correctness; immutable references and approved workload/contract migrations verified.\nHistorical timing capture: seven repetitions per profile; not measured for current source."
+  }
+}

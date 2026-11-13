@@ -1,0 +1,45 @@
+"""Confirm all twelve cells on one final input map, preserving every attempt."""
+import json,os,re,subprocess,sys,time
+from pathlib import Path
+root=Path.cwd();sys.path.insert(0,'validation');import compatibility as matrix;import record
+out=root/'validation/results/stage7-matrix-confirmed';out.mkdir(exist_ok=False)
+source=record.inputs();fingerprint=record.digest(json.dumps(source,sort_keys=True).encode())
+env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1','GOCACHE':'/private/tmp/go-mariadb-validation-20261111/go-cache','GOPROXY':'off'}
+# Earlier batches may still be finishing. Wait for the last recorded cell so
+# history discovery sees completed receipts rather than racing their writers.
+deadline=time.monotonic()+300
+while True:
+    try:done=len(json.loads((root/'validation/results/stage7-matrix-final/matrix.json').read_text()))==12
+    except (OSError,ValueError):done=False
+    if done:break
+    if time.monotonic()>deadline:raise RuntimeError('Earlier matrix batch did not complete')
+    time.sleep(0.25)
+toolchains={'1.27':'/opt/homebrew/bin/go','1.26':'/private/tmp/go-mariadb-stage7-toolchains-20261112/1.26/go/bin/go',
+            '1.25':'/private/tmp/go-mariadb-stage7-toolchains-20261112/1.25/go/bin/go'}
+results=[]
+for compiler,binary in toolchains.items():
+    for family in ('10.11','11.4','11.8','12.3'):
+        candidates=[]
+        for path in (root/'validation/results').glob('stage7-matrix*/**/capture.json'):
+            try:
+                capture=json.loads(path.read_text())
+                if capture.get('family')!=family or capture.get('inputs')!=source:continue
+                if not capture['compiler']['version'].startswith('go version go'+compiler+'.'):continue
+                matrix.validate(capture,path.parent)
+                candidates.append((capture['recorded_at'],path))
+            except (ValueError,KeyError,OSError):continue
+        if candidates:
+            path=max(candidates,key=lambda item:item[0])[1]
+            directory=path.parent;code=0;command=None
+        else:
+            directory=out/('go'+compiler+'-mariadb'+family)
+            command=[sys.executable,'validation/compatibility.py','--family',family,'--go',binary,'--output',str(directory)]
+            with (out/(directory.name+'-launch.log')).open('w') as log:
+                result=subprocess.run(command,env=env,stdout=log,stderr=subprocess.STDOUT,timeout=1200)
+            code=result.returncode
+        item={'compiler':compiler,'family':family,'command':command,'exit_code':code,'directory':str(directory.relative_to(root)),'reused_exact_source':command is None}
+        results.append(item);(out/'matrix.json').write_text(json.dumps(results,indent=2)+'\n');print(json.dumps(item),flush=True)
+        if code:raise RuntimeError('Final matrix cell failed: '+str(item))
+assert record.inputs()==source
+assert len(results)==12
+(out/'source.json').write_text(json.dumps({'input_fingerprint':fingerprint,'inputs':source},indent=2)+'\n')

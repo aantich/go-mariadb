@@ -1,0 +1,19 @@
+........E.........................................................................................
+======================================================================
+ERROR: test_prior_profile_and_newer_passing_leaf_cannot_be_omitted (test_compatibility.CompatibilityEvidenceTests.test_prior_profile_and_newer_passing_leaf_cannot_be_omitted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/work/validation/test_compatibility.py", line 111, in test_prior_profile_and_newer_passing_leaf_cannot_be_omitted
+    with tempfile.TemporaryDirectory(prefix='stage7-harness-',dir=matrix.HERE/'results') as tmp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/tempfile.py", line 1021, in __init__
+    self.name = mkdtemp(suffix, prefix, dir)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/tempfile.py", line 523, in mkdtemp
+    _os.mkdir(file, 0o700)
+OSError: [Errno 30] Read-only file system: '/work/validation/results/stage7-harness-yh6p5a0u'
+
+----------------------------------------------------------------------
+Ran 98 tests in 63.062s
+
+FAILED (errors=1)

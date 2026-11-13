@@ -1,0 +1,38 @@
+"""Mock an image-pull failure through the real controller; no Docker runs."""
+import contextlib
+import io
+import json
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+from unittest import mock
+
+sys.path.insert(0, 'validation')
+import compatibility as matrix
+
+real_run = subprocess.run
+diagnostic = 'review synthetic: registry lookup failed because DNS is unavailable'
+def fake_run(argv, *args, **kwargs):
+    if argv[0] == 'docker':
+        return subprocess.CompletedProcess(argv, 1, '', diagnostic)
+    return real_run(argv, *args, **kwargs)
+def start_with_pull(fixture):
+    fixture.docker('pull', fixture.reference)
+
+output = io.StringIO()
+with tempfile.TemporaryDirectory(prefix='go-mariadb-review-setup-') as tmp, \
+     mock.patch.object(matrix.OwnedServer, 'start', start_with_pull), \
+     mock.patch.object(matrix.subprocess, 'run', side_effect=fake_run), \
+     contextlib.redirect_stdout(output):
+    target = Path(tmp) / 'attempt'
+    status = matrix.run('10.11', '/opt/homebrew/bin/go', target)
+    capture = json.loads((target / 'capture.json').read_text())
+    result = {'exit_code': status, 'error_type': capture['error_type'],
+              'saved_stages': list(capture['stages']), 'saved_logs': list(capture['logs']),
+              'console': output.getvalue().strip(),
+              'failed_operation_recorded': 'pull' in json.dumps(capture) + output.getvalue(),
+              'original_diagnostic_recorded': diagnostic in json.dumps(capture) + output.getvalue()}
+assert status == 1 and not result['original_diagnostic_recorded']
+assert not result['failed_operation_recorded']
+print(json.dumps(result, indent=2))

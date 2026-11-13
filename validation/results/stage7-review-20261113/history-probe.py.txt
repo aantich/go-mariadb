@@ -1,0 +1,57 @@
+"""Synthetic review counterexamples; not a real correctness receipt or a fix."""
+import json
+from pathlib import Path
+import sys
+import tempfile
+from unittest import mock
+
+sys.path.insert(0, 'validation')
+import compatibility as matrix
+from test_compatibility import CompatibilityEvidenceTests
+
+helper = CompatibilityEvidenceTests()
+locked_images = (matrix.HERE / 'compatibility-images.json').read_bytes()
+extra = {'Action': 'pass', 'Package': matrix.ci.PACKAGE,
+         'Test': 'TestStage7EarlierPassingLeaf'}
+
+def add_old_leaf(capture, directory):
+    with (directory / 'root.log').open('a') as output:
+        output.write(json.dumps(extra) + '\n')
+    _, capture['stages']['root']['cases'] = matrix.assess(
+        (directory / 'root.log').read_text(), 0, 'root')
+    helper.rehash(capture, directory)
+
+results = {}
+for scenario in ('unchanged_contract_control', 'new_required_case', 'other_output_name'):
+    with tempfile.TemporaryDirectory(prefix='go-mariadb-review-history-') as tmp, \
+         mock.patch.object(matrix, 'HERE', Path(tmp)):
+        (matrix.HERE / 'compatibility-images.json').write_bytes(locked_images)
+        label = 'version-compatibility' if scenario == 'other_output_name' else 'stage7-review'
+        root = matrix.HERE / 'results' / label
+        older, current = root / 'older', root / 'current'
+        older.mkdir(parents=True)
+        current.mkdir()
+        before = helper.valid(older)
+        before['recorded_at'] = '2026-11-12T21:00:00+00:00'
+        add_old_leaf(before, older)
+        (older / 'capture.json').write_text(json.dumps(before, indent=2) + '\n')
+        required = set(matrix.INTEGRATION_REQUIRED)
+        if scenario == 'new_required_case':
+            required.add(matrix.ci.PACKAGE + '/validation/TestMariaDBFutureRequiredCase')
+        with mock.patch.object(matrix, 'INTEGRATION_REQUIRED', required):
+            after = helper.valid(current)  # New mandatory cases pass; old extra leaf is absent.
+            after['prior_profile'] = matrix.prior_profile(after)
+            try:
+                matrix.validate(after, current)
+                status = 'accepted despite missing previously passing leaf'
+            except ValueError as error:
+                status = str(error)
+            results[scenario] = {
+                'prior_discovered': after['prior_profile'] is not None,
+                'current_status': status,
+            }
+
+assert results['unchanged_contract_control']['current_status'] == 'Earlier matrix passes lost.'
+assert results['new_required_case']['prior_discovered'] is False
+assert results['other_output_name']['prior_discovered'] is False
+print(json.dumps(results, indent=2))

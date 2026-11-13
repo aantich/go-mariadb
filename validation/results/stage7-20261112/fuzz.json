@@ -1,0 +1,44 @@
+{
+  "Decode": {
+    "command": [
+      "go",
+      "test",
+      "./cdc",
+      "-run",
+      "^$",
+      "-fuzz",
+      "^FuzzCDCDecode$",
+      "-fuzztime=8s",
+      "-parallel=2"
+    ],
+    "exit_code": 0
+  },
+  "Sequence": {
+    "command": [
+      "go",
+      "test",
+      "./cdc",
+      "-run",
+      "^$",
+      "-fuzz",
+      "^FuzzCDCSequence$",
+      "-fuzztime=8s",
+      "-parallel=2"
+    ],
+    "exit_code": 0
+  },
+  "Values": {
+    "command": [
+      "go",
+      "test",
+      "./cdc",
+      "-run",
+      "^$",
+      "-fuzz",
+      "^FuzzCDCValues$",
+      "-fuzztime=8s",
+      "-parallel=2"
+    ],
+    "exit_code": 0
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "sql/log_event.h": {
+    "source_commit": "b439f350ce3a8306c77e64bc1679681320244d17",
+    "full_file_sha256": "998efd4bad6585709f52f071a11db7c03d665f223f830f30a17236c07ad1b108",
+    "excerpt": "server-empty-gtid-size.h.txt",
+    "lines": [
+      3731,
+      3743
+    ]
+  },
+  "sql/log_event_server.cc": {
+    "source_commit": "b439f350ce3a8306c77e64bc1679681320244d17",
+    "full_file_sha256": "88bffef10000fcbafeb98d57a4e93fa938a3a15924a1e188844abdaa4d5345ba",
+    "excerpt": "server-empty-gtid-padding.cc.txt",
+    "lines": [
+      3484,
+      3510
+    ]
+  }
+}

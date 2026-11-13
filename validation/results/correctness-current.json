@@ -237,7 +237,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestExternalAuthWire/read_error": {
-          "output": "=== RUN   TestExternalAuthWire/read_error\n[mariadb] 2026/11/12 22:21:32 packets.go:63 connection is closed\n--- PASS: TestExternalAuthWire/read_error (0.00s)\n",
+          "output": "=== RUN   TestExternalAuthWire/read_error\n[mariadb] 2026/11/12 23:01:55 packets.go:63 connection is closed\n--- PASS: TestExternalAuthWire/read_error (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestExternalAuthWire/binary_announcement_terminators": {
@@ -317,19 +317,19 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestConnectorGreetingAuthFallback/unknown_default": {
-          "output": "=== RUN   TestConnectorGreetingAuthFallback/unknown_default\n[mariadb] 2026/11/12 22:21:32 could not use requested auth plugin 'unknown_server_default': this authentication plugin is not supported: authentication plugin \"unknown_server_default\"\n--- PASS: TestConnectorGreetingAuthFallback/unknown_default (0.00s)\n",
+          "output": "=== RUN   TestConnectorGreetingAuthFallback/unknown_default\n[mariadb] 2026/11/12 23:01:55 could not use requested auth plugin 'unknown_server_default': this authentication plugin is not supported: authentication plugin \"unknown_server_default\"\n--- PASS: TestConnectorGreetingAuthFallback/unknown_default (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestConnectorGreetingAuthFallback/disabled_old_default": {
-          "output": "=== RUN   TestConnectorGreetingAuthFallback/disabled_old_default\n[mariadb] 2026/11/12 22:21:32 could not use requested auth plugin 'mysql_old_password': this user requires old password authentication. If you still want to use it, please add 'allowOldPasswords=1' to your DSN. See also https://github.com/go-sql-driver/mysql/wiki/old_passwords\n--- PASS: TestConnectorGreetingAuthFallback/disabled_old_default (0.00s)\n",
+          "output": "=== RUN   TestConnectorGreetingAuthFallback/disabled_old_default\n[mariadb] 2026/11/12 23:01:55 could not use requested auth plugin 'mysql_old_password': this user requires old password authentication. If you still want to use it, please add 'allowOldPasswords=1' to your DSN. See also https://github.com/go-sql-driver/mysql/wiki/old_passwords\n--- PASS: TestConnectorGreetingAuthFallback/disabled_old_default (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestConnectorGreetingAuthFallback/disabled_cleartext_default": {
-          "output": "=== RUN   TestConnectorGreetingAuthFallback/disabled_cleartext_default\n[mariadb] 2026/11/12 22:21:32 could not use requested auth plugin 'mysql_clear_password': this user requires clear text authentication. If you still want to use it, please add 'allowCleartextPasswords=1' to your DSN\n--- PASS: TestConnectorGreetingAuthFallback/disabled_cleartext_default (0.00s)\n",
+          "output": "=== RUN   TestConnectorGreetingAuthFallback/disabled_cleartext_default\n[mariadb] 2026/11/12 23:01:55 could not use requested auth plugin 'mysql_clear_password': this user requires clear text authentication. If you still want to use it, please add 'allowCleartextPasswords=1' to your DSN\n--- PASS: TestConnectorGreetingAuthFallback/disabled_cleartext_default (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestConnectorGreetingAuthFallback/fallback_disabled": {
-          "output": "=== RUN   TestConnectorGreetingAuthFallback/fallback_disabled\n[mariadb] 2026/11/12 22:21:32 could not use requested auth plugin 'unknown_server_default': this authentication plugin is not supported: authentication plugin \"unknown_server_default\"\n--- PASS: TestConnectorGreetingAuthFallback/fallback_disabled (0.00s)\n",
+          "output": "=== RUN   TestConnectorGreetingAuthFallback/fallback_disabled\n[mariadb] 2026/11/12 23:01:55 could not use requested auth plugin 'unknown_server_default': this authentication plugin is not supported: authentication plugin \"unknown_server_default\"\n--- PASS: TestConnectorGreetingAuthFallback/fallback_disabled (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestConnectorGreetingAuthFallback/unknown_account_plugin": {
@@ -485,7 +485,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestConnectorRejectsUnsolicitedPublicKey": {
-          "output": "=== RUN   TestConnectorRejectsUnsolicitedPublicKey\n--- PASS: TestConnectorRejectsUnsolicitedPublicKey (0.18s)\n",
+          "output": "=== RUN   TestConnectorRejectsUnsolicitedPublicKey\n--- PASS: TestConnectorRejectsUnsolicitedPublicKey (0.10s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestConnectorRejectsUnsolicitedPublicKey/caching_sha2_password": {
@@ -913,7 +913,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestTinyInt1IsBool": {
-          "output": "=== RUN   TestTinyInt1IsBool\n=== PAUSE TestTinyInt1IsBool\n=== CONT  TestTinyInt1IsBool\n--- PASS: TestTinyInt1IsBool (0.00s)\n",
+          "output": "=== RUN   TestTinyInt1IsBool\n=== PAUSE TestTinyInt1IsBool\n=== CONT  TestTinyInt1IsBool\n--- PASS: TestTinyInt1IsBool (0.00s)\n[mariadb] 2026/11/12 23:02:19 connection.go:872 closing bad idle connection: connection reset by peer\n[mariadb] 2026/11/12 23:02:19 packets.go:177 write tcp 127.0.0.1:56263->127.0.0.1:3306: write: broken pipe\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestTinyInt1IsBoolDisabled": {
@@ -921,7 +921,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestDedicatedBulkCancellationPhases": {
-          "output": "=== RUN   TestDedicatedBulkCancellationPhases\n--- PASS: TestDedicatedBulkCancellationPhases (0.25s)\n",
+          "output": "=== RUN   TestDedicatedBulkCancellationPhases\n--- PASS: TestDedicatedBulkCancellationPhases (0.26s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestDedicatedBulkCancellationPhases/prepare_write": {
@@ -1021,7 +1021,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestRoundtrip": {
-          "output": "=== RUN   TestRoundtrip\n--- PASS: TestRoundtrip (0.05s)\n",
+          "output": "=== RUN   TestRoundtrip\n--- PASS: TestRoundtrip (0.06s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestRoundtrip/a": {
@@ -1057,7 +1057,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestRoundtrip/100_rand_*_10000_repeat_bytes": {
-          "output": "=== RUN   TestRoundtrip/100_rand_*_10000_repeat_bytes\n--- PASS: TestRoundtrip/100_rand_*_10000_repeat_bytes (0.03s)\n",
+          "output": "=== RUN   TestRoundtrip/100_rand_*_10000_repeat_bytes\n--- PASS: TestRoundtrip/100_rand_*_10000_repeat_bytes (0.04s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestCompressThreshold": {
@@ -1093,11 +1093,11 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestIdleErrorTransport/TLS12/none/FIN=false": {
-          "output": "=== RUN   TestIdleErrorTransport/TLS12/none/FIN=false\n=== PAUSE TestIdleErrorTransport/TLS12/none/FIN=false\n=== CONT  TestIdleErrorTransport/TLS12/none/FIN=false\n--- PASS: TestIdleErrorTransport/TLS12/none/FIN=false (0.00s)\n",
+          "output": "=== RUN   TestIdleErrorTransport/TLS12/none/FIN=false\n=== PAUSE TestIdleErrorTransport/TLS12/none/FIN=false\n=== CONT  TestIdleErrorTransport/TLS12/none/FIN=false\n--- PASS: TestIdleErrorTransport/TLS12/none/FIN=false (0.01s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestIdleErrorTransport/TLS12/none/FIN=true": {
-          "output": "=== RUN   TestIdleErrorTransport/TLS12/none/FIN=true\n=== PAUSE TestIdleErrorTransport/TLS12/none/FIN=true\n=== CONT  TestIdleErrorTransport/TLS12/none/FIN=true\n--- PASS: TestIdleErrorTransport/TLS12/none/FIN=true (0.00s)\n",
+          "output": "=== RUN   TestIdleErrorTransport/TLS12/none/FIN=true\n=== PAUSE TestIdleErrorTransport/TLS12/none/FIN=true\n=== CONT  TestIdleErrorTransport/TLS12/none/FIN=true\n--- PASS: TestIdleErrorTransport/TLS12/none/FIN=true (0.01s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestIdleErrorTransport/TLS12/zlib/FIN=false": {
@@ -1365,7 +1365,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestPingMarkBadConnection": {
-          "output": "=== RUN   TestPingMarkBadConnection\n[mariadb] 2026/11/12 22:21:33 packets.go:177 boom\n--- PASS: TestPingMarkBadConnection (0.00s)\n",
+          "output": "=== RUN   TestPingMarkBadConnection\n[mariadb] 2026/11/12 23:01:56 packets.go:177 boom\n--- PASS: TestPingMarkBadConnection (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestPingErrInvalidConn": {
@@ -1445,7 +1445,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestMultiQuery": {
-          "output": "=== RUN   TestMultiQuery\n--- PASS: TestMultiQuery (0.11s)\n",
+          "output": "=== RUN   TestMultiQuery\n--- PASS: TestMultiQuery (0.12s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestInt": {
@@ -1485,11 +1485,11 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestDateTime": {
-          "output": "=== RUN   TestDateTime\n--- PASS: TestDateTime (0.28s)\n",
+          "output": "=== RUN   TestDateTime\n--- PASS: TestDateTime (0.26s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestDateTime/default": {
-          "output": "=== RUN   TestDateTime/default\n--- PASS: TestDateTime/default (0.05s)\n",
+          "output": "=== RUN   TestDateTime/default\n--- PASS: TestDateTime/default (0.04s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestDateTime/interpolateParams": {
@@ -1497,7 +1497,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestDateTime/compress": {
-          "output": "=== RUN   TestDateTime/compress\n--- PASS: TestDateTime/compress (0.06s)\n",
+          "output": "=== RUN   TestDateTime/compress\n--- PASS: TestDateTime/compress (0.05s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestDateTime/default#01": {
@@ -1525,23 +1525,23 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestLongData": {
-          "output": "=== RUN   TestLongData\n--- PASS: TestLongData (4.86s)\n",
+          "output": "=== RUN   TestLongData\n--- PASS: TestLongData (4.84s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestLongData/default": {
-          "output": "=== RUN   TestLongData/default\n--- PASS: TestLongData/default (0.76s)\n",
+          "output": "=== RUN   TestLongData/default\n--- PASS: TestLongData/default (0.79s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestLongData/interpolateParams": {
-          "output": "=== RUN   TestLongData/interpolateParams\n--- PASS: TestLongData/interpolateParams (1.07s)\n",
+          "output": "=== RUN   TestLongData/interpolateParams\n--- PASS: TestLongData/interpolateParams (1.02s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestLongData/compress": {
-          "output": "=== RUN   TestLongData/compress\n--- PASS: TestLongData/compress (3.03s)\n",
+          "output": "=== RUN   TestLongData/compress\n--- PASS: TestLongData/compress (3.04s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestLoadData": {
-          "output": "=== RUN   TestLoadData\n--- PASS: TestLoadData (0.31s)\n",
+          "output": "=== RUN   TestLoadData\n--- PASS: TestLoadData (0.29s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestLoadData/default": {
@@ -1553,7 +1553,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestLoadData/compress": {
-          "output": "=== RUN   TestLoadData/compress\n--- PASS: TestLoadData/compress (0.11s)\n",
+          "output": "=== RUN   TestLoadData/compress\n--- PASS: TestLoadData/compress (0.10s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestFoundRows1": {
@@ -1565,11 +1565,11 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestTLS": {
-          "output": "=== RUN   TestTLS\n--- PASS: TestTLS (0.38s)\n",
+          "output": "=== RUN   TestTLS\n--- PASS: TestTLS (0.40s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestTLS/default": {
-          "output": "=== RUN   TestTLS/default\n--- PASS: TestTLS/default (0.04s)\n",
+          "output": "=== RUN   TestTLS/default\n--- PASS: TestTLS/default (0.03s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestTLS/interpolateParams": {
@@ -1593,11 +1593,11 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestTLS/default#02": {
-          "output": "=== RUN   TestTLS/default#02\n    driver_test.go:1503: Cipher: TLS_AES_128_GCM_SHA256\n--- PASS: TestTLS/default#02 (0.03s)\n",
+          "output": "=== RUN   TestTLS/default#02\n    driver_test.go:1503: Cipher: TLS_AES_128_GCM_SHA256\n--- PASS: TestTLS/default#02 (0.05s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestTLS/interpolateParams#02": {
-          "output": "=== RUN   TestTLS/interpolateParams#02\n    driver_test.go:1503: Cipher: TLS_AES_128_GCM_SHA256\n--- PASS: TestTLS/interpolateParams#02 (0.04s)\n",
+          "output": "=== RUN   TestTLS/interpolateParams#02\n    driver_test.go:1503: Cipher: TLS_AES_128_GCM_SHA256\n--- PASS: TestTLS/interpolateParams#02 (0.05s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestTLS/compress#02": {
@@ -1609,7 +1609,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestCharset": {
-          "output": "=== RUN   TestCharset\n--- PASS: TestCharset (0.39s)\n",
+          "output": "=== RUN   TestCharset\n--- PASS: TestCharset (0.38s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestCharset/default": {
@@ -1657,7 +1657,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestCharset/compress#03": {
-          "output": "=== RUN   TestCharset/compress#03\n--- PASS: TestCharset/compress#03 (0.04s)\n",
+          "output": "=== RUN   TestCharset/compress#03\n--- PASS: TestCharset/compress#03 (0.03s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestFailingCharset": {
@@ -1665,19 +1665,19 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestCollation": {
-          "output": "=== RUN   TestCollation\n--- PASS: TestCollation (0.51s)\n",
+          "output": "=== RUN   TestCollation\n--- PASS: TestCollation (0.49s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestCollation/latin1_general_ci": {
-          "output": "=== RUN   TestCollation/latin1_general_ci\n--- PASS: TestCollation/latin1_general_ci (0.13s)\n",
+          "output": "=== RUN   TestCollation/latin1_general_ci\n--- PASS: TestCollation/latin1_general_ci (0.10s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestCollation/latin1_general_ci/default": {
-          "output": "=== RUN   TestCollation/latin1_general_ci/default\n--- PASS: TestCollation/latin1_general_ci/default (0.04s)\n",
+          "output": "=== RUN   TestCollation/latin1_general_ci/default\n--- PASS: TestCollation/latin1_general_ci/default (0.03s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestCollation/latin1_general_ci/interpolateParams": {
-          "output": "=== RUN   TestCollation/latin1_general_ci/interpolateParams\n--- PASS: TestCollation/latin1_general_ci/interpolateParams (0.05s)\n",
+          "output": "=== RUN   TestCollation/latin1_general_ci/interpolateParams\n--- PASS: TestCollation/latin1_general_ci/interpolateParams (0.03s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestCollation/latin1_general_ci/compress": {
@@ -1701,7 +1701,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestCollation/utf8mb4_unicode_ci": {
-          "output": "=== RUN   TestCollation/utf8mb4_unicode_ci\n--- PASS: TestCollation/utf8mb4_unicode_ci (0.14s)\n",
+          "output": "=== RUN   TestCollation/utf8mb4_unicode_ci\n--- PASS: TestCollation/utf8mb4_unicode_ci (0.13s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestCollation/utf8mb4_unicode_ci/default": {
@@ -1709,19 +1709,19 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestCollation/utf8mb4_unicode_ci/interpolateParams": {
-          "output": "=== RUN   TestCollation/utf8mb4_unicode_ci/interpolateParams\n--- PASS: TestCollation/utf8mb4_unicode_ci/interpolateParams (0.05s)\n",
+          "output": "=== RUN   TestCollation/utf8mb4_unicode_ci/interpolateParams\n--- PASS: TestCollation/utf8mb4_unicode_ci/interpolateParams (0.04s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestCollation/utf8mb4_unicode_ci/compress": {
-          "output": "=== RUN   TestCollation/utf8mb4_unicode_ci/compress\n--- PASS: TestCollation/utf8mb4_unicode_ci/compress (0.05s)\n",
+          "output": "=== RUN   TestCollation/utf8mb4_unicode_ci/compress\n--- PASS: TestCollation/utf8mb4_unicode_ci/compress (0.04s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestCollation/cp1257_bin": {
-          "output": "=== RUN   TestCollation/cp1257_bin\n--- PASS: TestCollation/cp1257_bin (0.12s)\n",
+          "output": "=== RUN   TestCollation/cp1257_bin\n--- PASS: TestCollation/cp1257_bin (0.14s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestCollation/cp1257_bin/default": {
-          "output": "=== RUN   TestCollation/cp1257_bin/default\n--- PASS: TestCollation/cp1257_bin/default (0.04s)\n",
+          "output": "=== RUN   TestCollation/cp1257_bin/default\n--- PASS: TestCollation/cp1257_bin/default (0.05s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestCollation/cp1257_bin/interpolateParams": {
@@ -1729,7 +1729,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestCollation/cp1257_bin/compress": {
-          "output": "=== RUN   TestCollation/cp1257_bin/compress\n--- PASS: TestCollation/cp1257_bin/compress (0.04s)\n",
+          "output": "=== RUN   TestCollation/cp1257_bin/compress\n--- PASS: TestCollation/cp1257_bin/compress (0.05s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestColumnsWithAlias": {
@@ -1741,27 +1741,27 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestTimezoneConversion": {
-          "output": "=== RUN   TestTimezoneConversion\n--- PASS: TestTimezoneConversion (0.85s)\n",
+          "output": "=== RUN   TestTimezoneConversion\n--- PASS: TestTimezoneConversion (0.90s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestTimezoneConversion/default": {
-          "output": "=== RUN   TestTimezoneConversion/default\n--- PASS: TestTimezoneConversion/default (0.08s)\n",
+          "output": "=== RUN   TestTimezoneConversion/default\n--- PASS: TestTimezoneConversion/default (0.09s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestTimezoneConversion/interpolateParams": {
-          "output": "=== RUN   TestTimezoneConversion/interpolateParams\n--- PASS: TestTimezoneConversion/interpolateParams (0.09s)\n",
+          "output": "=== RUN   TestTimezoneConversion/interpolateParams\n--- PASS: TestTimezoneConversion/interpolateParams (0.10s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestTimezoneConversion/compress": {
-          "output": "=== RUN   TestTimezoneConversion/compress\n--- PASS: TestTimezoneConversion/compress (0.08s)\n",
+          "output": "=== RUN   TestTimezoneConversion/compress\n--- PASS: TestTimezoneConversion/compress (0.09s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestTimezoneConversion/default#01": {
-          "output": "=== RUN   TestTimezoneConversion/default#01\n--- PASS: TestTimezoneConversion/default#01 (0.09s)\n",
+          "output": "=== RUN   TestTimezoneConversion/default#01\n--- PASS: TestTimezoneConversion/default#01 (0.10s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestTimezoneConversion/interpolateParams#01": {
-          "output": "=== RUN   TestTimezoneConversion/interpolateParams#01\n--- PASS: TestTimezoneConversion/interpolateParams#01 (0.07s)\n",
+          "output": "=== RUN   TestTimezoneConversion/interpolateParams#01\n--- PASS: TestTimezoneConversion/interpolateParams#01 (0.06s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestTimezoneConversion/compress#01": {
@@ -1773,7 +1773,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestTimezoneConversion/interpolateParams#02": {
-          "output": "=== RUN   TestTimezoneConversion/interpolateParams#02\n--- PASS: TestTimezoneConversion/interpolateParams#02 (0.06s)\n",
+          "output": "=== RUN   TestTimezoneConversion/interpolateParams#02\n--- PASS: TestTimezoneConversion/interpolateParams#02 (0.07s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestTimezoneConversion/compress#02": {
@@ -1805,19 +1805,19 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestPreparedManyCols": {
-          "output": "=== RUN   TestPreparedManyCols\n--- PASS: TestPreparedManyCols (0.83s)\n",
+          "output": "=== RUN   TestPreparedManyCols\n--- PASS: TestPreparedManyCols (0.80s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestPreparedManyCols/default": {
-          "output": "=== RUN   TestPreparedManyCols/default\n--- PASS: TestPreparedManyCols/default (0.27s)\n",
+          "output": "=== RUN   TestPreparedManyCols/default\n--- PASS: TestPreparedManyCols/default (0.26s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestPreparedManyCols/interpolateParams": {
-          "output": "=== RUN   TestPreparedManyCols/interpolateParams\n--- PASS: TestPreparedManyCols/interpolateParams (0.23s)\n",
+          "output": "=== RUN   TestPreparedManyCols/interpolateParams\n--- PASS: TestPreparedManyCols/interpolateParams (0.22s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestPreparedManyCols/compress": {
-          "output": "=== RUN   TestPreparedManyCols/compress\n--- PASS: TestPreparedManyCols/compress (0.33s)\n",
+          "output": "=== RUN   TestPreparedManyCols/compress\n--- PASS: TestPreparedManyCols/compress (0.32s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestConcurrent": {
@@ -1857,7 +1857,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestSQLInjection/compress": {
-          "output": "=== RUN   TestSQLInjection/compress\n--- PASS: TestSQLInjection/compress (0.07s)\n",
+          "output": "=== RUN   TestSQLInjection/compress\n--- PASS: TestSQLInjection/compress (0.06s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestSQLInjection/default#01": {
@@ -1889,7 +1889,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestSQLInjection/interpolateParams#03": {
-          "output": "=== RUN   TestSQLInjection/interpolateParams#03\n--- PASS: TestSQLInjection/interpolateParams#03 (0.06s)\n",
+          "output": "=== RUN   TestSQLInjection/interpolateParams#03\n--- PASS: TestSQLInjection/interpolateParams#03 (0.07s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestSQLInjection/compress#03": {
@@ -1897,7 +1897,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestInsertRetrieveEscapedData": {
-          "output": "=== RUN   TestInsertRetrieveEscapedData\n--- PASS: TestInsertRetrieveEscapedData (0.38s)\n",
+          "output": "=== RUN   TestInsertRetrieveEscapedData\n--- PASS: TestInsertRetrieveEscapedData (0.39s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestInsertRetrieveEscapedData/default": {
@@ -1905,7 +1905,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestInsertRetrieveEscapedData/interpolateParams": {
-          "output": "=== RUN   TestInsertRetrieveEscapedData/interpolateParams\n--- PASS: TestInsertRetrieveEscapedData/interpolateParams (0.06s)\n",
+          "output": "=== RUN   TestInsertRetrieveEscapedData/interpolateParams\n--- PASS: TestInsertRetrieveEscapedData/interpolateParams (0.07s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestInsertRetrieveEscapedData/compress": {
@@ -1929,7 +1929,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestUnixSocketAuthFail/default": {
-          "output": "=== RUN   TestUnixSocketAuthFail/default\n--- PASS: TestUnixSocketAuthFail/default (0.04s)\n",
+          "output": "=== RUN   TestUnixSocketAuthFail/default\n--- PASS: TestUnixSocketAuthFail/default (0.03s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestUnixSocketAuthFail/interpolateParams": {
@@ -1977,7 +1977,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestPing": {
-          "output": "=== RUN   TestPing\n--- PASS: TestPing (0.20s)\n",
+          "output": "=== RUN   TestPing\n--- PASS: TestPing (0.19s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestPing/default": {
@@ -2025,7 +2025,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestQueryMultipleResults": {
-          "output": "=== RUN   TestQueryMultipleResults\n--- PASS: TestQueryMultipleResults (0.09s)\n",
+          "output": "=== RUN   TestQueryMultipleResults\n--- PASS: TestQueryMultipleResults (0.11s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestPingContext": {
@@ -2041,7 +2041,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestContextCancelQueryRow": {
-          "output": "=== RUN   TestContextCancelQueryRow\n=== PAUSE TestContextCancelQueryRow\n=== CONT  TestContextCancelQueryRow\n--- PASS: TestContextCancelQueryRow (0.00s)\n[mariadb] 2026/11/12 22:21:54 connection.go:872 closing bad idle connection: connection reset by peer\n[mariadb] 2026/11/12 22:21:54 packets.go:177 write tcp 127.0.0.1:64336->127.0.0.1:3306: write: broken pipe\n",
+          "output": "=== RUN   TestContextCancelQueryRow\n=== PAUSE TestContextCancelQueryRow\n=== CONT  TestContextCancelQueryRow\n--- PASS: TestContextCancelQueryRow (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestContextCancelPrepare": {
@@ -2069,7 +2069,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestRowsColumnTypes": {
-          "output": "=== RUN   TestRowsColumnTypes\n--- PASS: TestRowsColumnTypes (0.19s)\n",
+          "output": "=== RUN   TestRowsColumnTypes\n--- PASS: TestRowsColumnTypes (0.20s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestRowsColumnTypes/default": {
@@ -2089,7 +2089,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestRawBytesAreNotModified": {
-          "output": "=== RUN   TestRawBytesAreNotModified\n--- PASS: TestRawBytesAreNotModified (0.23s)\n",
+          "output": "=== RUN   TestRawBytesAreNotModified\n--- PASS: TestRawBytesAreNotModified (0.25s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestRawBytesAreNotModified/default": {
@@ -2101,7 +2101,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestRawBytesAreNotModified/compress": {
-          "output": "=== RUN   TestRawBytesAreNotModified/compress\n--- PASS: TestRawBytesAreNotModified/compress (0.09s)\n",
+          "output": "=== RUN   TestRawBytesAreNotModified/compress\n--- PASS: TestRawBytesAreNotModified/compress (0.10s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestConnectorObeysDialTimeouts": {
@@ -2125,23 +2125,23 @@
           "status": "skip"
         },
         "github.com/aantich/go-mariadb/TestErrorInMultiResult": {
-          "output": "=== RUN   TestErrorInMultiResult\n--- PASS: TestErrorInMultiResult (0.05s)\n",
+          "output": "=== RUN   TestErrorInMultiResult\n--- PASS: TestErrorInMultiResult (0.04s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestIssue1567": {
-          "output": "=== RUN   TestIssue1567\n--- PASS: TestIssue1567 (1.85s)\n",
+          "output": "=== RUN   TestIssue1567\n--- PASS: TestIssue1567 (1.96s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestIssue1567/default": {
-          "output": "=== RUN   TestIssue1567/default\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63845->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63847->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63852->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63853->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63854->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63860->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63863->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63865->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63868->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63869->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63873->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63877->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63879->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63882->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63887->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63890->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63893->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63895->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63896->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63899->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63900->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63906->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63911->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63913->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63915->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63916->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63917->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63920->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63921->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63928->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63935->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63940->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63943->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63944->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63957->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63959->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63963->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63965->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63967->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63968->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63969->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63970->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63971->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63972->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63974->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63975->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63979->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63982->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:63991->127.0.0.1:3306: use of closed network connection\n--- PASS: TestIssue1567/default (0.63s)\n",
+          "output": "=== RUN   TestIssue1567/default\n[mariadb] 2026/11/12 23:02:07 connection.go:205 closing connection:close tcp 127.0.0.1:55725->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:07 connection.go:205 closing connection:close tcp 127.0.0.1:55729->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:07 connection.go:205 closing connection:close tcp 127.0.0.1:55733->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:07 connection.go:205 closing connection:close tcp 127.0.0.1:55734->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:07 connection.go:205 closing connection:close tcp 127.0.0.1:55736->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:07 connection.go:205 closing connection:close tcp 127.0.0.1:55739->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:07 connection.go:205 closing connection:close tcp 127.0.0.1:55740->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:07 connection.go:205 closing connection:close tcp 127.0.0.1:55753->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:07 connection.go:205 closing connection:close tcp 127.0.0.1:55755->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55765->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55766->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55776->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55787->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55788->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55791->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55792->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55793->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55794->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55799->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55805->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55808->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55809->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55810->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55817->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55824->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55827->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55830->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55836->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55839->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55840->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55842->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55843->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55854->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55855->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55861->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55862->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55865->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55868->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55869->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55871->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55874->127.0.0.1:3306: use of closed network connection\n--- PASS: TestIssue1567/default (0.65s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestIssue1567/interpolateParams": {
-          "output": "=== RUN   TestIssue1567/interpolateParams\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:64002->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:64004->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:64005->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:45 connection.go:205 closing connection:close tcp 127.0.0.1:64007->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64013->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64020->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64023->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64034->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64035->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64038->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64040->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64043->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64044->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64049->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64050->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64056->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64060->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64061->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64062->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64063->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64069->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64072->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64074->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64076->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64080->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64087->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64088->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64096->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64100->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64105->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64106->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64108->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64112->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64116->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64120->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64121->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64123->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64125->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64131->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64132->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64134->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64135->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64137->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64139->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64141->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64144->127.0.0.1:3306: use of closed network connection\n--- PASS: TestIssue1567/interpolateParams (0.67s)\n",
+          "output": "=== RUN   TestIssue1567/interpolateParams\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55880->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55883->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55891->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55911->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55912->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55918->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55919->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55926->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55927->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55930->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55936->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55942->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55945->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55947->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55949->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55951->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55953->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55958->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55962->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55966->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55968->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55969->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55972->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55974->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55977->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55984->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:08 connection.go:205 closing connection:close tcp 127.0.0.1:55985->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56005->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56006->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56009->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56013->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56016->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56017->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56018->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56020->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56028->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56033->127.0.0.1:3306: use of closed network connection\n--- PASS: TestIssue1567/interpolateParams (0.73s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestIssue1567/compress": {
-          "output": "=== RUN   TestIssue1567/compress\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64156->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64158->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64159->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64162->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64165->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64166->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64167->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64168->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64177->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64178->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64180->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64181->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64183->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64185->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64186->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64187->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64193->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64197->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64200->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64203->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64204->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64205->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64216->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64217->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64222->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64225->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64227->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64230->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64232->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64238->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64240->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64243->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64247->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64249->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64252->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64255->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64258->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64263->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64264->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64268->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:46 connection.go:205 closing connection:close tcp 127.0.0.1:64273->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:47 connection.go:205 closing connection:close tcp 127.0.0.1:64284->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:47 connection.go:205 closing connection:close tcp 127.0.0.1:64285->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:47 connection.go:205 closing connection:close tcp 127.0.0.1:64291->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 22:21:47 connection.go:205 closing connection:close tcp 127.0.0.1:64294->127.0.0.1:3306: use of closed network connection\n--- PASS: TestIssue1567/compress (0.55s)\n",
+          "output": "=== RUN   TestIssue1567/compress\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56037->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56043->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56048->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56051->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56052->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56057->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56060->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56067->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56071->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56080->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56092->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56095->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56097->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56099->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56108->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56110->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56114->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56119->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56124->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56129->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56135->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56151->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56159->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56160->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56162->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56164->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56168->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56173->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56175->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56176->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56181->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56183->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56187->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56195->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:09 connection.go:205 closing connection:close tcp 127.0.0.1:56200->127.0.0.1:3306: use of closed network connection\n--- PASS: TestIssue1567/compress (0.58s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestDSNParser": {
@@ -2425,11 +2425,11 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestErrorsStrictIgnoreNotes": {
-          "output": "=== RUN   TestErrorsStrictIgnoreNotes\n--- PASS: TestErrorsStrictIgnoreNotes (0.19s)\n",
+          "output": "=== RUN   TestErrorsStrictIgnoreNotes\n--- PASS: TestErrorsStrictIgnoreNotes (0.20s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestErrorsStrictIgnoreNotes/default": {
-          "output": "=== RUN   TestErrorsStrictIgnoreNotes/default\n--- PASS: TestErrorsStrictIgnoreNotes/default (0.07s)\n",
+          "output": "=== RUN   TestErrorsStrictIgnoreNotes/default\n--- PASS: TestErrorsStrictIgnoreNotes/default (0.06s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestErrorsStrictIgnoreNotes/interpolateParams": {
@@ -2437,7 +2437,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestErrorsStrictIgnoreNotes/compress": {
-          "output": "=== RUN   TestErrorsStrictIgnoreNotes/compress\n--- PASS: TestErrorsStrictIgnoreNotes/compress (0.06s)\n",
+          "output": "=== RUN   TestErrorsStrictIgnoreNotes/compress\n--- PASS: TestErrorsStrictIgnoreNotes/compress (0.07s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestMySQLErrIs": {
@@ -3077,7 +3077,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestNativeStreamBoundedStaging": {
-          "output": "=== RUN   TestNativeStreamBoundedStaging\n--- PASS: TestNativeStreamBoundedStaging (0.03s)\n",
+          "output": "=== RUN   TestNativeStreamBoundedStaging\n--- PASS: TestNativeStreamBoundedStaging (0.05s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestNativeCursorMaterializationError": {
@@ -3161,11 +3161,11 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestNativeProgressPackets": {
-          "output": "=== RUN   TestNativeProgressPackets\n--- PASS: TestNativeProgressPackets (0.02s)\n",
+          "output": "=== RUN   TestNativeProgressPackets\n--- PASS: TestNativeProgressPackets (0.01s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestNativeProgressPackets/owned_ordered_iterative": {
-          "output": "=== RUN   TestNativeProgressPackets/owned_ordered_iterative\n--- PASS: TestNativeProgressPackets/owned_ordered_iterative (0.01s)\n",
+          "output": "=== RUN   TestNativeProgressPackets/owned_ordered_iterative\n--- PASS: TestNativeProgressPackets/owned_ordered_iterative (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestNativeProgressPackets/capability_gate": {
@@ -3269,7 +3269,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestNativeProgressPackets/sequence": {
-          "output": "=== RUN   TestNativeProgressPackets/sequence\n[mariadb] 2026/11/12 22:21:48 packets.go:73 [warn] unexpected sequence nr: expected 0, got 7\n--- PASS: TestNativeProgressPackets/sequence (0.00s)\n",
+          "output": "=== RUN   TestNativeProgressPackets/sequence\n[mariadb] 2026/11/12 23:02:10 packets.go:73 [warn] unexpected sequence nr: expected 0, got 7\n--- PASS: TestNativeProgressPackets/sequence (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestNativeProgressCallbacks": {
@@ -3393,15 +3393,15 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestNativeNoReplay/stream": {
-          "output": "=== RUN   TestNativeNoReplay/stream\n[mariadb] 2026/11/12 22:21:48 packets.go:177 io: read/write on closed pipe\n[mariadb] 2026/11/12 22:21:48 connection.go:235 bad connection\n--- PASS: TestNativeNoReplay/stream (0.00s)\n",
+          "output": "=== RUN   TestNativeNoReplay/stream\n[mariadb] 2026/11/12 23:02:10 packets.go:177 io: read/write on closed pipe\n[mariadb] 2026/11/12 23:02:10 connection.go:235 bad connection\n--- PASS: TestNativeNoReplay/stream (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestNativeNoReplay/progress": {
-          "output": "=== RUN   TestNativeNoReplay/progress\n[mariadb] 2026/11/12 22:21:48 packets.go:177 io: read/write on closed pipe\n--- PASS: TestNativeNoReplay/progress (0.00s)\n",
+          "output": "=== RUN   TestNativeNoReplay/progress\n[mariadb] 2026/11/12 23:02:10 packets.go:177 io: read/write on closed pipe\n--- PASS: TestNativeNoReplay/progress (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestNativeNoReplay/units": {
-          "output": "=== RUN   TestNativeNoReplay/units\n[mariadb] 2026/11/12 22:21:48 packets.go:177 io: read/write on closed pipe\n[mariadb] 2026/11/12 22:21:48 connection.go:235 bad connection\n--- PASS: TestNativeNoReplay/units (0.00s)\n",
+          "output": "=== RUN   TestNativeNoReplay/units\n[mariadb] 2026/11/12 23:02:10 packets.go:177 io: read/write on closed pipe\n[mariadb] 2026/11/12 23:02:10 connection.go:235 bad connection\n--- PASS: TestNativeNoReplay/units (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestNativeStatementReuse": {
@@ -3461,15 +3461,15 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestNativeStatementNoReplay/aggregate": {
-          "output": "=== RUN   TestNativeStatementNoReplay/aggregate\n[mariadb] 2026/11/12 22:21:48 packets.go:177 io: read/write on closed pipe\n--- PASS: TestNativeStatementNoReplay/aggregate (0.00s)\n",
+          "output": "=== RUN   TestNativeStatementNoReplay/aggregate\n[mariadb] 2026/11/12 23:02:10 packets.go:177 io: read/write on closed pipe\n--- PASS: TestNativeStatementNoReplay/aggregate (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestNativeStatementNoReplay/units": {
-          "output": "=== RUN   TestNativeStatementNoReplay/units\n[mariadb] 2026/11/12 22:21:48 packets.go:177 io: read/write on closed pipe\n--- PASS: TestNativeStatementNoReplay/units (0.00s)\n",
+          "output": "=== RUN   TestNativeStatementNoReplay/units\n[mariadb] 2026/11/12 23:02:10 packets.go:177 io: read/write on closed pipe\n--- PASS: TestNativeStatementNoReplay/units (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestNativeStatementNoReplay/stream": {
-          "output": "=== RUN   TestNativeStatementNoReplay/stream\n[mariadb] 2026/11/12 22:21:48 packets.go:177 io: read/write on closed pipe\n--- PASS: TestNativeStatementNoReplay/stream (0.00s)\n",
+          "output": "=== RUN   TestNativeStatementNoReplay/stream\n[mariadb] 2026/11/12 23:02:10 packets.go:177 io: read/write on closed pipe\n--- PASS: TestNativeStatementNoReplay/stream (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestNativeStatementNoReplay/valuer_panic": {
@@ -3505,7 +3505,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestNativeStatementCloseTimeout": {
-          "output": "=== RUN   TestNativeStatementCloseTimeout\n[mariadb] 2026/11/12 22:21:48 packets.go:177 write pipe: i/o timeout\n--- PASS: TestNativeStatementCloseTimeout (0.03s)\n",
+          "output": "=== RUN   TestNativeStatementCloseTimeout\n[mariadb] 2026/11/12 23:02:11 packets.go:177 write pipe: i/o timeout\n--- PASS: TestNativeStatementCloseTimeout (0.03s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestScanNullTime": {
@@ -3593,7 +3593,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestWriteExecutePacketResetsStmtAfterLongDataError": {
-          "output": "=== RUN   TestWriteExecutePacketResetsStmtAfterLongDataError\n[mariadb] 2026/11/12 22:21:48 packets.go:177 long data write failed\n--- PASS: TestWriteExecutePacketResetsStmtAfterLongDataError (0.00s)\n",
+          "output": "=== RUN   TestWriteExecutePacketResetsStmtAfterLongDataError\n[mariadb] 2026/11/12 23:02:11 packets.go:177 long data write failed\n--- PASS: TestWriteExecutePacketResetsStmtAfterLongDataError (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestReadPacketSingleByte": {
@@ -3601,7 +3601,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestReadPacketWrongSequenceID": {
-          "output": "=== RUN   TestReadPacketWrongSequenceID\n[mariadb] 2026/11/12 22:21:48 packets.go:73 [warn] unexpected sequence nr: expected 1, got 0\n[mariadb] 2026/11/12 22:21:48 packets.go:73 [warn] unexpected sequence nr: expected 0, got 66\n--- PASS: TestReadPacketWrongSequenceID (0.00s)\n",
+          "output": "=== RUN   TestReadPacketWrongSequenceID\n[mariadb] 2026/11/12 23:02:11 packets.go:73 [warn] unexpected sequence nr: expected 1, got 0\n[mariadb] 2026/11/12 23:02:11 packets.go:73 [warn] unexpected sequence nr: expected 0, got 66\n--- PASS: TestReadPacketWrongSequenceID (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestReadPacketSplit": {
@@ -3609,7 +3609,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestReadPacketFail": {
-          "output": "=== RUN   TestReadPacketFail\n[mariadb] 2026/11/12 22:21:48 packets.go:91 malformed packet\n[mariadb] 2026/11/12 22:21:48 packets.go:63 connection is closed\n[mariadb] 2026/11/12 22:21:48 packets.go:63 too many reads\n--- PASS: TestReadPacketFail (0.00s)\n",
+          "output": "=== RUN   TestReadPacketFail\n[mariadb] 2026/11/12 23:02:11 packets.go:91 malformed packet\n[mariadb] 2026/11/12 23:02:11 packets.go:63 connection is closed\n[mariadb] 2026/11/12 23:02:11 packets.go:63 too many reads\n--- PASS: TestReadPacketFail (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestRegression801": {
@@ -4188,12 +4188,12 @@
           "output": "=== RUN   TestRowsColumnScannerRawBytes/binary\n=== PAUSE TestRowsColumnScannerRawBytes/binary\n=== CONT  TestRowsColumnScannerRawBytes/binary\n--- PASS: TestRowsColumnScannerRawBytes/binary (0.00s)\n",
           "status": "pass"
         },
-        "github.com/aantich/go-mariadb/TestRowsColumnScannerRawBytes/binary/default": {
-          "output": "=== RUN   TestRowsColumnScannerRawBytes/binary/default\n=== PAUSE TestRowsColumnScannerRawBytes/binary/default\n=== CONT  TestRowsColumnScannerRawBytes/binary/default\n--- PASS: TestRowsColumnScannerRawBytes/binary/default (0.08s)\n",
+        "github.com/aantich/go-mariadb/TestRowsColumnScannerRawBytes/text/default": {
+          "output": "=== RUN   TestRowsColumnScannerRawBytes/text/default\n=== PAUSE TestRowsColumnScannerRawBytes/text/default\n=== CONT  TestRowsColumnScannerRawBytes/text/default\n--- PASS: TestRowsColumnScannerRawBytes/text/default (0.06s)\n",
           "status": "pass"
         },
-        "github.com/aantich/go-mariadb/TestRowsColumnScannerRawBytes/text/default": {
-          "output": "=== RUN   TestRowsColumnScannerRawBytes/text/default\n=== PAUSE TestRowsColumnScannerRawBytes/text/default\n=== CONT  TestRowsColumnScannerRawBytes/text/default\n--- PASS: TestRowsColumnScannerRawBytes/text/default (0.07s)\n",
+        "github.com/aantich/go-mariadb/TestRowsColumnScannerRawBytes/binary/default": {
+          "output": "=== RUN   TestRowsColumnScannerRawBytes/binary/default\n=== PAUSE TestRowsColumnScannerRawBytes/binary/default\n=== CONT  TestRowsColumnScannerRawBytes/binary/default\n--- PASS: TestRowsColumnScannerRawBytes/binary/default (0.07s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestScanColumnBytesAnyOwnership": {
@@ -4285,7 +4285,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestManagedResetCancellation": {
-          "output": "=== RUN   TestManagedResetCancellation\n--- PASS: TestManagedResetCancellation (0.41s)\n",
+          "output": "=== RUN   TestManagedResetCancellation\n--- PASS: TestManagedResetCancellation (0.42s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestManagedResetCancellation/reset_write": {
@@ -4321,7 +4321,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestSessionTrackingCountLimits": {
-          "output": "=== RUN   TestSessionTrackingCountLimits\n--- PASS: TestSessionTrackingCountLimits (0.00s)\n",
+          "output": "=== RUN   TestSessionTrackingCountLimits\n--- PASS: TestSessionTrackingCountLimits (0.01s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestSessionTrackingFullDictionaryReplacement": {
@@ -4377,7 +4377,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestNativeStatementDeferredClose/write_failure": {
-          "output": "=== RUN   TestNativeStatementDeferredClose/write_failure\n[mariadb] 2026/11/12 22:21:48 packets.go:177 io: read/write on closed pipe\n--- PASS: TestNativeStatementDeferredClose/write_failure (0.00s)\n",
+          "output": "=== RUN   TestNativeStatementDeferredClose/write_failure\n[mariadb] 2026/11/12 23:02:11 packets.go:177 io: read/write on closed pipe\n--- PASS: TestNativeStatementDeferredClose/write_failure (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestNativeStatementDeferredCloseCancellation": {
@@ -4584,152 +4584,152 @@
           "output": "=== RUN   TestParseDateTimeFail/parse_\".\"_after_parsed_sec\n--- PASS: TestParseDateTimeFail/parse_\".\"_after_parsed_sec (0.00s)\n",
           "status": "pass"
         },
-        "github.com/aantich/go-mariadb/TestFoundRows1/default": {
-          "output": "=== RUN   TestFoundRows1/default\n=== PAUSE TestFoundRows1/default\n=== CONT  TestFoundRows1/default\n--- PASS: TestFoundRows1/default (0.14s)\n",
-          "status": "pass"
-        },
-        "github.com/aantich/go-mariadb/TestTinyInt1IsBool/default": {
-          "output": "=== RUN   TestTinyInt1IsBool/default\n=== PAUSE TestTinyInt1IsBool/default\n=== CONT  TestTinyInt1IsBool/default\n--- PASS: TestTinyInt1IsBool/default (0.15s)\n",
-          "status": "pass"
-        },
-        "github.com/aantich/go-mariadb/TestUint64/default": {
-          "output": "=== RUN   TestUint64/default\n=== PAUSE TestUint64/default\n=== CONT  TestUint64/default\n--- PASS: TestUint64/default (0.07s)\n",
-          "status": "pass"
-        },
-        "github.com/aantich/go-mariadb/TestRawBytesResultExceedsBuffer/default": {
-          "output": "=== RUN   TestRawBytesResultExceedsBuffer/default\n=== PAUSE TestRawBytesResultExceedsBuffer/default\n=== CONT  TestRawBytesResultExceedsBuffer/default\n--- PASS: TestRawBytesResultExceedsBuffer/default (0.09s)\n",
-          "status": "pass"
-        },
-        "github.com/aantich/go-mariadb/TestNULL/default": {
-          "output": "=== RUN   TestNULL/default\n=== PAUSE TestNULL/default\n=== CONT  TestNULL/default\n--- PASS: TestNULL/default (0.11s)\n",
-          "status": "pass"
-        },
-        "github.com/aantich/go-mariadb/TestValuerWithValidation/default": {
-          "output": "=== RUN   TestValuerWithValidation/default\n=== PAUSE TestValuerWithValidation/default\n=== CONT  TestValuerWithValidation/default\n--- PASS: TestValuerWithValidation/default (0.13s)\n",
-          "status": "pass"
-        },
-        "github.com/aantich/go-mariadb/TestValuer/default": {
-          "output": "=== RUN   TestValuer/default\n=== PAUSE TestValuer/default\n=== CONT  TestValuer/default\n--- PASS: TestValuer/default (0.15s)\n",
-          "status": "pass"
-        },
-        "github.com/aantich/go-mariadb/TestTimestampMicros/default": {
-          "output": "=== RUN   TestTimestampMicros/default\n=== PAUSE TestTimestampMicros/default\n=== CONT  TestTimestampMicros/default\n--- PASS: TestTimestampMicros/default (0.05s)\n",
-          "status": "pass"
-        },
-        "github.com/aantich/go-mariadb/TestRawBytes/default": {
-          "output": "=== RUN   TestRawBytes/default\n=== PAUSE TestRawBytes/default\n=== CONT  TestRawBytes/default\n--- PASS: TestRawBytes/default (0.06s)\n",
-          "status": "pass"
-        },
-        "github.com/aantich/go-mariadb/TestRawMessage/default": {
-          "output": "=== RUN   TestRawMessage/default\n=== PAUSE TestRawMessage/default\n=== CONT  TestRawMessage/default\n--- PASS: TestRawMessage/default (0.07s)\n",
-          "status": "pass"
-        },
-        "github.com/aantich/go-mariadb/TestString/default": {
-          "output": "=== RUN   TestString/default\n=== PAUSE TestString/default\n=== CONT  TestString/default\n--- PASS: TestString/default (0.85s)\n",
-          "status": "pass"
-        },
-        "github.com/aantich/go-mariadb/TestFloat64Placeholder/default": {
-          "output": "=== RUN   TestFloat64Placeholder/default\n=== PAUSE TestFloat64Placeholder/default\n=== CONT  TestFloat64Placeholder/default\n--- PASS: TestFloat64Placeholder/default (0.30s)\n",
-          "status": "pass"
-        },
-        "github.com/aantich/go-mariadb/TestInt/default": {
-          "output": "=== RUN   TestInt/default\n=== PAUSE TestInt/default\n=== CONT  TestInt/default\n--- PASS: TestInt/default (1.10s)\n",
-          "status": "pass"
-        },
-        "github.com/aantich/go-mariadb/TestFloat64/default": {
-          "output": "=== RUN   TestFloat64/default\n=== PAUSE TestFloat64/default\n=== CONT  TestFloat64/default\n--- PASS: TestFloat64/default (0.32s)\n",
-          "status": "pass"
-        },
-        "github.com/aantich/go-mariadb/TestFloat32/default": {
-          "output": "=== RUN   TestFloat32/default\n=== PAUSE TestFloat32/default\n=== CONT  TestFloat32/default\n--- PASS: TestFloat32/default (0.32s)\n",
-          "status": "pass"
-        },
         "github.com/aantich/go-mariadb/TestCRUD/default": {
-          "output": "=== RUN   TestCRUD/default\n=== PAUSE TestCRUD/default\n=== CONT  TestCRUD/default\n--- PASS: TestCRUD/default (0.14s)\n",
+          "output": "=== RUN   TestCRUD/default\n=== PAUSE TestCRUD/default\n=== CONT  TestCRUD/default\n--- PASS: TestCRUD/default (0.13s)\n",
           "status": "pass"
         },
-        "github.com/aantich/go-mariadb/TestNumbersToAny/default": {
-          "output": "=== RUN   TestNumbersToAny/default\n=== PAUSE TestNumbersToAny/default\n=== CONT  TestNumbersToAny/default\n--- PASS: TestNumbersToAny/default (0.12s)\n",
-          "status": "pass"
-        },
-        "github.com/aantich/go-mariadb/TestStaleConnectionChecks/default": {
-          "output": "=== RUN   TestStaleConnectionChecks/default\n=== PAUSE TestStaleConnectionChecks/default\n=== CONT  TestStaleConnectionChecks/default\n--- PASS: TestStaleConnectionChecks/default (3.04s)\n",
-          "status": "pass"
-        },
-        "github.com/aantich/go-mariadb/TestEmptyQuery/default": {
-          "output": "=== RUN   TestEmptyQuery/default\n=== PAUSE TestEmptyQuery/default\n=== CONT  TestEmptyQuery/default\n--- PASS: TestEmptyQuery/default (0.06s)\n",
-          "status": "pass"
-        },
-        "github.com/aantich/go-mariadb/TestTinyInt1IsBoolDisabled/default": {
-          "output": "=== RUN   TestTinyInt1IsBoolDisabled/default\n=== PAUSE TestTinyInt1IsBoolDisabled/default\n=== CONT  TestTinyInt1IsBoolDisabled/default\n--- PASS: TestTinyInt1IsBoolDisabled/default (0.07s)\n",
-          "status": "pass"
-        },
-        "github.com/aantich/go-mariadb/TestPingContext/default": {
-          "output": "=== RUN   TestPingContext/default\n=== PAUSE TestPingContext/default\n=== CONT  TestPingContext/default\n--- PASS: TestPingContext/default (0.03s)\n",
+        "github.com/aantich/go-mariadb/TestFoundRows1/default": {
+          "output": "=== RUN   TestFoundRows1/default\n=== PAUSE TestFoundRows1/default\n=== CONT  TestFoundRows1/default\n--- PASS: TestFoundRows1/default (0.10s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestValuerWithValueReceiverGivenNilValue/default": {
-          "output": "=== RUN   TestValuerWithValueReceiverGivenNilValue/default\n=== PAUSE TestValuerWithValueReceiverGivenNilValue/default\n=== CONT  TestValuerWithValueReceiverGivenNilValue/default\n--- PASS: TestValuerWithValueReceiverGivenNilValue/default (0.06s)\n",
+          "output": "=== RUN   TestValuerWithValueReceiverGivenNilValue/default\n=== PAUSE TestValuerWithValueReceiverGivenNilValue/default\n=== CONT  TestValuerWithValueReceiverGivenNilValue/default\n--- PASS: TestValuerWithValueReceiverGivenNilValue/default (0.11s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestContextBeginReadOnly/default": {
-          "output": "=== RUN   TestContextBeginReadOnly/default\n=== PAUSE TestContextBeginReadOnly/default\n=== CONT  TestContextBeginReadOnly/default\n--- PASS: TestContextBeginReadOnly/default (0.06s)\n",
-          "status": "pass"
-        },
-        "github.com/aantich/go-mariadb/TestContextBeginIsolationLevel/default": {
-          "output": "=== RUN   TestContextBeginIsolationLevel/default\n=== PAUSE TestContextBeginIsolationLevel/default\n=== CONT  TestContextBeginIsolationLevel/default\n--- PASS: TestContextBeginIsolationLevel/default (0.08s)\n",
+          "output": "=== RUN   TestContextBeginReadOnly/default\n=== PAUSE TestContextBeginReadOnly/default\n=== CONT  TestContextBeginReadOnly/default\n--- PASS: TestContextBeginReadOnly/default (0.11s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestContextCancelStmtQuery/default": {
-          "output": "=== RUN   TestContextCancelStmtQuery/default\n=== PAUSE TestContextCancelStmtQuery/default\n=== CONT  TestContextCancelStmtQuery/default\n--- PASS: TestContextCancelStmtQuery/default (1.33s)\n",
-          "status": "pass"
-        },
-        "github.com/aantich/go-mariadb/TestContextCancelPrepare/default": {
-          "output": "=== RUN   TestContextCancelPrepare/default\n=== PAUSE TestContextCancelPrepare/default\n=== CONT  TestContextCancelPrepare/default\n--- PASS: TestContextCancelPrepare/default (0.03s)\n",
-          "status": "pass"
-        },
-        "github.com/aantich/go-mariadb/TestContextCancelQueryRow/default": {
-          "output": "=== RUN   TestContextCancelQueryRow/default\n=== PAUSE TestContextCancelQueryRow/default\n=== CONT  TestContextCancelQueryRow/default\n--- PASS: TestContextCancelQueryRow/default (0.16s)\n",
+          "output": "=== RUN   TestContextCancelStmtQuery/default\n=== PAUSE TestContextCancelStmtQuery/default\n=== CONT  TestContextCancelStmtQuery/default\n--- PASS: TestContextCancelStmtQuery/default (1.36s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestContextCancelStmtExec/default": {
-          "output": "=== RUN   TestContextCancelStmtExec/default\n=== PAUSE TestContextCancelStmtExec/default\n=== CONT  TestContextCancelStmtExec/default\n--- PASS: TestContextCancelStmtExec/default (1.31s)\n",
+          "output": "=== RUN   TestContextCancelStmtExec/default\n=== PAUSE TestContextCancelStmtExec/default\n=== CONT  TestContextCancelStmtExec/default\n--- PASS: TestContextCancelStmtExec/default (1.36s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestContextBeginIsolationLevel/default": {
+          "output": "=== RUN   TestContextBeginIsolationLevel/default\n=== PAUSE TestContextBeginIsolationLevel/default\n=== CONT  TestContextBeginIsolationLevel/default\n--- PASS: TestContextBeginIsolationLevel/default (0.11s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestContextCancelQueryRow/default": {
+          "output": "=== RUN   TestContextCancelQueryRow/default\n=== PAUSE TestContextCancelQueryRow/default\n=== CONT  TestContextCancelQueryRow/default\n--- PASS: TestContextCancelQueryRow/default (0.19s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestContextCancelQuery/default": {
           "output": "=== RUN   TestContextCancelQuery/default\n=== PAUSE TestContextCancelQuery/default\n=== CONT  TestContextCancelQuery/default\n--- PASS: TestContextCancelQuery/default (1.32s)\n",
           "status": "pass"
         },
+        "github.com/aantich/go-mariadb/TestContextCancelPrepare/default": {
+          "output": "=== RUN   TestContextCancelPrepare/default\n=== PAUSE TestContextCancelPrepare/default\n=== CONT  TestContextCancelPrepare/default\n--- PASS: TestContextCancelPrepare/default (0.03s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestContextCancelExec/default": {
+          "output": "=== RUN   TestContextCancelExec/default\n=== PAUSE TestContextCancelExec/default\n=== CONT  TestContextCancelExec/default\n--- PASS: TestContextCancelExec/default (1.36s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestPingContext/default": {
+          "output": "=== RUN   TestPingContext/default\n=== PAUSE TestPingContext/default\n=== CONT  TestPingContext/default\n--- PASS: TestPingContext/default (0.04s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestStmtMultiRows/default": {
+          "output": "=== RUN   TestStmtMultiRows/default\n=== PAUSE TestStmtMultiRows/default\n=== CONT  TestStmtMultiRows/default\n--- PASS: TestStmtMultiRows/default (0.03s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestSkipResults/default": {
+          "output": "=== RUN   TestSkipResults/default\n=== PAUSE TestSkipResults/default\n=== CONT  TestSkipResults/default\n--- PASS: TestSkipResults/default (0.05s)\n",
+          "status": "pass"
+        },
         "github.com/aantich/go-mariadb/TestRowsClose/default": {
           "output": "=== RUN   TestRowsClose/default\n=== PAUSE TestRowsClose/default\n=== CONT  TestRowsClose/default\n--- PASS: TestRowsClose/default (0.03s)\n",
           "status": "pass"
         },
-        "github.com/aantich/go-mariadb/TestContextCancelExec/default": {
-          "output": "=== RUN   TestContextCancelExec/default\n=== PAUSE TestContextCancelExec/default\n=== CONT  TestContextCancelExec/default\n--- PASS: TestContextCancelExec/default (1.31s)\n",
-          "status": "pass"
-        },
-        "github.com/aantich/go-mariadb/TestSkipResults/default": {
-          "output": "=== RUN   TestSkipResults/default\n=== PAUSE TestSkipResults/default\n=== CONT  TestSkipResults/default\n--- PASS: TestSkipResults/default (0.03s)\n",
-          "status": "pass"
-        },
-        "github.com/aantich/go-mariadb/TestStmtMultiRows/default": {
-          "output": "=== RUN   TestStmtMultiRows/default\n=== PAUSE TestStmtMultiRows/default\n=== CONT  TestStmtMultiRows/default\n--- PASS: TestStmtMultiRows/default (0.04s)\n",
-          "status": "pass"
-        },
         "github.com/aantich/go-mariadb/TestCloseStmtBeforeRows/default": {
-          "output": "=== RUN   TestCloseStmtBeforeRows/default\n=== PAUSE TestCloseStmtBeforeRows/default\n=== CONT  TestCloseStmtBeforeRows/default\n--- PASS: TestCloseStmtBeforeRows/default (0.04s)\n",
+          "output": "=== RUN   TestCloseStmtBeforeRows/default\n=== PAUSE TestCloseStmtBeforeRows/default\n=== CONT  TestCloseStmtBeforeRows/default\n--- PASS: TestCloseStmtBeforeRows/default (0.06s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestRawBytesResultExceedsBuffer/default": {
+          "output": "=== RUN   TestRawBytesResultExceedsBuffer/default\n=== PAUSE TestRawBytesResultExceedsBuffer/default\n=== CONT  TestRawBytesResultExceedsBuffer/default\n--- PASS: TestRawBytesResultExceedsBuffer/default (0.07s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestColumnsWithAlias/default": {
+          "output": "=== RUN   TestColumnsWithAlias/default\n=== PAUSE TestColumnsWithAlias/default\n=== CONT  TestColumnsWithAlias/default\n--- PASS: TestColumnsWithAlias/default (0.06s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestFailingCharset/default": {
           "output": "=== RUN   TestFailingCharset/default\n=== PAUSE TestFailingCharset/default\n=== CONT  TestFailingCharset/default\n--- PASS: TestFailingCharset/default (0.00s)\n",
           "status": "pass"
         },
-        "github.com/aantich/go-mariadb/TestColumnsWithAlias/default": {
-          "output": "=== RUN   TestColumnsWithAlias/default\n=== PAUSE TestColumnsWithAlias/default\n=== CONT  TestColumnsWithAlias/default\n--- PASS: TestColumnsWithAlias/default (0.03s)\n",
+        "github.com/aantich/go-mariadb/TestFloat64Placeholder/default": {
+          "output": "=== RUN   TestFloat64Placeholder/default\n=== PAUSE TestFloat64Placeholder/default\n=== CONT  TestFloat64Placeholder/default\n--- PASS: TestFloat64Placeholder/default (0.30s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/TestFoundRows2/default": {
-          "output": "=== RUN   TestFoundRows2/default\n=== PAUSE TestFoundRows2/default\n=== CONT  TestFoundRows2/default\n--- PASS: TestFoundRows2/default (0.07s)\n",
+          "output": "=== RUN   TestFoundRows2/default\n=== PAUSE TestFoundRows2/default\n=== CONT  TestFoundRows2/default\n--- PASS: TestFoundRows2/default (0.13s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestUint64/default": {
+          "output": "=== RUN   TestUint64/default\n=== PAUSE TestUint64/default\n=== CONT  TestUint64/default\n--- PASS: TestUint64/default (0.06s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestTimestampMicros/default": {
+          "output": "=== RUN   TestTimestampMicros/default\n=== PAUSE TestTimestampMicros/default\n=== CONT  TestTimestampMicros/default\n--- PASS: TestTimestampMicros/default (0.06s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestValuerWithValidation/default": {
+          "output": "=== RUN   TestValuerWithValidation/default\n=== PAUSE TestValuerWithValidation/default\n=== CONT  TestValuerWithValidation/default\n--- PASS: TestValuerWithValidation/default (0.14s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestNULL/default": {
+          "output": "=== RUN   TestNULL/default\n=== PAUSE TestNULL/default\n=== CONT  TestNULL/default\n--- PASS: TestNULL/default (0.11s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestRawMessage/default": {
+          "output": "=== RUN   TestRawMessage/default\n=== PAUSE TestRawMessage/default\n=== CONT  TestRawMessage/default\n--- PASS: TestRawMessage/default (0.05s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestString/default": {
+          "output": "=== RUN   TestString/default\n=== PAUSE TestString/default\n=== CONT  TestString/default\n--- PASS: TestString/default (0.81s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestValuer/default": {
+          "output": "=== RUN   TestValuer/default\n=== PAUSE TestValuer/default\n=== CONT  TestValuer/default\n--- PASS: TestValuer/default (0.11s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestNumbersToAny/default": {
+          "output": "=== RUN   TestNumbersToAny/default\n=== PAUSE TestNumbersToAny/default\n=== CONT  TestNumbersToAny/default\n--- PASS: TestNumbersToAny/default (0.12s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestRawBytes/default": {
+          "output": "=== RUN   TestRawBytes/default\n=== PAUSE TestRawBytes/default\n=== CONT  TestRawBytes/default\n--- PASS: TestRawBytes/default (0.05s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestFloat64/default": {
+          "output": "=== RUN   TestFloat64/default\n=== PAUSE TestFloat64/default\n=== CONT  TestFloat64/default\n--- PASS: TestFloat64/default (0.31s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestFloat32/default": {
+          "output": "=== RUN   TestFloat32/default\n=== PAUSE TestFloat32/default\n=== CONT  TestFloat32/default\n--- PASS: TestFloat32/default (0.30s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestInt/default": {
+          "output": "=== RUN   TestInt/default\n=== PAUSE TestInt/default\n=== CONT  TestInt/default\n--- PASS: TestInt/default (0.92s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestTinyInt1IsBoolDisabled/default": {
+          "output": "=== RUN   TestTinyInt1IsBoolDisabled/default\n=== PAUSE TestTinyInt1IsBoolDisabled/default\n=== CONT  TestTinyInt1IsBoolDisabled/default\n--- PASS: TestTinyInt1IsBoolDisabled/default (0.11s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestEmptyQuery/default": {
+          "output": "=== RUN   TestEmptyQuery/default\n=== PAUSE TestEmptyQuery/default\n=== CONT  TestEmptyQuery/default\n--- PASS: TestEmptyQuery/default (0.05s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestStaleConnectionChecks/default": {
+          "output": "=== RUN   TestStaleConnectionChecks/default\n=== PAUSE TestStaleConnectionChecks/default\n=== CONT  TestStaleConnectionChecks/default\n--- PASS: TestStaleConnectionChecks/default (3.03s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/TestTinyInt1IsBool/default": {
+          "output": "=== RUN   TestTinyInt1IsBool/default\n=== PAUSE TestTinyInt1IsBool/default\n=== CONT  TestTinyInt1IsBool/default\n--- PASS: TestTinyInt1IsBool/default (0.06s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/FuzzDedicatedLengthEncoding": {
@@ -4906,6 +4906,42 @@
         },
         "github.com/aantich/go-mariadb/FuzzDiscardedExtendedColumn/seed#1": {
           "output": "=== RUN   FuzzDiscardedExtendedColumn/seed#1\n--- PASS: FuzzDiscardedExtendedColumn/seed#1 (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/cdc/TestCDCGTIDListPadding": {
+          "output": "=== RUN   TestCDCGTIDListPadding\n--- PASS: TestCDCGTIDListPadding (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/cdc/TestCDCGTIDListPadding/compact_empty": {
+          "output": "=== RUN   TestCDCGTIDListPadding/compact_empty\n--- PASS: TestCDCGTIDListPadding/compact_empty (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/cdc/TestCDCGTIDListPadding/padded_empty": {
+          "output": "=== RUN   TestCDCGTIDListPadding/padded_empty\n--- PASS: TestCDCGTIDListPadding/padded_empty (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/cdc/TestCDCGTIDListPadding/one_padding_byte": {
+          "output": "=== RUN   TestCDCGTIDListPadding/one_padding_byte\n--- PASS: TestCDCGTIDListPadding/one_padding_byte (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/cdc/TestCDCGTIDListPadding/three_padding_bytes": {
+          "output": "=== RUN   TestCDCGTIDListPadding/three_padding_bytes\n--- PASS: TestCDCGTIDListPadding/three_padding_bytes (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/cdc/TestCDCGTIDListPadding/nonzero_padding": {
+          "output": "=== RUN   TestCDCGTIDListPadding/nonzero_padding\n--- PASS: TestCDCGTIDListPadding/nonzero_padding (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/cdc/TestCDCGTIDListPadding/truncated_header": {
+          "output": "=== RUN   TestCDCGTIDListPadding/truncated_header\n--- PASS: TestCDCGTIDListPadding/truncated_header (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/cdc/TestCDCGTIDListPadding/nonempty": {
+          "output": "=== RUN   TestCDCGTIDListPadding/nonempty\n--- PASS: TestCDCGTIDListPadding/nonempty (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/cdc/TestCDCGTIDListPadding/nonempty_with_padding": {
+          "output": "=== RUN   TestCDCGTIDListPadding/nonempty_with_padding\n--- PASS: TestCDCGTIDListPadding/nonempty_with_padding (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/cdc/TestCDCTransactions": {
@@ -5188,6 +5224,10 @@
           "output": "=== RUN   TestCDCFuzzSeedReachability/family/18/type=15\n--- PASS: TestCDCFuzzSeedReachability/family/18/type=15 (0.00s)\n",
           "status": "pass"
         },
+        "github.com/aantich/go-mariadb/cdc/TestCDCFuzzSeedReachability/family/19/type=163": {
+          "output": "=== RUN   TestCDCFuzzSeedReachability/family/19/type=163\n--- PASS: TestCDCFuzzSeedReachability/family/19/type=163 (0.00s)\n",
+          "status": "pass"
+        },
         "github.com/aantich/go-mariadb/cdc/TestCDCFuzzSeedReachability/sequence/0": {
           "output": "=== RUN   TestCDCFuzzSeedReachability/sequence/0\n--- PASS: TestCDCFuzzSeedReachability/sequence/0 (0.00s)\n",
           "status": "pass"
@@ -5369,7 +5409,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/cdc/FuzzCDCDecode": {
-          "output": "=== RUN   FuzzCDCDecode\n--- PASS: FuzzCDCDecode (0.00s)\n",
+          "output": "=== RUN   FuzzCDCDecode\n--- PASS: FuzzCDCDecode (0.01s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/cdc/FuzzCDCDecode/seed#0": {
@@ -5448,6 +5488,10 @@
           "output": "=== RUN   FuzzCDCDecode/seed#18\n--- PASS: FuzzCDCDecode/seed#18 (0.00s)\n",
           "status": "pass"
         },
+        "github.com/aantich/go-mariadb/cdc/FuzzCDCDecode/seed#19": {
+          "output": "=== RUN   FuzzCDCDecode/seed#19\n--- PASS: FuzzCDCDecode/seed#19 (0.00s)\n",
+          "status": "pass"
+        },
         "github.com/aantich/go-mariadb/cdc/FuzzCDCSequence": {
           "output": "=== RUN   FuzzCDCSequence\n--- PASS: FuzzCDCSequence (0.00s)\n",
           "status": "pass"
@@ -5485,7 +5529,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/gssapi/TestNativeContextCleanup": {
-          "output": "=== RUN   TestNativeContextCleanup\n--- PASS: TestNativeContextCleanup (0.03s)\n",
+          "output": "=== RUN   TestNativeContextCleanup\n--- PASS: TestNativeContextCleanup (0.02s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/gssapi/TestProviderCancellation": {
@@ -5513,7 +5557,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/gssapi/TestProviderAdmission": {
-          "output": "=== RUN   TestProviderAdmission\n--- PASS: TestProviderAdmission (0.38s)\n",
+          "output": "=== RUN   TestProviderAdmission\n--- PASS: TestProviderAdmission (0.40s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/gssapi/TestProviderAdmission/open": {
@@ -5537,11 +5581,11 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBNativeBulk": {
-          "output": "=== RUN   TestMariaDBNativeBulk\n--- PASS: TestMariaDBNativeBulk (0.15s)\n",
+          "output": "=== RUN   TestMariaDBNativeBulk\n--- PASS: TestMariaDBNativeBulk (0.10s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBNativeBulk/1": {
-          "output": "=== RUN   TestMariaDBNativeBulk/1\n--- PASS: TestMariaDBNativeBulk/1 (0.01s)\n",
+          "output": "=== RUN   TestMariaDBNativeBulk/1\n--- PASS: TestMariaDBNativeBulk/1 (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBNativeBulk/16": {
@@ -5549,7 +5593,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBNativeBulk/100": {
-          "output": "=== RUN   TestMariaDBNativeBulk/100\n--- PASS: TestMariaDBNativeBulk/100 (0.01s)\n",
+          "output": "=== RUN   TestMariaDBNativeBulk/100\n--- PASS: TestMariaDBNativeBulk/100 (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBNativeBulk/1000": {
@@ -5557,15 +5601,15 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBNativeUnsignedResult": {
-          "output": "=== RUN   TestMariaDBNativeUnsignedResult\n--- PASS: TestMariaDBNativeUnsignedResult (0.12s)\n",
+          "output": "=== RUN   TestMariaDBNativeUnsignedResult\n--- PASS: TestMariaDBNativeUnsignedResult (0.08s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBReviewBulkTransports": {
-          "output": "=== RUN   TestMariaDBReviewBulkTransports\n--- PASS: TestMariaDBReviewBulkTransports (0.32s)\n",
+          "output": "=== RUN   TestMariaDBReviewBulkTransports\n--- PASS: TestMariaDBReviewBulkTransports (0.31s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBReviewBulkTransports/text": {
-          "output": "=== RUN   TestMariaDBReviewBulkTransports/text\n--- PASS: TestMariaDBReviewBulkTransports/text (0.06s)\n",
+          "output": "=== RUN   TestMariaDBReviewBulkTransports/text\n--- PASS: TestMariaDBReviewBulkTransports/text (0.05s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBReviewBulkTransports/compressed": {
@@ -5581,7 +5625,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBReviewBulkTransports/x509": {
-          "output": "=== RUN   TestMariaDBReviewBulkTransports/x509\n--- PASS: TestMariaDBReviewBulkTransports/x509 (0.08s)\n",
+          "output": "=== RUN   TestMariaDBReviewBulkTransports/x509\n--- PASS: TestMariaDBReviewBulkTransports/x509 (0.07s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBReviewZeroTimeParity": {
@@ -5625,7 +5669,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBManagedSessionIsolation/text": {
-          "output": "=== RUN   TestMariaDBManagedSessionIsolation/text\n--- PASS: TestMariaDBManagedSessionIsolation/text (0.02s)\n",
+          "output": "=== RUN   TestMariaDBManagedSessionIsolation/text\n--- PASS: TestMariaDBManagedSessionIsolation/text (0.01s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBManagedSessionIsolation/compressed": {
@@ -5673,7 +5717,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBNativeTypeMetadata": {
-          "output": "=== RUN   TestMariaDBNativeTypeMetadata\n--- PASS: TestMariaDBNativeTypeMetadata (0.71s)\n",
+          "output": "=== RUN   TestMariaDBNativeTypeMetadata\n--- PASS: TestMariaDBNativeTypeMetadata (0.62s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBNativeTypeMetadata/text": {
@@ -5681,27 +5725,27 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBNativeTypeMetadata/compressed": {
-          "output": "=== RUN   TestMariaDBNativeTypeMetadata/compressed\n--- PASS: TestMariaDBNativeTypeMetadata/compressed (0.12s)\n",
+          "output": "=== RUN   TestMariaDBNativeTypeMetadata/compressed\n--- PASS: TestMariaDBNativeTypeMetadata/compressed (0.10s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBNativeTypeMetadata/tls": {
-          "output": "=== RUN   TestMariaDBNativeTypeMetadata/tls\n--- PASS: TestMariaDBNativeTypeMetadata/tls (0.13s)\n",
+          "output": "=== RUN   TestMariaDBNativeTypeMetadata/tls\n--- PASS: TestMariaDBNativeTypeMetadata/tls (0.11s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBNativeTypeMetadata/socket": {
-          "output": "=== RUN   TestMariaDBNativeTypeMetadata/socket\n--- PASS: TestMariaDBNativeTypeMetadata/socket (0.12s)\n",
+          "output": "=== RUN   TestMariaDBNativeTypeMetadata/socket\n--- PASS: TestMariaDBNativeTypeMetadata/socket (0.10s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBNativeTypeMetadata/legacy": {
-          "output": "=== RUN   TestMariaDBNativeTypeMetadata/legacy\n--- PASS: TestMariaDBNativeTypeMetadata/legacy (0.13s)\n",
+          "output": "=== RUN   TestMariaDBNativeTypeMetadata/legacy\n--- PASS: TestMariaDBNativeTypeMetadata/legacy (0.10s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBNativeTypeMetadata/uncached": {
-          "output": "=== RUN   TestMariaDBNativeTypeMetadata/uncached\n--- PASS: TestMariaDBNativeTypeMetadata/uncached (0.12s)\n",
+          "output": "=== RUN   TestMariaDBNativeTypeMetadata/uncached\n--- PASS: TestMariaDBNativeTypeMetadata/uncached (0.10s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBManagedRestorationFailure": {
-          "output": "=== RUN   TestMariaDBManagedRestorationFailure\n--- PASS: TestMariaDBManagedRestorationFailure (0.16s)\n",
+          "output": "=== RUN   TestMariaDBManagedRestorationFailure\n--- PASS: TestMariaDBManagedRestorationFailure (0.14s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBManagedRoleAndSchema": {
@@ -5745,7 +5789,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBStreamPacketBoundary": {
-          "output": "=== RUN   TestMariaDBStreamPacketBoundary\n--- PASS: TestMariaDBStreamPacketBoundary (0.03s)\n",
+          "output": "=== RUN   TestMariaDBStreamPacketBoundary\n--- PASS: TestMariaDBStreamPacketBoundary (0.02s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBStreamPacketBoundary/automatic=false": {
@@ -5753,15 +5797,15 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBStreamPacketBoundary/automatic=true": {
-          "output": "=== RUN   TestMariaDBStreamPacketBoundary/automatic=true\n--- PASS: TestMariaDBStreamPacketBoundary/automatic=true (0.02s)\n",
+          "output": "=== RUN   TestMariaDBStreamPacketBoundary/automatic=true\n--- PASS: TestMariaDBStreamPacketBoundary/automatic=true (0.01s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBBulkUnits": {
-          "output": "=== RUN   TestMariaDBBulkUnits\n--- PASS: TestMariaDBBulkUnits (0.05s)\n",
+          "output": "=== RUN   TestMariaDBBulkUnits\n--- PASS: TestMariaDBBulkUnits (0.03s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBBulkUnits/text": {
-          "output": "=== RUN   TestMariaDBBulkUnits/text\n--- PASS: TestMariaDBBulkUnits/text (0.01s)\n",
+          "output": "=== RUN   TestMariaDBBulkUnits/text\n--- PASS: TestMariaDBBulkUnits/text (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBBulkUnits/compressed": {
@@ -5789,11 +5833,11 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBStreamParameters": {
-          "output": "=== RUN   TestMariaDBStreamParameters\n--- PASS: TestMariaDBStreamParameters (0.10s)\n",
+          "output": "=== RUN   TestMariaDBStreamParameters\n--- PASS: TestMariaDBStreamParameters (0.08s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBStreamParameters/text": {
-          "output": "=== RUN   TestMariaDBStreamParameters/text\n--- PASS: TestMariaDBStreamParameters/text (0.01s)\n",
+          "output": "=== RUN   TestMariaDBStreamParameters/text\n--- PASS: TestMariaDBStreamParameters/text (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBStreamParameters/compressed": {
@@ -5801,15 +5845,15 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBStreamParameters/tls": {
-          "output": "=== RUN   TestMariaDBStreamParameters/tls\n--- PASS: TestMariaDBStreamParameters/tls (0.02s)\n",
+          "output": "=== RUN   TestMariaDBStreamParameters/tls\n--- PASS: TestMariaDBStreamParameters/tls (0.01s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBStreamParameters/socket": {
-          "output": "=== RUN   TestMariaDBStreamParameters/socket\n--- PASS: TestMariaDBStreamParameters/socket (0.01s)\n",
+          "output": "=== RUN   TestMariaDBStreamParameters/socket\n--- PASS: TestMariaDBStreamParameters/socket (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBStreamParameters/x509": {
-          "output": "=== RUN   TestMariaDBStreamParameters/x509\n--- PASS: TestMariaDBStreamParameters/x509 (0.02s)\n",
+          "output": "=== RUN   TestMariaDBStreamParameters/x509\n--- PASS: TestMariaDBStreamParameters/x509 (0.01s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBStreamParameters/legacy": {
@@ -5817,11 +5861,11 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBStreamParameters/uncached": {
-          "output": "=== RUN   TestMariaDBStreamParameters/uncached\n--- PASS: TestMariaDBStreamParameters/uncached (0.01s)\n",
+          "output": "=== RUN   TestMariaDBStreamParameters/uncached\n--- PASS: TestMariaDBStreamParameters/uncached (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBServerCursors": {
-          "output": "=== RUN   TestMariaDBServerCursors\n--- PASS: TestMariaDBServerCursors (0.14s)\n",
+          "output": "=== RUN   TestMariaDBServerCursors\n--- PASS: TestMariaDBServerCursors (0.11s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBServerCursors/text/1": {
@@ -5829,7 +5873,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBServerCursors/text/3": {
-          "output": "=== RUN   TestMariaDBServerCursors/text/3\n--- PASS: TestMariaDBServerCursors/text/3 (0.01s)\n",
+          "output": "=== RUN   TestMariaDBServerCursors/text/3\n--- PASS: TestMariaDBServerCursors/text/3 (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBServerCursors/text/128": {
@@ -5837,11 +5881,11 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBServerCursors/compressed/1": {
-          "output": "=== RUN   TestMariaDBServerCursors/compressed/1\n--- PASS: TestMariaDBServerCursors/compressed/1 (0.01s)\n",
+          "output": "=== RUN   TestMariaDBServerCursors/compressed/1\n--- PASS: TestMariaDBServerCursors/compressed/1 (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBServerCursors/compressed/3": {
-          "output": "=== RUN   TestMariaDBServerCursors/compressed/3\n--- PASS: TestMariaDBServerCursors/compressed/3 (0.01s)\n",
+          "output": "=== RUN   TestMariaDBServerCursors/compressed/3\n--- PASS: TestMariaDBServerCursors/compressed/3 (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBServerCursors/compressed/128": {
@@ -5885,7 +5929,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBServerCursors/legacy/1": {
-          "output": "=== RUN   TestMariaDBServerCursors/legacy/1\n--- PASS: TestMariaDBServerCursors/legacy/1 (0.01s)\n",
+          "output": "=== RUN   TestMariaDBServerCursors/legacy/1\n--- PASS: TestMariaDBServerCursors/legacy/1 (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBServerCursors/legacy/3": {
@@ -5909,11 +5953,11 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBProgressExecution": {
-          "output": "=== RUN   TestMariaDBProgressExecution\n--- PASS: TestMariaDBProgressExecution (0.09s)\n",
+          "output": "=== RUN   TestMariaDBProgressExecution\n--- PASS: TestMariaDBProgressExecution (0.08s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBProgressExecution/text": {
-          "output": "=== RUN   TestMariaDBProgressExecution/text\n--- PASS: TestMariaDBProgressExecution/text (0.02s)\n",
+          "output": "=== RUN   TestMariaDBProgressExecution/text\n--- PASS: TestMariaDBProgressExecution/text (0.01s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBProgressExecution/compressed": {
@@ -5945,7 +5989,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBNativeCloseAfterReturn": {
-          "output": "=== RUN   TestMariaDBNativeCloseAfterReturn\n--- PASS: TestMariaDBNativeCloseAfterReturn (0.20s)\n",
+          "output": "=== RUN   TestMariaDBNativeCloseAfterReturn\n--- PASS: TestMariaDBNativeCloseAfterReturn (0.21s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBNativeCloseAfterReturn/text/text_full": {
@@ -6041,7 +6085,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBNativeCloseAfterReturn/x509/cursor_full": {
-          "output": "=== RUN   TestMariaDBNativeCloseAfterReturn/x509/cursor_full\n--- PASS: TestMariaDBNativeCloseAfterReturn/x509/cursor_full (0.01s)\n",
+          "output": "=== RUN   TestMariaDBNativeCloseAfterReturn/x509/cursor_full\n--- PASS: TestMariaDBNativeCloseAfterReturn/x509/cursor_full (0.02s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBNativeCloseAfterReturn/x509/cursor_early": {
@@ -6129,11 +6173,11 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBNativeStatementReuse/uncached": {
-          "output": "=== RUN   TestMariaDBNativeStatementReuse/uncached\n--- PASS: TestMariaDBNativeStatementReuse/uncached (0.01s)\n",
+          "output": "=== RUN   TestMariaDBNativeStatementReuse/uncached\n--- PASS: TestMariaDBNativeStatementReuse/uncached (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBNativeStatementReset": {
-          "output": "=== RUN   TestMariaDBNativeStatementReset\n--- PASS: TestMariaDBNativeStatementReset (0.04s)\n",
+          "output": "=== RUN   TestMariaDBNativeStatementReset\n--- PASS: TestMariaDBNativeStatementReset (0.03s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBNativeStatementReset/text": {
@@ -6141,7 +6185,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBNativeStatementReset/compressed": {
-          "output": "=== RUN   TestMariaDBNativeStatementReset/compressed\n--- PASS: TestMariaDBNativeStatementReset/compressed (0.01s)\n",
+          "output": "=== RUN   TestMariaDBNativeStatementReset/compressed\n--- PASS: TestMariaDBNativeStatementReset/compressed (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBNativeStatementReset/tls": {
@@ -6173,7 +6217,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBExternalAuthentication": {
-          "output": "=== RUN   TestMariaDBExternalAuthentication\n    stage5_auth_test.go:66: EXTERNAL_AUTH {\"contract\": \"external-auth-v1\", \"fixture_inputs\": {\"Dockerfile\": \"2fbec1c32625e19a0880c93db66d27c4350d1d234956f60589813f083218c5d7\", \"pam_fixture.c\": \"9af7b7cf9c588c061a0172b850eac7ca07a48f8edf04ffe6f45e836a2b85cafa\", \"serve.py\": \"2c22e4d43c680a0d23cf72073e644b08498aead53140b721f9534ee36dc4ba31\"}, \"realm\": \"GO-MARIADB.TEST\", \"runtime_identity\": \"docker-runtime-sha256:8ab4ca1b95d1f45504e6d2dc13b3c8c0cbd9881278c6d0a1361f197a33480b64\", \"server_version\": \"12.3.3-MariaDB-ubu2404\", \"service_principal\": \"mariadb/localhost@GO-MARIADB.TEST\", \"tls_certificate_sha256\": \"ce029ca314b3b90fa189c2e68aeadaf001fff03be5b2c6e45dcd33796b8d3148\"}\n--- PASS: TestMariaDBExternalAuthentication (0.14s)\n",
+          "output": "=== RUN   TestMariaDBExternalAuthentication\n    stage5_auth_test.go:66: EXTERNAL_AUTH {\"contract\": \"external-auth-v1\", \"fixture_inputs\": {\"Dockerfile\": \"2fbec1c32625e19a0880c93db66d27c4350d1d234956f60589813f083218c5d7\", \"pam_fixture.c\": \"9af7b7cf9c588c061a0172b850eac7ca07a48f8edf04ffe6f45e836a2b85cafa\", \"serve.py\": \"2c22e4d43c680a0d23cf72073e644b08498aead53140b721f9534ee36dc4ba31\"}, \"realm\": \"GO-MARIADB.TEST\", \"runtime_identity\": \"docker-runtime-sha256:8ab4ca1b95d1f45504e6d2dc13b3c8c0cbd9881278c6d0a1361f197a33480b64\", \"server_version\": \"12.3.3-MariaDB-ubu2404\", \"service_principal\": \"mariadb/localhost@GO-MARIADB.TEST\", \"tls_certificate_sha256\": \"b3316d23dbe36ba435266fbdd1c1f4a96850a223d880d2a20361292adb2e3f74\"}\n--- PASS: TestMariaDBExternalAuthentication (0.13s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBExternalAuthentication/PAM/password": {
@@ -6197,7 +6241,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBExternalAuthentication/PAM/disabled": {
-          "output": "=== RUN   TestMariaDBExternalAuthentication/PAM/disabled\n--- PASS: TestMariaDBExternalAuthentication/PAM/disabled (0.01s)\n",
+          "output": "=== RUN   TestMariaDBExternalAuthentication/PAM/disabled\n--- PASS: TestMariaDBExternalAuthentication/PAM/disabled (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBExternalAuthentication/PAM/callback_error": {
@@ -6205,7 +6249,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBExternalAuthentication/PAM/cancellation": {
-          "output": "=== RUN   TestMariaDBExternalAuthentication/PAM/cancellation\n--- PASS: TestMariaDBExternalAuthentication/PAM/cancellation (0.01s)\n",
+          "output": "=== RUN   TestMariaDBExternalAuthentication/PAM/cancellation\n--- PASS: TestMariaDBExternalAuthentication/PAM/cancellation (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBExternalAuthentication/GSSAPI/TCP": {
@@ -6237,7 +6281,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBCDC": {
-          "output": "=== RUN   TestMariaDBCDC\n    stage6_cdc_test.go:108: CDC_FIXTURE {\"binlog_format\": \"ROW\", \"checksum\": \"CRC32\", \"contract\": \"cdc-v1\", \"fixture_sha256\": \"ce19dfa92382a8bfc192a1fb185ca27af4043c090a854fd11eaa4f3425428720\", \"semisync_available\": true, \"server_id\": 621129, \"server_version\": \"12.3.3-MariaDB-log\", \"transport\": \"private-unix-socket\"}\n--- PASS: TestMariaDBCDC (1.94s)\n",
+          "output": "=== RUN   TestMariaDBCDC\n    stage6_cdc_test.go:108: CDC_FIXTURE {\"binlog_format\": \"ROW\", \"checksum\": \"CRC32\", \"contract\": \"cdc-v1\", \"fixture_sha256\": \"fee0c0bc3ffee6b604520a4666e32985b69103babc2fde5c61221f43f516edf8\", \"semisync_available\": true, \"server_id\": 621129, \"server_version\": \"12.3.3-MariaDB-log\", \"transport\": \"private-unix-socket\"}\n--- PASS: TestMariaDBCDC (2.19s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBCDC/cursor_config_remains_reusable": {
@@ -6273,15 +6317,15 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBCDC/checksum_OFF_transition": {
-          "output": "=== RUN   TestMariaDBCDC/checksum_OFF_transition\n--- PASS: TestMariaDBCDC/checksum_OFF_transition (0.09s)\n",
+          "output": "=== RUN   TestMariaDBCDC/checksum_OFF_transition\n--- PASS: TestMariaDBCDC/checksum_OFF_transition (0.08s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBCDC/large_logical_event_and_receive_limit": {
-          "output": "=== RUN   TestMariaDBCDC/large_logical_event_and_receive_limit\n--- PASS: TestMariaDBCDC/large_logical_event_and_receive_limit (0.81s)\n",
+          "output": "=== RUN   TestMariaDBCDC/large_logical_event_and_receive_limit\n--- PASS: TestMariaDBCDC/large_logical_event_and_receive_limit (0.83s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBCDC/GTID_resume_and_DDL_rotation": {
-          "output": "=== RUN   TestMariaDBCDC/GTID_resume_and_DDL_rotation\n--- PASS: TestMariaDBCDC/GTID_resume_and_DDL_rotation (0.08s)\n",
+          "output": "=== RUN   TestMariaDBCDC/GTID_resume_and_DDL_rotation\n--- PASS: TestMariaDBCDC/GTID_resume_and_DDL_rotation (0.07s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBCDC/cancellation_and_close": {
@@ -6293,11 +6337,195 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBCDC/restart_from_durable_GTID": {
-          "output": "=== RUN   TestMariaDBCDC/restart_from_durable_GTID\n[mariadb] 2026/11/12 22:22:07 connection.go:872 closing bad idle connection: EOF\n[mariadb] 2026/11/12 22:22:07 packets.go:177 write unix ->/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/go-mariadb-cdc-3z1beuax/server.sock: write: broken pipe\n[mariadb] 2026/11/12 22:22:07 connection.go:872 closing bad idle connection: EOF\n[mariadb] 2026/11/12 22:22:07 packets.go:177 write unix ->/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/go-mariadb-cdc-3z1beuax/server.sock: write: broken pipe\n--- PASS: TestMariaDBCDC/restart_from_durable_GTID (0.78s)\n",
+          "output": "=== RUN   TestMariaDBCDC/restart_from_durable_GTID\n[mariadb] 2026/11/12 23:02:29 connection.go:872 closing bad idle connection: EOF\n[mariadb] 2026/11/12 23:02:29 packets.go:177 write unix ->/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/go-mariadb-cdc-74tvs0zd/server.sock: write: broken pipe\n[mariadb] 2026/11/12 23:02:29 connection.go:872 closing bad idle connection: EOF\n[mariadb] 2026/11/12 23:02:29 packets.go:177 write unix ->/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/go-mariadb-cdc-74tvs0zd/server.sock: write: broken pipe\n--- PASS: TestMariaDBCDC/restart_from_durable_GTID (1.01s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBCDC/purged_file_and_missing_privilege": {
           "output": "=== RUN   TestMariaDBCDC/purged_file_and_missing_privilege\n--- PASS: TestMariaDBCDC/purged_file_and_missing_privilege (0.04s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility\n    stage7_compat_test.go:269: MARIADB_COMPATIBILITY {\"expected_features\":{\"bulk_units\":true,\"parsec\":true,\"vector\":true},\"family\":\"12.3\",\"version\":\"12.3.3-MariaDB-log\"}\n--- PASS: TestMariaDBStage7Compatibility (0.24s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility/values/text": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility/values/text\n--- PASS: TestMariaDBStage7Compatibility/values/text (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility/values/text/prepared=false": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility/values/text/prepared=false\n--- PASS: TestMariaDBStage7Compatibility/values/text/prepared=false (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility/values/text/prepared=true": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility/values/text/prepared=true\n--- PASS: TestMariaDBStage7Compatibility/values/text/prepared=true (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility/values/compressed": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility/values/compressed\n--- PASS: TestMariaDBStage7Compatibility/values/compressed (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility/values/compressed/prepared=false": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility/values/compressed/prepared=false\n--- PASS: TestMariaDBStage7Compatibility/values/compressed/prepared=false (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility/values/compressed/prepared=true": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility/values/compressed/prepared=true\n--- PASS: TestMariaDBStage7Compatibility/values/compressed/prepared=true (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility/values/tls": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility/values/tls\n--- PASS: TestMariaDBStage7Compatibility/values/tls (0.01s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility/values/tls/prepared=false": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility/values/tls/prepared=false\n--- PASS: TestMariaDBStage7Compatibility/values/tls/prepared=false (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility/values/tls/prepared=true": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility/values/tls/prepared=true\n--- PASS: TestMariaDBStage7Compatibility/values/tls/prepared=true (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility/values/tls_compressed": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility/values/tls_compressed\n--- PASS: TestMariaDBStage7Compatibility/values/tls_compressed (0.01s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility/values/tls_compressed/prepared=false": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility/values/tls_compressed/prepared=false\n--- PASS: TestMariaDBStage7Compatibility/values/tls_compressed/prepared=false (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility/values/tls_compressed/prepared=true": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility/values/tls_compressed/prepared=true\n--- PASS: TestMariaDBStage7Compatibility/values/tls_compressed/prepared=true (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility/native_policies/text": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility/native_policies/text\n--- PASS: TestMariaDBStage7Compatibility/native_policies/text (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility/native_policies/compressed": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility/native_policies/compressed\n--- PASS: TestMariaDBStage7Compatibility/native_policies/compressed (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility/native_policies/tls": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility/native_policies/tls\n--- PASS: TestMariaDBStage7Compatibility/native_policies/tls (0.01s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility/native_policies/tls_compressed": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility/native_policies/tls_compressed\n--- PASS: TestMariaDBStage7Compatibility/native_policies/tls_compressed (0.01s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility/native_policies/legacy": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility/native_policies/legacy\n--- PASS: TestMariaDBStage7Compatibility/native_policies/legacy (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility/native_policies/uncached": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility/native_policies/uncached\n--- PASS: TestMariaDBStage7Compatibility/native_policies/uncached (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility/bulk_units_capability": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility/bulk_units_capability\n--- PASS: TestMariaDBStage7Compatibility/bulk_units_capability (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility/native_metadata": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility/native_metadata\n--- PASS: TestMariaDBStage7Compatibility/native_metadata (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility/authentication/ed25519": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility/authentication/ed25519\n--- PASS: TestMariaDBStage7Compatibility/authentication/ed25519 (0.01s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility/authentication/parsec": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility/authentication/parsec\n--- PASS: TestMariaDBStage7Compatibility/authentication/parsec (0.01s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Compatibility/vector_availability": {
+          "output": "=== RUN   TestMariaDBStage7Compatibility/vector_availability\n--- PASS: TestMariaDBStage7Compatibility/vector_availability (0.08s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7CDC": {
+          "output": "=== RUN   TestMariaDBStage7CDC\n--- PASS: TestMariaDBStage7CDC (0.55s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7CDC/text": {
+          "output": "=== RUN   TestMariaDBStage7CDC/text\n--- PASS: TestMariaDBStage7CDC/text (0.13s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7CDC/compressed": {
+          "output": "=== RUN   TestMariaDBStage7CDC/compressed\n--- PASS: TestMariaDBStage7CDC/compressed (0.13s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7CDC/tls": {
+          "output": "=== RUN   TestMariaDBStage7CDC/tls\n--- PASS: TestMariaDBStage7CDC/tls (0.15s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7CDC/tls_compressed": {
+          "output": "=== RUN   TestMariaDBStage7CDC/tls_compressed\n--- PASS: TestMariaDBStage7CDC/tls_compressed (0.15s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBStage7Restart": {
+          "output": "=== RUN   TestMariaDBStage7Restart\n[mariadb] 2026/11/12 23:02:31 packets.go:177 write unix ->/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/go-mariadb-cdc-74tvs0zd/server.sock: write: broken pipe\n--- PASS: TestMariaDBStage7Restart (1.18s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBFailureRecovery": {
+          "output": "=== RUN   TestMariaDBFailureRecovery\n--- PASS: TestMariaDBFailureRecovery (1.29s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBFailureRecovery/lock_timeout_requires_explicit_rollback": {
+          "output": "=== RUN   TestMariaDBFailureRecovery/lock_timeout_requires_explicit_rollback\n--- PASS: TestMariaDBFailureRecovery/lock_timeout_requires_explicit_rollback (1.15s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBFailureRecovery/deadlock_victim_and_survivor": {
+          "output": "=== RUN   TestMariaDBFailureRecovery/deadlock_victim_and_survivor\n--- PASS: TestMariaDBFailureRecovery/deadlock_victim_and_survivor (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBFailureRecovery/autocommit/before_write": {
+          "output": "=== RUN   TestMariaDBFailureRecovery/autocommit/before_write\n[mariadb] 2026/11/12 23:02:32 connection.go:205 closing connection:close tcp 127.0.0.1:56485->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:32 packets.go:177 validation: injected connection loss\n    stage7_recovery_test.go:333: RECOVERY_FAULT operation=autocommit phase=before write bytes=0 server_ok=false effects=1\n--- PASS: TestMariaDBFailureRecovery/autocommit/before_write (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBFailureRecovery/autocommit/partial_write": {
+          "output": "=== RUN   TestMariaDBFailureRecovery/autocommit/partial_write\n[mariadb] 2026/11/12 23:02:32 connection.go:205 closing connection:close tcp 127.0.0.1:56487->127.0.0.1:3306: use of closed network connection\n    stage7_recovery_test.go:333: RECOVERY_FAULT operation=autocommit phase=partial write bytes=25 server_ok=false effects=0\n--- PASS: TestMariaDBFailureRecovery/autocommit/partial_write (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBFailureRecovery/autocommit/lost_OK": {
+          "output": "=== RUN   TestMariaDBFailureRecovery/autocommit/lost_OK\n[mariadb] 2026/11/12 23:02:32 connection.go:205 closing connection:close tcp 127.0.0.1:56489->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:32 packets.go:63 validation: injected connection loss\n    stage7_recovery_test.go:333: RECOVERY_FAULT operation=autocommit phase=lost OK bytes=51 server_ok=true effects=1\n--- PASS: TestMariaDBFailureRecovery/autocommit/lost_OK (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBFailureRecovery/transaction_commit/before_write": {
+          "output": "=== RUN   TestMariaDBFailureRecovery/transaction_commit/before_write\n[mariadb] 2026/11/12 23:02:32 connection.go:205 closing connection:close tcp 127.0.0.1:56491->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:32 packets.go:177 validation: injected connection loss\n    stage7_recovery_test.go:333: RECOVERY_FAULT operation=transaction commit phase=before write bytes=0 server_ok=false effects=0\n--- PASS: TestMariaDBFailureRecovery/transaction_commit/before_write (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBFailureRecovery/transaction_commit/partial_write": {
+          "output": "=== RUN   TestMariaDBFailureRecovery/transaction_commit/partial_write\n[mariadb] 2026/11/12 23:02:32 connection.go:205 closing connection:close tcp 127.0.0.1:56493->127.0.0.1:3306: use of closed network connection\n    stage7_recovery_test.go:333: RECOVERY_FAULT operation=transaction commit phase=partial write bytes=5 server_ok=false effects=0\n--- PASS: TestMariaDBFailureRecovery/transaction_commit/partial_write (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBFailureRecovery/transaction_commit/lost_OK": {
+          "output": "=== RUN   TestMariaDBFailureRecovery/transaction_commit/lost_OK\n[mariadb] 2026/11/12 23:02:32 connection.go:205 closing connection:close tcp 127.0.0.1:56495->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:32 packets.go:63 validation: injected connection loss\n    stage7_recovery_test.go:333: RECOVERY_FAULT operation=transaction commit phase=lost OK bytes=11 server_ok=true effects=1\n--- PASS: TestMariaDBFailureRecovery/transaction_commit/lost_OK (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBFailureRecovery/native_bulk/before_write": {
+          "output": "=== RUN   TestMariaDBFailureRecovery/native_bulk/before_write\n[mariadb] 2026/11/12 23:02:32 connection.go:205 closing connection:close tcp 127.0.0.1:56497->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:32 packets.go:177 validation: injected connection loss\n    stage7_recovery_test.go:333: RECOVERY_FAULT operation=native bulk phase=before write bytes=0 server_ok=false effects=0\n--- PASS: TestMariaDBFailureRecovery/native_bulk/before_write (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBFailureRecovery/native_bulk/partial_write": {
+          "output": "=== RUN   TestMariaDBFailureRecovery/native_bulk/partial_write\n[mariadb] 2026/11/12 23:02:32 connection.go:205 closing connection:close tcp 127.0.0.1:56499->127.0.0.1:3306: use of closed network connection\n    stage7_recovery_test.go:333: RECOVERY_FAULT operation=native bulk phase=partial write bytes=11 server_ok=false effects=0\n--- PASS: TestMariaDBFailureRecovery/native_bulk/partial_write (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBFailureRecovery/native_bulk/lost_OK": {
+          "output": "=== RUN   TestMariaDBFailureRecovery/native_bulk/lost_OK\n[mariadb] 2026/11/12 23:02:32 connection.go:205 closing connection:close tcp 127.0.0.1:56501->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:32 packets.go:63 validation: injected connection loss\n    stage7_recovery_test.go:333: RECOVERY_FAULT operation=native bulk phase=lost OK bytes=22 server_ok=true effects=1\n--- PASS: TestMariaDBFailureRecovery/native_bulk/lost_OK (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBFailureRecovery/native_stream/before_write": {
+          "output": "=== RUN   TestMariaDBFailureRecovery/native_stream/before_write\n[mariadb] 2026/11/12 23:02:32 connection.go:205 closing connection:close tcp 127.0.0.1:56503->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:32 packets.go:177 validation: injected connection loss\n    stage7_recovery_test.go:333: RECOVERY_FAULT operation=native stream phase=before write bytes=0 server_ok=false effects=0\n--- PASS: TestMariaDBFailureRecovery/native_stream/before_write (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBFailureRecovery/native_stream/partial_write": {
+          "output": "=== RUN   TestMariaDBFailureRecovery/native_stream/partial_write\n[mariadb] 2026/11/12 23:02:32 connection.go:205 closing connection:close tcp 127.0.0.1:56505->127.0.0.1:3306: use of closed network connection\n    stage7_recovery_test.go:333: RECOVERY_FAULT operation=native stream phase=partial write bytes=9 server_ok=false effects=0\n--- PASS: TestMariaDBFailureRecovery/native_stream/partial_write (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestMariaDBFailureRecovery/native_stream/lost_OK": {
+          "output": "=== RUN   TestMariaDBFailureRecovery/native_stream/lost_OK\n[mariadb] 2026/11/12 23:02:32 connection.go:205 closing connection:close tcp 127.0.0.1:56507->127.0.0.1:3306: use of closed network connection\n[mariadb] 2026/11/12 23:02:32 packets.go:63 validation: injected connection loss\n    stage7_recovery_test.go:333: RECOVERY_FAULT operation=native stream phase=lost OK bytes=18 server_ok=true effects=1\n--- PASS: TestMariaDBFailureRecovery/native_stream/lost_OK (0.00s)\n",
+          "status": "pass"
+        },
+        "github.com/aantich/go-mariadb/validation/TestRecoveryFaultBoundary": {
+          "output": "=== RUN   TestRecoveryFaultBoundary\n--- PASS: TestRecoveryFaultBoundary (0.00s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBValues": {
@@ -6929,11 +7157,11 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBBindings": {
-          "output": "=== RUN   TestMariaDBBindings\n--- PASS: TestMariaDBBindings (0.26s)\n",
+          "output": "=== RUN   TestMariaDBBindings\n--- PASS: TestMariaDBBindings (0.27s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBBindings/prepared": {
-          "output": "=== RUN   TestMariaDBBindings/prepared\n--- PASS: TestMariaDBBindings/prepared (0.03s)\n",
+          "output": "=== RUN   TestMariaDBBindings/prepared\n--- PASS: TestMariaDBBindings/prepared (0.02s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBBindings/prepared/bytes_0": {
@@ -6997,7 +7225,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBBindings/compressed": {
-          "output": "=== RUN   TestMariaDBBindings/compressed\n--- PASS: TestMariaDBBindings/compressed (0.12s)\n",
+          "output": "=== RUN   TestMariaDBBindings/compressed\n--- PASS: TestMariaDBBindings/compressed (0.13s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBBindings/compressed/bytes_0": {
@@ -7029,7 +7257,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBSQL": {
-          "output": "=== RUN   TestMariaDBSQL\n--- PASS: TestMariaDBSQL (0.17s)\n",
+          "output": "=== RUN   TestMariaDBSQL\n--- PASS: TestMariaDBSQL (0.19s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBSQL/cte": {
@@ -7057,11 +7285,11 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBSQL/sequence": {
-          "output": "=== RUN   TestMariaDBSQL/sequence\n--- PASS: TestMariaDBSQL/sequence (0.08s)\n",
+          "output": "=== RUN   TestMariaDBSQL/sequence\n--- PASS: TestMariaDBSQL/sequence (0.09s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBSQL/system_versioning": {
-          "output": "=== RUN   TestMariaDBSQL/system_versioning\n--- PASS: TestMariaDBSQL/system_versioning (0.09s)\n",
+          "output": "=== RUN   TestMariaDBSQL/system_versioning\n--- PASS: TestMariaDBSQL/system_versioning (0.10s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBSQL/oracle_mode": {
@@ -7069,7 +7297,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBResults": {
-          "output": "=== RUN   TestMariaDBResults\n--- PASS: TestMariaDBResults (0.32s)\n",
+          "output": "=== RUN   TestMariaDBResults\n--- PASS: TestMariaDBResults (0.38s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBResults/multiple_text_results": {
@@ -7081,15 +7309,15 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBResults/metadata_after_ddl": {
-          "output": "=== RUN   TestMariaDBResults/metadata_after_ddl\n--- PASS: TestMariaDBResults/metadata_after_ddl (0.19s)\n",
+          "output": "=== RUN   TestMariaDBResults/metadata_after_ddl\n--- PASS: TestMariaDBResults/metadata_after_ddl (0.24s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBResults/unsigned_insert_id_contract": {
-          "output": "=== RUN   TestMariaDBResults/unsigned_insert_id_contract\n--- PASS: TestMariaDBResults/unsigned_insert_id_contract (0.09s)\n",
+          "output": "=== RUN   TestMariaDBResults/unsigned_insert_id_contract\n--- PASS: TestMariaDBResults/unsigned_insert_id_contract (0.10s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBTransactions": {
-          "output": "=== RUN   TestMariaDBTransactions\n--- PASS: TestMariaDBTransactions (0.09s)\n",
+          "output": "=== RUN   TestMariaDBTransactions\n--- PASS: TestMariaDBTransactions (0.10s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBTransactions/rollback": {
@@ -7149,7 +7377,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBAuthentication": {
-          "output": "=== RUN   TestMariaDBAuthentication\n--- PASS: TestMariaDBAuthentication (0.07s)\n",
+          "output": "=== RUN   TestMariaDBAuthentication\n--- PASS: TestMariaDBAuthentication (0.05s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBAuthentication/text": {
@@ -7173,7 +7401,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBAuthentication/parsec": {
-          "output": "=== RUN   TestMariaDBAuthentication/parsec\n--- PASS: TestMariaDBAuthentication/parsec (0.02s)\n",
+          "output": "=== RUN   TestMariaDBAuthentication/parsec\n--- PASS: TestMariaDBAuthentication/parsec (0.01s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/validation/TestMariaDBAuthentication/caching_sha2_password": {
@@ -7249,7 +7477,7 @@
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/zstd/TestDriverDependencyBoundary": {
-          "output": "=== RUN   TestDriverDependencyBoundary\n--- PASS: TestDriverDependencyBoundary (0.06s)\n",
+          "output": "=== RUN   TestDriverDependencyBoundary\n--- PASS: TestDriverDependencyBoundary (0.04s)\n",
           "status": "pass"
         },
         "github.com/aantich/go-mariadb/zstd/TestCodecRejectsInvalidInput": {
@@ -7312,7 +7540,7 @@
       "buffer.go": "397304123c95e30295577e2339d1159421040f0031cfe201ca5438bf9f963171",
       "bulk.go": "1960d727bad34f8c18c6fdc8e6c117c4b7c39c81a9f84d955d3291fdf17f817b",
       "bulk_units.go": "e47dfeaedb2b1ac1bdb68875afbedd45e3c31b796879a721dc6a23c9ade9b656",
-      "cdc/decoder.go": "fe93d262093827bb163141181abc57349b556a9149850b2e104d23435afb6d68",
+      "cdc/decoder.go": "0a9454825671924c31877e69d81713998e74839a723adabd2243e52f485452e2",
       "cdc/reader.go": "88c0741baa08a75b9435a7add953460db9fd19f3f9debf9210e8ed3af9f9bc63",
       "cdc/rows.go": "7d1eee7fd7e2421c415ebdc78d1536e15861b05f1e28c40b29874742e8ffa57e",
       "cdc/stream.go": "5a35df73cfa6e0fd162845a1aa7fde2efb8da4c7ce1db336b294cb6baf8c66c3",
@@ -7367,7 +7595,7 @@
     },
     "workload": {
       ".github/workflows/actions.lock": "b4687239f4810d7729d076b2e9d5b8f336d43384a125c634762960fa46a097c5",
-      ".github/workflows/test.yml": "9be93d6082b840caf59562f477a7b159135ce7e926f24320adb9132ce91a182f",
+      ".github/workflows/test.yml": "8e39b5ecb6ef50578a1902e91c3c3b225e99cdb0aed068db901d6554c1ed6736",
       "auth_external_test.go": "76adb7c52cf4b5641789ff77bf3aa3f206705074aab6cbf72127fccae3fbfa76",
       "auth_fallback_test.go": "1deb8237885bf019405a82297ddd4c04f39583e32ce38df79532cb3f632b7a95",
       "auth_plugin_test.go": "21bed8ee5c40965b749fd77335fde7cce6745317a3e7d675a1e2c5640f2ce748",
@@ -7377,9 +7605,10 @@
       "benchmark_test.go": "dcf795604af4eb1fc67c67223b1b1dfade6a6ae2e8b2937a38873ae096260e18",
       "boolean_test.go": "cb2bcee315fa73a51d36ef43d87c7f0c095948a6bf1f15ff72ea30bad7ca333c",
       "bulk_fault_regression_test.go": "a4d7b02ab651e88606a4fc21aae21f0d96435f6c03f3b21c284dfe41780b0205",
+      "cdc/compatibility_test.go": "ecb17acfd381effc9657f2e36b33cfba0c49c8ee83d829f868eef6c4bb8394c8",
       "cdc/decoder_test.go": "d3a0f2ebfc432bc1dcaaf075154893f2fe354ea103cd7357d3936f3a6684d57c",
       "cdc/example_test.go": "c227e269cf5077309f58c9e742196ec8085ad368ab0d6033b5aca7d73f43ce33",
-      "cdc/fuzz_test.go": "e9331387cd6e5aeeb67f7bf9ee2b49f5b93e08c77c7d69c81d54329889ebf4ce",
+      "cdc/fuzz_test.go": "73417005705941717a947037a2969a71d417710af1b3fc1082a14ce01e2f33e5",
       "cdc/review_fixes_test.go": "2e09b7ceb7de9c09bc35af87037882b59f53ca3fd18f6d0ef274a56b28d1f51e",
       "cdc/values_test.go": "019a8bedeabe460cbe4b6a265df46fb2088d684fe6b708817581a227bef34682",
       "compress_negotiation_test.go": "e8159df67f341f59079a5d9e297e0f6433338f309ac1a3e5e12a2fc97e4252f9",
@@ -7423,9 +7652,11 @@
       "validation/auth_fixture/serve.py": "2c22e4d43c680a0d23cf72073e644b08498aead53140b721f9534ee36dc4ba31",
       "validation/benchmark_test.go": "9fb5c4793bf0c59b607c75554ca0d148818e44bdf7b883a002fc32f375ce40c0",
       "validation/cdc_evidence.py": "559282fd070c8dffb98668d3dc03564cb5635d6a567727054b4413e8760a8b51",
-      "validation/cdc_fixture.py": "ce19dfa92382a8bfc192a1fb185ca27af4043c090a854fd11eaa4f3425428720",
+      "validation/cdc_fixture.py": "fee0c0bc3ffee6b604520a4666e32985b69103babc2fde5c61221f43f516edf8",
       "validation/check.py": "4939a0a80a0aed8276081a323264c33f13e248ab8ec9b5610687508dcf612ead",
-      "validation/ci.py": "973dac636ef7127510980b9247d5cafa52126e6e53b0417f6dc72b3dd6ea91e7",
+      "validation/ci.py": "5c7d8ea1f9e1ea5b349e2f04a04492be2cac7bb375a2f75322e7a7a01929e962",
+      "validation/compatibility-images.json": "df5c6706fadd42421bb95bad9861f500030741876787296591604c21854d89bc",
+      "validation/compatibility.py": "32acb7023463954e7c05a3599107c5897e32e34ac727d40a02d6d3f2787b8c5a",
       "validation/config_test.go": "4dbcdadc404c5f6417358a62428691e9074a0f007d8f5a506bec521524cd3e04",
       "validation/contract-migrations.json": "6121f8f49d798adf65e2f7ee9963e0fb11cb06d55602d28fec348b795c2484f9",
       "validation/contracts.py": "8b4b0387f9f5d9a204c27319c3b313ef0596a66db867ba6c15159a778afea7c7",
@@ -7442,7 +7673,7 @@
       "validation/profile_reads.py": "174e6572360ad603e257bfcb184c3803898ffbf8ddbafab4d1a8d98e2944c476",
       "validation/provenance.py": "f8f7d867a3ce9ca12d7be88cf974d4ed3b3616c06e3010d6ffa0514f5a40bb99",
       "validation/provision.py": "545b2c7af9fb4ed0fbdc783a860e7a26324d543f3eba3594b0fc6ed29e6d2388",
-      "validation/record.py": "c40156490c3f296294fb45802fc6ce201425114a150190f13c313ee37493ea9c",
+      "validation/record.py": "bcde5eb32bebcc0f5446a7f2c7b17b853ce2f9dda72c870bdc236933ef1e7664",
       "validation/review_regression_test.go": "c89abb3233de402a1b31c5f531abb4da653ed6bd03bdb93e7a987be6078d329f",
       "validation/run.py": "ebaa780e0dd12500e6120f3fc69b819ac4e47f7a11ecb5515d90809ef8aee6e3",
       "validation/session_test.go": "381252475da23d5a8ab57c53c89e83e157a141fd0a34f3d820ac79e3956d2bf6",
@@ -7454,8 +7685,11 @@
       "validation/stage4_workloads.py": "d44dd04a76c606e483f71c5caba25e57b16f40a126346fdede85ba1c72d3496d",
       "validation/stage5_auth_test.go": "1fcfc2439bea9021a38841f7e53cdeb93a15e5ca1697ff4f334c225511bc6004",
       "validation/stage6_cdc_test.go": "ec60ede4fb96ceb2e12f86abc93d3b7758897e14c7bc19bdb7a7fb7369c699fe",
+      "validation/stage7_compat_test.go": "ef55aed7e1b1a88bde97a2929b30a29635eba5c59b79c54d6e571f617baa0f3c",
+      "validation/stage7_recovery_test.go": "9c98aa0aa47b3af26474e1721dab968863e2d53a37a8468148fc51fbe4893e83",
       "validation/suite_test.go": "8eb29269218f0aa94912265a5b4171d1766398f952e5c82cee52cd94b6f3a653",
       "validation/test_ci_policy.py": "7bf7d437a41a93c12abe262bf48f0e2884cf991d1cd76bd81c740282aa06cf53",
+      "validation/test_compatibility.py": "3cce6446bab85426e1fc37266edfcc21f37dab89660dda61ad53ca87c01a1cfa",
       "validation/test_dedicated_recorder.py": "0bed6ecb6aea171d4c5349ef6699cf50c97e86baf8eba12e7c78715dfe2052b2",
       "validation/test_full_capture.py": "95a6b0e4a67bbd37e0da28cad2751b282d1d32109a1601b50e47b7cac3af478e",
       "validation/test_provenance.py": "09d4d35f4a809b269710b9742e387f9858f5bdc6c0920a845c7c67a486f791cc",
@@ -7471,9 +7705,9 @@
       "zstd/zstd_test.go": "ffb03c5db1fcbf66c94474dc9c6162a2f4fc174889b504964d754a84cf365e48"
     }
   },
-  "input_fingerprint": "69f760d553f6ec430157640a420190123790d4a636555d766126f468ab03c043",
-  "recorded_at": "2026-11-12T21:21:29.442567+00:00",
-  "commit": "b3300c2bdef1bf57b4ea0b43559c0aedce5450bf",
+  "input_fingerprint": "98ba80ed279200ff93c51231f27cd9568f56f8fe8d67b7b7335f079f0526635f",
+  "recorded_at": "2026-11-12T22:01:54.432788+00:00",
+  "commit": "ec42783deb9727a529f3f9c29a80e7ed4d585e7a",
   "revision_provenance": {
     "status": "available"
   },
@@ -7604,13 +7838,13 @@
     "runtime_identity": "docker-runtime-sha256:8ab4ca1b95d1f45504e6d2dc13b3c8c0cbd9881278c6d0a1361f197a33480b64",
     "server_version": "12.3.3-MariaDB-ubu2404",
     "service_principal": "mariadb/localhost@GO-MARIADB.TEST",
-    "tls_certificate_sha256": "ce029ca314b3b90fa189c2e68aeadaf001fff03be5b2c6e45dcd33796b8d3148"
+    "tls_certificate_sha256": "b3316d23dbe36ba435266fbdd1c1f4a96850a223d880d2a20361292adb2e3f74"
   },
   "cdc_fixture": {
     "binlog_format": "ROW",
     "checksum": "CRC32",
     "contract": "cdc-v1",
-    "fixture_sha256": "ce19dfa92382a8bfc192a1fb185ca27af4043c090a854fd11eaa4f3425428720",
+    "fixture_sha256": "fee0c0bc3ffee6b604520a4666e32985b69103babc2fde5c61221f43f516edf8",
     "semisync_available": true,
     "server_id": 621129,
     "server_version": "12.3.3-MariaDB-log",
@@ -7678,16 +7912,16 @@
   "pass_history_contract": "correctness-history-v1",
   "prior_correctness": {
     "file": "prior-correctness.json",
-    "sha256": "9073fe7393d28f5cee4cbfd409391890c9cece506f350a2a8ddab057220f2dae"
+    "sha256": "ca0e8716a7ba4228ec35c0eb538ed3126fe12a76a7b90a7c4e458053a0877b63"
   },
   "lost_correctness_passes": [],
   "inputs_stable": true,
   "logs": {
     "vet.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "correctness.log": "24db7ea23eeff5bb6bf99e8a60af1f45da8e4ac9627037c08b2ca75130e58be3",
+    "correctness.log": "1d9b5ed080bdd685f404edb9d744e4c1893f7848a4329f4bcc4cbd1d77e13da5",
     "server-after.log": "fc0dcfeb4c06669c9ac42344a1c1e763662af4ac5237d360eabd3f04cc0922d6",
     "server-before.log": "fc0dcfeb4c06669c9ac42344a1c1e763662af4ac5237d360eabd3f04cc0922d6",
-    "recorder.log": "a7be95c8e1b05db2f4367410349d30473611af198c85479b34a094e5a086cfbe"
+    "recorder.log": "eee33b38b1f1ef905e3222a58553e4b3185fb982203db46d857c91bf989dd84d"
   },
   "exit_code": 0,
   "verified_checks": {
@@ -7696,11 +7930,11 @@
     "harness_policy": true
   },
   "leaf_counts": {
-    "pass": 1588,
+    "pass": 1637,
     "skip": 8
   },
   "prior_passes_lost": [],
-  "evidence_directory": "results/stage6-review-fixes-mac-final",
+  "evidence_directory": "results/stage7-mac-final-3",
   "benchmark_capture_fingerprint": "d40de51ee6e045d07c242a9af50e0356a6cd5dd7e2d362570b9df7b1cc37a2a4",
   "performance_measured": false
 }

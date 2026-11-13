@@ -1,0 +1,4 @@
+/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/compatibility.py:300: SyntaxWarning: 'return' in a 'finally' block
+  if 'No such volume' in found.stderr:return
+10.11 go version go1.27.4 darwin/arm64: root exit=1, issues=2
+Compatibility profile failed; inspect saved stages and server.log.

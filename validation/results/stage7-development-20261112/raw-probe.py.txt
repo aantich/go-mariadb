@@ -1,0 +1,16 @@
+import json,os,sys,tempfile
+from pathlib import Path
+sys.path.insert(0,'validation');import compatibility as c
+out=Path('validation/results/stage7-development-20261112').resolve()
+overlay=out/'raw-probe-overlay.json'
+overlay.write_text(json.dumps({'Replace':{str(c.ROOT/'validation/stage7_raw_probe_test.go'):str(out/'raw_probe_test.go.txt')}})+'\n')
+with tempfile.TemporaryDirectory(prefix='go-mariadb-stage7-probe-') as tmp:
+    fixture=c.OwnedServer(Path(tmp),c.images()['10.11'])
+    try:
+        fixture.start();control=Path(tmp)/'control';control.mkdir()
+        env={**os.environ,**c.ENVIRONMENT,'MARIADB_VALIDATION_CONFIG':str(fixture.config_path)}
+        code,output=c.run_stage(['go','test','-race','-overlay',str(overlay),'./validation','-run','^TestStage7RawProbe$','-count=1','-v'],env,fixture,control)
+        (out/'raw-probe.log').write_text(output)
+        print(output);print('exit_code',code)
+        fixture.restart();print('owned restart passed')
+    finally:fixture.close()

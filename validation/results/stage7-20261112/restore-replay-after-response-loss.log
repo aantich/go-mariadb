@@ -1,0 +1,10 @@
+=== RUN   TestMariaDBFailureRecovery
+=== RUN   TestMariaDBFailureRecovery/autocommit/lost_OK
+[mariadb] 2026/11/12 22:56:26 connection.go:205 closing connection:close tcp 127.0.0.1:60660->127.0.0.1:3306: use of closed network connection
+[mariadb] 2026/11/12 22:56:26 packets.go:63 validation: injected connection loss
+    stage7_recovery_test.go:307: lost/uncertain write was successful or replayable <nil>
+--- FAIL: TestMariaDBFailureRecovery (0.15s)
+    --- FAIL: TestMariaDBFailureRecovery/autocommit/lost_OK (0.00s)
+FAIL
+FAIL	github.com/aantich/go-mariadb/validation	0.517s
+FAIL

@@ -1,0 +1,66 @@
+{
+  "input_fingerprint": "98ba80ed279200ff93c51231f27cd9568f56f8fe8d67b7b7335f079f0526635f",
+  "profiles": 12,
+  "counts": {
+    "go1.27-mariadb10.11": {
+      "pass": 1303,
+      "fail": 0,
+      "skip": 6
+    },
+    "go1.27-mariadb11.4": {
+      "pass": 1303,
+      "fail": 0,
+      "skip": 6
+    },
+    "go1.27-mariadb11.8": {
+      "pass": 1303,
+      "fail": 0,
+      "skip": 6
+    },
+    "go1.27-mariadb12.3": {
+      "pass": 1303,
+      "fail": 0,
+      "skip": 6
+    },
+    "go1.26-mariadb10.11": {
+      "pass": 1219,
+      "fail": 0,
+      "skip": 6
+    },
+    "go1.26-mariadb11.4": {
+      "pass": 1219,
+      "fail": 0,
+      "skip": 6
+    },
+    "go1.26-mariadb11.8": {
+      "pass": 1219,
+      "fail": 0,
+      "skip": 6
+    },
+    "go1.26-mariadb12.3": {
+      "pass": 1219,
+      "fail": 0,
+      "skip": 6
+    },
+    "go1.25-mariadb10.11": {
+      "pass": 1219,
+      "fail": 0,
+      "skip": 6
+    },
+    "go1.25-mariadb11.4": {
+      "pass": 1219,
+      "fail": 0,
+      "skip": 6
+    },
+    "go1.25-mariadb11.8": {
+      "pass": 1219,
+      "fail": 0,
+      "skip": 6
+    },
+    "go1.25-mariadb12.3": {
+      "pass": 1219,
+      "fail": 0,
+      "skip": 6
+    }
+  }
+}

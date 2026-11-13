@@ -1,0 +1,29 @@
+// MariaDB/server b439f350ce3a8306c77e64bc1679681320244d17 sql/log_event_server.cc:3484-3510
+// GPL-2.0; see ../stage6-review-20261112/server-12.3.3-COPYING.txt
+Gtid_list_log_event::to_packet(String *packet)
+{
+  uint32 i;
+  uchar *p;
+  uint32 needed_length;
+
+  DBUG_ASSERT(count < 1<<28);
+
+  needed_length= packet->length() + get_data_size();
+  if (packet->reserve(needed_length))
+    return true;
+  p= (uchar *)packet->ptr() + packet->length();;
+  packet->length(needed_length);
+  int4store(p, (count & ((1<<28)-1)) | gl_flags);
+  p += 4;
+  /* Initialise the padding for empty Gtid_list. */
+  if (count == 0)
+    int2store(p, 0);
+  for (i= 0; i < count; ++i)
+  {
+    int4store(p, list[i].domain_id);
+    int4store(p+4, list[i].server_id);
+    int8store(p+8, list[i].seq_no);
+    p += 16;
+  }
+
+  return false;

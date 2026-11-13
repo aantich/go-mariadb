@@ -1,0 +1,40 @@
+[
+  {
+    "name": "restore-empty-list-rejection",
+    "source": "cdc/decoder.go",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "-overlay",
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage7-20261112/restore-empty-list-rejection-overlay.json",
+      "./cdc",
+      "-run",
+      "^TestCDCGTIDListPadding/padded_empty$",
+      "-count=1",
+      "-v"
+    ],
+    "exit_code": 1,
+    "expected_assertion": "trailing payload",
+    "compiled": true
+  },
+  {
+    "name": "restore-replay-after-response-loss",
+    "source": "connection.go",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "-overlay",
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage7-20261112/restore-replay-after-response-loss-overlay.json",
+      "./validation",
+      "-run",
+      "^TestMariaDBFailureRecovery/autocommit/lost_OK$",
+      "-count=1",
+      "-v"
+    ],
+    "exit_code": 1,
+    "expected_assertion": "lost/uncertain write was successful or replayable",
+    "compiled": true
+  }
+]

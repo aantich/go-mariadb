@@ -65,7 +65,7 @@ func decoderSeeds() []fuzzEvent {
 		seeds = append(seeds, fuzzEvent{compressed, compressedBody(body, prefix)})
 	}
 	first, _ := fragmentSeeds()
-	return append(seeds, fuzzEvent{165, compressedBody(queryBody("COMMIT"), 15)}, fuzzEvent{172, first}, fuzzEvent{FormatEvent, formatBody(true)})
+	return append(seeds, fuzzEvent{165, compressedBody(queryBody("COMMIT"), 15)}, fuzzEvent{172, first}, fuzzEvent{FormatEvent, formatBody(true)}, fuzzEvent{GTIDListEvent, make([]byte, 6)})
 }
 
 func boundedFuzzDecoder(t testing.TB) *decoder {
@@ -128,7 +128,7 @@ func sequenceSeeds() [][]byte {
 	prefix := []fuzzEvent{{GTIDEvent, gtidBody(1, 4)}, {QueryEvent, queryBody("BEGIN")}, {TableMapEvent, tableBody()}}
 	seeds := [][]byte{sequenceBytes([]fuzzEvent{
 		{GTIDEvent, gtidBody(1, 1)}, {165, compressedBody(queryBody("CREATE TABLE t(id INT)"), 15)},
-		{RotateEvent, rotateBody("bin.000002", 4)}, {FormatEvent, formatBody(true)},
+		{RotateEvent, rotateBody("bin.000002", 4)}, {FormatEvent, formatBody(true)}, {GTIDListEvent, make([]byte, 6)},
 		{GTIDEvent, gtidBody(2, 1)}, {QueryEvent, queryBody("DROP TABLE t")},
 	})}
 	for _, events := range [][]fuzzEvent{

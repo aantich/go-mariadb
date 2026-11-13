@@ -1,0 +1,29 @@
+"""Defect restorations touch only replacement files and Go overlays."""
+import json,os,re,subprocess
+from pathlib import Path
+root=Path.cwd();out=root/'validation/results/stage7-20261112'
+env={**os.environ,'GOCACHE':'/private/tmp/go-mariadb-validation-20261111/go-cache','GOMAXPROCS':'2',
+     'GOFLAGS':'','GOWORK':'off','GOPROXY':'off','MARIADB_VALIDATION_CONFIG':str(root/'validation/.local/config.json')}
+controls=[]
+def run(name,path,change,package,pattern,diagnostic):
+    source=(root/path).read_text();modified=change(source)
+    assert source!=modified
+    replacement=out/(name+'.go.txt');replacement.write_text(modified)
+    overlay=out/(name+'-overlay.json');overlay.write_text(json.dumps({'Replace':{str(root/path):str(replacement)}})+'\n')
+    command=['go','test','-race','-overlay',str(overlay),package,'-run',pattern,'-count=1','-v']
+    result=subprocess.run(command,env=env,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,timeout=120)
+    (out/(name+'.log')).write_text(result.stdout)
+    assert result.returncode==1 and diagnostic in result.stdout and '[build failed]' not in result.stdout,result.stdout[-2000:]
+    controls.append({'name':name,'source':path,'command':command,'exit_code':result.returncode,'expected_assertion':diagnostic,'compiled':True})
+def remove_padding(s):
+    return re.sub(r'\t\tif count == 0 && len\(body\) == 6 && r.le\(2\) != 0 \{.*?\n\t\t\}', '',s,count=1,flags=re.S)
+run('restore-empty-list-rejection','cdc/decoder.go',remove_padding,'./cdc','^TestCDCGTIDListPadding/padded_empty$','trailing payload')
+def unsafe_replay(s):
+    start=s.index('func (mc *mysqlConn) exec(query string) error {');end=s.index('func (mc *mysqlConn) Query(',start)
+    body=s[start:end]
+    body=body.replace('if err != nil {\n\t\treturn err\n\t}', 'if err != nil {\n\t\treturn driver.ErrBadConn\n\t}',1)
+    return s[:start]+body+s[end:]
+run('restore-replay-after-response-loss','connection.go',unsafe_replay,'./validation',
+    '^TestMariaDBFailureRecovery/autocommit/lost_OK$','lost/uncertain write was successful or replayable')
+(out/'negative-controls.json').write_text(json.dumps(controls,indent=2)+'\n')
+print(json.dumps(controls,indent=2))

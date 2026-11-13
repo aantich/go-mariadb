@@ -117,10 +117,17 @@ func (d *decoder) decode(raw []byte, ack bool) (*Event, error) {
 			d.position = e.Position
 		}
 	}
+	var decoded *Event
+	var err error
 	if e.Type == 172 || d.fragment != nil {
-		return d.partial(e, body)
+		decoded, err = d.partial(e, body)
+	} else {
+		decoded, err = d.event(e, body)
 	}
-	return d.event(e, body)
+	if err != nil {
+		return nil, fmt.Errorf("%w: event %d at position %d", err, e.WireType, e.Position)
+	}
+	return decoded, nil
 }
 func (d *decoder) finish(e *Event) error {
 	if d.active == nil && !d.inTransaction {
@@ -267,6 +274,12 @@ func (d *decoder) event(e *Event, body []byte) (*Event, error) {
 			}
 			seen[key] = true
 			list.Entries = append(list.Entries, g)
+		}
+		// MariaDB pads an empty list to a six-byte body so older replicas can
+		// replace it with a dummy event. Compact four-byte summaries also occur
+		// in synthetic context; neither form may carry arbitrary trailing data.
+		if count == 0 && len(body) == 6 && r.le(2) != 0 {
+			return nil, fmt.Errorf("%w: empty GTID-list padding", ErrMalformed)
 		}
 		if err = r.end(); err != nil {
 			return nil, err

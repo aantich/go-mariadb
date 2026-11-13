@@ -33,8 +33,12 @@ def stop(process, *, group=False, grace=2.0):
                 return False
         if send(signal.SIGTERM):
             deadline = time.monotonic()+grace
-            while send(0) and time.monotonic() < deadline:
-                process.poll()  # Reap our direct child while waiting on its group.
+            while time.monotonic() < deadline:
+                # Reap the leader before probing. On Darwin, a group containing
+                # only its unreaped zombie may reject killpg(0) with EPERM.
+                process.poll()
+                if not send(0):
+                    break
                 time.sleep(0.025)
             # SIGKILL also covers descendants that ignored SIGTERM. Orphaned
             # zombies can retain a group ID until init reaps them, so do not

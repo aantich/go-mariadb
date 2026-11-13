@@ -3,8 +3,9 @@
 A dedicated, pure-Go **MariaDB** driver for `database/sql`, forked from
 [go-sql-driver/mysql](https://github.com/go-sql-driver/mysql).
 
-**Alpha:** automated tests cover MariaDB 12.3.3 locally. Application pilots and
-wider server/platform validation remain outstanding.
+**Alpha:** automated compatibility covers MariaDB 10.11/11.4/11.8/12.3 with Go
+1.25/1.26/1.27 in the [recorded profiles](validation/COMPATIBILITY.md).
+Application pilots and wider platform/topology validation remain outstanding.
 This is a development checkout; no independent release has been published.
 MySQL and TiDB are outside this project's support scope.
 
@@ -23,6 +24,7 @@ MySQL and TiDB are outside this project's support scope.
 **[Stage 4 review corrections](docs/STAGE4_REVIEW_FIXES.md)** ·
 **[Optional CDC and durable resume](docs/STAGE6_CDC.md)** ·
 **[CDC review corrections and validation](docs/STAGE6_REVIEW_FIXES.md)** ·
+**[Version compatibility and failure recovery](docs/STAGE7_COMPATIBILITY.md)** ·
 **[Roadmap and remaining gaps](docs/ROADMAP.md)** ·
 **[Run validation](validation/README.md)**
 

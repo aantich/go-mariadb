@@ -1,0 +1,21 @@
+import concurrent.futures,json,os,subprocess,sys
+from pathlib import Path
+root=Path('/Users/aantich/dev/mariadbnew/projects/go-mariadb')
+source=json.loads((root/'validation/results/stage8-20261114/frozen-source.json').read_text())
+sys.path.insert(0,str(root/'validation'));import record
+assert record.inputs()==source['inputs']
+compilers={'1.25':'/private/tmp/go-mariadb-stage8-toolchains/1.25/go/bin/go','1.26':'/private/tmp/go-mariadb-stage8-toolchains/1.26/go/bin/go','1.27':subprocess.check_output(['which','go'],text=True).strip()}
+tasks=[(suite,go,server) for suite,versions in [('core',('1.25','1.26'))] for go in versions for server in ('10.11','11.4','11.8','12.3')]
+def run(task):
+ suite,go,server=task;name=suite+'-go'+go+'-mariadb'+server
+ output=root/'validation/results/stage8-matrix-refreshed'/name
+ log=root/'validation/results/stage8-20261114'/('refreshed-'+name+'.log')
+ command=['python3','validation/'+('compatibility.py' if suite=='core' else 'applications.py'),'--family',server,'--go',compilers[go],'--output',str(output)]
+ with log.open('w') as stream: result=subprocess.run(command,cwd=root,env={**os.environ,'GOCACHE':'/private/tmp/go-mariadb-validation-20261111/go-cache','GOPROXY':'off','PYTHONDONTWRITEBYTECODE':'1'},stdout=stream,stderr=subprocess.STDOUT)
+ item={'suite':suite,'go':go,'family':server,'directory':str(output.relative_to(root)),'exit_code':result.returncode,'command':command}
+ print(json.dumps(item),flush=True)
+ return item
+with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(run,tasks))
+(root/'validation/results/stage8-20261114/matrix-refreshed-runs.json').write_text(json.dumps(results,indent=2)+'\n')
+assert record.inputs()==source['inputs']
+sys.exit(any(item['exit_code'] for item in results))

@@ -1,0 +1,91 @@
+Installing MariaDB/MySQL system tables in '/tmp/go-mariadb-cdc-d45h2jfl/data' ...
+2026-11-14 16:29:52 0 [Warning] mariadbd: io_uring_queue_init() failed with EPERM: sysctl kernel.io_uring_disabled has the value 2, or 1 and the user of the process is not a member of sysctl kernel.io_uring_group. (see man 2 io_uring_setup).
+create_uring failed: falling back to libaio
+OK
+
+To start mariadbd at boot time you have to copy
+support-files/mariadb.service to the right place for your system
+
+
+PLEASE REMEMBER TO SET A PASSWORD FOR THE MariaDB root USER !
+To do so, start the server, then issue the following command:
+
+'/usr/bin/mariadb-secure-installation'
+
+which will also give you the option of removing the test
+databases and anonymous user created by default.  This is
+strongly recommended for production servers.
+
+See the MariaDB Documentation at https://mariadb.com/docs
+
+You can start the MariaDB daemon with:
+cd '/usr' ; /usr/bin/mariadbd-safe --datadir='/tmp/go-mariadb-cdc-d45h2jfl/data'
+
+You can test the MariaDB daemon with mariadb-test-run.pl
+cd '/usr/share/mariadb/mariadb-test' ; perl mariadb-test-run.pl
+
+Please report any problems at https://mariadb.org/jira
+
+The latest information about MariaDB is available at https://mariadb.org/.
+
+Consider joining MariaDB's strong and vibrant community:
+https://mariadb.org/get-involved/
+
+2026-11-14 16:29:53 0 [Note] Starting MariaDB 12.3.3-MariaDB-ubu2404-log source revision 83e909fc2a0dbc394b4b683fb3fa2d7dcf26cc5e server_uid dR8Cxzk3u5X7zjCVf2nc/kHmP8k= as process 55
+2026-11-14 16:29:53 0 [ERROR] mariadbd: Can't open shared library '/usr/lib/mysql/plugin/semisync_master.so' (errno: 2, cannot open shared object file: No such file or directory)
+2026-11-14 16:29:53 0 [ERROR] Couldn't load plugins from 'semisync_master.so'.
+2026-11-14 16:29:53 0 [Note] InnoDB: Compressed tables use zlib 1.3
+2026-11-14 16:29:53 0 [Note] InnoDB: Number of transaction pools: 1
+2026-11-14 16:29:53 0 [Note] InnoDB: Using ARMv8 crc32 + pmull instructions
+2026-11-14 16:29:53 0 [Warning] mariadbd: io_uring_queue_init() failed with EPERM: sysctl kernel.io_uring_disabled has the value 2, or 1 and the user of the process is not a member of sysctl kernel.io_uring_group. (see man 2 io_uring_setup).
+create_uring failed: falling back to libaio
+2026-11-14 16:29:53 0 [Note] InnoDB: Using Linux native AIO
+2026-11-14 16:29:53 0 [Note] InnoDB: innodb_buffer_pool_size_max=8388608m, innodb_buffer_pool_size=64m
+2026-11-14 16:29:53 0 [Note] InnoDB: Completed initialization of buffer pool
+2026-11-14 16:29:53 0 [Note] InnoDB: Buffered log writes (block size=512 bytes)
+2026-11-14 16:29:53 0 [Note] InnoDB: End of log at LSN=45093
+2026-11-14 16:29:53 0 [Note] InnoDB: Opened 3 undo tablespaces
+2026-11-14 16:29:53 0 [Note] InnoDB: 128 rollback segments in 3 undo tablespaces are active.
+2026-11-14 16:29:53 0 [Note] InnoDB: Setting file './ibtmp1' size to 12.000MiB. Physically writing the file full; Please wait ...
+2026-11-14 16:29:53 0 [Note] InnoDB: File './ibtmp1' size is now 12.000MiB.
+2026-11-14 16:29:53 0 [Note] InnoDB: log sequence number 45093; transaction id 14
+2026-11-14 16:29:53 0 [Note] Plugin 'FEEDBACK' is disabled.
+2026-11-14 16:29:53 0 [Note] Plugin 'wsrep-provider' is disabled.
+2026-11-14 16:29:53 0 [Note] InnoDB: Loading buffer pool(s) from /tmp/go-mariadb-cdc-d45h2jfl/data/ib_buffer_pool
+2026-11-14 16:29:53 0 [Note] InnoDB: Buffer pool(s) load completed at 261114 16:29:53
+2026-11-14 16:29:53 0 [Note] mariadbd: Event Scheduler: Loaded 0 events
+2026-11-14 16:29:53 0 [Note] /usr/sbin/mariadbd: ready for connections.
+Version: '12.3.3-MariaDB-ubu2404-log'  socket: '/tmp/go-mariadb-cdc-d45h2jfl/server.sock'  port: 0  mariadb.org binary distribution
+2026-11-14 16:29:54 0 [Note] /usr/sbin/mariadbd (initiated by: unknown): Normal shutdown
+2026-11-14 16:29:57 0 [Note] InnoDB: FTS optimize thread exiting.
+2026-11-14 16:29:57 0 [Note] InnoDB: Starting shutdown...
+2026-11-14 16:29:57 0 [Note] InnoDB: Dumping buffer pool(s) to /tmp/go-mariadb-cdc-d45h2jfl/data/ib_buffer_pool
+2026-11-14 16:29:57 0 [Note] InnoDB: Buffer pool(s) dump completed at 261114 16:29:57
+2026-11-14 16:29:57 0 [Note] InnoDB: Removed temporary tablespace data file: "./ibtmp1"
+2026-11-14 16:29:57 0 [Note] Shutdown completed; log sequence number 114693; transaction id 264
+2026-11-14 16:29:57 0 [Note] /usr/sbin/mariadbd: Shutdown complete
+2026-11-14 16:29:57 0 [Note] Starting MariaDB 12.3.3-MariaDB-ubu2404-log source revision 83e909fc2a0dbc394b4b683fb3fa2d7dcf26cc5e server_uid dR8Cxzk3u5X7zjCVf2nc/kHmP8k= as process 134
+2026-11-14 16:29:57 0 [ERROR] mariadbd: Can't open shared library '/usr/lib/mysql/plugin/semisync_master.so' (errno: 2, cannot open shared object file: No such file or directory)
+2026-11-14 16:29:57 0 [ERROR] Couldn't load plugins from 'semisync_master.so'.
+2026-11-14 16:29:57 0 [Note] InnoDB: Compressed tables use zlib 1.3
+2026-11-14 16:29:57 0 [Note] InnoDB: Number of transaction pools: 1
+2026-11-14 16:29:57 0 [Note] InnoDB: Using ARMv8 crc32 + pmull instructions
+2026-11-14 16:29:57 0 [Warning] mariadbd: io_uring_queue_init() failed with EPERM: sysctl kernel.io_uring_disabled has the value 2, or 1 and the user of the process is not a member of sysctl kernel.io_uring_group. (see man 2 io_uring_setup).
+create_uring failed: falling back to libaio
+2026-11-14 16:29:57 0 [Note] InnoDB: Using Linux native AIO
+2026-11-14 16:29:57 0 [Note] InnoDB: innodb_buffer_pool_size_max=8388608m, innodb_buffer_pool_size=64m
+2026-11-14 16:29:57 0 [Note] InnoDB: Completed initialization of buffer pool
+2026-11-14 16:29:57 0 [Note] InnoDB: Buffered log writes (block size=512 bytes)
+2026-11-14 16:29:57 0 [Note] InnoDB: End of log at LSN=114693
+2026-11-14 16:29:57 0 [Note] InnoDB: Opened 3 undo tablespaces
+2026-11-14 16:29:57 0 [Note] InnoDB: 128 rollback segments in 3 undo tablespaces are active.
+2026-11-14 16:29:57 0 [Note] InnoDB: Setting file './ibtmp1' size to 12.000MiB. Physically writing the file full; Please wait ...
+2026-11-14 16:29:57 0 [Note] InnoDB: File './ibtmp1' size is now 12.000MiB.
+2026-11-14 16:29:57 0 [Note] InnoDB: log sequence number 114693; transaction id 265
+2026-11-14 16:29:57 0 [Note] Plugin 'FEEDBACK' is disabled.
+2026-11-14 16:29:57 0 [Note] Plugin 'wsrep-provider' is disabled.
+2026-11-14 16:29:57 0 [Note] InnoDB: Loading buffer pool(s) from /tmp/go-mariadb-cdc-d45h2jfl/data/ib_buffer_pool
+2026-11-14 16:29:57 0 [Note] InnoDB: Buffer pool(s) load completed at 261114 16:29:57
+2026-11-14 16:29:57 0 [Note] mariadbd: Event Scheduler: Loaded 0 events
+2026-11-14 16:29:57 0 [Note] /usr/sbin/mariadbd: ready for connections.
+Version: '12.3.3-MariaDB-ubu2404-log'  socket: '/tmp/go-mariadb-cdc-d45h2jfl/server.sock'  port: 0  mariadb.org binary distribution

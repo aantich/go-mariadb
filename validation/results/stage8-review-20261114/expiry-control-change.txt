@@ -1,0 +1,4 @@
+Isolated temporary-copy control only.
+Before: app := client(t, name, db)
+After: app := application{}
+Run only TestApplicationLifecycle/{sql,sqlx,gorm}/prepared_handle_expiry.

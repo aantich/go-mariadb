@@ -1,0 +1,6 @@
+10.11 go version go1.25.14 darwin/arm64: applications exit=0, issues=0
+10.11 go version go1.25.14 darwin/arm64: adapter exit=0, issues=0
+10.11 go version go1.25.14 darwin/arm64: vet exit=0, issues=0
+10.11 go version go1.25.14 darwin/arm64: adapter-vet exit=0, issues=0
+10.11 go version go1.25.14 darwin/arm64: modules exit=0, issues=0
+10.11 go version go1.25.14 darwin/arm64: consumer exit=0, issues=0

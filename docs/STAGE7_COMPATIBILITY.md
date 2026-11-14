@@ -1,5 +1,11 @@
 # Stage 7: MariaDB compatibility and failure recovery
 
+**13 November review corrections:** Stage 7 and its original review were
+subsequently committed as `2a5fe58`. The three review findings are addressed in
+the [review-fix record](STAGE7_REVIEW_FIXES.md), with refreshed current-source
+correctness and compatibility evidence. The original captures and statements
+below describe their capture time; new corrections remain uncommitted.
+
 Authorized 12 November 2026, following published Stage 6 commit `ec42783d`.
 Anton selected version compatibility and failure recovery. Work stays on `master`
 and remains uncommitted for review. Readiness stays **Alpha**; benchmarks,

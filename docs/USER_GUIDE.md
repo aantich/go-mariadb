@@ -6,6 +6,10 @@ tested profile and outstanding failures are in [live results](../validation/RESU
 Go 1.25 or newer is required. Use a local module replacement until a release
 exists; the [README](../README.md#use-it) shows the commands.
 
+For GORM, sqlx, migration from the upstream driver and a tested transaction/outbox
+example, see the [application integration guide](APPLICATIONS.md). The core module
+does not require either framework; GORM support lives in a separate optional module.
+
 ## Connect and query
 
 ```go

@@ -1,0 +1,7 @@
+{
+  "previous_stage8_artifacts_preserved": 620,
+  "previous_review_artifacts_preserved": 12,
+  "mapping": "validation/results/stage8-review-fixes-20261114/prior-artifact-map.json",
+  "mapping_sha256": "075977c4dcbbe7ad65153901209bcc0d68e4638789a0aaa940a10ccb9280fbd6",
+  "historical_timing_pointer_sha256": "02fea12c04c5c42f1596bdb0c56ddd3839afb26a86f7e3e61f0b7e798adea7ed"
+}

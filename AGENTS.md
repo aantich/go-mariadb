@@ -1,4 +1,92 @@
-# Current authorization, 12 November 2026
+# Publication authorization, later on 14 November 2026
+
+Anton requested committing and pushing the completed Go driver work to the
+fork's existing `master`. This supersedes the earlier uncommitted-only status
+for Stage 7 review corrections, Stage 8 and all five Stage 8 review fixes.
+Use the verified existing receipts; do not repeat tests or benchmarks just for
+publication. Earlier status statements and manifests retain their capture-time
+context. No package tag or release is authorized. Benchmarks and profiling stay
+deferred until Anton explicitly requests measurement.
+
+# Stage 8 review-fix authorization, later on 14 November 2026
+
+Anton requested fixing all five findings in `docs/STAGE8_CODE_REVIEW.md`.
+The corrections are implemented in the existing `master` checkout. Keep them
+uncommitted; no branch, commit, push, tag or release is authorized. Continue to
+exclude all benchmarks, benchmark smoke and profiling until Anton authorizes
+measurement. Preserve the original 68 core runtime/native inputs, immutable
+references, workload bodies and sealed Stage 7/8/review artifacts.
+
+See `docs/STAGE8_REVIEW_FIXES.md` and
+`validation/results/stage8-review-fixes-confirmation.json`. Current executable
+fingerprint is `c2468c56…bd7608b` (71 driver/module/native and 130 workload/CI
+inputs). GORM preserves its shared generator's optional Apply/savepoint methods;
+framework expiry tests reuse actual handles/caches. Native v2 receipts protect
+v1/v2 predecessor passes without resetting history when source or socket names
+change, retain timeout/preflight diagnostics, and publication derives actual
+client OS/architecture. Write helpful public ownership/configuration comments.
+
+Full Mac/Linux correctness passes 1,637/1,640 leaves with zero failures, unchanged
+8/5 skips, race/vet and 128 harness tests on each. Application profiles pass 41
+leaves (zero failures/skips). The twelve-cell core matrix stays independently
+required. Live reports link current exact-source evidence; historical statements
+below retain their capture context. All 620 sealed Stage 8 and 12 review artifact
+byte sequences remain available through archived copies when current files change.
+The historical timing pointer/reference bytes remain unchanged.
+
+# Current authorization, 14 November 2026
+
+Anton approved Stage 8: real application integration and Alpha release
+preparation. Add pinned GORM/sqlx workflows, lifecycle/restart recovery, an
+optional dedicated GORM adapter, independent core consumer checks, migration
+examples and a maintained application evidence gate alongside the core matrix.
+See `docs/STAGE8_APPLICATIONS.md`, `docs/APPLICATIONS.md` and
+`validation/APPLICATIONS.md`. Preserve all Stage 7 review corrections and earlier
+evidence. Keep all work uncommitted on existing `master`; no branch, tag,
+commit, push or package publication is authorized. Do not run benchmarks,
+benchmark smoke or profiles. Readiness remains Alpha; automated application
+workflows do not establish production use. The core module's dependencies
+remain unchanged; framework dependencies live in nested modules. Both the
+core and optional module still use development replacements until an approved
+public version is selected. Comments must explain public ownership, error and
+configuration contracts. Historical status below describes its capture time.
+
+Stage 8 final source is `9e8bdde9…ab85de` (71 driver/module/native and 129
+test/harness/CI inputs). The original 68 runtime/native inputs and core module
+dependencies remain byte-identical. Core Mac/Linux correctness passes
+1,637/1,640 leaves, zero failures, unchanged 8/5 skips, race/vet and all 122
+harness tests. Twelve core matrix cells pass at this same source. Eight
+Go 1.25/1.27 application cells plus native Linux each pass 31 leaves with no
+failures/skips. The live correctness/core/application reports have independent
+cohorts; `verify.py` requires all of them. See
+`validation/results/stage8-confirmation.json` for final evidence and controls.
+All 192 Stage 7 review-fix artifact byte sequences remain available; changed
+live documents have archived copies under `results/stage8-20261114/previous-artifacts`.
+Historical timing/reference bytes stay unchanged. Source-changing, setup and
+archive-metadata attempts remain saved and excluded from current acceptance.
+
+# Previous authorization, 13 November 2026
+
+Anton requested fixing all three Stage 7 review findings. The checkout already
+contained Stage 7 and its review in `2a5fe58e5b15f52db7a375e301c2c09fd6e20e34`;
+new corrections are complete and uncommitted on `master`. See
+`docs/STAGE7_REVIEW_FIXES.md` and
+`validation/results/stage7-review-fixes-confirmation.json`. Source
+`a16c00cf…e449f1` has unchanged driver/Go-test inputs, 1,637 Mac / 1,640 Linux
+passing Go leaves, zero failures, unchanged 8/5 skips and 113 passing harness
+tests per platform. All twelve Go/server matrix cells pass at that same source.
+Historical contracts/inventories and arbitrary output names preserve earlier
+passes; the standard verifier now requires a complete corroborated compatibility
+cohort, and setup failures retain sanitized diagnostics. Restored defects fail
+the intended controls. Failed/source-changing attempts and original evidence are
+preserved; original sealed bytes remain in parent `2a5fe58`. Live correctness
+and compatibility reports are refreshed; timing/reference bytes are unchanged.
+No benchmarks, smoke runs or profiling occurred. Keep corrections uncommitted
+on `master`; no new commit, push, release or branch is authorized. No new remote
+CI execution is claimed. Earlier pending/uncommitted statements below describe
+their capture time and are superseded by this status.
+
+# Previous authorization, 12 November 2026
 
 Stage 7 is complete and uncommitted on `master`, parent `ec42783d`. Final source
 `98ba80ed…526635f` passes all 12 MariaDB 10.11.19/11.4.13/11.8.9/12.3.3 ×

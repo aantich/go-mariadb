@@ -1,0 +1,8 @@
+{
+  "synthetic": true,
+  "lost_native_passes": [
+    "applications/github.com/aantich/go-mariadb/validation/apps/TestLinuxApplicationRegression"
+  ],
+  "native_validator_accepted": true,
+  "complete_nine_cell_cohort_accepted": true
+}

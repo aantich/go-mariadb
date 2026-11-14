@@ -1,0 +1,8 @@
+{
+  "python_AST_files": 41,
+  "python_AST_pass": true,
+  "go_vet_and_race": "all core and application receipts",
+  "gofmt_and_actionlint_and_diff_check": true,
+  "configured_secret_absent_from_new_public_artifacts": true,
+  "public_artifacts_scanned": 459
+}

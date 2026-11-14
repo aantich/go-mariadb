@@ -1,0 +1,14 @@
+[
+  "validation/results/stage8-matrix-refreshed/core-go1.25-mariadb10.11",
+  "validation/results/stage8-matrix-refreshed/core-go1.25-mariadb11.4",
+  "validation/results/stage8-matrix-refreshed/core-go1.25-mariadb11.8",
+  "validation/results/stage8-matrix-refreshed/core-go1.25-mariadb12.3",
+  "validation/results/stage8-matrix-refreshed/core-go1.26-mariadb10.11",
+  "validation/results/stage8-matrix-refreshed/core-go1.26-mariadb11.4",
+  "validation/results/stage8-matrix-refreshed/core-go1.26-mariadb11.8",
+  "validation/results/stage8-matrix-refreshed/core-go1.26-mariadb12.3",
+  "validation/results/stage8-matrix/core-go1.27-mariadb10.11",
+  "validation/results/stage8-matrix/core-go1.27-mariadb11.4",
+  "validation/results/stage8-matrix/core-go1.27-mariadb11.8",
+  "validation/results/stage8-matrix/core-go1.27-mariadb12.3"
+]

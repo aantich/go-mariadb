@@ -1,0 +1,28 @@
+Isolated MariaDB 12.3.3-MariaDB-ubu2404 fixtures ready; native/TLS/auth tests are required.
+Initializing database '/tmp/go-mariadb-external-auth-nvx7l1mi/services/principal' for realm 'GO-MARIADB.TEST',
+master key name 'K/M@GO-MARIADB.TEST'
+No policy specified for mariadb/localhost@GO-MARIADB.TEST; defaulting to no policy
+Authenticating as principal root/admin@GO-MARIADB.TEST with password.
+Principal "mariadb/localhost@GO-MARIADB.TEST" created.
+No policy specified for driver@GO-MARIADB.TEST; defaulting to no policy
+Authenticating as principal root/admin@GO-MARIADB.TEST with password.
+Principal "driver@GO-MARIADB.TEST" created.
+No policy specified for other@GO-MARIADB.TEST; defaulting to no policy
+Authenticating as principal root/admin@GO-MARIADB.TEST with password.
+Principal "other@GO-MARIADB.TEST" created.
+Authenticating as principal root/admin@GO-MARIADB.TEST with password.
+Entry for principal mariadb/localhost@GO-MARIADB.TEST with kvno 2, encryption type aes256-cts-hmac-sha1-96 added to keytab WRFILE:/tmp/go-mariadb-external-auth-nvx7l1mi/services/server.keytab.
+Entry for principal mariadb/localhost@GO-MARIADB.TEST with kvno 2, encryption type aes128-cts-hmac-sha1-96 added to keytab WRFILE:/tmp/go-mariadb-external-auth-nvx7l1mi/services/server.keytab.
+Authenticating as principal root/admin@GO-MARIADB.TEST with password.
+Entry for principal driver@GO-MARIADB.TEST with kvno 2, encryption type aes256-cts-hmac-sha1-96 added to keytab WRFILE:/tmp/go-mariadb-external-auth-nvx7l1mi/services/driver.keytab.
+Entry for principal driver@GO-MARIADB.TEST with kvno 2, encryption type aes128-cts-hmac-sha1-96 added to keytab WRFILE:/tmp/go-mariadb-external-auth-nvx7l1mi/services/driver.keytab.
+Authenticating as principal root/admin@GO-MARIADB.TEST with password.
+Entry for principal other@GO-MARIADB.TEST with kvno 2, encryption type aes256-cts-hmac-sha1-96 added to keytab WRFILE:/tmp/go-mariadb-external-auth-nvx7l1mi/services/other.keytab.
+Entry for principal other@GO-MARIADB.TEST with kvno 2, encryption type aes128-cts-hmac-sha1-96 added to keytab WRFILE:/tmp/go-mariadb-external-auth-nvx7l1mi/services/other.keytab.
+2026-11-13 14:39:54 0 [Warning] mariadbd: io_uring_queue_init() failed with EPERM: sysctl kernel.io_uring_disabled has the value 2, or 1 and the user of the process is not a member of sysctl kernel.io_uring_group. (see man 2 io_uring_setup).
+create_uring failed: falling back to libaio
+mariadb/localhost@GO-MARIADB.TEST: kvno = 2
+mariadb/localhost@GO-MARIADB.TEST: kvno = 2
+correctness: raw exit=0; unexpected issues=0
+recorder: raw exit=0; unexpected issues=0
+vet: raw exit=0; unexpected issues=0

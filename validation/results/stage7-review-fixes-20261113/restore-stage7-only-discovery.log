@@ -1,0 +1,15 @@
+test_prior_profile_and_newer_passing_leaf_cannot_be_omitted (test_compatibility.CompatibilityEvidenceTests.test_prior_profile_and_newer_passing_leaf_cannot_be_omitted) ... FAIL
+
+======================================================================
+FAIL: test_prior_profile_and_newer_passing_leaf_cannot_be_omitted (test_compatibility.CompatibilityEvidenceTests.test_prior_profile_and_newer_passing_leaf_cannot_be_omitted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_compatibility.py", line 130, in test_prior_profile_and_newer_passing_leaf_cannot_be_omitted
+    self.assertIsNotNone(after['prior_profile'])
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: unexpectedly None
+
+----------------------------------------------------------------------
+Ran 1 test in 0.120s
+
+FAILED (failures=1)

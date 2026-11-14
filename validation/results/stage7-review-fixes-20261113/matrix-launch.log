@@ -1,0 +1,12 @@
+{"compiler": "1.27", "family": "10.11", "directory": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb10.11", "exit_code": 1}
+{"compiler": "1.27", "family": "11.4", "directory": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.4", "exit_code": 0}
+{"compiler": "1.27", "family": "11.8", "directory": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.8", "exit_code": 1}
+{"compiler": "1.27", "family": "12.3", "directory": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb12.3", "exit_code": 0}
+{"compiler": "1.26", "family": "10.11", "directory": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb10.11", "exit_code": 0}
+{"compiler": "1.26", "family": "11.4", "directory": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.4", "exit_code": 0}
+{"compiler": "1.26", "family": "11.8", "directory": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.8", "exit_code": 0}
+{"compiler": "1.26", "family": "12.3", "directory": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb12.3", "exit_code": 0}
+{"compiler": "1.25", "family": "10.11", "directory": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb10.11", "exit_code": 0}
+{"compiler": "1.25", "family": "11.4", "directory": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.4", "exit_code": 0}
+{"compiler": "1.25", "family": "11.8", "directory": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.8", "exit_code": 0}
+{"compiler": "1.25", "family": "12.3", "directory": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb12.3", "exit_code": 0}

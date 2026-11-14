@@ -1,0 +1,31 @@
+Compatibility profile failed; inspect /private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmpo6to8pyd/results/missing-compiler/failure.log.
+Compatibility profile failed; inspect /private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmpo6to8pyd/results/missing-client/failure.log.
+Compatibility profile failed; inspect /private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmpz2gytaoh/results/arbitrary-output-name/failure.log.
+..................................................................................................................E.......
+======================================================================
+ERROR: test_owned_descendants_stop_after_leader_exit_or_ignored_term (test_stage6_cdc.CDCEvidenceTests.test_owned_descendants_stop_after_leader_exit_or_ignored_term) (running=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_stage6_cdc.py", line 183, in test_owned_descendants_stop_after_leader_exit_or_ignored_term
+    cdc_fixture.stop(owner,group=True,grace=0.1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/cdc_fixture.py", line 40, in stop
+    if not send(0):
+           ~~~~^^^
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/cdc_fixture.py", line 30, in send
+    os.killpg(process.pid, sig)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_stage6_cdc.py", line 191, in test_owned_descendants_stop_after_leader_exit_or_ignored_term
+    try: os.killpg(owner.pid,signal.SIGKILL)
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+----------------------------------------------------------------------
+Ran 122 tests in 20.765s
+
+FAILED (errors=1)

@@ -1,0 +1,18 @@
+{
+  "input_fingerprint": "a16c00cf01a35b193ab251edbadb1a04ece062906b8a3f12bffbabd6cee449f1",
+  "profile_counts": {
+    "mac": {
+      "pass": 1637,
+      "skip": 8
+    },
+    "linux": {
+      "pass": 1640,
+      "skip": 5
+    }
+  },
+  "matrix_profiles": 12,
+  "harness_tests": 113,
+  "sealed_artifacts": 192,
+  "original_parent_artifacts_verified": 360,
+  "uncommitted": true
+}

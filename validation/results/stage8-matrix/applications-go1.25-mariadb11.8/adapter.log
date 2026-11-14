@@ -1,0 +1,24 @@
+{"Time":"2026-11-14T17:29:57.386654+01:00","Action":"start","Package":"github.com/aantich/go-mariadb/integrations/gorm"}
+{"Time":"2026-11-14T17:29:57.670524+01:00","Action":"run","Package":"github.com/aantich/go-mariadb/integrations/gorm","Test":"TestTranslationIdentity"}
+{"Time":"2026-11-14T17:29:57.670618+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/integrations/gorm","Test":"TestTranslationIdentity","Output":"=== RUN   TestTranslationIdentity\n"}
+{"Time":"2026-11-14T17:29:57.670645+01:00","Action":"run","Package":"github.com/aantich/go-mariadb/integrations/gorm","Test":"TestTranslationIdentity/1062"}
+{"Time":"2026-11-14T17:29:57.670652+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/integrations/gorm","Test":"TestTranslationIdentity/1062","Output":"=== RUN   TestTranslationIdentity/1062\n"}
+{"Time":"2026-11-14T17:29:57.670669+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/integrations/gorm","Test":"TestTranslationIdentity/1062","Output":"--- PASS: TestTranslationIdentity/1062 (0.00s)\n"}
+{"Time":"2026-11-14T17:29:57.670677+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb/integrations/gorm","Test":"TestTranslationIdentity/1062","Elapsed":0}
+{"Time":"2026-11-14T17:29:57.670687+01:00","Action":"run","Package":"github.com/aantich/go-mariadb/integrations/gorm","Test":"TestTranslationIdentity/1451"}
+{"Time":"2026-11-14T17:29:57.670691+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/integrations/gorm","Test":"TestTranslationIdentity/1451","Output":"=== RUN   TestTranslationIdentity/1451\n"}
+{"Time":"2026-11-14T17:29:57.670748+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/integrations/gorm","Test":"TestTranslationIdentity/1451","Output":"--- PASS: TestTranslationIdentity/1451 (0.00s)\n"}
+{"Time":"2026-11-14T17:29:57.670758+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb/integrations/gorm","Test":"TestTranslationIdentity/1451","Elapsed":0}
+{"Time":"2026-11-14T17:29:57.670766+01:00","Action":"run","Package":"github.com/aantich/go-mariadb/integrations/gorm","Test":"TestTranslationIdentity/1452"}
+{"Time":"2026-11-14T17:29:57.67077+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/integrations/gorm","Test":"TestTranslationIdentity/1452","Output":"=== RUN   TestTranslationIdentity/1452\n"}
+{"Time":"2026-11-14T17:29:57.670817+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/integrations/gorm","Test":"TestTranslationIdentity/1452","Output":"--- PASS: TestTranslationIdentity/1452 (0.00s)\n"}
+{"Time":"2026-11-14T17:29:57.670834+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb/integrations/gorm","Test":"TestTranslationIdentity/1452","Elapsed":0}
+{"Time":"2026-11-14T17:29:57.670894+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/integrations/gorm","Test":"TestTranslationIdentity","Output":"--- PASS: TestTranslationIdentity (0.00s)\n"}
+{"Time":"2026-11-14T17:29:57.670906+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb/integrations/gorm","Test":"TestTranslationIdentity","Elapsed":0}
+{"Time":"2026-11-14T17:29:57.670913+01:00","Action":"run","Package":"github.com/aantich/go-mariadb/integrations/gorm","Test":"TestDedicatedPoolRequired"}
+{"Time":"2026-11-14T17:29:57.670918+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/integrations/gorm","Test":"TestDedicatedPoolRequired","Output":"=== RUN   TestDedicatedPoolRequired\n"}
+{"Time":"2026-11-14T17:29:57.671082+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/integrations/gorm","Test":"TestDedicatedPoolRequired","Output":"--- PASS: TestDedicatedPoolRequired (0.00s)\n"}
+{"Time":"2026-11-14T17:29:57.671094+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb/integrations/gorm","Test":"TestDedicatedPoolRequired","Elapsed":0}
+{"Time":"2026-11-14T17:29:57.67112+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/integrations/gorm","Output":"PASS\n"}
+{"Time":"2026-11-14T17:29:58.677353+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/integrations/gorm","Output":"ok  \tgithub.com/aantich/go-mariadb/integrations/gorm\t1.290s\n"}
+{"Time":"2026-11-14T17:29:58.677417+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb/integrations/gorm","Elapsed":1.291}

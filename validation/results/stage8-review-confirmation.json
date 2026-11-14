@@ -1,0 +1,65 @@
+{
+  "date": "2026-11-14",
+  "branch": "master",
+  "parent_commit": "2a5fe58e5b15f52db7a375e301c2c09fd6e20e34",
+  "input_fingerprint": "9e8bdde9d1ea1d5c2f80cdb5c9f2edc3f891e7eb10bbd5862670e0cc8cab85de",
+  "production_and_permanent_test_code_changed": false,
+  "all_original_620_artifact_hashes_intact": true,
+  "existing_harness_tests_pass": 122,
+  "existing_adapter_race_tests_pass": true,
+  "findings": [
+    {
+      "id": 1,
+      "priority": "P2",
+      "title": "GORM optional methods hidden by interface embedding",
+      "proof": "live owned MariaDB"
+    },
+    {
+      "id": 2,
+      "priority": "P2",
+      "title": "Native application pass history is not enforced",
+      "proof": "synthetic valid-profile/cohort control"
+    },
+    {
+      "id": 3,
+      "priority": "P2",
+      "title": "Framework expiry cases bypass framework handles",
+      "proof": "live temporary-copy control"
+    },
+    {
+      "id": 4,
+      "priority": "P3",
+      "title": "Native timeout loses stage output and status",
+      "proof": "synthetic timeout"
+    },
+    {
+      "id": 5,
+      "priority": "P3",
+      "title": "Report hardcodes macOS for Linux matrix clients",
+      "proof": "synthetic accepted Linux cohort"
+    }
+  ],
+  "benchmarks_executed": false,
+  "benchmark_smoke_executed": false,
+  "profiling_executed": false,
+  "full_matrix_rerun": false,
+  "new_commit_made": false,
+  "new_push_made": false,
+  "package_published": false,
+  "owned_review_fixtures_cleaned": true,
+  "configured_secret_absent_from_review_artifacts": true,
+  "artifacts": {
+    "docs/STAGE8_CODE_REVIEW.md": "60b9d22acc705944f49904820ef02e3dc66032627916e2ef87e7870ac1d3cf64",
+    "validation/results/stage8-review-20261114/adapter-unit.log": "b86db93e3e662dd178607988bd41cd2672a6b070cc16339649f158a51b415723",
+    "validation/results/stage8-review-20261114/expiry-control-change.txt": "d4d655520f538249360a50c3a8e43a54a659f1b3094d40c5858fd392be0dafce",
+    "validation/results/stage8-review-20261114/expiry-no-framework-control.json": "edcde1902d91a1392bc5de3a0733d75737674c1e6edd97ef7f5485b9b848262c",
+    "validation/results/stage8-review-20261114/expiry-no-framework.log": "896d9448d16d9e8f8e0bbbfaea55662ea5a5c31ffdce21084fb5979791d41af0",
+    "validation/results/stage8-review-20261114/gorm-build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "validation/results/stage8-review-20261114/gorm-live-probe.log": "b76ba3b0dae53a7d046f383a5b4e55964c71dae43965e3dd3108d0f743b9aaa9",
+    "validation/results/stage8-review-20261114/gorm-probe.go.txt": "1cdfa467d8a0bf432af751c0bb1fbc702366c5079482669c03b4340d302ef171",
+    "validation/results/stage8-review-20261114/harness.log": "730829a35eedcaa42316f1aefa3befbed8c8edef410cea753b7249d8ac581ff2",
+    "validation/results/stage8-review-20261114/linux-render-control.json": "a5f2f96bbf5e04c72039efdfe6c48aedc66b177ae17845648b5cc6973a64b76f",
+    "validation/results/stage8-review-20261114/native-history-control.json": "90a80dff50a1c4a02177783aca7d5063bd6e489a5332e61ec2bf1402e501fae9",
+    "validation/results/stage8-review-20261114/native-timeout-control.json": "88abb99700d11fbb154a64307ed620e23bbd81afd6361f3c163fd416832cd732"
+  }
+}

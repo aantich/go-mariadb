@@ -1,0 +1,7 @@
+{
+  "python_ast": true,
+  "gofmt": true,
+  "actionlint": true,
+  "diff_check": true,
+  "input_fingerprint": "9e8bdde9d1ea1d5c2f80cdb5c9f2edc3f891e7eb10bbd5862670e0cc8cab85de"
+}

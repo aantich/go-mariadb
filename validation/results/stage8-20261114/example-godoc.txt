@@ -1,0 +1,12 @@
+package example // import "github.com/aantich/go-mariadb/validation/apps/example"
+
+Package example contains the executable application-guide transaction example.
+
+FUNCTIONS
+
+func RecordOrder(ctx context.Context, db *sql.DB, operationID string, payload []byte) error
+    RecordOrder atomically stores an operation and its outbox record. The
+    schema must give operation_id a unique key. A failed Commit is an uncertain
+    outcome: callers reconcile that ID through a fresh connection before
+    deciding to retry.
+

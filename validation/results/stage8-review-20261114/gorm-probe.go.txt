@@ -1,0 +1,53 @@
+package main
+import (
+ "context"
+ "database/sql"
+ "encoding/json"
+ "errors"
+ "fmt"
+ "os"
+ "time"
+ mariadb "github.com/aantich/go-mariadb"
+ adapter "github.com/aantich/go-mariadb/integrations/gorm"
+ shared "gorm.io/driver/mysql"
+ "gorm.io/gorm"
+ "gorm.io/gorm/logger"
+)
+type Stamp struct { ID int `gorm:"primaryKey"`; CreatedAt time.Time; UpdatedAt time.Time }
+func (Stamp) TableName() string { return "go_app_review_stamps" }
+func main(){if err:=run();err!=nil{fmt.Fprintln(os.Stderr,err);os.Exit(1)}}
+func run()error{
+ var fixture struct{Host,User,Password,Database string;Port int}
+ data,err:=os.ReadFile(os.Getenv("MARIADB_VALIDATION_CONFIG"));if err!=nil{return err}
+ if err=json.Unmarshal(data,&fixture);err!=nil{return err}
+ cfg:=mariadb.NewConfig();cfg.User,cfg.Passwd,cfg.DBName=fixture.User,fixture.Password,fixture.Database
+ cfg.Net,cfg.Addr="tcp",fmt.Sprintf("%s:%d",fixture.Host,fixture.Port);cfg.ParseTime=true;cfg.Loc=time.UTC
+ cfg.Timeout,cfg.ReadTimeout,cfg.WriteTimeout=3*time.Second,5*time.Second,5*time.Second
+ cfg.Params=map[string]string{"time_zone":"'+00:00'"}
+ connector,err:=mariadb.NewConnector(cfg);if err!=nil{return err};db:=sql.OpenDB(connector);defer db.Close()
+ ctx,cancel:=context.WithTimeout(context.Background(),20*time.Second);defer cancel()
+ makeGORM:=func(d gorm.Dialector)(*gorm.DB,error){return gorm.Open(d,&gorm.Config{Logger:logger.Default.LogMode(logger.Silent),PrepareStmt:true})}
+ adapted:=adapter.New(adapter.Config{Conn:db});underlying:=shared.New(shared.Config{DriverName:"mariadb",Conn:db})
+ _,adaptedSP:=adapted.(gorm.SavePointerDialectorInterface);_,sharedSP:=underlying.(gorm.SavePointerDialectorInterface)
+ _,adaptedApply:=adapted.(interface{Apply(*gorm.Config)error});_,sharedApply:=underlying.(interface{Apply(*gorm.Config)error})
+ g,err:=makeGORM(adapted);if err!=nil{return err};g=g.WithContext(ctx)
+ defer func(){if cache,ok:=g.ConnPool.(*gorm.PreparedStmtDB);ok{cache.Close()}}()
+ nestedCalled:=false
+ nestedError:=g.Transaction(func(tx *gorm.DB)error{return tx.Transaction(func(inner *gorm.DB)error{nestedCalled=true;return nil})})
+ if err=g.AutoMigrate(&Stamp{});err!=nil{return err};defer db.ExecContext(context.Background(),"DROP TABLE go_app_review_stamps")
+ stamp:=Stamp{ID:1};if err=g.Create(&stamp).Error;err!=nil{return err};var loaded Stamp
+ if err=g.First(&loaded,1).Error;err!=nil{return err}
+ control,err:=makeGORM(underlying);if err!=nil{return err};control=control.WithContext(ctx)
+ defer func(){if cache,ok:=control.ConnPool.(*gorm.PreparedStmtDB);ok{cache.Close()}}()
+ controlCalled:=false
+ controlErr:=control.Transaction(func(tx *gorm.DB)error{return tx.Transaction(func(inner *gorm.DB)error{controlCalled=true;return nil})})
+ controlStamp:=Stamp{ID:2};if err=control.Create(&controlStamp).Error;err!=nil{return err};var controlLoaded Stamp
+ if err=control.First(&controlLoaded,2).Error;err!=nil{return err}
+ return json.NewEncoder(os.Stdout).Encode(map[string]any{
+ "adapter_savepoint_interface":adaptedSP,"shared_savepoint_interface":sharedSP,"adapter_apply_interface":adaptedApply,"shared_apply_interface":sharedApply,
+ "adapter_nested_error_unsupported":errors.Is(nestedError,gorm.ErrUnsupportedDriver),"adapter_nested_callback_called":nestedCalled,
+ "shared_nested_error":fmt.Sprint(controlErr),"shared_nested_callback_called":controlCalled,
+ "adapter_created_at_roundtrip_equal":stamp.CreatedAt.Equal(loaded.CreatedAt),"adapter_created_at_nanoseconds":stamp.CreatedAt.Nanosecond(),"stored_created_at_nanoseconds":loaded.CreatedAt.Nanosecond(),
+ "shared_created_at_roundtrip_equal":controlStamp.CreatedAt.Equal(controlLoaded.CreatedAt),"shared_created_at_nanoseconds":controlStamp.CreatedAt.Nanosecond(),
+ })
+}

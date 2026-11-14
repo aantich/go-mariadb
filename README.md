@@ -5,11 +5,14 @@ A dedicated, pure-Go **MariaDB** driver for `database/sql`, forked from
 
 **Alpha:** automated compatibility covers MariaDB 10.11/11.4/11.8/12.3 with Go
 1.25/1.26/1.27 in the [recorded profiles](validation/COMPATIBILITY.md).
-Application pilots and wider platform/topology validation remain outstanding.
+GORM and sqlx workflows also have [separate application profiles](validation/APPLICATIONS.md).
+Production application pilots and wider platform/topology validation remain outstanding.
 This is a development checkout; no independent release has been published.
 MySQL and TiDB are outside this project's support scope.
 
 **[User guide and examples](docs/USER_GUIDE.md)** ·
+**[GORM, sqlx and migration guide](docs/APPLICATIONS.md)** ·
+**[Application validation and Alpha readiness](docs/STAGE8_APPLICATIONS.md)** ·
 **[Live correctness and benchmarks](validation/RESULTS.md)** ·
 **[Implementation record](docs/DEDICATED_DRIVER.md)** ·
 **[Review corrections](docs/STAGE1_REVIEW_FIXES.md)** ·
@@ -25,6 +28,8 @@ MySQL and TiDB are outside this project's support scope.
 **[Optional CDC and durable resume](docs/STAGE6_CDC.md)** ·
 **[CDC review corrections and validation](docs/STAGE6_REVIEW_FIXES.md)** ·
 **[Version compatibility and failure recovery](docs/STAGE7_COMPATIBILITY.md)** ·
+**[Compatibility validation review corrections](docs/STAGE7_REVIEW_FIXES.md)** ·
+**[Application integration review corrections](docs/STAGE8_REVIEW_FIXES.md)** ·
 **[Roadmap and remaining gaps](docs/ROADMAP.md)** ·
 **[Run validation](validation/README.md)**
 
@@ -58,6 +63,9 @@ create a registration collision.
 
 * Standard SQL queries, prepared statements, transactions, context cancellation,
   multi-result statements/procedures and `Scanner`/`Valuer` integration.
+* Optional [GORM adapter](integrations/gorm) with MariaDB transport and error
+  translation that preserves both GORM and original server error identities;
+  [tested sqlx usage](docs/APPLICATIONS.md#sqlx) through the `mariadb` registration.
 * MariaDB metadata caching, binary value decoding, Go 1.27 direct column scanning,
   utf8mb4, sockets, verified TLS and client certificates.
 * Native binary batch DML through opt-in `BulkExec`, including unsigned values,

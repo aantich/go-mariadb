@@ -1,0 +1,16 @@
+test_setup_failure_retains_redacted_docker_diagnostics (test_compatibility.CompatibilityOwnershipTests.test_setup_failure_retains_redacted_docker_diagnostics) ... Compatibility profile failed; inspect saved stages and server.log.
+ERROR
+
+======================================================================
+ERROR: test_setup_failure_retains_redacted_docker_diagnostics (test_compatibility.CompatibilityOwnershipTests.test_setup_failure_retains_redacted_docker_diagnostics)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_compatibility.py", line 254, in test_setup_failure_retains_redacted_docker_diagnostics
+    self.assertEqual(capture['failure']['phase'],'fixture_setup')
+                     ~~~~~~~^^^^^^^^^^^
+KeyError: 'failure'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.105s
+
+FAILED (errors=1)

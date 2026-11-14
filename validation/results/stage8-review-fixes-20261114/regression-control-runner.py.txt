@@ -1,0 +1,45 @@
+import json,os,pathlib,re,shutil,subprocess,sys,tempfile
+sys.path.insert(0,'validation');import compatibility,record,ci,correctness
+root=record.ROOT;dest=record.HERE/'results/stage8-review-fixes-20261114';dest.mkdir(exist_ok=True)
+env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1','GOCACHE':'/private/tmp/go-mariadb-validation-20261111/go-cache','GOMAXPROCS':'2','GOFLAGS':'','GOWORK':'off','GOPROXY':'off'}
+proof={}
+with tempfile.TemporaryDirectory(prefix='gomdb-stage8-fix-controls-') as temp:
+ private=pathlib.Path(temp);private.chmod(0o700);fixture=compatibility.OwnedServer(private,compatibility.images()['12.3'])
+ try:
+  fixture.start();env['MARIADB_VALIDATION_CONFIG']=str(fixture.config_path)
+  for variant in ('unchanged','missing-client','hidden-methods'):
+   app=private/variant/'apps';shutil.copytree(root/'validation/apps',app)
+   adapter=root/'integrations/gorm'
+   if variant=='hidden-methods':
+    adapter=private/variant/'adapter';shutil.copytree(root/'integrations/gorm',adapter)
+    source=(adapter/'mariadb.go').read_text().replace('*mysql.Dialector\n','gorm.Dialector\n')
+    source=re.sub(r'var \(\n.*?\n\)\n\nfunc \(d \*dialect\) Initialize','func (d *dialect) Initialize',source,flags=re.S)
+    (adapter/'mariadb.go').write_text(source)
+    (adapter/'go.mod').write_text((adapter/'go.mod').read_text().replace('=> ../..','=> '+str(root)))
+    (dest/'hidden-methods-overlay.go.txt').write_text(source)
+   mod=(app/'go.mod').read_text().replace('=> ../../integrations/gorm','=> '+str(adapter)).replace('=> ../..','=> '+str(root));(app/'go.mod').write_text(mod)
+   if variant=='missing-client':
+    path=app/'lifecycle_test.go';path.write_text(path.read_text().replace('app := client(t, name, db)','app := application{}'))
+   pattern='^TestGORMDialectContract$' if variant=='hidden-methods' else '^TestApplicationLifecycle$/.*/^prepared_handle_expiry$'
+   command=['/opt/homebrew/bin/go','-C',str(app),'test','-race','-json','-count=1','-timeout=90s','-run='+pattern,'./...']
+   result=subprocess.run(command,cwd=root,env=env,capture_output=True,text=True,timeout=180)
+   output=(result.stdout+result.stderr).replace(fixture.password,'[redacted]');(dest/(variant+'.log')).write_text(output)
+   issues,cases=ci.assess_tests(output,result.returncode,required=set())
+   counts={status:sum(case['status']==status for case in correctness.leaves(cases).values()) for status in ('pass','fail','skip')}
+   if variant=='unchanged':assert result.returncode==0 and counts['pass']==3 and not counts['skip'],(variant,counts)
+   elif variant=='missing-client':assert result.returncode!=0 and counts['fail']==3,(variant,counts)
+   else:assert result.returncode!=0 and counts['fail']==8,(variant,counts)
+   proof[variant]={'exit_code':result.returncode,'leaf_counts':counts,'expected_outcome_confirmed':True}
+   print(variant,proof[variant],flush=True)
+  # Rerun the original review's unmodified standalone optional-method probe.
+  probe=private/'unchanged/apps/review_probe_temp.go'
+  try:
+   probe.write_text((record.HERE/'results/stage8-review-20261114/gorm-probe.go.txt').read_text())
+   result=subprocess.run(['/opt/homebrew/bin/go','-C',str(probe.parent),'run',str(probe)],cwd=root,env=env,capture_output=True,text=True,timeout=120)
+   (dest/'gorm-probe-fixed.log').write_text((result.stdout+result.stderr).replace(fixture.password,'[redacted]'))
+   assert result.returncode==0
+  finally:probe.unlink(missing_ok=True)
+ finally:
+  fixture.close()
+  proof['owned_fixture_cleaned']=True
+(dest/'regression-controls.json').write_text(json.dumps(proof,indent=2)+'\n')

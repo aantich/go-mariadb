@@ -2,6 +2,44 @@
 
 ## Current dedicated driver
 
+**Stage 8 applications:** Install the pinned nested module graphs once:
+
+```sh
+go -C validation/apps mod download all
+go -C integrations/gorm mod download all
+GOPROXY=off python3 validation/applications.py --family 12.3 \
+  --output validation/results/stage8-unique-go127-mariadb123
+```
+
+Repeat for MariaDB 10.11/11.4/11.8/12.3 and Go 1.25/1.27 with `--go PATH`.
+The runner uses the same owned Docker lifecycle as the core matrix, with a
+separate frozen application command/inventory/dependency contract. It requires
+real framework workflows and one restart, race/vet, locked module resolution
+and a standalone offline CGO-free core consumer. Required cases cannot skip.
+Ordinary root `go test ./...` does not discover these nested modules.
+
+On an isolated Linux runtime with a complete MariaDB 12.3 installation, run:
+
+```sh
+GOPROXY=off python3 validation/applications_local.py \
+  --output validation/results/stage8-unique-native-linux
+```
+
+This owns a private socket server through `cdc_fixture.py`; it does not use or
+restart the system service. Native v2 receipts protect earlier passing leaves
+from matching compiler/host/server/configuration profiles, including historical
+v1 receipts. Random socket paths and source/fixture edits do not reset history.
+Current publication requires v2, corroborates predecessor hashes and raw events,
+and rejects lost passes or an omitted newest eligible predecessor. Timeouts
+retain streamed stage output and sanitized phase/status diagnostics. Publish the eight Docker profiles plus native Linux
+with `python3 validation/applications_cohort.py --publish --profile DIRECTORY`,
+repeating `--profile` for all nine directories. The standard `verify.py` requires
+this complete current-source application cohort alongside full core correctness
+and the twelve-cell core matrix. It checks raw evidence and does not run tests.
+No benchmark, smoke benchmark, profiling, tagging or publication runs here.
+See [results](APPLICATIONS.md), [application usage](../docs/APPLICATIONS.md) and
+[release gates](../docs/STAGE8_APPLICATIONS.md).
+
 **Stage 7: version compatibility and failure recovery.** The dedicated
 correctness-only matrix is independent of the complete current-version suite:
 
@@ -17,6 +55,12 @@ immutable distribution digests; update it deliberately for a new patch profile.
 The runner creates labelled private containers/volumes, loopback-only endpoints,
 temporary credentials/TLS and a bounded restart control. It rejects existing
 output directories and retains failed attempts. It never executes benchmarks.
+Outputs must live beneath `validation/results`; names are unrestricted within
+that tree so later stages retain the same pass-history protection. The original
+v1 command/inventory contract is frozen in `compatibility-contract-v1.json`.
+Add required cases without rewriting the historical floor; version the contract
+when changing its commands. Unqualified early development captures remain saved
+but cannot establish prior passes. Corrupted qualified predecessors fail closed.
 
 Each profile runs the inherited SQL/protocol/CDC unit suite with race detection,
 version-aware integration/native API/recovery tests and vet. Real PAM/KDC/native
@@ -31,6 +75,22 @@ sanitized raw receipts/logs in the downloadable job log, including failed jobs.
 Local final receipts and exact platform/version scope are linked from the
 [compatibility report](COMPATIBILITY.md) and
 [Stage 7 implementation record](../docs/STAGE7_COMPATIBILITY.md).
+
+After collecting all twelve compiler/server cells at the same source, publish
+their verified cohort with `python3 validation/compatibility_cohort.py --publish`,
+passing `--profile DIRECTORY` once for each of the twelve evidence directories.
+This consumes saved receipts and updates the machine-readable index and public
+table; it runs no tests or benchmarks. Duplicate, missing or inconsistent cells
+are rejected. `python3 validation/compatibility_cohort.py` verifies the existing
+index, raw logs, hashes and metadata. The standard `python3 validation/verify.py`
+now requires this cohort as well as fresh full correctness and immutable references.
+Rerunning only the current-version suite cannot establish current compatibility.
+
+Setup/preflight failures save `failure.log` with their phase. Docker failures
+also retain the safe operation, status and bounded, credential-redacted output.
+Private environments and arbitrary exception messages are never serialized.
+Diagnostic write failures cannot prevent owned-resource cleanup. See the
+[review corrections](../docs/STAGE7_REVIEW_FIXES.md) for validation and limits.
 
 **Stage 6, correctness only:** Optional [CDC](../docs/STAGE6_CDC.md) has its own
 disposable, socket-only MariaDB with binlogging, TLS and semisync. Its globals,

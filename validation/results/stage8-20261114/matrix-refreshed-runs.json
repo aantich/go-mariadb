@@ -1,0 +1,138 @@
+[
+  {
+    "suite": "core",
+    "go": "1.25",
+    "family": "10.11",
+    "directory": "validation/results/stage8-matrix-refreshed/core-go1.25-mariadb10.11",
+    "exit_code": 0,
+    "command": [
+      "python3",
+      "validation/compatibility.py",
+      "--family",
+      "10.11",
+      "--go",
+      "/private/tmp/go-mariadb-stage8-toolchains/1.25/go/bin/go",
+      "--output",
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-matrix-refreshed/core-go1.25-mariadb10.11"
+    ]
+  },
+  {
+    "suite": "core",
+    "go": "1.25",
+    "family": "11.4",
+    "directory": "validation/results/stage8-matrix-refreshed/core-go1.25-mariadb11.4",
+    "exit_code": 0,
+    "command": [
+      "python3",
+      "validation/compatibility.py",
+      "--family",
+      "11.4",
+      "--go",
+      "/private/tmp/go-mariadb-stage8-toolchains/1.25/go/bin/go",
+      "--output",
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-matrix-refreshed/core-go1.25-mariadb11.4"
+    ]
+  },
+  {
+    "suite": "core",
+    "go": "1.25",
+    "family": "11.8",
+    "directory": "validation/results/stage8-matrix-refreshed/core-go1.25-mariadb11.8",
+    "exit_code": 0,
+    "command": [
+      "python3",
+      "validation/compatibility.py",
+      "--family",
+      "11.8",
+      "--go",
+      "/private/tmp/go-mariadb-stage8-toolchains/1.25/go/bin/go",
+      "--output",
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-matrix-refreshed/core-go1.25-mariadb11.8"
+    ]
+  },
+  {
+    "suite": "core",
+    "go": "1.25",
+    "family": "12.3",
+    "directory": "validation/results/stage8-matrix-refreshed/core-go1.25-mariadb12.3",
+    "exit_code": 0,
+    "command": [
+      "python3",
+      "validation/compatibility.py",
+      "--family",
+      "12.3",
+      "--go",
+      "/private/tmp/go-mariadb-stage8-toolchains/1.25/go/bin/go",
+      "--output",
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-matrix-refreshed/core-go1.25-mariadb12.3"
+    ]
+  },
+  {
+    "suite": "core",
+    "go": "1.26",
+    "family": "10.11",
+    "directory": "validation/results/stage8-matrix-refreshed/core-go1.26-mariadb10.11",
+    "exit_code": 0,
+    "command": [
+      "python3",
+      "validation/compatibility.py",
+      "--family",
+      "10.11",
+      "--go",
+      "/private/tmp/go-mariadb-stage8-toolchains/1.26/go/bin/go",
+      "--output",
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-matrix-refreshed/core-go1.26-mariadb10.11"
+    ]
+  },
+  {
+    "suite": "core",
+    "go": "1.26",
+    "family": "11.4",
+    "directory": "validation/results/stage8-matrix-refreshed/core-go1.26-mariadb11.4",
+    "exit_code": 0,
+    "command": [
+      "python3",
+      "validation/compatibility.py",
+      "--family",
+      "11.4",
+      "--go",
+      "/private/tmp/go-mariadb-stage8-toolchains/1.26/go/bin/go",
+      "--output",
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-matrix-refreshed/core-go1.26-mariadb11.4"
+    ]
+  },
+  {
+    "suite": "core",
+    "go": "1.26",
+    "family": "11.8",
+    "directory": "validation/results/stage8-matrix-refreshed/core-go1.26-mariadb11.8",
+    "exit_code": 0,
+    "command": [
+      "python3",
+      "validation/compatibility.py",
+      "--family",
+      "11.8",
+      "--go",
+      "/private/tmp/go-mariadb-stage8-toolchains/1.26/go/bin/go",
+      "--output",
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-matrix-refreshed/core-go1.26-mariadb11.8"
+    ]
+  },
+  {
+    "suite": "core",
+    "go": "1.26",
+    "family": "12.3",
+    "directory": "validation/results/stage8-matrix-refreshed/core-go1.26-mariadb12.3",
+    "exit_code": 0,
+    "command": [
+      "python3",
+      "validation/compatibility.py",
+      "--family",
+      "12.3",
+      "--go",
+      "/private/tmp/go-mariadb-stage8-toolchains/1.26/go/bin/go",
+      "--output",
+      "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-matrix-refreshed/core-go1.26-mariadb12.3"
+    ]
+  }
+]

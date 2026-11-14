@@ -51,18 +51,32 @@ def legacy_inputs():
 def inputs():
     # Include untracked production additions, not only git ls-files.
     files = [p for p in ROOT.rglob('*.go') if not any(x in p.parts for x in ('results','baselines','.git'))]
-    driver = {str(p.relative_to(ROOT)): digest(p.read_bytes()) for p in files if not p.name.endswith('_test.go')}
+    apps = HERE/'apps'
+    driver = {str(p.relative_to(ROOT)): digest(p.read_bytes()) for p in files
+              if not p.name.endswith('_test.go') and not p.is_relative_to(apps)}
     driver.update({name:digest((ROOT/name).read_bytes()) for name in ('go.mod','go.sum')})
     # The optional native provider is executable driver code too. A Go-only
     # fingerprint would miss ABI, mechanism-policy and cleanup changes here.
     driver.update({str(p.relative_to(ROOT)):digest(p.read_bytes()) for p in (ROOT/'gssapi').glob('native.*')
                    if p.suffix in ('.c','.h')})
-    workload = {str(p.relative_to(ROOT)):digest(p.read_bytes()) for p in files if p.name.endswith('_test.go')}
+    workload = {str(p.relative_to(ROOT)):digest(p.read_bytes()) for p in files
+                if p.name.endswith('_test.go') or p.is_relative_to(apps)}
+    # Nested application dependencies stay out of the core module. Their source
+    # and full lock graph are still executable validation inputs. The optional
+    # GORM integration is driver code with its own separately pinned module.
+    for name in ('go.mod','go.sum','dependencies.json'):
+        path=apps/name
+        if path.exists():workload[str(path.relative_to(ROOT))]=digest(path.read_bytes())
+    for name in ('go.mod','go.sum'):
+        path=ROOT/'integrations/gorm'/name
+        if path.exists():driver[str(path.relative_to(ROOT))]=digest(path.read_bytes())
     workload.update({str(p.relative_to(ROOT)):digest(p.read_bytes()) for p in HERE.glob('*.py')})
     workload.update({str(p.relative_to(ROOT)):digest(p.read_bytes()) for p in (HERE/'auth_fixture').glob('*') if p.is_file()})
     workload['validation/identity-migration.json'] = digest((HERE/'identity-migration.json').read_bytes())
     workload['validation/contract-migrations.json'] = digest((HERE/'contract-migrations.json').read_bytes())
     workload['validation/compatibility-images.json'] = digest((HERE/'compatibility-images.json').read_bytes())
+    workload['validation/compatibility-contract-v1.json'] = digest((HERE/'compatibility-contract-v1.json').read_bytes())
+    workload['validation/applications-contract-v1.json'] = digest((HERE/'applications-contract-v1.json').read_bytes())
     for path in ('.github/workflows/test.yml', '.github/workflows/actions.lock'):
         workload[path] = digest((ROOT/path).read_bytes())
     return {'driver':dict(sorted(driver.items())), 'workload':dict(sorted(workload.items()))}
@@ -197,6 +211,7 @@ def render(current, baseline, correctness=None):
                   f"Server: **{server['version']}** · Go: `{correctness['go']}` · Host: `{correctness['host']}` · GOMAXPROCS: **{correctness['check_environment']['GOMAXPROCS']}** · performance_schema: **{server['performance_schema']}**. Server settings match before/after checks.",
                   ', '.join(checked)+' pass. No prior passing assertion was lost. Managed isolation is explicitly opted in; ordinary checkout remains liveness-only.',
                   f"[Raw correctness receipt]({correctness['evidence_directory']}/capture.json) · [Reusable statements](../docs/STAGE4_STATEMENT_REUSE.md) · [Native API contracts](../docs/STAGE3_NATIVE_APIS.md) · [Session foundations](../docs/STAGE2_SESSION_FOUNDATIONS.md).", '',
+                  '[Application integration results](APPLICATIONS.md) · [12-cell core version matrix](COMPATIBILITY.md). Application cases are recorded separately from core counts.', '',
                   '**No performance measurements were made for this source.** The timing tables and full-capture failures below belong to the earlier source fingerprint shown there. They are historical, qualified measurements; none were copied into a new baseline or presented as current-source timings.', '',
                   '<details><summary>Earlier full-capture results and historical failures</summary>', '',
                   '## Earlier full performance capture', '']

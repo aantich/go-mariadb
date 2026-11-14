@@ -1,0 +1,12 @@
+{
+  "synthetic": true,
+  "timeout_reproduced": true,
+  "partial_output_preserved": false,
+  "failed_stage_recorded": false,
+  "phase_or_failure_recorded": false,
+  "saved_files": [
+    "capture.json",
+    "server-before.log",
+    "server.log"
+  ]
+}

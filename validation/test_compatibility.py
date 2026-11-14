@@ -102,6 +102,7 @@ class CompatibilityEvidenceTests(unittest.TestCase):
         source=record.inputs()['workload']
         self.assertIn('validation/compatibility.py',source)
         self.assertIn('validation/compatibility-images.json',source)
+        self.assertIn('validation/compatibility-contract-v1.json',source)
         self.assertEqual(set(matrix.images()),{'10.11','11.4','11.8','12.3'})
         self.assertTrue(all('@sha256:' in value for value in matrix.images().values()))
         self.assertNotIn('./gssapi',matrix.commands('/bin/go')['root'])
@@ -114,7 +115,7 @@ class CompatibilityEvidenceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory(prefix='go-mariadb-stage7-harness-') as tmp, \
              mock.patch.object(matrix,'HERE',Path(tmp)):
             (matrix.HERE/'compatibility-images.json').write_bytes(locked_images)
-            root=matrix.HERE/'results'/'stage7-harness';root.mkdir(parents=True)
+            root=matrix.HERE/'results'/'future-compatibility-stage';root.mkdir(parents=True)
             older=root/'older';current=root/'current';older.mkdir();current.mkdir()
             before=self.valid(older);before['recorded_at']='2026-11-12T21:00:00+00:00'
             extra={'Action':'pass','Package':matrix.ci.PACKAGE,'Test':'TestStage7EarlierPassingLeaf'}
@@ -137,6 +138,49 @@ class CompatibilityEvidenceTests(unittest.TestCase):
             _,after['stages']['root']['cases']=matrix.assess((current/'root.log').read_text(),0,'root')
             self.rehash(after,current)
             with self.assertRaisesRegex(ValueError,'Earlier matrix passes lost'):matrix.validate(after,current)
+
+    def test_inventory_growth_preserves_older_passes_and_commands(self):
+        locked_images=(matrix.HERE/'compatibility-images.json').read_bytes()
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(matrix,'HERE',Path(tmp)):
+            (matrix.HERE/'compatibility-images.json').write_bytes(locked_images)
+            older=matrix.HERE/'results'/'any-name'/'older';older.mkdir(parents=True)
+            current=older.parent/'current';current.mkdir()
+            before=self.valid(older);before['recorded_at']='2026-11-12T21:00:00+00:00'
+            extra={'Action':'pass','Package':matrix.ci.PACKAGE,'Test':'TestEarlierPassingLeaf'}
+            with (older/'root.log').open('a') as output:output.write(json.dumps(extra)+'\n')
+            _,before['stages']['root']['cases']=matrix.assess((older/'root.log').read_text(),0,'root')
+            self.rehash(before,older)
+            (older/'capture.json').write_text(json.dumps(before))
+            prototype=older.parent/'unqualified-development-attempt';prototype.mkdir()
+            early=copy.deepcopy(before);early.pop('required_tests')
+            (prototype/'capture.json').write_text(json.dumps(early))
+            required=matrix.INTEGRATION_REQUIRED|{matrix.ci.PACKAGE+'/validation/TestMariaDBStage7Compatibility/future_required_case'}
+            with mock.patch.object(matrix,'INTEGRATION_REQUIRED',required):
+                after=self.valid(current)
+                after['prior_profile']=matrix.prior_profile(after)
+                self.assertIsNotNone(after['prior_profile'])
+                with self.assertRaisesRegex(ValueError,'Earlier matrix passes lost'):
+                    matrix.validate(after,current)
+                with (current/'root.log').open('a') as output:output.write(json.dumps(extra)+'\n')
+                _,after['stages']['root']['cases']=matrix.assess((current/'root.log').read_text(),0,'root')
+                self.rehash(after,current)
+                matrix.validate(after,current)
+                # Historical command verification also stays independent of a
+                # later collector command change. New command contracts need a
+                # new version, rather than rewriting the old receipt's meaning.
+                with mock.patch.object(matrix,'commands',return_value={}):
+                    matrix.validate(before,older,current=False)
+            # Corruption of a successful predecessor must fail closed instead
+            # of treating that predecessor as an absent baseline.
+            (older/'root.log').write_text('corrupted\n')
+            with self.assertRaisesRegex(ValueError,'Invalid earlier compatibility profile'):
+                matrix.prior_profile(after)
+
+    def test_original_contract_cannot_be_rewritten(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path=Path(tmp)/'contract.json';path.write_text('{}')
+            with mock.patch.object(matrix,'CONTRACT_FILE',path),self.assertRaisesRegex(ValueError,'original compatibility contract'):
+                matrix.historical_contract()
 
 
 class CompatibilityOwnershipTests(unittest.TestCase):
@@ -190,3 +234,69 @@ class CompatibilityOwnershipTests(unittest.TestCase):
             self.assertNotIn(fixture.password,output)
             self.assertIn('controller failed: RuntimeError',output)
             fixture.restart.assert_called_once()
+
+    def test_setup_failure_retains_redacted_docker_diagnostics(self):
+        locked_images=(matrix.HERE/'compatibility-images.json').read_bytes()
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(matrix,'HERE',Path(tmp)):
+            root=Path(tmp);(root/'compatibility-images.json').write_bytes(locked_images)
+            fixture=self.fixture(root)
+            secret=fixture.password
+            result=subprocess.CompletedProcess([],1,'registry unavailable '+secret,'DNS lookup failed '+secret)
+            def start():fixture.docker('pull',fixture.reference)
+            with mock.patch.object(matrix,'OwnedServer',return_value=fixture), \
+                 mock.patch.object(fixture,'start',side_effect=start), \
+                 mock.patch.object(matrix.platform,'platform',return_value='synthetic'), \
+                 mock.patch.object(matrix.subprocess,'check_output',return_value='go version go1.27.4 linux/arm64'), \
+                 mock.patch.object(matrix.subprocess,'run',return_value=result):
+                target=root/'results'/'arbitrary-output-name'
+                self.assertEqual(matrix.run('12.3',sys.executable,target),1)
+            capture=json.loads((target/'capture.json').read_text())
+            self.assertEqual(capture['failure']['phase'],'fixture_setup')
+            self.assertEqual(capture['failure']['operation'],'docker.pull')
+            self.assertIn('DNS lookup failed [redacted]',capture['failure']['diagnostic'])
+            self.assertIn('failure.log',capture['logs'])
+            self.assertFalse((target/'server.log').exists())
+            for path in target.iterdir():self.assertNotIn(secret,path.read_text())
+
+    def test_timeout_and_execution_failure_have_safe_operation_details(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            fixture=self.fixture(Path(tmp))
+            timeout=subprocess.TimeoutExpired(['docker'],1,output=b'partial '+fixture.password.encode(),stderr=b'network failed')
+            for error,status in ((timeout,'timeout'),(FileNotFoundError('private text'),'FileNotFoundError')):
+                with self.subTest(status=status),mock.patch.object(matrix.subprocess,'run',side_effect=error):
+                    with self.assertRaises(matrix.FixtureFailure) as caught:fixture.docker('pull',fixture.reference)
+                    details=matrix.failure_details(caught.exception,'fixture_setup')
+                    self.assertEqual(details['operation'],'docker.pull')
+                    self.assertEqual(details['status'],status)
+                    self.assertNotIn(fixture.password,json.dumps(details))
+                    self.assertNotIn('private text',json.dumps(details))
+
+    def test_arbitrary_exception_does_not_disclose_its_message(self):
+        details=matrix.failure_details(RuntimeError('secret SQL password'),'fixture_setup')
+        self.assertEqual(details,{'phase':'fixture_setup','error_type':'RuntimeError'})
+
+    def test_diagnostic_write_failure_cannot_interrupt_cleanup(self):
+        capture={}
+        with mock.patch.object(Path,'write_text',side_effect=OSError('full disk')):
+            matrix.save_failure(capture,Path('/synthetic'),RuntimeError('private text'),'fixture_cleanup')
+        self.assertEqual(capture['failure']['phase'],'fixture_cleanup')
+        self.assertEqual(capture['failure']['write_error_type'],'OSError')
+        self.assertNotIn('private text',json.dumps(capture))
+
+    def test_preflight_failures_also_leave_a_receipt(self):
+        locked_images=(matrix.HERE/'compatibility-images.json').read_bytes()
+        with tempfile.TemporaryDirectory() as tmp, mock.patch.object(matrix,'HERE',Path(tmp)):
+            root=Path(tmp);(root/'compatibility-images.json').write_bytes(locked_images)
+            missing=root/'results'/'missing-compiler'
+            self.assertEqual(matrix.run('12.3',str(root/'absent-go'),missing),1)
+            capture=json.loads((missing/'capture.json').read_text())
+            self.assertEqual(capture['failure']['phase'],'compiler_identity')
+            with mock.patch.object(matrix,'OwnedServer',side_effect=ValueError('private secret')), \
+                 mock.patch.object(matrix.subprocess,'check_output',return_value='go version go1.27.4 linux/arm64'), \
+                 mock.patch.object(matrix.platform,'platform',return_value='synthetic'):
+                target=root/'results'/'missing-client'
+                self.assertEqual(matrix.run('12.3',sys.executable,target),1)
+            capture=json.loads((target/'capture.json').read_text())
+            self.assertEqual(capture['failure']['phase'],'fixture_initialization')
+            self.assertTrue(capture['resources_cleaned'])
+            self.assertNotIn('private secret',(target/'failure.log').read_text())

@@ -1,0 +1,38 @@
+{"Time":"2026-11-14T18:14:48.601799+01:00","Action":"start","Package":"github.com/aantich/go-mariadb/validation/apps"}
+{"Time":"2026-11-14T18:14:48.601962+01:00","Action":"start","Package":"github.com/aantich/go-mariadb/validation/apps/consumer"}
+{"Time":"2026-11-14T18:14:48.601987+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/validation/apps/consumer","Output":"?   \tgithub.com/aantich/go-mariadb/validation/apps/consumer\t[no test files]\n"}
+{"Time":"2026-11-14T18:14:48.602016+01:00","Action":"skip","Package":"github.com/aantich/go-mariadb/validation/apps/consumer","Elapsed":0}
+{"Time":"2026-11-14T18:14:48.602025+01:00","Action":"start","Package":"github.com/aantich/go-mariadb/validation/apps/example"}
+{"Time":"2026-11-14T18:14:48.602058+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/validation/apps/example","Output":"?   \tgithub.com/aantich/go-mariadb/validation/apps/example\t[no test files]\n"}
+{"Time":"2026-11-14T18:14:48.602087+01:00","Action":"skip","Package":"github.com/aantich/go-mariadb/validation/apps/example","Elapsed":0}
+{"Time":"2026-11-14T18:14:49.132148+01:00","Action":"run","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle"}
+{"Time":"2026-11-14T18:14:49.132218+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle","Output":"=== RUN   TestApplicationLifecycle\n","OutputType":"frame"}
+{"Time":"2026-11-14T18:14:49.132534+01:00","Action":"run","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/sql"}
+{"Time":"2026-11-14T18:14:49.132546+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/sql","Output":"=== RUN   TestApplicationLifecycle/sql\n","OutputType":"frame"}
+{"Time":"2026-11-14T18:14:49.147638+01:00","Action":"run","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/sql/prepared_handle_expiry"}
+{"Time":"2026-11-14T18:14:49.147675+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/sql/prepared_handle_expiry","Output":"=== RUN   TestApplicationLifecycle/sql/prepared_handle_expiry\n","OutputType":"frame"}
+{"Time":"2026-11-14T18:14:49.163348+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/sql/prepared_handle_expiry","Output":"--- PASS: TestApplicationLifecycle/sql/prepared_handle_expiry (0.02s)\n","OutputType":"frame"}
+{"Time":"2026-11-14T18:14:49.163373+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/sql/prepared_handle_expiry","Elapsed":0.02}
+{"Time":"2026-11-14T18:14:49.16363+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/sql","Output":"--- PASS: TestApplicationLifecycle/sql (0.03s)\n","OutputType":"frame"}
+{"Time":"2026-11-14T18:14:49.163647+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/sql","Elapsed":0.03}
+{"Time":"2026-11-14T18:14:49.163781+01:00","Action":"run","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/sqlx"}
+{"Time":"2026-11-14T18:14:49.163793+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/sqlx","Output":"=== RUN   TestApplicationLifecycle/sqlx\n","OutputType":"frame"}
+{"Time":"2026-11-14T18:14:49.17285+01:00","Action":"run","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/sqlx/prepared_handle_expiry"}
+{"Time":"2026-11-14T18:14:49.172868+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/sqlx/prepared_handle_expiry","Output":"=== RUN   TestApplicationLifecycle/sqlx/prepared_handle_expiry\n","OutputType":"frame"}
+{"Time":"2026-11-14T18:14:49.187689+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/sqlx/prepared_handle_expiry","Output":"--- PASS: TestApplicationLifecycle/sqlx/prepared_handle_expiry (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-11-14T18:14:49.187712+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/sqlx/prepared_handle_expiry","Elapsed":0.01}
+{"Time":"2026-11-14T18:14:49.187973+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/sqlx","Output":"--- PASS: TestApplicationLifecycle/sqlx (0.02s)\n","OutputType":"frame"}
+{"Time":"2026-11-14T18:14:49.188014+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/sqlx","Elapsed":0.02}
+{"Time":"2026-11-14T18:14:49.18813+01:00","Action":"run","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/gorm"}
+{"Time":"2026-11-14T18:14:49.188142+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/gorm","Output":"=== RUN   TestApplicationLifecycle/gorm\n","OutputType":"frame"}
+{"Time":"2026-11-14T18:14:49.193737+01:00","Action":"run","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/gorm/prepared_handle_expiry"}
+{"Time":"2026-11-14T18:14:49.193755+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/gorm/prepared_handle_expiry","Output":"=== RUN   TestApplicationLifecycle/gorm/prepared_handle_expiry\n","OutputType":"frame"}
+{"Time":"2026-11-14T18:14:49.200678+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/gorm/prepared_handle_expiry","Output":"--- PASS: TestApplicationLifecycle/gorm/prepared_handle_expiry (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-11-14T18:14:49.200702+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/gorm/prepared_handle_expiry","Elapsed":0.01}
+{"Time":"2026-11-14T18:14:49.200972+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/gorm","Output":"--- PASS: TestApplicationLifecycle/gorm (0.01s)\n","OutputType":"frame"}
+{"Time":"2026-11-14T18:14:49.200983+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle/gorm","Elapsed":0.01}
+{"Time":"2026-11-14T18:14:49.201026+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle","Output":"--- PASS: TestApplicationLifecycle (0.07s)\n","OutputType":"frame"}
+{"Time":"2026-11-14T18:14:49.201043+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb/validation/apps","Test":"TestApplicationLifecycle","Elapsed":0.07}
+{"Time":"2026-11-14T18:14:49.201247+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/validation/apps","Output":"PASS\n","OutputType":"frame"}
+{"Time":"2026-11-14T18:14:50.205153+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/validation/apps","Output":"ok  \tgithub.com/aantich/go-mariadb/validation/apps\t1.603s\n"}
+{"Time":"2026-11-14T18:14:50.205202+01:00","Action":"pass","Package":"github.com/aantich/go-mariadb/validation/apps","Elapsed":1.603}

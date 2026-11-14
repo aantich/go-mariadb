@@ -1,0 +1,47 @@
+"""Exercise the real standard verifier with fresh receipts and a bad matrix pointer."""
+import ast
+import contextlib
+import copy
+import io
+import json
+from pathlib import Path
+import subprocess
+import sys
+from unittest import mock
+
+sys.path.insert(0,'validation')
+import record
+import verify
+
+out=Path('validation/results/stage7-review-fixes-20261113')
+target=record.HERE/'results/compatibility-current.json'
+original=json.loads(target.read_text())
+previous=ast.parse(subprocess.check_output(['git','show','2a5fe58:validation/verify.py'],text=True))
+node=next(node for node in previous.body if isinstance(node,ast.FunctionDef) and node.name=='main')
+fixed=verify.main
+exec(compile(ast.Module(body=[node],type_ignores=[]),'<reviewed original verifier>','exec'),verify.__dict__)
+old=verify.main;verify.main=fixed
+real_read=Path.read_text
+results={}
+for scenario in ('missing','stale','incomplete'):
+    def fake_read(path,*args,**kwargs):
+        if path==target:
+            if scenario=='missing':raise FileNotFoundError('synthetic missing compatibility pointer')
+            value=copy.deepcopy(original)
+            if scenario=='stale':value['inputs']={}
+            else:value['profiles'].pop(next(iter(value['profiles'])))
+            return json.dumps(value)
+        return real_read(path,*args,**kwargs)
+    outcomes={}
+    for name,main in (('fixed',fixed),('restored_original',old)):
+        output=io.StringIO()
+        with mock.patch.object(Path,'read_text',fake_read),contextlib.redirect_stdout(output):
+            try:main();blocked=False
+            except SystemExit as error:
+                assert 'compatibility verification failed' in str(error),str(error)
+                blocked=True
+        outcomes[name]={'blocked_bad_matrix':blocked}
+    assert outcomes['fixed']['blocked_bad_matrix'] and not outcomes['restored_original']['blocked_bad_matrix']
+    results[scenario]=outcomes
+(out/'verifier-gate-control.json').write_text(json.dumps(results,indent=2)+'\n')
+print(json.dumps(results,indent=2))

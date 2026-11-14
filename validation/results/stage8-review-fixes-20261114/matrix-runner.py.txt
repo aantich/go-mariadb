@@ -1,0 +1,22 @@
+from concurrent.futures import ThreadPoolExecutor,as_completed
+import json,os,pathlib,subprocess
+root=pathlib.Path('/Users/aantich/dev/mariadbnew/projects/go-mariadb')
+output=root/'validation/results/stage8-review-fixes-matrix';output.mkdir()
+env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1','GOCACHE':'/private/tmp/go-mariadb-validation-20261111/go-cache','GOMAXPROCS':'2','GOFLAGS':'','GOWORK':'off','GOPROXY':'off'}
+compilers={'1.25':'/private/tmp/gomdb-stage8-review-fixes-toolchains/1.25/go/bin/go','1.26':'/private/tmp/gomdb-stage8-review-fixes-toolchains/1.26/go/bin/go','1.27':'/opt/homebrew/bin/go'}
+jobs=[(kind,go,family) for kind in ('core','applications') for go in compilers if kind=='core' or go!='1.26' for family in ('10.11','11.4','11.8','12.3')]
+def run(job):
+ kind,go,family=job;name=f'{kind}-go{go}-mariadb{family}';directory=output/name
+ # Reuse the already-complete exact-source live regression profile.
+ if kind=='applications' and go=='1.27' and family=='12.3':
+  directory=root/'validation/results/stage8-review-fixes-app-smoke-correctness';return name,0,str(directory)
+ program='compatibility.py' if kind=='core' else 'applications.py'
+ with (output/(name+'.controller.log')).open('w') as log:
+  result=subprocess.run(['python3','validation/'+program,'--family',family,'--go',compilers[go],'--output',str(directory)],cwd=root,env=env,stdout=log,stderr=subprocess.STDOUT,timeout=900)
+ return name,result.returncode,str(directory)
+results=[]
+with ThreadPoolExecutor(max_workers=2) as pool:
+ for future in as_completed([pool.submit(run,job) for job in jobs]):
+  name,code,directory=future.result();print(name,code,flush=True);results.append({'name':name,'exit_code':code,'directory':directory})
+(output/'run-summary.json').write_text(json.dumps(results,indent=2)+'\n')
+raise SystemExit(any(row['exit_code'] for row in results))

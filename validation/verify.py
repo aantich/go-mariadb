@@ -62,6 +62,18 @@ def main():
             raise SystemExit('Full-run verification failed: '+str(error)) from error
     if current.get('lost_baseline_passes'):
         raise SystemExit('Original passing assertions were lost.')
+    # Full current-version correctness does not establish the older-server
+    # matrix. Require its separate live evidence before reporting freshness.
+    from compatibility_cohort import verify_current
+    try:
+        verify_current(HERE)
+    except (ValueError, OSError, KeyError, TypeError) as error:
+        raise SystemExit('Current compatibility verification failed: '+str(error)) from error
+    from applications_cohort import verify_current as verify_applications
+    try:
+        verify_applications()
+    except (ValueError, OSError, KeyError, TypeError) as error:
+        raise SystemExit('Current application verification failed: '+str(error)) from error
     print('Fresh correctness; immutable references and approved workload/contract migrations verified.' if correctness else 'Fresh dedicated-driver results; baseline checksums and original workload bodies intact.')
     print('Historical timing capture: seven repetitions per profile; not measured for current source.' if correctness else 'Seven repetitions per profile. Correctness exit: '+str(current['exit_code']))
 

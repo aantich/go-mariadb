@@ -1,0 +1,27 @@
+import contextlib,copy,io,json,pathlib,sys
+from unittest import mock
+sys.path.insert(0,'validation');import verify,record
+summary_path=record.HERE/'results/applications-current.json';summary=json.loads(summary_path.read_text())
+native_path=record.HERE/summary['profiles']['go1.27-native-linux']['evidence_directory']/'capture.json'
+native=json.loads(native_path.read_text());original=pathlib.Path.read_text
+controls={}
+for name in ('missing-applications','incomplete-cohort','corrupt-native-predecessor','legacy-native-current','wrong-platform-summary'):
+ changed=copy.deepcopy(summary);capture=copy.deepcopy(native)
+ if name=='incomplete-cohort':del changed['profiles']['go1.27-native-linux']
+ if name=='corrupt-native-predecessor':capture['prior_profile']['sha256']='0'*64
+ if name=='legacy-native-current':capture['native_contract']='mariadb-applications-native-v1'
+ if name=='wrong-platform-summary':changed['platform_scope']='fabricated client platform'
+ def read(path,*args,**kwargs):
+  if path.resolve()==summary_path.resolve():
+   if name=='missing-applications':raise FileNotFoundError('synthetic missing application pointer')
+   return json.dumps(changed)
+  if path.resolve()==native_path.resolve():return json.dumps(capture)
+  return original(path,*args,**kwargs)
+ with mock.patch.object(pathlib.Path,'read_text',read),contextlib.redirect_stdout(io.StringIO()):
+  try:verify.main()
+  except SystemExit as error:
+   assert str(error).startswith('Current application verification failed:'),str(error)
+   controls[name]={'rejected':True,'reason':str(error)}
+  else:raise AssertionError(name+' was accepted')
+(record.HERE/'results/stage8-review-fixes-20261114/standard-verifier-controls.json').write_text(json.dumps(controls,indent=2)+'\n')
+print(json.dumps(controls,indent=2))

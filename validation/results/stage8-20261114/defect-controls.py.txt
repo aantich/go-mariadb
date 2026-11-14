@@ -1,0 +1,29 @@
+import json,os,shutil,subprocess,sys,tempfile
+from pathlib import Path
+sys.path.insert(0,'validation')
+import record,ci
+source=record.inputs();results=[];output=Path('validation/results/stage8-20261114')
+with tempfile.TemporaryDirectory(prefix='go-mariadb-stage8-controls-') as directory:
+ root=Path(directory)
+ for name,sha in source['driver'].items():
+  dest=root/name;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(record.ROOT/name,dest)
+ shutil.copyfile(record.ROOT/'integrations/gorm/mariadb_test.go',root/'integrations/gorm/mariadb_test.go')
+ path=root/'integrations/gorm/mariadb.go';original=path.read_text()
+ variants={'unchanged':original,'missing_error_translation':original.replace('return errors.Join(translated, err)','return err'),
+ 'foreign_pool_guard_removed':original[:original.index('func (d *dialect) Initialize')]+'func (d *dialect) Initialize(db *gorm.DB) error { return d.Dialector.Initialize(db) }\n\n'+original[original.index('// Translate preserves'): ]}
+ for name,text in variants.items():
+  path.write_text(text)
+  command=['go','-C',str(root/'integrations/gorm'),'test','-race','-json','-count=1','./...']
+  result=subprocess.run(command,env={**os.environ,'GOWORK':'off','GOFLAGS':'','GOTOOLCHAIN':'local'},text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,timeout=120)
+  (output/('control-'+name+'.log')).write_text(result.stdout)
+  _,cases=ci.assess_tests(result.stdout,result.returncode,required=set())
+  failures=sorted(k for k,v in cases.items() if v.get('status')=='fail')
+  if name=='unchanged':assert result.returncode==0 and not failures
+  else:
+   assert result.returncode==1 and failures
+   expected='TestTranslationIdentity' if name=='missing_error_translation' else 'TestDedicatedPoolRequired'
+   assert any(expected in item for item in failures)
+  results.append({'control':name,'exit_code':result.returncode,'failing_cases':failures})
+assert record.inputs()==source
+(output/'defect-controls.json').write_text(json.dumps(results,indent=2)+'\n')
+print(json.dumps(results,indent=2))

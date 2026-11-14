@@ -1,0 +1,206 @@
+// Copyright 2026 Anton Antich. SPDX-License-Identifier: MPL-2.0
+
+package mariadb
+
+import (
+	"database/sql/driver"
+	"encoding/binary"
+	"errors"
+	"io"
+)
+
+// WithServerCursors makes Query use prepared, read-only server cursors, fetching
+// between 1 and 65535 rows per command. Use a separate pool for cursor-compatible
+// SELECTs; procedures and multiple result sets are unsupported. Exec is unchanged.
+// Rows retain ordinary database/sql scanning and context cancellation. Close Rows
+// promptly: early Close drains only the current batch and resets the statement.
+//
+// MariaDB materializes these cursors on the server. This bounds the client's
+// in-flight row count, not the byte size of a row or server-side storage, and adds
+// one round trip per fetch. It is not a general query speed optimization.
+func WithServerCursors(fetchRows uint32) Option {
+	return func(c *Config) error {
+		if fetchRows == 0 || fetchRows > 65535 {
+			return errors.New("mariadb: cursor fetch size must be between 1 and 65535")
+		}
+		c.cursorFetchRows = fetchRows
+		return nil
+	}
+}
+
+// cursorRows reuses binary decoding and metadata, but owns command boundaries:
+// a batch EOF is not the end of database/sql.Rows. No driver pointer leaves the
+// normal driver.Rows lifetime managed by database/sql.
+type cursorRows struct {
+	binaryRows
+	owner   *mysqlConn
+	stmt    *mysqlStmt
+	fetch   uint32
+	count   uint32
+	pending bool
+	done    bool
+	closed  bool
+}
+
+func (stmt *mysqlStmt) queryCursor(args []driver.Value) (finishableRows, error) {
+	mc := stmt.mc
+	if err := stmt.writeExecutePacketMode(args, 1); err != nil {
+		return nil, mc.markBadConn(err)
+	}
+	n, follows, err := mc.clearResult().readResultSetHeaderPacket()
+	if err != nil {
+		return nil, err
+	}
+	if n == 0 {
+		// A non-SELECT may already have executed. Never request replay.
+		mc.close()
+		return nil, errors.New("mariadb: query did not open a server cursor")
+	}
+	if follows {
+		stmt.columns, err = mc.readColumnDefinitions(n, stmt.columns, false)
+	} else if len(stmt.columns) != n {
+		return nil, mc.protocolError()
+	}
+	if err != nil {
+		return nil, err
+	}
+	// Cursor metadata omits SEND_EOF on the server. Its single terminator
+	// announces the open cursor, in both legacy and deprecated-EOF modes.
+	packet, err := mc.readPacket()
+	if err != nil {
+		return nil, err
+	}
+	// Cursor materialization may fail after metadata has been sent. A complete
+	// ERR ends the command, preserving its SQLSTATE and a synchronized stream;
+	// it is not a malformed cursor terminator.
+	if len(packet) > 0 && packet[0] == iERR {
+		return nil, mc.handleErrorPacket(packet)
+	}
+	status, err := mc.terminatorStatus(packet)
+	if err != nil {
+		return nil, err
+	}
+	if status&statusCursorExists == 0 || status&(statusMoreResultsExists|statusLastRowSent) != 0 {
+		return nil, mc.protocolError()
+	}
+	mc.status = status
+	rows := &cursorRows{binaryRows: binaryRows{mysqlRows{mc: mc, rs: resultSet{columns: stmt.columns}}},
+		owner: mc, stmt: stmt, fetch: mc.cfg.cursorFetchRows}
+	mc.trackRows(&rows.mysqlRows)
+	return rows, nil
+}
+
+func (rows *cursorRows) next(read func() error) error {
+	if rows.closed || rows.done {
+		return io.EOF
+	}
+	mc := rows.owner
+	for {
+		if err := mc.error(); err != nil {
+			return err
+		}
+		if !rows.pending {
+			packet := make([]byte, 13)
+			packet[4] = comStmtFetch
+			binary.LittleEndian.PutUint32(packet[5:9], rows.stmt.id)
+			binary.LittleEndian.PutUint32(packet[9:13], rows.fetch)
+			mc.resetSequence()
+			if err := mc.writePacket(packet); err != nil {
+				return err // No replay of a partially consumed cursor.
+			}
+			mc.syncSequence()
+			rows.mc, rows.rs.done = mc, false
+			rows.pending, rows.count = true, 0
+		}
+		err := read()
+		rows.mc = mc // Ordinary binaryRows clears this at a batch EOF.
+		if err == nil {
+			rows.count++
+			if rows.count > rows.fetch {
+				return mc.protocolError()
+			}
+			return nil
+		}
+		if err != io.EOF {
+			// A row decoding error can leave a batch unread. Retiring is safer
+			// than guessing whether it is possible to reset on this stream.
+			mc.close()
+			return err
+		}
+		if err := rows.endBatch(); err != nil {
+			return err
+		}
+		if rows.done {
+			return io.EOF
+		}
+	}
+}
+
+func (rows *cursorRows) endBatch() error {
+	rows.pending = false
+	status := rows.owner.status
+	if status&statusMoreResultsExists == 0 {
+		if status&statusLastRowSent != 0 && status&statusCursorExists == 0 {
+			rows.done = true
+			return nil
+		}
+		if status&statusCursorExists != 0 && status&statusLastRowSent == 0 && rows.count == rows.fetch {
+			return nil
+		}
+	}
+	return rows.owner.protocolError()
+}
+
+func (rows *cursorRows) Next(dest []driver.Value) error {
+	return rows.next(func() error { return rows.binaryRows.Next(dest) })
+}
+
+func (rows *cursorRows) HasNextResultSet() bool { return false }
+func (rows *cursorRows) NextResultSet() error   { return io.EOF }
+
+func (rows *cursorRows) Close() (err error) {
+	if rows.closed {
+		return nil
+	}
+	rows.closed = true
+	rows.rawCols = nil
+	defer func() { rows.mc = nil }()
+	if f := rows.finish; f != nil {
+		rows.finish = nil
+		defer f() // Keep cancellation active through drain and RESET's ACK.
+	}
+	defer rows.releaseStatements(&err)
+	mc := rows.owner
+	if err := mc.error(); err != nil {
+		return err
+	}
+	if rows.pending {
+		// Do not call next: it would fetch the rest of the cursor. Consume
+		// only the bounded response already requested, checking its row count.
+		for {
+			_, err := rows.readRowPacket(true)
+			rows.mc = mc
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				mc.close()
+				return err
+			}
+			rows.count++
+			if rows.count > rows.fetch {
+				return mc.protocolError()
+			}
+		}
+		if err := rows.endBatch(); err != nil {
+			return err
+		}
+	}
+	if !rows.done {
+		if err := rows.stmt.reset(); err != nil {
+			mc.close()
+			return err
+		}
+	}
+	return nil
+}

@@ -1,0 +1,21 @@
+"""Refresh the three early cells captured before the final controller correction."""
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+out=Path('validation/results/stage7-review-fixes-matrix-refreshed')
+out.mkdir(exist_ok=False)
+env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1',
+     'GOCACHE':'/private/tmp/go-mariadb-validation-20261111/go-cache','GOPROXY':'off'}
+results=[]
+for family in ('10.11','11.4','11.8'):
+    target=out/f'go1.27-mariadb{family}'
+    command=[sys.executable,'validation/compatibility.py','--family',family,'--output',str(target)]
+    with (out/(target.name+'-launch.log')).open('w') as log:
+        status=subprocess.run(command,env=env,stdout=log,stderr=subprocess.STDOUT,timeout=1200).returncode
+    results.append({'compiler':'1.27','family':family,'directory':str(target),'exit_code':status})
+    (out/'matrix.json').write_text(json.dumps(results,indent=2)+'\n')
+    print(json.dumps(results[-1]),flush=True)
+raise SystemExit(1 if any(cell['exit_code'] for cell in results) else 0)

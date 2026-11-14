@@ -1,0 +1,40 @@
+{
+  "mac": {
+    "input_fingerprint": "c2468c56caf4c77b64c30f1e3458759f45167759e9f2953cc8cc2feb9bd7608b",
+    "leaf_counts": {
+      "pass": 1637,
+      "skip": 8
+    },
+    "checks": {
+      "race": true,
+      "vet": true,
+      "harness_policy": true
+    },
+    "lost_correctness_passes": [],
+    "harness_tests": 128,
+    "evidence_directory": "stage8-review-fixes-mac"
+  },
+  "linux": {
+    "input_fingerprint": "c2468c56caf4c77b64c30f1e3458759f45167759e9f2953cc8cc2feb9bd7608b",
+    "leaf_counts": {
+      "pass": 1640,
+      "skip": 5
+    },
+    "checks": {
+      "race": true,
+      "vet": true,
+      "harness_policy": true
+    },
+    "lost_correctness_passes": [],
+    "harness_tests": 128,
+    "evidence_directory": "stage8-review-fixes-linux/core"
+  },
+  "native_applications": {
+    "input_fingerprint": "c2468c56caf4c77b64c30f1e3458759f45167759e9f2953cc8cc2feb9bd7608b",
+    "pass_count": 41,
+    "prior_profile": "results/stage8-linux-accepted/applications/capture.json",
+    "lost_prior_passes": [],
+    "resources_cleaned": true
+  },
+  "original_gorm_probe_corrected": true
+}

@@ -1,0 +1,224 @@
+{
+  "contract": "mariadb-applications-v1",
+  "commands": {
+    "applications": [
+      "$GO",
+      "-C",
+      "validation/apps",
+      "test",
+      "-race",
+      "-json",
+      "-count=1",
+      "-timeout=180s",
+      "-p=1",
+      "-parallel=2",
+      "./..."
+    ],
+    "adapter": [
+      "$GO",
+      "-C",
+      "integrations/gorm",
+      "test",
+      "-race",
+      "-json",
+      "-count=1",
+      "-timeout=180s",
+      "-p=1",
+      "-parallel=2",
+      "./..."
+    ],
+    "vet": [
+      "$GO",
+      "-C",
+      "validation/apps",
+      "vet",
+      "./..."
+    ],
+    "adapter-vet": [
+      "$GO",
+      "-C",
+      "integrations/gorm",
+      "vet",
+      "./..."
+    ],
+    "modules": [
+      "$GO",
+      "-C",
+      "validation/apps",
+      "list",
+      "-m",
+      "-json",
+      "all"
+    ],
+    "consumer": [
+      "python3",
+      "validation/release_consumer.py",
+      "--go",
+      "$GO"
+    ]
+  },
+  "required_tests": {
+    "applications": [
+      "github.com/aantich/go-mariadb/validation/apps/TestApplicationExamples",
+      "github.com/aantich/go-mariadb/validation/apps/TestApplicationLifecycle",
+      "github.com/aantich/go-mariadb/validation/apps/TestApplicationLifecycle/gorm/active_query_cancellation",
+      "github.com/aantich/go-mariadb/validation/apps/TestApplicationLifecycle/gorm/concurrent_requests",
+      "github.com/aantich/go-mariadb/validation/apps/TestApplicationLifecycle/gorm/early_rows_close",
+      "github.com/aantich/go-mariadb/validation/apps/TestApplicationLifecycle/gorm/pool_wait_cancellation",
+      "github.com/aantich/go-mariadb/validation/apps/TestApplicationLifecycle/gorm/prepared_handle_expiry",
+      "github.com/aantich/go-mariadb/validation/apps/TestApplicationLifecycle/sql/active_query_cancellation",
+      "github.com/aantich/go-mariadb/validation/apps/TestApplicationLifecycle/sql/concurrent_requests",
+      "github.com/aantich/go-mariadb/validation/apps/TestApplicationLifecycle/sql/early_rows_close",
+      "github.com/aantich/go-mariadb/validation/apps/TestApplicationLifecycle/sql/pool_wait_cancellation",
+      "github.com/aantich/go-mariadb/validation/apps/TestApplicationLifecycle/sql/prepared_handle_expiry",
+      "github.com/aantich/go-mariadb/validation/apps/TestApplicationLifecycle/sqlx/active_query_cancellation",
+      "github.com/aantich/go-mariadb/validation/apps/TestApplicationLifecycle/sqlx/concurrent_requests",
+      "github.com/aantich/go-mariadb/validation/apps/TestApplicationLifecycle/sqlx/early_rows_close",
+      "github.com/aantich/go-mariadb/validation/apps/TestApplicationLifecycle/sqlx/pool_wait_cancellation",
+      "github.com/aantich/go-mariadb/validation/apps/TestApplicationLifecycle/sqlx/prepared_handle_expiry",
+      "github.com/aantich/go-mariadb/validation/apps/TestApplicationManagedSessions",
+      "github.com/aantich/go-mariadb/validation/apps/TestApplicationProvenance",
+      "github.com/aantich/go-mariadb/validation/apps/TestApplicationRestart",
+      "github.com/aantich/go-mariadb/validation/apps/TestGORMApplication",
+      "github.com/aantich/go-mariadb/validation/apps/TestGORMApplication/compressed",
+      "github.com/aantich/go-mariadb/validation/apps/TestGORMApplication/plain",
+      "github.com/aantich/go-mariadb/validation/apps/TestGORMApplication/tls",
+      "github.com/aantich/go-mariadb/validation/apps/TestGORMApplication/tls_compressed",
+      "github.com/aantich/go-mariadb/validation/apps/TestSQLxApplication",
+      "github.com/aantich/go-mariadb/validation/apps/TestSQLxApplication/compressed",
+      "github.com/aantich/go-mariadb/validation/apps/TestSQLxApplication/plain",
+      "github.com/aantich/go-mariadb/validation/apps/TestSQLxApplication/tls",
+      "github.com/aantich/go-mariadb/validation/apps/TestSQLxApplication/tls_compressed"
+    ],
+    "adapter": [
+      "github.com/aantich/go-mariadb/integrations/gorm/TestDedicatedPoolRequired",
+      "github.com/aantich/go-mariadb/integrations/gorm/TestTranslationIdentity",
+      "github.com/aantich/go-mariadb/integrations/gorm/TestTranslationIdentity/1062",
+      "github.com/aantich/go-mariadb/integrations/gorm/TestTranslationIdentity/1451",
+      "github.com/aantich/go-mariadb/integrations/gorm/TestTranslationIdentity/1452"
+    ]
+  },
+  "dependencies": [
+    {
+      "Path": "filippo.io/edwards25519",
+      "Version": "v1.2.0",
+      "Sum": "h1:crnVqOiS4jqYleHd9vaKZ+HKtHfllngJIiOpNpoJsjo=",
+      "GoModSum": "h1:xzAOLCNug/yB62zG1bQ8uziwrIqIuxhctzJT18Q77mc=",
+      "GoVersion": "1.24.0"
+    },
+    {
+      "Path": "github.com/aantich/go-mariadb",
+      "Version": "v0.0.0",
+      "GoVersion": "1.25.0",
+      "local_source": "github.com/aantich/go-mariadb"
+    },
+    {
+      "Path": "github.com/aantich/go-mariadb/integrations/gorm",
+      "Version": "v0.0.0",
+      "GoVersion": "1.25.0",
+      "local_source": "github.com/aantich/go-mariadb/integrations/gorm"
+    },
+    {
+      "Path": "github.com/aantich/go-mariadb/validation/apps",
+      "GoVersion": "1.25.0",
+      "Main": true
+    },
+    {
+      "Path": "github.com/go-sql-driver/mysql",
+      "Version": "v1.8.1",
+      "Sum": "h1:LedoTUt/eveggdHS9qUFC1EFSa8bU2+1pZjSRpvNJ1Y=",
+      "GoModSum": "h1:wEBSXgmK//2ZFJyE+qWnIsVGmvmEKlqwuVSjsCm7DZg=",
+      "GoVersion": "1.18"
+    },
+    {
+      "Path": "github.com/jinzhu/inflection",
+      "Version": "v1.0.0",
+      "Sum": "h1:K317FqzuhWc8YvSVlFMCCUb36O/S9MCKRDI7QkRKD/E=",
+      "GoModSum": "h1:h+uFLlag+Qp1Va5pdKtLDYj+kHp5pxUVkryuEj+Srlc="
+    },
+    {
+      "Path": "github.com/jinzhu/now",
+      "Version": "v1.1.5",
+      "Sum": "h1:/o9tlHleP7gOFmsnYNz3RGnqzefHA47wQpKrrdTIwXQ=",
+      "GoModSum": "h1:d3SSVoowX0Lcu0IBviAWJpolVfI5UJVZZ7cO71lE/z8=",
+      "GoVersion": "1.12"
+    },
+    {
+      "Path": "github.com/jmoiron/sqlx",
+      "Version": "v1.4.0",
+      "Sum": "h1:1PLqN7S1UYp5t4SrVVnt4nUVNemrDAtxlulVe+Qgm3o=",
+      "GoModSum": "h1:ZrZ7UsYB/weZdl2Bxg6jCRO9c3YHl8r3ahlKmRT4JLY=",
+      "GoVersion": "1.10"
+    },
+    {
+      "Path": "github.com/klauspost/compress",
+      "Version": "v1.19.2",
+      "Sum": "h1:hMRETovs/pu/dVWN7zIT1PGG8t509MwT6bO7XSi26R8=",
+      "GoModSum": "h1:cwPg85FWrGar70rWktvGQj8/hthj3wpl0PGDogxkrSQ=",
+      "GoVersion": "1.24"
+    },
+    {
+      "Path": "github.com/lib/pq",
+      "Version": "v1.10.9",
+      "Sum": "h1:YXG7RB+JIjhP29X+OtkiDnYaXQwpS4JEWq7dtCCRUEw=",
+      "GoModSum": "h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=",
+      "GoVersion": "1.13"
+    },
+    {
+      "Path": "github.com/mattn/go-sqlite3",
+      "Version": "v1.14.22",
+      "Sum": "h1:2gZY6PC6kBnID23Tichd1K+Z0oS6nE/XwU+Vz/5o4kU=",
+      "GoModSum": "h1:Uh1q+B4BYcTPb+yiD3kU8Ct7aC0hY9fxUwlHK0RXw+Y=",
+      "GoVersion": "1.19"
+    },
+    {
+      "Path": "golang.org/x/mod",
+      "Version": "v0.17.0",
+      "Sum": "h1:zY54UmvipHiNd+pm+m0x9KhZ9hl1/7QNMyxXbc6ICqA=",
+      "GoModSum": "h1:hTbmBsO62+eylJbnUtE2MGJUyE7QWk4xUqPFrRgJ+7c=",
+      "GoVersion": "1.18"
+    },
+    {
+      "Path": "golang.org/x/sync",
+      "Version": "v0.9.0",
+      "Sum": "h1:fEo0HyrW1GIgZdpbhCRO0PkJajUS5H9IFUztCgEo2jQ=",
+      "GoModSum": "h1:Czt+wKu1gCyEFDUtn0jG5QVvpJ6rzVqr5aXyt9drQfk=",
+      "GoVersion": "1.18"
+    },
+    {
+      "Path": "golang.org/x/text",
+      "Version": "v0.20.0",
+      "Sum": "h1:gK/Kv2otX8gz+wn7Rmb3vT96ZwuoxnQlY+HlJVj7Qug=",
+      "GoModSum": "h1:D4IsuqiFMhST5bX19pQ9ikHC2GsaKyk/oF+pn3ducp4=",
+      "GoVersion": "1.18"
+    },
+    {
+      "Path": "golang.org/x/tools",
+      "Version": "v0.21.1-0.20240508182429-e35e4ccd0d2d",
+      "Sum": "h1:vU5i/LfpvrRCpgM/VPfJLg5KjxD3E+hfT1SH+d9zLwg=",
+      "GoModSum": "h1:aiJjzUbINMkxbQROHiO6hDPo2LHcIPhhQsa9DLh0yGk=",
+      "GoVersion": "1.19"
+    },
+    {
+      "Path": "gorm.io/driver/mysql",
+      "Version": "v1.6.0",
+      "Sum": "h1:eNbLmNTpPpTOVZi8MMxCi2aaIm0ZpInbORNXDwyLGvg=",
+      "GoModSum": "h1:D/oCC2GWK3M/dqoLxnOlaNKmXz8WNTfcS9y5ovaSqKo=",
+      "GoVersion": "1.18"
+    },
+    {
+      "Path": "gorm.io/driver/sqlite",
+      "Version": "v1.6.0",
+      "Sum": "h1:WHRRrIiulaPiPFmDcod6prc4l2VGVWHz80KspNsxSfQ=",
+      "GoModSum": "h1:AO9V1qIQddBESngQUKWL9yoH93HIeA1X6V633rBwyT8=",
+      "GoVersion": "1.20"
+    },
+    {
+      "Path": "gorm.io/gorm",
+      "Version": "v1.31.2",
+      "Sum": "h1:3o8FXNo9v9S858gil+3LlZA1LkCOzgb4g5BL64FgaCo=",
+      "GoModSum": "h1:XyQVbO2k6YkOis7C2437jSit3SsDK72s7n7rsSHd+Gs=",
+      "GoVersion": "1.18"
+    }
+  ]
+}

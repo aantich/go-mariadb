@@ -1,0 +1,81 @@
+.......E..E........E........E..E......................................................................................
+======================================================================
+ERROR: test_inventory_growth_preserves_older_passes_and_commands (test_compatibility.CompatibilityEvidenceTests.test_inventory_growth_preserves_older_passes_and_commands)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_compatibility.py", line 157, in test_inventory_growth_preserves_older_passes_and_commands
+    after['prior_profile']=matrix.prior_profile(after)
+                           ~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/compatibility.py", line 223, in prior_profile
+    'source':str(path.relative_to(HERE)),'sha256':record.digest(path.read_bytes())}
+                 ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 490, in relative_to
+    raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+ValueError: '/private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmp55k77yj9/results/any-name/older/capture.json' is not in the subpath of '/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmp55k77yj9'
+
+======================================================================
+ERROR: test_prior_profile_and_newer_passing_leaf_cannot_be_omitted (test_compatibility.CompatibilityEvidenceTests.test_prior_profile_and_newer_passing_leaf_cannot_be_omitted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_compatibility.py", line 129, in test_prior_profile_and_newer_passing_leaf_cannot_be_omitted
+    after['prior_profile']=matrix.prior_profile(after)
+                           ~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/compatibility.py", line 223, in prior_profile
+    'source':str(path.relative_to(HERE)),'sha256':record.digest(path.read_bytes())}
+                 ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 490, in relative_to
+    raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+ValueError: '/private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/go-mariadb-stage7-harness-h_nt8i18/results/future-compatibility-stage/older/capture.json' is not in the subpath of '/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/go-mariadb-stage7-harness-h_nt8i18'
+
+======================================================================
+ERROR: test_setup_failure_retains_redacted_docker_diagnostics (test_compatibility.CompatibilityOwnershipTests.test_setup_failure_retains_redacted_docker_diagnostics)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_compatibility.py", line 248, in test_setup_failure_retains_redacted_docker_diagnostics
+    self.assertEqual(matrix.run('12.3',sys.executable,target),1)
+                     ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/compatibility.py", line 432, in run
+    'image_reference':images()[family],'compiler':compiler,'host':platform.platform(),
+                                                                  ~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/platform.py", line 1399, in platform
+    bits, linkage = architecture(sys.executable)
+                    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/platform.py", line 806, in architecture
+    fileout = _syscmd_file(executable, '')
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/platform.py", line 764, in _syscmd_file
+    return output.decode('latin-1')
+           ^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'decode'. Did you mean: 'encode'?
+
+======================================================================
+ERROR: test_inventory_growth_preserves_older_passes_and_commands (test_compatibility.CompatibilityEvidenceTests.test_inventory_growth_preserves_older_passes_and_commands)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_compatibility.py", line 157, in test_inventory_growth_preserves_older_passes_and_commands
+    after['prior_profile']=matrix.prior_profile(after)
+                           ~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/compatibility.py", line 223, in prior_profile
+    'source':str(path.relative_to(HERE)),'sha256':record.digest(path.read_bytes())}
+                 ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 490, in relative_to
+    raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+ValueError: '/private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmpjl3411lk/results/any-name/older/capture.json' is not in the subpath of '/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmpjl3411lk'
+
+======================================================================
+ERROR: test_prior_profile_and_newer_passing_leaf_cannot_be_omitted (test_compatibility.CompatibilityEvidenceTests.test_prior_profile_and_newer_passing_leaf_cannot_be_omitted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_compatibility.py", line 129, in test_prior_profile_and_newer_passing_leaf_cannot_be_omitted
+    after['prior_profile']=matrix.prior_profile(after)
+                           ~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/compatibility.py", line 223, in prior_profile
+    'source':str(path.relative_to(HERE)),'sha256':record.digest(path.read_bytes())}
+                 ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.6/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 490, in relative_to
+    raise ValueError(f"{str(self)!r} is not in the subpath of {str(other)!r}")
+ValueError: '/private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/go-mariadb-stage7-harness-_54e_eu3/results/future-compatibility-stage/older/capture.json' is not in the subpath of '/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/go-mariadb-stage7-harness-_54e_eu3'
+
+----------------------------------------------------------------------
+Ran 118 tests in 19.467s
+
+FAILED (errors=5)

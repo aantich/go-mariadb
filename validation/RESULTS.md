@@ -2,10 +2,12 @@
 
 ## Latest correctness — native MariaDB APIs
 
-Recorded: **2026-11-12T22:01:54.432788+00:00** · Source: `98ba80ed279200ff93c51231f27cd9568f56f8fe8d67b7b7335f079f0526635f` · **1637 PASS / 0 FAIL / 8 SKIP**, unique leaves.
+Recorded: **2026-11-14T17:13:59.659943+00:00** · Source: `c2468c56caf4c77b64c30f1e3458759f45167759e9f2953cc8cc2feb9bd7608b` · **1637 PASS / 0 FAIL / 8 SKIP**, unique leaves.
 Server: **12.3.3-MariaDB-log** · Go: `go version go1.27.4 darwin/arm64` · Host: `macOS-26.4-arm64-arm-64bit-Mach-O` · GOMAXPROCS: **2** · performance_schema: **0**. Server settings match before/after checks.
 Race detection, vet, harness policy checks pass. No prior passing assertion was lost. Managed isolation is explicitly opted in; ordinary checkout remains liveness-only.
-[Raw correctness receipt](results/stage7-mac-final-3/capture.json) · [Reusable statements](../docs/STAGE4_STATEMENT_REUSE.md) · [Native API contracts](../docs/STAGE3_NATIVE_APIS.md) · [Session foundations](../docs/STAGE2_SESSION_FOUNDATIONS.md).
+[Raw correctness receipt](results/stage8-review-fixes-mac/capture.json) · [Reusable statements](../docs/STAGE4_STATEMENT_REUSE.md) · [Native API contracts](../docs/STAGE3_NATIVE_APIS.md) · [Session foundations](../docs/STAGE2_SESSION_FOUNDATIONS.md).
+
+[Application integration results](APPLICATIONS.md) · [12-cell core version matrix](COMPATIBILITY.md). Application cases are recorded separately from core counts.
 
 **No performance measurements were made for this source.** The timing tables and full-capture failures below belong to the earlier source fingerprint shown there. They are historical, qualified measurements; none were copied into a new baseline or presented as current-source timings.
 

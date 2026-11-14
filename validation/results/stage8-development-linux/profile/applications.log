@@ -1,0 +1,19 @@
+go: downloading github.com/jmoiron/sqlx v1.4.0
+go: downloading gorm.io/gorm v1.31.2
+go: downloading filippo.io/edwards25519 v1.2.0
+go: downloading gorm.io/driver/mysql v1.6.0
+{"ImportPath":"filippo.io/edwards25519","Action":"build-output","Output":"# github.com/aantich/go-mariadb/validation/apps\n"}
+{"ImportPath":"filippo.io/edwards25519","Action":"build-output","Output":"/work/auth_ed25519.go:15:2: module lookup disabled by GOPROXY=off\n"}
+{"ImportPath":"filippo.io/edwards25519","Action":"build-fail"}
+{"Time":"2026-11-14T16:21:27.026969085Z","Action":"start","Package":"github.com/aantich/go-mariadb/validation/apps"}
+{"Time":"2026-11-14T16:21:27.026995169Z","Action":"output","Package":"github.com/aantich/go-mariadb/validation/apps","Output":"FAIL\tgithub.com/aantich/go-mariadb/validation/apps [setup failed]\n","OutputType":"frame"}
+{"Time":"2026-11-14T16:21:27.027003794Z","Action":"fail","Package":"github.com/aantich/go-mariadb/validation/apps","Elapsed":0,"FailedBuild":"filippo.io/edwards25519"}
+{"ImportPath":"filippo.io/edwards25519","Action":"build-output","Output":"# github.com/aantich/go-mariadb/validation/apps/consumer\n"}
+{"ImportPath":"filippo.io/edwards25519","Action":"build-output","Output":"/work/auth_ed25519.go:15:2: module lookup disabled by GOPROXY=off\n"}
+{"ImportPath":"filippo.io/edwards25519","Action":"build-fail"}
+{"Time":"2026-11-14T16:21:27.02704146Z","Action":"start","Package":"github.com/aantich/go-mariadb/validation/apps/consumer"}
+{"Time":"2026-11-14T16:21:27.027043127Z","Action":"output","Package":"github.com/aantich/go-mariadb/validation/apps/consumer","Output":"FAIL\tgithub.com/aantich/go-mariadb/validation/apps/consumer [setup failed]\n","OutputType":"frame"}
+{"Time":"2026-11-14T16:21:27.02704546Z","Action":"fail","Package":"github.com/aantich/go-mariadb/validation/apps/consumer","Elapsed":0,"FailedBuild":"filippo.io/edwards25519"}
+{"Time":"2026-11-14T16:21:36.045394131Z","Action":"start","Package":"github.com/aantich/go-mariadb/validation/apps/example"}
+{"Time":"2026-11-14T16:21:36.045425589Z","Action":"output","Package":"github.com/aantich/go-mariadb/validation/apps/example","Output":"?   \tgithub.com/aantich/go-mariadb/validation/apps/example\t[no test files]\n"}
+{"Time":"2026-11-14T16:21:36.045431881Z","Action":"skip","Package":"github.com/aantich/go-mariadb/validation/apps/example","Elapsed":0}

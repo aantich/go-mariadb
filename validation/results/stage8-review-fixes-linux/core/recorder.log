@@ -1,0 +1,12 @@
+Native applications failed; inspect /tmp/tmptt_cu8in/results/preflight/capture.json.
+Native applications failed; inspect /tmp/tmptt_cu8in/results/diagnostic/capture.json.
+Native applications applications: exit=None, issues=1
+Native applications failed; inspect /tmp/tmpm6hd8i67/results/timeout/capture.json.
+Compatibility profile failed; inspect /tmp/tmpr09gfkey/results/missing-compiler/failure.log.
+Compatibility profile failed; inspect /tmp/tmpr09gfkey/results/missing-client/failure.log.
+Compatibility profile failed; inspect /tmp/tmpukjn74pb/results/arbitrary-output-name/failure.log.
+................................................................................................................................
+----------------------------------------------------------------------
+Ran 128 tests in 9.190s
+
+OK

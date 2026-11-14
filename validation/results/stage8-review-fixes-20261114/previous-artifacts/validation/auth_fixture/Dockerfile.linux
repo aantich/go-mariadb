@@ -1,0 +1,10 @@
+# Build the service image first using Dockerfile in this directory.
+# The Go toolchain is copied into that disposable image for native Linux checks.
+FROM golang:1.27.4-bookworm AS toolchain
+FROM go-mariadb-stage5-auth:latest
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    libkrb5-dev && rm -rf /var/lib/apt/lists/*
+COPY --from=toolchain /usr/local/go /usr/local/go
+RUN touch /opt/driver-auth/disposable-fixture
+ENV PATH="/usr/local/go/bin:${PATH}"
+ENTRYPOINT []

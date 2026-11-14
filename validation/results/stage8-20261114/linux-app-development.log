@@ -1,0 +1,12 @@
+Native applications applications: exit=1, issues=33
+Traceback (most recent call last):
+  File "/work/validation/applications_local.py", line 130, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ^^^^^^
+  File "/work/validation/applications_local.py", line 118, in main
+    if args.child:return child(args.go,directory)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/work/validation/applications_local.py", line 98, in child
+    if result.returncode or issues:raise ValueError('Native application check failed: '+name)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: Native application check failed: applications

@@ -1,5 +1,27 @@
 # MariaDB Go driver implementation roadmap
 
+**14 November, Stage 8 review corrections:** All five findings are addressed:
+GORM preserves optional dialect methods, expiry checks use actual framework
+handles, native Linux pass history and timeout diagnostics are protected, and
+platform labels come from verified receipts. See [corrections and verification](STAGE8_REVIEW_FIXES.md).
+Benchmarks remain deferred; work remains uncommitted on `master`.
+
+**14 November, Stage 8:** Application integration and Alpha release preparation
+are implemented in the working tree. The optional GORM adapter fixes concrete
+error translation and dedicated-pool selection; pinned GORM/sqlx applications
+exercise schema changes, values, transactions and lifecycle/restart recovery.
+See [Stage 8 and remaining release gates](STAGE8_APPLICATIONS.md) and the
+[application report](../validation/APPLICATIONS.md). Full correctness and the
+core matrix remain independent gates. No benchmarks, tag, push or publication
+are authorized in this pass; all work stays uncommitted on `master`.
+
+**13 November review corrections:** The three Stage 7 review findings are
+addressed by versioned history protection, a maintained twelve-cell cohort
+verifier/publisher integrated with the standard freshness check, and sanitized
+setup diagnostics. See [review-fix evidence](STAGE7_REVIEW_FIXES.md). Develop on
+the existing `master`; these corrections remain uncommitted. Benchmarks and
+profiling remain deferred; original/reference timings have not advanced.
+
 **Current stage, later on 12 November:** Stage 6 and all seven review corrections
 are published in [`ec42783d`](https://github.com/aantich/go-mariadb/commit/ec42783deb9727a529f3f9c29a80e7ed4d585e7a).
 Anton selected [Stage 7: version compatibility and failure recovery](STAGE7_COMPATIBILITY.md).

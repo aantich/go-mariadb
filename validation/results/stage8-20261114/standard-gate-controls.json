@@ -1,0 +1,17 @@
+[
+  {
+    "control": "missing",
+    "rejected": true,
+    "reason": "Current application verification failed: synthetic missing application index"
+  },
+  {
+    "control": "stale",
+    "rejected": true,
+    "reason": "Current application verification failed: synthetic stale application index"
+  },
+  {
+    "control": "incomplete",
+    "rejected": true,
+    "reason": "Current application verification failed: synthetic incomplete application cohort"
+  }
+]

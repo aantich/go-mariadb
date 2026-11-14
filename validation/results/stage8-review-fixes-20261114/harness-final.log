@@ -1,0 +1,25 @@
+F......Native applications failed; inspect /private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmpi2mdbnrd/results/preflight/capture.json.
+Native applications failed; inspect /private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmpi2mdbnrd/results/diagnostic/capture.json.
+..Native applications applications: exit=None, issues=1
+Native applications failed; inspect /private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmpzsc21bic/results/timeout/capture.json.
+.........................Compatibility profile failed; inspect /private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmpdqy_v8wf/results/missing-compiler/failure.log.
+Compatibility profile failed; inspect /private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmpdqy_v8wf/results/missing-client/failure.log.
+.Compatibility profile failed; inspect /private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmpuzmhjrow/results/arbitrary-output-name/failure.log.
+............................................................................................
+======================================================================
+FAIL: test_application_cohort_requires_all_cells_and_checks_summary (test_applications.ApplicationEvidenceTests.test_application_cohort_requires_all_cells_and_checks_summary)
+----------------------------------------------------------------------
+ValueError: Native application history source changed.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_applications.py", line 291, in test_application_cohort_requires_all_cells_and_checks_summary
+    with self.assertRaisesRegex(ValueError,'passes lost'):cohort.build(directories)
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "passes lost" does not match "Native application history source changed."
+
+----------------------------------------------------------------------
+Ran 127 tests in 17.144s
+
+FAILED (failures=1)

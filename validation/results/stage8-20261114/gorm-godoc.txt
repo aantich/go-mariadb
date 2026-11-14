@@ -1,0 +1,29 @@
+package mariadbgorm // import "github.com/aantich/go-mariadb/integrations/gorm"
+
+Package mariadbgorm adapts GORM's SQL generation to the dedicated MariaDB
+transport. It is an optional module: ordinary database/sql users do not need
+GORM or its SQL dialect dependencies. Readiness remains Alpha.
+
+FUNCTIONS
+
+func New(config Config) gorm.Dialector
+    New uses GORM's shared MariaDB-capable SQL generator with the dedicated
+    driver name fixed in place. Native connection options are configured on
+    Conn through mariadb.NewConnector; they are never hidden in GORM parameter
+    values.
+
+func Open(dsn string) gorm.Dialector
+    Open selects the dedicated "mariadb" registration. GORM's shared dialect
+    generator detects the actual MariaDB version during initialization.
+
+
+TYPES
+
+type Config struct {
+	DSN  string
+	Conn *sql.DB
+}
+    Config selects a MariaDB DSN or an existing pool. Conn takes precedence
+    over DSN and remains owned by the caller. Construct it with this project's
+    driver; this adapter does not accept pools backed by another transport.
+

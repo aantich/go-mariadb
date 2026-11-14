@@ -223,6 +223,48 @@ jobs:
                   print(path.read_text(), flush=True)
           PY
 
+  # Applications have a separate contract: core protocol coverage cannot prove
+  # framework migrations, error translation or statement-cache recovery.
+  mariadb-applications:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        go: ['1.25', '1.27']
+        mariadb: ['10.11', '11.4', '11.8', '12.3']
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-go@v7.0.0
+        with:
+          go-version: ${{ matrix.go }}
+      - name: Install the provenance client and optional native headers
+        run: sudo apt-get update && sudo apt-get install -y mariadb-client libkrb5-dev
+      - name: Download locked application and core module graphs
+        run: |
+          go mod download all
+          go -C validation/apps mod download all
+          go -C integrations/gorm mod download all
+      - name: Require live applications, race checks and owned restart recovery
+        env:
+          GOPROXY: 'off'
+        run: python3 validation/applications.py --family '${{ matrix.mariadb }}' --output 'validation/results/stage8-ci-${{ matrix.mariadb }}-go${{ matrix.go }}'
+      - name: Preserve sanitized application evidence in the job log
+        if: always()
+        env:
+          PROFILE_DIRECTORY: validation/results/stage8-ci-${{ matrix.mariadb }}-go${{ matrix.go }}
+        run: |
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+          for path in sorted(Path(os.environ['PROFILE_DIRECTORY']).glob('*')):
+              if path.suffix in ('.json', '.log'):
+                  print(f'Evidence file: {path.name}', flush=True)
+                  print(path.read_text(), flush=True)
+          PY
+
   # notifies that all test jobs are finished.
   finish:
     needs: test

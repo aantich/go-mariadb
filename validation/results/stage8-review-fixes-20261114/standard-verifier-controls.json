@@ -1,0 +1,22 @@
+{
+  "missing-applications": {
+    "rejected": true,
+    "reason": "Current application verification failed: synthetic missing application pointer"
+  },
+  "incomplete-cohort": {
+    "rejected": true,
+    "reason": "Current application verification failed: Incomplete application cohort."
+  },
+  "corrupt-native-predecessor": {
+    "rejected": true,
+    "reason": "Current application verification failed: Native application history source changed."
+  },
+  "legacy-native-current": {
+    "rejected": true,
+    "reason": "Current application verification failed: Incomplete native Linux application profile."
+  },
+  "wrong-platform-summary": {
+    "rejected": true,
+    "reason": "Current application verification failed: Application summary differs from raw evidence."
+  }
+}

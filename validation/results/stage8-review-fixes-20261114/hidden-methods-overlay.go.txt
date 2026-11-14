@@ -1,0 +1,81 @@
+// Copyright 2026 Anton Antich. SPDX-License-Identifier: MPL-2.0
+
+// Package mariadbgorm adapts GORM's SQL generation to the dedicated MariaDB
+// transport. It is an optional module: ordinary database/sql users do not need
+// GORM or its SQL dialect dependencies. Readiness remains Alpha.
+package mariadbgorm
+
+import (
+	"database/sql"
+	"errors"
+
+	mariadb "github.com/aantich/go-mariadb"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+)
+
+// Config selects a MariaDB DSN or an existing pool. Conn takes precedence over
+// DSN and remains owned by the caller. Construct it with this project's driver;
+// this adapter does not accept pools backed by another transport.
+type Config struct {
+	DSN  string
+	Conn *sql.DB
+}
+
+// Embed the concrete SQL generator so GORM can discover its optional Apply,
+// SavePoint and RollbackTo methods on this wrapper as well. Embedding only
+// gorm.Dialector silently drops these methods and breaks nested transactions.
+type dialect struct {
+	gorm.Dialector
+	conn *sql.DB
+}
+
+// Open selects the dedicated "mariadb" registration. GORM's shared dialect
+// generator detects the actual MariaDB version during initialization.
+func Open(dsn string) gorm.Dialector { return New(Config{DSN: dsn}) }
+
+// New uses GORM's shared MariaDB-capable SQL generator with the dedicated driver
+// name fixed in place. Native connection options are configured on Conn through
+// mariadb.NewConnector; they are never hidden in GORM parameter values.
+func New(config Config) gorm.Dialector {
+	shared := mysql.Config{DriverName: "mariadb", DSN: config.DSN}
+	// Conn is an interface in the shared generator. Do not place a typed nil
+	// *sql.DB in it: that would bypass DSN initialization and panic on first use.
+	if config.Conn != nil {
+		shared.Conn = config.Conn
+	}
+	return &dialect{Dialector: &mysql.Dialector{Config: &shared}, conn: config.Conn}
+}
+
+func (d *dialect) Initialize(db *gorm.DB) error {
+	if d.conn != nil {
+		if _, ok := d.conn.Driver().(*mariadb.MariaDBDriver); !ok {
+			return errors.New("mariadbgorm: Conn must use the dedicated MariaDB driver")
+		}
+	}
+	return d.Dialector.Initialize(db)
+}
+
+// Translate preserves the original server error while adding GORM's portable
+// identity. The shared dialect only recognizes the upstream driver's concrete
+// error type; this fork's errors need their own errors.As-based translation.
+// GORM calls this method only when Config.TranslateError is enabled.
+func (d *dialect) Translate(err error) error {
+	var server *mariadb.MySQLError
+	if !errors.As(err, &server) || server == nil {
+		return err
+	}
+	var translated error
+	switch server.Number {
+	case 1062:
+		translated = gorm.ErrDuplicatedKey
+	case 1451, 1452:
+		translated = gorm.ErrForeignKeyViolated
+	default:
+		return err
+	}
+	if errors.Is(err, translated) {
+		return err
+	}
+	return errors.Join(translated, err)
+}

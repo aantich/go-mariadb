@@ -1,0 +1,6 @@
+{"ImportPath":"github.com/aantich/go-mariadb/integrations/gorm [github.com/aantich/go-mariadb/integrations/gorm.test]","Action":"build-output","Output":"# github.com/aantich/go-mariadb/integrations/gorm [github.com/aantich/go-mariadb/integrations/gorm.test]\n"}
+{"ImportPath":"github.com/aantich/go-mariadb/integrations/gorm [github.com/aantich/go-mariadb/integrations/gorm.test]","Action":"build-output","Output":"./mariadb_test.go:49:9: config.DialFunc undefined (type *\"github.com/go-sql-driver/mysql\".Config has no field or method DialFunc)\n"}
+{"ImportPath":"github.com/aantich/go-mariadb/integrations/gorm [github.com/aantich/go-mariadb/integrations/gorm.test]","Action":"build-fail"}
+{"Time":"2026-11-14T17:27:00.40115+01:00","Action":"start","Package":"github.com/aantich/go-mariadb/integrations/gorm"}
+{"Time":"2026-11-14T17:27:00.401226+01:00","Action":"output","Package":"github.com/aantich/go-mariadb/integrations/gorm","Output":"FAIL\tgithub.com/aantich/go-mariadb/integrations/gorm [build failed]\n","OutputType":"frame"}
+{"Time":"2026-11-14T17:27:00.401242+01:00","Action":"fail","Package":"github.com/aantich/go-mariadb/integrations/gorm","Elapsed":0,"FailedBuild":"github.com/aantich/go-mariadb/integrations/gorm [github.com/aantich/go-mariadb/integrations/gorm.test]"}

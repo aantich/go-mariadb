@@ -1,0 +1,12 @@
+Native applications failed; inspect /private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmp6ngrbktl/results/preflight/capture.json.
+Native applications failed; inspect /private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmp6ngrbktl/results/diagnostic/capture.json.
+Native applications applications: exit=None, issues=1
+Native applications failed; inspect /private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmp3ix25nto/results/timeout/capture.json.
+Compatibility profile failed; inspect /private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmp1a_ivzqo/results/missing-compiler/failure.log.
+Compatibility profile failed; inspect /private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmp1a_ivzqo/results/missing-client/failure.log.
+Compatibility profile failed; inspect /private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmprj2t7jfr/results/arbitrary-output-name/failure.log.
+................................................................................................................................
+----------------------------------------------------------------------
+Ran 128 tests in 23.080s
+
+OK

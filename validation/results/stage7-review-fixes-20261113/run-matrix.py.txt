@@ -1,0 +1,29 @@
+"""Collect every declared cell, retain failures, and never execute benchmarks."""
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+
+root=Path.cwd()
+output=root/'validation/results/stage7-review-fixes-matrix'
+output.mkdir(exist_ok=False)
+toolchains={
+    '1.27':'/opt/homebrew/bin/go',
+    '1.26':'/private/tmp/go-mariadb-stage7-review-fixes-toolchains-20261113/1.26/go/bin/go',
+    '1.25':'/private/tmp/go-mariadb-stage7-review-fixes-toolchains-20261113/1.25/go/bin/go',
+}
+env={**os.environ,'PYTHONDONTWRITEBYTECODE':'1',
+     'GOCACHE':'/private/tmp/go-mariadb-validation-20261111/go-cache','GOPROXY':'off'}
+results=[]
+for compiler,binary in toolchains.items():
+    for family in ('10.11','11.4','11.8','12.3'):
+        directory=output/f'go{compiler}-mariadb{family}'
+        command=[sys.executable,'validation/compatibility.py','--family',family,'--go',binary,'--output',str(directory)]
+        with (output/(directory.name+'-launch.log')).open('w') as log:
+            status=subprocess.run(command,env=env,stdout=log,stderr=subprocess.STDOUT,timeout=1200).returncode
+        item={'compiler':compiler,'family':family,'directory':str(directory.relative_to(root)),'exit_code':status}
+        results.append(item)
+        (output/'matrix.json').write_text(json.dumps(results,indent=2)+'\n')
+        print(json.dumps(item),flush=True)
+raise SystemExit(1 if any(item['exit_code'] for item in results) else 0)

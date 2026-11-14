@@ -1,0 +1,185 @@
+// Copyright 2026 Anton Antich. SPDX-License-Identifier: MPL-2.0
+
+package mariadb
+
+import (
+	"bytes"
+	"context"
+	"errors"
+	"strings"
+	"unicode/utf8"
+)
+
+// ErrGSSAPIPolicy reports absent credentials policy, a principal/mechanism
+// mismatch, an excessive exchange or incomplete mutual authentication.
+var ErrGSSAPIPolicy = errors.New("mariadb: GSSAPI policy or mutual authentication requirement not satisfied")
+
+// GSSAPIRequest contains the locally pinned service principal and selected
+// mechanism. Negotiate requests SPNEGO with Kerberos credentials only; it must
+// never authorize NTLM, delegation or a password fallback.
+type GSSAPIRequest struct {
+	ServicePrincipal string
+	Negotiate        bool
+}
+
+// GSSAPIClient owns one provider security context. Step receives an owned token
+// (nil on its first call) and returns owned output plus local completion status.
+// Completion must require mutual authentication of the pinned server principal.
+// Empty output sends no packet. Methods are called sequentially. Step must honor
+// ctx without waiting for an uninterruptible native call; such work may finish
+// later, owning no SQL socket. Close must be idempotent and nonblocking, and must
+// eventually release credentials, names, output buffers and the security context.
+type GSSAPIClient interface {
+	Step(context.Context, []byte) (output []byte, complete bool, err error)
+	Close() error
+}
+
+// GSSAPIConfig enables MariaDB's auth_gssapi_client plugin for one connector.
+// It requires this method: password-only success or a switch to another method
+// is rejected. The initial default-plugin handshake sends no password proof.
+// ServicePrincipal must exactly match the server's announcement, including its
+// realm; it is never inferred from an untrusted challenge. NewClient must return
+// a fresh context per exchange. The optional gssapi subpackage supplies a native
+// Unix provider without adding a dependency to ordinary core-driver builds.
+// AllowSPNEGO defaults to false; when enabled only Kerberos credentials may be
+// used. MaxSteps defaults to 16, with a maximum of 64. Tokens are capped at 1 MiB.
+// GSSAPI authenticates identity, not SQL transport: configure verified TLS when
+// SQL confidentiality is required. Policy/provider callbacks are not DSN fields.
+type GSSAPIConfig struct {
+	ServicePrincipal string
+	AllowSPNEGO      bool
+	MaxSteps         int
+	NewClient        func(context.Context, GSSAPIRequest) (GSSAPIClient, error)
+}
+
+// WithGSSAPI copies an explicit principal and provider policy. A zero config
+// disables the built-in GSSAPI plugin. Configuration does not acquire credentials.
+func WithGSSAPI(policy GSSAPIConfig) Option {
+	return func(cfg *Config) error {
+		if policy.ServicePrincipal == "" && policy.NewClient == nil && policy.MaxSteps == 0 && !policy.AllowSPNEGO {
+			cfg.gssapi = nil
+			return nil
+		}
+		if policy.NewClient == nil || len(policy.ServicePrincipal) == 0 || len(policy.ServicePrincipal) > 1024 ||
+			!utf8.ValidString(policy.ServicePrincipal) || strings.ContainsRune(policy.ServicePrincipal, 0) ||
+			policy.MaxSteps < 0 || policy.MaxSteps > 64 {
+			return ErrGSSAPIPolicy
+		}
+		copy := policy
+		if copy.MaxSteps == 0 {
+			copy.MaxSteps = 16
+		}
+		cfg.gssapi = &copy
+		return nil
+	}
+}
+
+type gssapiPlugin struct {
+	client   GSSAPIClient
+	steps    int
+	limit    int
+	complete bool
+}
+
+// MariaDB's greeting usually names its default password plugin even for GSSAPI
+// accounts. Advertise that default without sending credentials, then require the
+// account-specific GSSAPI switch. An early server OK is never sufficient.
+type requiredGSSAPIPlugin struct{ simpleAuth }
+
+func (*requiredGSSAPIPlugin) InitAuth(context.Context, []byte, *AuthContext) ([]byte, error) {
+	return []byte{}, nil
+}
+func (*requiredGSSAPIPlugin) ValidateAuth() error { return ErrGSSAPIPolicy }
+
+func init() { RegisterAuthPlugin("auth_gssapi_client", func() AuthPlugin { return &gssapiPlugin{} }) }
+
+func (*gssapiPlugin) sensitiveAuth() {}
+
+func (p *gssapiPlugin) InitAuth(ctx context.Context, packet []byte, auth *AuthContext) ([]byte, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	policy := auth.gssapi
+	if policy == nil {
+		return nil, ErrGSSAPIPolicy
+	}
+	// server_plugin.cc emits principal\0mechanism\0. Older servers emit only
+	// principal\0. Keep both NULs: the second is an empty mechanism, not padding.
+	principal, rest, found := bytes.Cut(packet, []byte{0})
+	if !found || string(principal) != policy.ServicePrincipal {
+		return nil, ErrGSSAPIPolicy
+	}
+	mechanism := ""
+	if len(rest) > 0 {
+		if rest[len(rest)-1] != 0 || bytes.IndexByte(rest[:len(rest)-1], 0) >= 0 {
+			return nil, ErrMalformPkt
+		}
+		mechanism = string(rest[:len(rest)-1])
+	}
+	negotiate := mechanism == "Negotiate"
+	if mechanism != "" && mechanism != "Kerberos" && !(negotiate && policy.AllowSPNEGO) {
+		return nil, ErrGSSAPIPolicy
+	}
+	client, err := policy.NewClient(ctx, GSSAPIRequest{ServicePrincipal: policy.ServicePrincipal, Negotiate: negotiate})
+	p.client = client // Also release a provider returned alongside an error.
+	if err != nil {
+		return nil, err
+	}
+	if client == nil {
+		return nil, ErrGSSAPIPolicy
+	}
+	p.limit = policy.MaxSteps
+	response, err := p.step(ctx, nil)
+	if err == nil && len(response) == 0 {
+		return nil, ErrGSSAPIPolicy // No token proves the client started an exchange.
+	}
+	return response, err
+}
+
+func (p *gssapiPlugin) ContinuationAuth(ctx context.Context, packet, _ []byte, _ *AuthContext) ([]byte, error) {
+	if len(packet) == 0 || len(packet) > 1<<20 {
+		return nil, ErrMalformPkt
+	}
+	return p.step(ctx, bytes.Clone(packet))
+}
+
+func (p *gssapiPlugin) step(ctx context.Context, packet []byte) ([]byte, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	if p.client == nil || p.complete || p.steps >= p.limit {
+		return nil, ErrGSSAPIPolicy
+	}
+	p.steps++
+	output, complete, err := p.client.Step(ctx, packet)
+	if err != nil {
+		return nil, err
+	}
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	if len(output) > 1<<20 || (!complete && len(output) == 0) {
+		return nil, ErrGSSAPIPolicy
+	}
+	p.complete = complete
+	if len(output) == 0 {
+		return nil, nil // AP-REP can complete locally without a final client token.
+	}
+	return output, nil
+}
+
+func (p *gssapiPlugin) ValidateAuth() error {
+	if !p.complete {
+		return ErrGSSAPIPolicy
+	}
+	return nil
+}
+
+func (p *gssapiPlugin) Close() error {
+	if p.client != nil {
+		client := p.client
+		p.client = nil
+		return client.Close()
+	}
+	return nil
+}

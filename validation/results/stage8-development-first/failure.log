@@ -1,0 +1,4 @@
+{
+  "phase": "check_applications",
+  "error_type": "RuntimeError"
+}

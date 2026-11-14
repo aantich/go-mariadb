@@ -1,0 +1,770 @@
+{
+  "AGENTS.md": {
+    "sha256": "a2ab8a71289f5826de4645c68c0dda492d00f3f2c0725e89a5f8a30175ee58b5",
+    "preserved_at": "validation/results/stage8-20261114/previous-artifacts/AGENTS.md"
+  },
+  "README.md": {
+    "sha256": "5b2705e237d2cf540714d4010e96c2a60ac5de97e4dda9fbfbb4462132e7544e",
+    "preserved_at": "validation/results/stage8-20261114/previous-artifacts/README.md"
+  },
+  "docs/ROADMAP.md": {
+    "sha256": "d7b0c306613172fb8f20520e1c309efbafcb59d29288ec2ed0cd26d16e385ce9",
+    "preserved_at": "validation/results/stage8-20261114/previous-artifacts/docs/ROADMAP.md"
+  },
+  "docs/STAGE7_COMPATIBILITY.md": {
+    "sha256": "579d9181c725e5e50e9a066a8dbdc66bbbe0b261013d744e989fc455d31cf08d",
+    "preserved_at": "docs/STAGE7_COMPATIBILITY.md"
+  },
+  "docs/STAGE7_REVIEW_FIXES.md": {
+    "sha256": "c4d61f9539d1afb427d7f81bd2383a3f9c77b62fd6b0208c7bca8947c7d848c8",
+    "preserved_at": "docs/STAGE7_REVIEW_FIXES.md"
+  },
+  "validation/COMPATIBILITY.md": {
+    "sha256": "4716b8e438ae41a9a1863a8a4d0f9a4cd036fab13ea20a2b6128c60273dcf90c",
+    "preserved_at": "validation/results/stage8-20261114/previous-artifacts/validation/COMPATIBILITY.md"
+  },
+  "validation/COVERAGE.md": {
+    "sha256": "bc5524187d03fe24631939f75ab7fce1f1c7831f5c5d643601774eb2ecabfb47",
+    "preserved_at": "validation/results/stage8-20261114/previous-artifacts/validation/COVERAGE.md"
+  },
+  "validation/README.md": {
+    "sha256": "bc304851af0a3f87937298a336b8dcec990be7b1a8ed8fc43e62277e815694ad",
+    "preserved_at": "validation/results/stage8-20261114/previous-artifacts/validation/README.md"
+  },
+  "validation/RESULTS.md": {
+    "sha256": "5d87fb7398f94ee6a7310a61a62fc6b9d11d8fe0410169f786c82fbbcdbbb339",
+    "preserved_at": "validation/results/stage8-20261114/previous-artifacts/validation/RESULTS.md"
+  },
+  "validation/results/compatibility-current.json": {
+    "sha256": "0518278e7946284475376fba0f84272c2bf3fb93c328bbf3ef09f3fc3ef40876",
+    "preserved_at": "validation/results/stage8-20261114/previous-artifacts/validation/results/compatibility-current.json"
+  },
+  "validation/results/correctness-current.json": {
+    "sha256": "abab61ffde53cb55087f994fcfe9f075281f3bc34a11f03aa8c4d5630a06c666",
+    "preserved_at": "validation/results/stage8-20261114/previous-artifacts/validation/results/correctness-current.json"
+  },
+  "validation/results/stage7-review-fixes-20261113/confirm.py.txt": {
+    "sha256": "a3270c765b5be9983af4b0ba703a2b32fb0af981294f34084204887a50b363cb",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/confirm.py.txt"
+  },
+  "validation/results/stage7-review-fixes-20261113/focused-after-history-fix.log": {
+    "sha256": "02da8d8a95bb22e5553c7a3f800cb97837c05142ad90d59f5b2b1680ca17b810",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/focused-after-history-fix.log"
+  },
+  "validation/results/stage7-review-fixes-20261113/harness-confirmed.log": {
+    "sha256": "6791b999f845847ff8bd570878c5f2791df52b77cfbf7f014a7c7c63715914f0",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/harness-confirmed.log"
+  },
+  "validation/results/stage7-review-fixes-20261113/harness-final.log": {
+    "sha256": "c12d6d9b2903ec09fbad600b62c456bddc5209d8849cd98464c93ffdb7a1dbe2",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/harness-final.log"
+  },
+  "validation/results/stage7-review-fixes-20261113/harness-first.log": {
+    "sha256": "e701891a5c3331c8b6a88b6f28bbd9f6bd645cb4e28568fa70e5aac3e107d46c",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/harness-first.log"
+  },
+  "validation/results/stage7-review-fixes-20261113/harness-second.log": {
+    "sha256": "88d684e578fb5a3b87542063c2e23510bbedafbbfb389c7e6c53d249ba3b6bdf",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/harness-second.log"
+  },
+  "validation/results/stage7-review-fixes-20261113/linux-check.sh.txt": {
+    "sha256": "7e380eee6e2cc2d53bc0da815c886ed88c153bc033732ef63b6bfd52598ad75a",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/linux-check.sh.txt"
+  },
+  "validation/results/stage7-review-fixes-20261113/linux-final-2.log": {
+    "sha256": "31f1651bd5122fc88624a6926773d2de7a185b5d7c5b7491753139280f1cbea8",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/linux-final-2.log"
+  },
+  "validation/results/stage7-review-fixes-20261113/linux-final-install-db.log": {
+    "sha256": "1a5874e4917e2d7451b017b1b6ff4466cc6c2d25642cd2d66ff2e5de3b84b13d",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/linux-final-install-db.log"
+  },
+  "validation/results/stage7-review-fixes-20261113/linux-final-main-server.log": {
+    "sha256": "b5af51277109141a76f2d5cbeac16d339d73c83de7c11c680fd3308e703c2e71",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/linux-final-main-server.log"
+  },
+  "validation/results/stage7-review-fixes-20261113/linux-final.log": {
+    "sha256": "9abedb59a0daf35f4ee38025572f40784ee54ec3ccec514ce52798181f7477fd",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/linux-final.log"
+  },
+  "validation/results/stage7-review-fixes-20261113/linux-initial-install-db.log": {
+    "sha256": "2c3f593b253af306e72b471361d3cc2c22b8f0b5da47f8c0c4f4ee7fa9fa4da0",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/linux-initial-install-db.log"
+  },
+  "validation/results/stage7-review-fixes-20261113/linux-initial-main-server.log": {
+    "sha256": "740fab5def69b9dee7baa9ddab3b74d954de1b8e1555529b4f2c82b3af7a7a3c",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/linux-initial-main-server.log"
+  },
+  "validation/results/stage7-review-fixes-20261113/mac-final-2.log": {
+    "sha256": "7ebc55687a2eb5237a29aa6c9de44b40ad6ecf4fd92a1ded0154ebbebdc8c01e",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/mac-final-2.log"
+  },
+  "validation/results/stage7-review-fixes-20261113/mac-final.log": {
+    "sha256": "4afb0a5c6038fb1b9ed5648019af126855e84e1f7fa5ce65318e7a43399d86e7",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/mac-final.log"
+  },
+  "validation/results/stage7-review-fixes-20261113/matrix-launch.log": {
+    "sha256": "65df33bd9de5520ba3f9a72f4c00742006283eb905fead8bac5a77d8cea34056",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/matrix-launch.log"
+  },
+  "validation/results/stage7-review-fixes-20261113/matrix-refresh-launch.log": {
+    "sha256": "ebc37f4b3195bceed7f8e8b71e7121e7781aa6ca77663fc2c4dbb75b9bdf5d21",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/matrix-refresh-launch.log"
+  },
+  "validation/results/stage7-review-fixes-20261113/negative-controls-launch.log": {
+    "sha256": "1e87cd2b44f72a6d04feb078b57c6db915a80a80447f2e7f638918101bd76fff",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/negative-controls-launch.log"
+  },
+  "validation/results/stage7-review-fixes-20261113/negative-controls.json": {
+    "sha256": "1e87cd2b44f72a6d04feb078b57c6db915a80a80447f2e7f638918101bd76fff",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/negative-controls.json"
+  },
+  "validation/results/stage7-review-fixes-20261113/negative-controls.py.txt": {
+    "sha256": "62387b4d098871ee8835739107c042bb7326ba8ff60f6f5ca7841916961855d1",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/negative-controls.py.txt"
+  },
+  "validation/results/stage7-review-fixes-20261113/publish-cohort.log": {
+    "sha256": "26ed064683d13a4f5ca309da2fb8b43f07ae7580510998de4696de9926e79ab8",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/publish-cohort.log"
+  },
+  "validation/results/stage7-review-fixes-20261113/publish-correctness.log": {
+    "sha256": "fefbafb7ae600029525c26441cab47dbc360d4eb8f9872c8840e4c342a7d5ee7",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/publish-correctness.log"
+  },
+  "validation/results/stage7-review-fixes-20261113/refresh-changed-cells.py.txt": {
+    "sha256": "f0b4bbe582d22ea31d205538b73120c1b6426b5284d45e18783fadf623b21619",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/refresh-changed-cells.py.txt"
+  },
+  "validation/results/stage7-review-fixes-20261113/restore-growing-historical-floor.log": {
+    "sha256": "51530130a94ded5fdabaa38a4a7446da3001d6a1bc392731338130a213ec9145",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/restore-growing-historical-floor.log"
+  },
+  "validation/results/stage7-review-fixes-20261113/restore-lost-setup-diagnostic.log": {
+    "sha256": "47ed2ba65d3c43801832ae3662a0d5dfeb6a35d516ecf6c647f7dc458f6bd74f",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/restore-lost-setup-diagnostic.log"
+  },
+  "validation/results/stage7-review-fixes-20261113/restore-stage7-only-discovery.log": {
+    "sha256": "95b61f56e082ddc31473524633a7c253905beee185a6bcee297639ca92a4d861",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/restore-stage7-only-discovery.log"
+  },
+  "validation/results/stage7-review-fixes-20261113/run-matrix.py.txt": {
+    "sha256": "3d4dd81571097b84a5a149c86f278e0213346c6cb668e0f8e44c7a91e8c8525b",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/run-matrix.py.txt"
+  },
+  "validation/results/stage7-review-fixes-20261113/selected-matrix.json": {
+    "sha256": "6e49c20458bc5f98278a0e6753103407b09f19ea83609824577f2dc02717640e",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/selected-matrix.json"
+  },
+  "validation/results/stage7-review-fixes-20261113/source-first.json": {
+    "sha256": "1993871f219df812313d125801335522837cd48b78e091f30b2a9cea07a9e5c3",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/source-first.json"
+  },
+  "validation/results/stage7-review-fixes-20261113/source.json": {
+    "sha256": "f30cab801c610abff1483b50f388a2e97d177b659022a7b24f817374d9b1bad8",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/source.json"
+  },
+  "validation/results/stage7-review-fixes-20261113/verifier-gate-control.json": {
+    "sha256": "f896367b06a50b343bbb43a3fdeb46f935c5ed3e0217381aa74ed74f4012940b",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/verifier-gate-control.json"
+  },
+  "validation/results/stage7-review-fixes-20261113/verifier-gate-control.log": {
+    "sha256": "f896367b06a50b343bbb43a3fdeb46f935c5ed3e0217381aa74ed74f4012940b",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/verifier-gate-control.log"
+  },
+  "validation/results/stage7-review-fixes-20261113/verifier-gate-control.py.txt": {
+    "sha256": "ce03d95f935e6d2543bce614625335034c7b1faa75d120a7b783cc9e20934347",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/verifier-gate-control.py.txt"
+  },
+  "validation/results/stage7-review-fixes-20261113/verify.log": {
+    "sha256": "c493740d802560911baa4bd543e21def0349a912b7b37234d9124ca8aca0522b",
+    "preserved_at": "validation/results/stage7-review-fixes-20261113/verify.log"
+  },
+  "validation/results/stage7-review-fixes-linux-final/capture.json": {
+    "sha256": "73cfb2eed48c481918c2f69521e2cfb2dfc68209680bad25508549cc7f0c3fef",
+    "preserved_at": "validation/results/stage7-review-fixes-linux-final/capture.json"
+  },
+  "validation/results/stage7-review-fixes-linux-final/correctness.log": {
+    "sha256": "8898d0e9a467ce8eed3985ca4b26ac3266ed9976b2bd27b7e745000f756e0b13",
+    "preserved_at": "validation/results/stage7-review-fixes-linux-final/correctness.log"
+  },
+  "validation/results/stage7-review-fixes-linux-final/prior-correctness.json": {
+    "sha256": "3b1da3150f21c251fbc80dc8ea07f579f8f7b01fed66c2f755ce4ea7e3b7d540",
+    "preserved_at": "validation/results/stage7-review-fixes-linux-final/prior-correctness.json"
+  },
+  "validation/results/stage7-review-fixes-linux-final/recorder.log": {
+    "sha256": "ef27116842bcad6b7ac69141bd7231f6ef631e41ce7fa654659394efe1d1c705",
+    "preserved_at": "validation/results/stage7-review-fixes-linux-final/recorder.log"
+  },
+  "validation/results/stage7-review-fixes-linux-final/server-after.log": {
+    "sha256": "a38a08cf207926d05b6cfc46158b3b2b51de7b2171b6571a675fade7a50269b1",
+    "preserved_at": "validation/results/stage7-review-fixes-linux-final/server-after.log"
+  },
+  "validation/results/stage7-review-fixes-linux-final/server-before.log": {
+    "sha256": "a38a08cf207926d05b6cfc46158b3b2b51de7b2171b6571a675fade7a50269b1",
+    "preserved_at": "validation/results/stage7-review-fixes-linux-final/server-before.log"
+  },
+  "validation/results/stage7-review-fixes-linux-final/vet.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "preserved_at": "validation/results/stage7-review-fixes-linux-final/vet.log"
+  },
+  "validation/results/stage7-review-fixes-linux-final-2/capture.json": {
+    "sha256": "65d5a8ef79b0cb0fb0f6154b3e48f15458a81f1b3419efef4e213a27975c136a",
+    "preserved_at": "validation/results/stage7-review-fixes-linux-final-2/capture.json"
+  },
+  "validation/results/stage7-review-fixes-linux-final-2/correctness.log": {
+    "sha256": "350e73cb8c45323a23728776c40d7c2c105da6da31b5748c4a7fc489e9b2a061",
+    "preserved_at": "validation/results/stage7-review-fixes-linux-final-2/correctness.log"
+  },
+  "validation/results/stage7-review-fixes-linux-final-2/prior-correctness.json": {
+    "sha256": "3b1da3150f21c251fbc80dc8ea07f579f8f7b01fed66c2f755ce4ea7e3b7d540",
+    "preserved_at": "validation/results/stage7-review-fixes-linux-final-2/prior-correctness.json"
+  },
+  "validation/results/stage7-review-fixes-linux-final-2/recorder.log": {
+    "sha256": "54f62372dbd704fd539e163d83fada0d8ec33ee6047f5c74603fdb5c82c95516",
+    "preserved_at": "validation/results/stage7-review-fixes-linux-final-2/recorder.log"
+  },
+  "validation/results/stage7-review-fixes-linux-final-2/server-after.log": {
+    "sha256": "a38a08cf207926d05b6cfc46158b3b2b51de7b2171b6571a675fade7a50269b1",
+    "preserved_at": "validation/results/stage7-review-fixes-linux-final-2/server-after.log"
+  },
+  "validation/results/stage7-review-fixes-linux-final-2/server-before.log": {
+    "sha256": "a38a08cf207926d05b6cfc46158b3b2b51de7b2171b6571a675fade7a50269b1",
+    "preserved_at": "validation/results/stage7-review-fixes-linux-final-2/server-before.log"
+  },
+  "validation/results/stage7-review-fixes-linux-final-2/vet.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "preserved_at": "validation/results/stage7-review-fixes-linux-final-2/vet.log"
+  },
+  "validation/results/stage7-review-fixes-mac-final/capture.json": {
+    "sha256": "e09786ddbe099af52c3eb042410a4d3f73054131e520f7f1301b2a664f5b4733",
+    "preserved_at": "validation/results/stage7-review-fixes-mac-final/capture.json"
+  },
+  "validation/results/stage7-review-fixes-mac-final/correctness.log": {
+    "sha256": "c9d286de51dc0242ef2e4594bc4cc0c2f7d3aab9981437841fb554f1abe1bba7",
+    "preserved_at": "validation/results/stage7-review-fixes-mac-final/correctness.log"
+  },
+  "validation/results/stage7-review-fixes-mac-final/prior-correctness.json": {
+    "sha256": "6427613c15a7f7cb80c2b848ac209738cb120103e2ce56671b160e5e1a606a1a",
+    "preserved_at": "validation/results/stage7-review-fixes-mac-final/prior-correctness.json"
+  },
+  "validation/results/stage7-review-fixes-mac-final/recorder.log": {
+    "sha256": "06704fb81f13660925f43ad513349fb2d78ae29367f292c4fa133983acd089b4",
+    "preserved_at": "validation/results/stage7-review-fixes-mac-final/recorder.log"
+  },
+  "validation/results/stage7-review-fixes-mac-final/server-after.log": {
+    "sha256": "fc0dcfeb4c06669c9ac42344a1c1e763662af4ac5237d360eabd3f04cc0922d6",
+    "preserved_at": "validation/results/stage7-review-fixes-mac-final/server-after.log"
+  },
+  "validation/results/stage7-review-fixes-mac-final/server-before.log": {
+    "sha256": "fc0dcfeb4c06669c9ac42344a1c1e763662af4ac5237d360eabd3f04cc0922d6",
+    "preserved_at": "validation/results/stage7-review-fixes-mac-final/server-before.log"
+  },
+  "validation/results/stage7-review-fixes-mac-final/vet.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "preserved_at": "validation/results/stage7-review-fixes-mac-final/vet.log"
+  },
+  "validation/results/stage7-review-fixes-mac-final-2/capture.json": {
+    "sha256": "17ddc976dc1e12fc9786e467a587fea5db100407925d4f81e77026925bf0688d",
+    "preserved_at": "validation/results/stage7-review-fixes-mac-final-2/capture.json"
+  },
+  "validation/results/stage7-review-fixes-mac-final-2/correctness.log": {
+    "sha256": "9226b6116dc4ca2890aee7933ab423eb9a0b9907eedfa8056aee88c213057617",
+    "preserved_at": "validation/results/stage7-review-fixes-mac-final-2/correctness.log"
+  },
+  "validation/results/stage7-review-fixes-mac-final-2/prior-correctness.json": {
+    "sha256": "6427613c15a7f7cb80c2b848ac209738cb120103e2ce56671b160e5e1a606a1a",
+    "preserved_at": "validation/results/stage7-review-fixes-mac-final-2/prior-correctness.json"
+  },
+  "validation/results/stage7-review-fixes-mac-final-2/recorder.log": {
+    "sha256": "ac475ee16365248d51305a03e3d8ba33a8dd2808fbc7aa5524d85cebab853876",
+    "preserved_at": "validation/results/stage7-review-fixes-mac-final-2/recorder.log"
+  },
+  "validation/results/stage7-review-fixes-mac-final-2/server-after.log": {
+    "sha256": "fc0dcfeb4c06669c9ac42344a1c1e763662af4ac5237d360eabd3f04cc0922d6",
+    "preserved_at": "validation/results/stage7-review-fixes-mac-final-2/server-after.log"
+  },
+  "validation/results/stage7-review-fixes-mac-final-2/server-before.log": {
+    "sha256": "fc0dcfeb4c06669c9ac42344a1c1e763662af4ac5237d360eabd3f04cc0922d6",
+    "preserved_at": "validation/results/stage7-review-fixes-mac-final-2/server-before.log"
+  },
+  "validation/results/stage7-review-fixes-mac-final-2/vet.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "preserved_at": "validation/results/stage7-review-fixes-mac-final-2/vet.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb10.11/capture.json": {
+    "sha256": "5219237bf407b3ccd29cc89e8a5dfdf95bdba1c1f5b15d455e4cb12daf2f4a0e",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb10.11/capture.json"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb10.11/integration.log": {
+    "sha256": "d1f3b0a01b97627db0e4bf0182bb460b234f1d54f14263cb9c801fb1bf310308",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb10.11/integration.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb10.11/root.log": {
+    "sha256": "6aff279167b89f38249f84d4a7a2507e9ef0820dedc77c5054fc871daea97c53",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb10.11/root.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb10.11/server-after.log": {
+    "sha256": "805b6f3aaa829ddc17f77bcf55d34d1a7581cc6b024f9037e635530291f0d27f",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb10.11/server-after.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb10.11/server-before.log": {
+    "sha256": "805b6f3aaa829ddc17f77bcf55d34d1a7581cc6b024f9037e635530291f0d27f",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb10.11/server-before.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb10.11/server.log": {
+    "sha256": "9dbcbe48b3f90352c8f0bacec556af6f62491e2b04dd50b3da9da19d6b6251bf",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb10.11/server.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb10.11/vet.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb10.11/vet.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb10.11-launch.log": {
+    "sha256": "11053c0afd06e8ea0d7582afa595c58a52226d6320b68c9dfafc030494ab28ff",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb10.11-launch.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.4/capture.json": {
+    "sha256": "9aa13f940ddabf3c9caa669fedf1ce0857c7ee70b20d8d36020bc742391c3237",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.4/capture.json"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.4/integration.log": {
+    "sha256": "eb37e8e94cb31e6f72e60d753f66e5cdfa2fa9bc9fe7af2913bd0f484c5bb45d",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.4/integration.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.4/root.log": {
+    "sha256": "5f01aca7863cbf62f6ac0d69342d83624a4a584d230f1f4f8e32752caed822f2",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.4/root.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.4/server-after.log": {
+    "sha256": "c0d31d0eca5d7cbf445f5271c1f0e784f9380e67af4c8676391f26a10b2aefe7",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.4/server-after.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.4/server-before.log": {
+    "sha256": "c0d31d0eca5d7cbf445f5271c1f0e784f9380e67af4c8676391f26a10b2aefe7",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.4/server-before.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.4/server.log": {
+    "sha256": "edb9c69a3094d70224c563cae1a37cc1c26435ea5e6c5cb98fce3a7c1c49ef21",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.4/server.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.4/vet.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.4/vet.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.4-launch.log": {
+    "sha256": "c96590b67d9912c28b17dcd12e32ca8aa61c261f1aa1b78276c24055cff3713e",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.4-launch.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.8/capture.json": {
+    "sha256": "b9ddded77dc0c56aefb6e51b49ebda25c429f64497b84e9b67e338dd43141a12",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.8/capture.json"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.8/integration.log": {
+    "sha256": "e11365392e66c8aad910cd82e2dbbb72e7dc8e71c2274f4f9b015c256f852354",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.8/integration.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.8/root.log": {
+    "sha256": "81d3b8e536c7235ded044ab44a4d973c3f180054d4b61561503df42ce07fba25",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.8/root.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.8/server-after.log": {
+    "sha256": "95f195d2735359a61922cb0d55661f8fabf3ae94b7115a7737a1a9e11bf03065",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.8/server-after.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.8/server-before.log": {
+    "sha256": "95f195d2735359a61922cb0d55661f8fabf3ae94b7115a7737a1a9e11bf03065",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.8/server-before.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.8/server.log": {
+    "sha256": "fbda638f0cfba597def610e2d28a1e96bec4e12c61725ec4bd7666a0ac11d352",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.8/server.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.8/vet.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.8/vet.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.8-launch.log": {
+    "sha256": "4f2648fa8f9c5b83648441eb3b2223dcd6d08821098a61f05e2bd5a21b35eaa1",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb11.8-launch.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb12.3/capture.json": {
+    "sha256": "c48c1667e6374756058efffc1037f8f754d0e43d01aef883ca2746ba4ea33283",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb12.3/capture.json"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb12.3/integration.log": {
+    "sha256": "c8bba3f0953e046d58db0b000b008feee32f95e03d77c91b87728a10a9e4cd7d",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb12.3/integration.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb12.3/root.log": {
+    "sha256": "3003519bfb46c684e9225ec430db95e78601c601d18cec49f42a2a42456a0a61",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb12.3/root.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb12.3/server-after.log": {
+    "sha256": "fee88c4d0abe8bd091a189dcab2ac5cd9d56c5a973fb2647c9be1d3268ae4b44",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb12.3/server-after.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb12.3/server-before.log": {
+    "sha256": "fee88c4d0abe8bd091a189dcab2ac5cd9d56c5a973fb2647c9be1d3268ae4b44",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb12.3/server-before.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb12.3/server.log": {
+    "sha256": "20254d4669489cdcc49dd76d3635b0c1305ff9bcd9ed0e7462bae5b698348b36",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb12.3/server.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb12.3/vet.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb12.3/vet.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.25-mariadb12.3-launch.log": {
+    "sha256": "ac676a8812972f7b011df2de4429bd74143cd297d66fd349de4ef16b33b26cdf",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.25-mariadb12.3-launch.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb10.11/capture.json": {
+    "sha256": "79f0f06f5f94cecf6e296640d55f0984432a476c12f239183110b4dc42569c6f",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb10.11/capture.json"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb10.11/integration.log": {
+    "sha256": "82ecb5fd070e5c2c189c51d7ec2ab98e3ca111fb92714a1bc717a90e89df2472",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb10.11/integration.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb10.11/root.log": {
+    "sha256": "525c80bdc4e1beb247743b4392addcad91770eb35a967e3cffbb57d54729dc1b",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb10.11/root.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb10.11/server-after.log": {
+    "sha256": "805b6f3aaa829ddc17f77bcf55d34d1a7581cc6b024f9037e635530291f0d27f",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb10.11/server-after.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb10.11/server-before.log": {
+    "sha256": "805b6f3aaa829ddc17f77bcf55d34d1a7581cc6b024f9037e635530291f0d27f",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb10.11/server-before.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb10.11/server.log": {
+    "sha256": "877f0b88777bd4376c356f5ffb84a6a2c7d0bcfda6ede827768dacb6d1b2ce1c",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb10.11/server.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb10.11/vet.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb10.11/vet.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb10.11-launch.log": {
+    "sha256": "86fc9a2ebb7aeac24e00ddcce7806c723289bbc0f21f5a4a2594d2f71fdc578a",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb10.11-launch.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.4/capture.json": {
+    "sha256": "bb3cc58645f81c1ac5a01a2277722cc4641e290ff31ef67313114ddea6b17226",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.4/capture.json"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.4/integration.log": {
+    "sha256": "887460fd7557f44be24bb1d7b7f457b55b012549d3d148da91662d141b8981b9",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.4/integration.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.4/root.log": {
+    "sha256": "7923c54759cebeeae0b3e1d1250a2678a40b0494d2b7aa46b19c0eddc7278371",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.4/root.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.4/server-after.log": {
+    "sha256": "c0d31d0eca5d7cbf445f5271c1f0e784f9380e67af4c8676391f26a10b2aefe7",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.4/server-after.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.4/server-before.log": {
+    "sha256": "c0d31d0eca5d7cbf445f5271c1f0e784f9380e67af4c8676391f26a10b2aefe7",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.4/server-before.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.4/server.log": {
+    "sha256": "4c8bd2158ce7c7c534bc3242a8f98b1fbb436b80f4b0a2fc2f1cc4fdfb3e65e5",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.4/server.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.4/vet.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.4/vet.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.4-launch.log": {
+    "sha256": "8bc43a4f09f6781b95ff596c3c5923e9b675242b54daef38468bddcf9c8c580a",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.4-launch.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.8/capture.json": {
+    "sha256": "47d6fd5ff16f0c33944e28f74f21667ecefa26fc0d5290b3e75cf5ff38859fc5",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.8/capture.json"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.8/integration.log": {
+    "sha256": "5707280eb7dacf4e1503357dee217e814522b930810ad866c79177ef88cfb4cc",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.8/integration.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.8/root.log": {
+    "sha256": "46cea863eeb33deafb1d05cbfb63ec226a5c9960ef42abc8fceff282cf6ae711",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.8/root.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.8/server-after.log": {
+    "sha256": "95f195d2735359a61922cb0d55661f8fabf3ae94b7115a7737a1a9e11bf03065",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.8/server-after.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.8/server-before.log": {
+    "sha256": "95f195d2735359a61922cb0d55661f8fabf3ae94b7115a7737a1a9e11bf03065",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.8/server-before.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.8/server.log": {
+    "sha256": "c983a0a282effb3aa2e7021b4d7fd1d9606e3b6b6dcfe0e1f8616a5baedf71c8",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.8/server.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.8/vet.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.8/vet.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.8-launch.log": {
+    "sha256": "b12614625ffb8889fdad07cee6703682e335bec77f9947f9c404b137910f41ed",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb11.8-launch.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb12.3/capture.json": {
+    "sha256": "988e0b7a55268cd37c02b3c05d06f09e98efa50cc9a34d07113a3e01a528b8e8",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb12.3/capture.json"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb12.3/integration.log": {
+    "sha256": "4b9032b4587e3b396b55c67c449550c86c8af28c3e612cf0965ac272f5262d18",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb12.3/integration.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb12.3/root.log": {
+    "sha256": "0c35be23a35f94fcfcad7b7d1d615cedcbafc4a6adeccbf16c6c31717826322b",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb12.3/root.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb12.3/server-after.log": {
+    "sha256": "fee88c4d0abe8bd091a189dcab2ac5cd9d56c5a973fb2647c9be1d3268ae4b44",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb12.3/server-after.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb12.3/server-before.log": {
+    "sha256": "fee88c4d0abe8bd091a189dcab2ac5cd9d56c5a973fb2647c9be1d3268ae4b44",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb12.3/server-before.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb12.3/server.log": {
+    "sha256": "4d20c18aaab7ca49a67310af106de28b7c966148b096c8b11d1915bfd4370b14",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb12.3/server.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb12.3/vet.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb12.3/vet.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.26-mariadb12.3-launch.log": {
+    "sha256": "6cc18c8e62f7c26ca8e531b5f7e6a6f24d36bd6131d8ee70151e3bf6f27b5aed",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.26-mariadb12.3-launch.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb10.11/capture.json": {
+    "sha256": "923a63fb4a98ab2ae2bb2424427855ae08d71b62cd5be238d249c0b57171f07b",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb10.11/capture.json"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb10.11/failure.log": {
+    "sha256": "f16f287462759f22d68ee15f421674c9aa2c12b43c3beb565996c7ee28925d56",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb10.11/failure.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb10.11/server-before.log": {
+    "sha256": "805b6f3aaa829ddc17f77bcf55d34d1a7581cc6b024f9037e635530291f0d27f",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb10.11/server-before.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb10.11/server.log": {
+    "sha256": "43cf6e22617f2a9d3864da2f63567a858b9377f33d7cb706534a786f1199a4c1",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb10.11/server.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb10.11-launch.log": {
+    "sha256": "1faa133878420b851662cb5d445fada4954e65c80ecabf50c1d06d31435ae662",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb10.11-launch.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.4/capture.json": {
+    "sha256": "f5bbddb5a97f86229c7b94ad21ce4f40f1f9357e7f595e0a0c9c9db44068c229",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.4/capture.json"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.4/integration.log": {
+    "sha256": "c6791cf7b4f55e509aa22205f5cda4d52dffd54d713093d7598bb77664be5a18",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.4/integration.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.4/root.log": {
+    "sha256": "6a46c3d636c395b89d5c69c2ec085e7dd7e14b8c893a4271d971b86fa9c91e4f",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.4/root.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.4/server-after.log": {
+    "sha256": "c0d31d0eca5d7cbf445f5271c1f0e784f9380e67af4c8676391f26a10b2aefe7",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.4/server-after.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.4/server-before.log": {
+    "sha256": "c0d31d0eca5d7cbf445f5271c1f0e784f9380e67af4c8676391f26a10b2aefe7",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.4/server-before.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.4/server.log": {
+    "sha256": "9109ad510decce4b7a3ebb7eed9464067ac25f8d6a8cc53098cc3eacd933388a",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.4/server.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.4/vet.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.4/vet.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.4-launch.log": {
+    "sha256": "5dd4f2007997d6d5294eb8048d1a4f68d24d7c80c54848bb9b24043cee06dd1c",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.4-launch.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.8/capture.json": {
+    "sha256": "fc9d19ec6faab8c69138697765df868c5e256ff1d17282e6e83035be1355b655",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.8/capture.json"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.8/integration.log": {
+    "sha256": "822246cbe46b36c8e68eb0224973d2176ad47e2875505f8b42d5c064d1611a66",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.8/integration.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.8/root.log": {
+    "sha256": "80ab9fb586f2ea7cce27db15034f1030dc314ab3cd89106f5a711193e0ccf8ba",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.8/root.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.8/server-after.log": {
+    "sha256": "95f195d2735359a61922cb0d55661f8fabf3ae94b7115a7737a1a9e11bf03065",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.8/server-after.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.8/server-before.log": {
+    "sha256": "95f195d2735359a61922cb0d55661f8fabf3ae94b7115a7737a1a9e11bf03065",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.8/server-before.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.8/server.log": {
+    "sha256": "bbb63362fd259f310dc6e289e80a5b08074f429843abe06bae8a1dca7cfa18d7",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.8/server.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.8/vet.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.8/vet.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.8-launch.log": {
+    "sha256": "ba0fb64a2c9135e636412c8802f6b42e463b8afc1eed97ae564c9e5ebe7ee6e0",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb11.8-launch.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb12.3/capture.json": {
+    "sha256": "4e4cca8305e41847dee969de37336951e41bcf102a8bb09735cc616b140bc383",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb12.3/capture.json"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb12.3/integration.log": {
+    "sha256": "f939d7cca7f9b2821acdf190b1babd0952570a3592049b4138474798b2428bb3",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb12.3/integration.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb12.3/root.log": {
+    "sha256": "198ed3412a09413ccae4522b85b3bad29065179e6b8ab8cce301b1a5a56ef1cd",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb12.3/root.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb12.3/server-after.log": {
+    "sha256": "fee88c4d0abe8bd091a189dcab2ac5cd9d56c5a973fb2647c9be1d3268ae4b44",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb12.3/server-after.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb12.3/server-before.log": {
+    "sha256": "fee88c4d0abe8bd091a189dcab2ac5cd9d56c5a973fb2647c9be1d3268ae4b44",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb12.3/server-before.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb12.3/server.log": {
+    "sha256": "0d033fc3dd54e62623d97431ba07938c1c88a2137d72ecdac460a5f3e3d3e092",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb12.3/server.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb12.3/vet.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb12.3/vet.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/go1.27-mariadb12.3-launch.log": {
+    "sha256": "520ee5a4bba0fa570f8c209b3fb766780ec6558202257342ea20e2017a06c02a",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/go1.27-mariadb12.3-launch.log"
+  },
+  "validation/results/stage7-review-fixes-matrix/matrix.json": {
+    "sha256": "c4e85a4217c4b4a265305f7c8c4ff2bfc03e7b132f8363dbaa9c09d2bfdb6de7",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix/matrix.json"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb10.11/capture.json": {
+    "sha256": "8246878e15c879eac4228e24c55ea3bea85779e8b038c724535dfeb3d8b3f0ec",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb10.11/capture.json"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb10.11/integration.log": {
+    "sha256": "354e6ef2d9884a59d7464a7ff85f0b134281eb1e4ccd97738ea4d259ecbb6f72",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb10.11/integration.log"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb10.11/root.log": {
+    "sha256": "d973de339dd46e7f3db40af6ec92a14659b3c92dfbf5277f2206b26961b37e3d",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb10.11/root.log"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb10.11/server-after.log": {
+    "sha256": "805b6f3aaa829ddc17f77bcf55d34d1a7581cc6b024f9037e635530291f0d27f",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb10.11/server-after.log"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb10.11/server-before.log": {
+    "sha256": "805b6f3aaa829ddc17f77bcf55d34d1a7581cc6b024f9037e635530291f0d27f",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb10.11/server-before.log"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb10.11/server.log": {
+    "sha256": "deff3c780caaed06e91d56e8fbf46b7a24c1fc8a7d281f0a76ff75e99a2ca720",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb10.11/server.log"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb10.11/vet.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb10.11/vet.log"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb10.11-launch.log": {
+    "sha256": "b0d4453b62d757f605758c3b58112ff484bf1cf9e34c01c737b963fc56d8d863",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb10.11-launch.log"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.4/capture.json": {
+    "sha256": "e2ba40670a7f1caff57e8ad2e4895e39bfe5278af392ced568fe0f196902b5ed",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.4/capture.json"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.4/integration.log": {
+    "sha256": "ff49846e3414321491d5b3e8c39fc6af501add573160e67729261ef876322699",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.4/integration.log"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.4/root.log": {
+    "sha256": "23359b911284715e3542c945b4070f426251ab5654f2a8fbb35ad6a41dbd4a64",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.4/root.log"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.4/server-after.log": {
+    "sha256": "c0d31d0eca5d7cbf445f5271c1f0e784f9380e67af4c8676391f26a10b2aefe7",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.4/server-after.log"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.4/server-before.log": {
+    "sha256": "c0d31d0eca5d7cbf445f5271c1f0e784f9380e67af4c8676391f26a10b2aefe7",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.4/server-before.log"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.4/server.log": {
+    "sha256": "cebd3085b54a5900ca99e4c070daa049dda7494c13a2e02eb011a55bb82227e3",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.4/server.log"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.4/vet.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.4/vet.log"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.4-launch.log": {
+    "sha256": "5dd4f2007997d6d5294eb8048d1a4f68d24d7c80c54848bb9b24043cee06dd1c",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.4-launch.log"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.8/capture.json": {
+    "sha256": "3182f2ca9e81960d426b455311e7e5f59a2b1be63f22f02d84ad77eb374d37e0",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.8/capture.json"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.8/integration.log": {
+    "sha256": "087501f4cc132ec7d88f985733f871a3fdde2fdb312ed768f1c65675fd8a9e55",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.8/integration.log"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.8/root.log": {
+    "sha256": "83ee30269b3ef9d01e71043867211aa17ff1de2941a057ad6d5b89b7db03f962",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.8/root.log"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.8/server-after.log": {
+    "sha256": "95f195d2735359a61922cb0d55661f8fabf3ae94b7115a7737a1a9e11bf03065",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.8/server-after.log"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.8/server-before.log": {
+    "sha256": "95f195d2735359a61922cb0d55661f8fabf3ae94b7115a7737a1a9e11bf03065",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.8/server-before.log"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.8/server.log": {
+    "sha256": "8ff48ce01708a39eb25b91279e96fdff5ba0ef9e649fd3169af9b498bb5250ff",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.8/server.log"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.8/vet.log": {
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.8/vet.log"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.8-launch.log": {
+    "sha256": "6014f2af6d8ed113ffeaa021550d6f372e0fba4cf8c46ffe1ba121d3f6a83e55",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/go1.27-mariadb11.8-launch.log"
+  },
+  "validation/results/stage7-review-fixes-matrix-refreshed/matrix.json": {
+    "sha256": "28610ee1d695bedd5993bd8cf2700b163d6aa0edb8272471796f5db00d060696",
+    "preserved_at": "validation/results/stage7-review-fixes-matrix-refreshed/matrix.json"
+  }
+}

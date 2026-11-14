@@ -1,0 +1,26 @@
+{
+  "missing": {
+    "fixed": {
+      "blocked_bad_matrix": true
+    },
+    "restored_original": {
+      "blocked_bad_matrix": false
+    }
+  },
+  "stale": {
+    "fixed": {
+      "blocked_bad_matrix": true
+    },
+    "restored_original": {
+      "blocked_bad_matrix": false
+    }
+  },
+  "incomplete": {
+    "fixed": {
+      "blocked_bad_matrix": true
+    },
+    "restored_original": {
+      "blocked_bad_matrix": false
+    }
+  }
+}

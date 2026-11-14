@@ -1,0 +1,20 @@
+{
+  "temporary_copy_only": true,
+  "client_wrapper_construction_removed": true,
+  "exit_code": 0,
+  "required_expiry_leaves_passing": [
+    "github.com/aantich/go-mariadb/validation/apps/TestApplicationLifecycle/gorm/prepared_handle_expiry",
+    "github.com/aantich/go-mariadb/validation/apps/TestApplicationLifecycle/sql/prepared_handle_expiry",
+    "github.com/aantich/go-mariadb/validation/apps/TestApplicationLifecycle/sqlx/prepared_handle_expiry"
+  ],
+  "command": [
+    "go",
+    "test",
+    "-race",
+    "-json",
+    "-count=1",
+    "-timeout=60s",
+    "-run=^TestApplicationLifecycle$/.*/^prepared_handle_expiry$",
+    "./..."
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "owned_containers_remaining": 0,
+  "owned_volumes_remaining": 0,
+  "linux_container_removed": true,
+  "private_toolchains_removed": true,
+  "private_source_archive_removed": true,
+  "temporary_control_source_copies_removed": true,
+  "compiler_caches_retained": true
+}

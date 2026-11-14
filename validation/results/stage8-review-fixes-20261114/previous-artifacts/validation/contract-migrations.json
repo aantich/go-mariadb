@@ -1,0 +1,12 @@
+{
+  "date": "2026-11-12",
+  "authorization": "Anton approved the proposed session-foundations stage, including an explicit managed policy in the live isolation test; original failing baseline retained.",
+  "changes": [
+    {
+      "path": "validation/suite_test.go",
+      "before": "func TestMariaDBDesiredCleanPoolReset(t *testing.T) {\n\tdb := openDB(t, \"text\")",
+      "after": "func TestMariaDBDesiredCleanPoolReset(t *testing.T) {\n\tcfg := driverConfig(t, \"text\")\n\tif err := cfg.Apply(mysql.WithSessionReset(mysql.SessionResetPolicy{})); err != nil {\n\t\tt.Fatal(err)\n\t}\n\tdb := openConfig(t, cfg)",
+      "reason": "Request clean reuse explicitly; preserve every isolation assertion and add a separate ordinary-checkout test."
+    }
+  ]
+}

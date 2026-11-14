@@ -1,0 +1,102 @@
+[
+  {
+    "name": "core-go1.25-mariadb10.11",
+    "exit_code": 0,
+    "directory": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-review-fixes-matrix/core-go1.25-mariadb10.11"
+  },
+  {
+    "name": "core-go1.25-mariadb11.4",
+    "exit_code": 0,
+    "directory": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-review-fixes-matrix/core-go1.25-mariadb11.4"
+  },
+  {
+    "name": "core-go1.25-mariadb11.8",
+    "exit_code": 0,
+    "directory": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-review-fixes-matrix/core-go1.25-mariadb11.8"
+  },
+  {
+    "name": "core-go1.25-mariadb12.3",
+    "exit_code": 0,
+    "directory": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-review-fixes-matrix/core-go1.25-mariadb12.3"
+  },
+  {
+    "name": "core-go1.26-mariadb11.4",
+    "exit_code": 0,
+    "directory": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-review-fixes-matrix/core-go1.26-mariadb11.4"
+  },
+  {
+    "name": "core-go1.26-mariadb10.11",
+    "exit_code": 0,
+    "directory": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-review-fixes-matrix/core-go1.26-mariadb10.11"
+  },
+  {
+    "name": "core-go1.26-mariadb11.8",
+    "exit_code": 0,
+    "directory": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-review-fixes-matrix/core-go1.26-mariadb11.8"
+  },
+  {
+    "name": "core-go1.26-mariadb12.3",
+    "exit_code": 0,
+    "directory": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-review-fixes-matrix/core-go1.26-mariadb12.3"
+  },
+  {
+    "name": "core-go1.27-mariadb11.4",
+    "exit_code": 0,
+    "directory": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-review-fixes-matrix/core-go1.27-mariadb11.4"
+  },
+  {
+    "name": "core-go1.27-mariadb10.11",
+    "exit_code": 0,
+    "directory": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-review-fixes-matrix/core-go1.27-mariadb10.11"
+  },
+  {
+    "name": "core-go1.27-mariadb12.3",
+    "exit_code": 0,
+    "directory": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-review-fixes-matrix/core-go1.27-mariadb12.3"
+  },
+  {
+    "name": "core-go1.27-mariadb11.8",
+    "exit_code": 0,
+    "directory": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-review-fixes-matrix/core-go1.27-mariadb11.8"
+  },
+  {
+    "name": "applications-go1.25-mariadb10.11",
+    "exit_code": 0,
+    "directory": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-review-fixes-matrix/applications-go1.25-mariadb10.11"
+  },
+  {
+    "name": "applications-go1.25-mariadb11.4",
+    "exit_code": 0,
+    "directory": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-review-fixes-matrix/applications-go1.25-mariadb11.4"
+  },
+  {
+    "name": "applications-go1.25-mariadb11.8",
+    "exit_code": 0,
+    "directory": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-review-fixes-matrix/applications-go1.25-mariadb11.8"
+  },
+  {
+    "name": "applications-go1.25-mariadb12.3",
+    "exit_code": 0,
+    "directory": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-review-fixes-matrix/applications-go1.25-mariadb12.3"
+  },
+  {
+    "name": "applications-go1.27-mariadb10.11",
+    "exit_code": 0,
+    "directory": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-review-fixes-matrix/applications-go1.27-mariadb10.11"
+  },
+  {
+    "name": "applications-go1.27-mariadb11.4",
+    "exit_code": 0,
+    "directory": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-review-fixes-matrix/applications-go1.27-mariadb11.4"
+  },
+  {
+    "name": "applications-go1.27-mariadb12.3",
+    "exit_code": 0,
+    "directory": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-review-fixes-app-smoke-correctness"
+  },
+  {
+    "name": "applications-go1.27-mariadb11.8",
+    "exit_code": 0,
+    "directory": "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/results/stage8-review-fixes-matrix/applications-go1.27-mariadb11.8"
+  }
+]

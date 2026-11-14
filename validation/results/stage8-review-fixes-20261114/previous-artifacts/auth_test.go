@@ -1,0 +1,1453 @@
+// Go MySQL Driver - A MySQL-Driver for Go's database/sql package
+//
+// Copyright 2018 The Go-MySQL-Driver Authors. All rights reserved.
+//
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this file,
+// You can obtain one at http://mozilla.org/MPL/2.0/.
+
+package mariadb
+
+import (
+	"bytes"
+	"context"
+	"crypto/rsa"
+	"crypto/x509"
+	"encoding/pem"
+	"errors"
+	"fmt"
+	"testing"
+)
+
+var testPubKey = []byte("-----BEGIN PUBLIC KEY-----\n" +
+	"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAol0Z8G8U+25Btxk/g/fm\n" +
+	"UAW/wEKjQCTjkibDE4B+qkuWeiumg6miIRhtilU6m9BFmLQSy1ltYQuu4k17A4tQ\n" +
+	"rIPpOQYZges/qsDFkZh3wyK5jL5WEFVdOasf6wsfszExnPmcZS4axxoYJfiuilrN\n" +
+	"hnwinBAqfi3S0sw5MpSI4Zl1AbOrHG4zDI62Gti2PKiMGyYDZTS9xPrBLbN95Kby\n" +
+	"FFclQLEzA9RJcS1nHFsWtRgHjGPhhjCQxEm9NQ1nePFhCfBfApyfH1VM2VCOQum6\n" +
+	"Ci9bMuHWjTjckC84mzF99kOxOWVU7mwS6gnJqBzpuz8t3zq8/iQ2y7QrmZV+jTJP\n" +
+	"WQIDAQAB\n" +
+	"-----END PUBLIC KEY-----\n")
+
+var testPubKeyRSA *rsa.PublicKey
+
+func init() {
+	block, _ := pem.Decode(testPubKey)
+	pub, err := x509.ParsePKIXPublicKey(block.Bytes)
+	if err != nil {
+		panic(err)
+	}
+	testPubKeyRSA = pub.(*rsa.PublicKey)
+}
+
+func TestScrambleOldPass(t *testing.T) {
+	scramble := []byte{9, 8, 7, 6, 5, 4, 3, 2}
+	vectors := []struct {
+		pass string
+		out  string
+	}{
+		{" pass", "47575c5a435b4251"},
+		{"pass ", "47575c5a435b4251"},
+		{"123\t456", "575c47505b5b5559"},
+		{"C0mpl!ca ted#PASS123", "5d5d554849584a45"},
+	}
+
+	authPlugin := oldPasswordPlugin{}
+
+	for _, tuple := range vectors {
+		ours := authPlugin.scrambleOldPassword(scramble, tuple.pass)
+		if tuple.out != fmt.Sprintf("%x", ours) {
+			t.Errorf("Failed old password %q", tuple.pass)
+		}
+	}
+}
+
+func TestScrambleSHA256Pass(t *testing.T) {
+	scramble := []byte{10, 47, 74, 111, 75, 73, 34, 48, 88, 76, 114, 74, 37, 13, 3, 80, 82, 2, 23, 21}
+	vectors := []struct {
+		pass string
+		out  string
+	}{
+		{"secret", "f490e76f66d9d86665ce54d98c78d0acfe2fb0b08b423da807144873d30b312c"},
+		{"secret2", "abc3934a012cf342e876071c8ee202de51785b430258a7a0138bc79c4d800bc6"},
+	}
+	for _, tuple := range vectors {
+		ours := scrambleSHA256Password(scramble, tuple.pass)
+		if tuple.out != fmt.Sprintf("%x", ours) {
+			t.Errorf("Failed SHA256 password %q", tuple.pass)
+		}
+	}
+}
+
+func TestAuthFastCachingSHA256PasswordCached(t *testing.T) {
+	conn, mc := newRWMockConn(1)
+	mc.cfg.User = "root"
+	mc.cfg.Passwd = "secret"
+
+	authData := []byte{90, 105, 74, 126, 30, 48, 37, 56, 3, 23, 115, 127, 69,
+		22, 41, 84, 32, 123, 43, 118}
+	plugin := "caching_sha2_password"
+
+	// Send Client Authentication Packet
+	auth := newAuthContext(mc.cfg, mc.cfg.Passwd, false)
+	authPlugin, _ := globalPluginRegistry.GetPlugin(plugin)
+	authResp, err := authPlugin.InitAuth(context.Background(), authData, auth)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = mc.writeHandshakeResponsePacket(authResp, plugin)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// check written auth response
+	authRespStart := 4 + 4 + 4 + 1 + 23 + len(mc.cfg.User) + 1
+	authRespEnd := authRespStart + 1 + len(authResp)
+	writtenAuthRespLen := conn.written[authRespStart]
+	writtenAuthResp := conn.written[authRespStart+1 : authRespEnd]
+	expectedAuthResp := []byte{102, 32, 5, 35, 143, 161, 140, 241, 171, 232, 56,
+		139, 43, 14, 107, 196, 249, 170, 147, 60, 220, 204, 120, 178, 214, 15,
+		184, 150, 26, 61, 57, 235}
+	if writtenAuthRespLen != 32 || !bytes.Equal(writtenAuthResp, expectedAuthResp) {
+		t.Fatalf("unexpected written auth response (%d bytes): %v", writtenAuthRespLen, writtenAuthResp)
+	}
+	conn.written = nil
+
+	// auth response
+	conn.data = []byte{
+		2, 0, 0, 2, 1, 3, // Fast Auth Success
+		7, 0, 0, 3, 0, 0, 0, 2, 0, 0, 0, // OK
+	}
+	conn.maxReads = 1
+
+	if err = mc.handleAuthResult(context.Background(), authData, authPlugin, auth); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+}
+
+func TestAuthFastCachingSHA256PasswordEmpty(t *testing.T) {
+	conn, mc := newRWMockConn(1)
+	mc.cfg.User = "root"
+	mc.cfg.Passwd = ""
+
+	authData := []byte{90, 105, 74, 126, 30, 48, 37, 56, 3, 23, 115, 127, 69,
+		22, 41, 84, 32, 123, 43, 118}
+	plugin := "caching_sha2_password"
+
+	// Send Client Authentication Packet
+	auth := newAuthContext(mc.cfg, mc.cfg.Passwd, false)
+	authPlugin, _ := globalPluginRegistry.GetPlugin(plugin)
+	authResp, err := authPlugin.InitAuth(context.Background(), authData, auth)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = mc.writeHandshakeResponsePacket(authResp, plugin)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// check written auth response
+	authRespStart := 4 + 4 + 4 + 1 + 23 + len(mc.cfg.User) + 1
+	authRespEnd := authRespStart + 1 + len(authResp)
+	writtenAuthRespLen := conn.written[authRespStart]
+	writtenAuthResp := conn.written[authRespStart+1 : authRespEnd]
+	if writtenAuthRespLen != 0 {
+		t.Fatalf("unexpected written auth response (%d bytes): %v",
+			writtenAuthRespLen, writtenAuthResp)
+	}
+	conn.written = nil
+
+	// auth response
+	conn.data = []byte{
+		7, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, // OK
+	}
+	conn.maxReads = 1
+
+	if err = mc.handleAuthResult(context.Background(), authData, authPlugin, auth); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+}
+
+func TestAuthFastCachingSHA256PasswordFullRSA(t *testing.T) {
+	conn, mc := newRWMockConn(1)
+	mc.cfg.User = "root"
+	mc.cfg.Passwd = "secret"
+
+	authData := []byte{6, 81, 96, 114, 14, 42, 50, 30, 76, 47, 1, 95, 126, 81,
+		62, 94, 83, 80, 52, 85}
+	plugin := "caching_sha2_password"
+
+	// Send Client Authentication Packet
+	auth := newAuthContext(mc.cfg, mc.cfg.Passwd, false)
+	authPlugin, _ := globalPluginRegistry.GetPlugin(plugin)
+	conn.data = []byte{0x01, 0x00, 0x00, 0x00, 0xff}
+	authResp, err := authPlugin.InitAuth(context.Background(), authData, auth)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if err = mc.writeHandshakeResponsePacket(authResp, plugin); err != nil {
+		t.Fatal(err)
+	}
+
+	// check written auth response
+	authRespStart := 4 + 4 + 4 + 1 + 23 + len(mc.cfg.User) + 1
+	authRespEnd := authRespStart + 1 + len(authResp)
+	writtenAuthRespLen := conn.written[authRespStart]
+	writtenAuthResp := conn.written[authRespStart+1 : authRespEnd]
+	expectedAuthResp := []byte{171, 201, 138, 146, 89, 159, 11, 170, 0, 67, 165,
+		49, 175, 94, 218, 68, 177, 109, 110, 86, 34, 33, 44, 190, 67, 240, 70,
+		110, 40, 139, 124, 41}
+	if writtenAuthRespLen != 32 || !bytes.Equal(writtenAuthResp, expectedAuthResp) {
+		t.Fatalf("unexpected written auth response (%d bytes): %v", writtenAuthRespLen, writtenAuthResp)
+	}
+	conn.written = nil
+
+	// auth response
+	conn.data = []byte{
+		2, 0, 0, 2, 1, 4, // Perform Full Authentication
+	}
+	conn.queuedReplies = [][]byte{
+		// pub key response
+		append([]byte{byte(1 + len(testPubKey)), 1, 0, 4, 1}, testPubKey...),
+
+		// OK
+		{7, 0, 0, 6, 0, 0, 0, 2, 0, 0, 0},
+	}
+	conn.maxReads = 3
+
+	if err = mc.handleAuthResult(context.Background(), authData, authPlugin, auth); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+
+	if !bytes.HasPrefix(conn.written, []byte{1, 0, 0, 3, 2, 0, 1, 0, 5}) {
+		t.Errorf("unexpected written data: %v", conn.written)
+	}
+}
+
+func TestAuthFastCachingSHA256PasswordFullRSAWithKey(t *testing.T) {
+	conn, mc := newRWMockConn(1)
+	mc.cfg.User = "root"
+	mc.cfg.Passwd = "secret"
+	mc.cfg.pubKey = testPubKeyRSA
+
+	authData := []byte{6, 81, 96, 114, 14, 42, 50, 30, 76, 47, 1, 95, 126, 81,
+		62, 94, 83, 80, 52, 85}
+	plugin := "caching_sha2_password"
+
+	// Send Client Authentication Packet
+	auth := newAuthContext(mc.cfg, mc.cfg.Passwd, false)
+	authPlugin, _ := globalPluginRegistry.GetPlugin(plugin)
+	authResp, err := authPlugin.InitAuth(context.Background(), authData, auth)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = mc.writeHandshakeResponsePacket(authResp, plugin)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// check written auth response
+	authRespStart := 4 + 4 + 4 + 1 + 23 + len(mc.cfg.User) + 1
+	authRespEnd := authRespStart + 1 + len(authResp)
+	writtenAuthRespLen := conn.written[authRespStart]
+	writtenAuthResp := conn.written[authRespStart+1 : authRespEnd]
+	expectedAuthResp := []byte{171, 201, 138, 146, 89, 159, 11, 170, 0, 67, 165,
+		49, 175, 94, 218, 68, 177, 109, 110, 86, 34, 33, 44, 190, 67, 240, 70,
+		110, 40, 139, 124, 41}
+	if writtenAuthRespLen != 32 || !bytes.Equal(writtenAuthResp, expectedAuthResp) {
+		t.Fatalf("unexpected written auth response (%d bytes): %v", writtenAuthRespLen, writtenAuthResp)
+	}
+	conn.written = nil
+
+	// auth response
+	conn.data = []byte{
+		2, 0, 0, 2, 1, 4, // Perform Full Authentication
+	}
+	conn.queuedReplies = [][]byte{
+		// OK
+		{7, 0, 0, 4, 0, 0, 0, 2, 0, 0, 0},
+	}
+	conn.maxReads = 2
+
+	// Handle response to auth packet
+	if err = mc.handleAuthResult(context.Background(), authData, authPlugin, auth); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+
+	if !bytes.HasPrefix(conn.written, []byte{0, 1, 0, 3}) {
+		t.Errorf("unexpected written data: %v", conn.written)
+	}
+}
+
+func TestAuthFastCachingSHA256PasswordFullSecure(t *testing.T) {
+	conn, mc := newRWMockConn(1)
+	mc.cfg.User = "root"
+	mc.cfg.Passwd = "secret"
+
+	authData := []byte{6, 81, 96, 114, 14, 42, 50, 30, 76, 47, 1, 95, 126, 81,
+		62, 94, 83, 80, 52, 85}
+	plugin := "caching_sha2_password"
+
+	// Send Client Authentication Packet
+	auth := newAuthContext(mc.cfg, mc.cfg.Passwd, true)
+	authPlugin, _ := globalPluginRegistry.GetPlugin(plugin)
+	authResp, err := authPlugin.InitAuth(context.Background(), authData, auth)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = mc.writeHandshakeResponsePacket(authResp, plugin)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// check written auth response
+	authRespStart := 4 + 4 + 4 + 1 + 23 + len(mc.cfg.User) + 1
+	authRespEnd := authRespStart + 1 + len(authResp)
+	writtenAuthRespLen := conn.written[authRespStart]
+	writtenAuthResp := conn.written[authRespStart+1 : authRespEnd]
+	expectedAuthResp := []byte{171, 201, 138, 146, 89, 159, 11, 170, 0, 67, 165,
+		49, 175, 94, 218, 68, 177, 109, 110, 86, 34, 33, 44, 190, 67, 240, 70,
+		110, 40, 139, 124, 41}
+	if writtenAuthRespLen != 32 || !bytes.Equal(writtenAuthResp, expectedAuthResp) {
+		t.Fatalf("unexpected written auth response (%d bytes): %v", writtenAuthRespLen, writtenAuthResp)
+	}
+	conn.written = nil
+
+	// auth response
+	conn.data = []byte{
+		2, 0, 0, 2, 1, 4, // Perform Full Authentication
+	}
+	conn.queuedReplies = [][]byte{
+		// OK
+		{7, 0, 0, 4, 0, 0, 0, 2, 0, 0, 0},
+	}
+	conn.maxReads = 3
+
+	// Handle response to auth packet
+	if err = mc.handleAuthResult(context.Background(), authData, authPlugin, auth); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+
+	if !bytes.Equal(conn.written, []byte{7, 0, 0, 3, 115, 101, 99, 114, 101, 116, 0}) {
+		t.Errorf("unexpected written data: %v", conn.written)
+	}
+}
+
+func TestAuthFastCleartextPasswordNotAllowed(t *testing.T) {
+	_, mc := newRWMockConn(1)
+	mc.cfg.User = "root"
+	mc.cfg.Passwd = "secret"
+
+	authData := []byte{70, 114, 92, 94, 1, 38, 11, 116, 63, 114, 23, 101, 126,
+		103, 26, 95, 81, 17, 24, 21}
+	plugin := "mysql_clear_password"
+
+	// Send Client Authentication Packet
+	auth := newAuthContext(mc.cfg, mc.cfg.Passwd, false)
+	_, _, err := mc.initAuth(context.Background(), plugin, authData, auth)
+	if err != ErrCleartextPassword {
+		t.Errorf("expected ErrCleartextPassword, got %v", err)
+	}
+}
+
+func TestAuthFastCleartextPassword(t *testing.T) {
+	conn, mc := newRWMockConn(1)
+	mc.cfg.User = "root"
+	mc.cfg.Passwd = "secret"
+	mc.cfg.AllowCleartextPasswords = true
+
+	authData := []byte{70, 114, 92, 94, 1, 38, 11, 116, 63, 114, 23, 101, 126,
+		103, 26, 95, 81, 17, 24, 21}
+	plugin := "mysql_clear_password"
+
+	// Send Client Authentication Packet
+	auth := newAuthContext(mc.cfg, mc.cfg.Passwd, false)
+	authPlugin, _ := globalPluginRegistry.GetPlugin(plugin)
+	authResp, err := authPlugin.InitAuth(context.Background(), authData, auth)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = mc.writeHandshakeResponsePacket(authResp, plugin)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// check written auth response
+	authRespStart := 4 + 4 + 4 + 1 + 23 + len(mc.cfg.User) + 1
+	authRespEnd := authRespStart + 1 + len(authResp)
+	writtenAuthRespLen := conn.written[authRespStart]
+	writtenAuthResp := conn.written[authRespStart+1 : authRespEnd]
+	expectedAuthResp := []byte{115, 101, 99, 114, 101, 116, 0}
+	if writtenAuthRespLen != 7 || !bytes.Equal(writtenAuthResp, expectedAuthResp) {
+		t.Fatalf("unexpected written auth response (%d bytes): %v", writtenAuthRespLen, writtenAuthResp)
+	}
+	conn.written = nil
+
+	// auth response
+	conn.data = []byte{
+		7, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, // OK
+	}
+	conn.maxReads = 1
+
+	if err = mc.handleAuthResult(context.Background(), authData, authPlugin, auth); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+}
+
+func TestAuthFastCleartextPasswordEmpty(t *testing.T) {
+	conn, mc := newRWMockConn(1)
+	mc.cfg.User = "root"
+	mc.cfg.Passwd = ""
+	mc.cfg.AllowCleartextPasswords = true
+
+	authData := []byte{70, 114, 92, 94, 1, 38, 11, 116, 63, 114, 23, 101, 126,
+		103, 26, 95, 81, 17, 24, 21}
+	plugin := "mysql_clear_password"
+
+	// Send Client Authentication Packet
+	auth := newAuthContext(mc.cfg, mc.cfg.Passwd, false)
+	authPlugin, _ := globalPluginRegistry.GetPlugin(plugin)
+	authResp, err := authPlugin.InitAuth(context.Background(), authData, auth)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = mc.writeHandshakeResponsePacket(authResp, plugin)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// check written auth response
+	authRespStart := 4 + 4 + 4 + 1 + 23 + len(mc.cfg.User) + 1
+	authRespEnd := authRespStart + 1 + len(authResp)
+	writtenAuthRespLen := conn.written[authRespStart]
+	writtenAuthResp := conn.written[authRespStart+1 : authRespEnd]
+	expectedAuthResp := []byte{0}
+	if writtenAuthRespLen != 1 || !bytes.Equal(writtenAuthResp, expectedAuthResp) {
+		t.Fatalf("unexpected written auth response (%d bytes): %v", writtenAuthRespLen, writtenAuthResp)
+	}
+	conn.written = nil
+
+	// auth response
+	conn.data = []byte{
+		7, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, // OK
+	}
+	conn.maxReads = 1
+
+	if err = mc.handleAuthResult(context.Background(), authData, authPlugin, auth); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+}
+
+func TestAuthFastNativePasswordNotAllowed(t *testing.T) {
+	_, mc := newRWMockConn(1)
+	mc.cfg.User = "root"
+	mc.cfg.Passwd = "secret"
+	mc.cfg.AllowNativePasswords = false
+
+	authData := []byte{70, 114, 92, 94, 1, 38, 11, 116, 63, 114, 23, 101, 126,
+		103, 26, 95, 81, 17, 24, 21}
+	plugin := "mysql_native_password"
+
+	// Send Client Authentication Packet
+	auth := newAuthContext(mc.cfg, mc.cfg.Passwd, false)
+	_, _, err := mc.initAuth(context.Background(), plugin, authData, auth)
+	if err != ErrNativePassword {
+		t.Errorf("expected ErrNativePassword, got %v", err)
+	}
+}
+
+func TestAuthFastNativePassword(t *testing.T) {
+	conn, mc := newRWMockConn(1)
+	mc.cfg.User = "root"
+	mc.cfg.Passwd = "secret"
+
+	authData := []byte{70, 114, 92, 94, 1, 38, 11, 116, 63, 114, 23, 101, 126,
+		103, 26, 95, 81, 17, 24, 21}
+	plugin := "mysql_native_password"
+
+	// Send Client Authentication Packet
+	auth := newAuthContext(mc.cfg, mc.cfg.Passwd, false)
+	authPlugin, _ := globalPluginRegistry.GetPlugin(plugin)
+	authResp, err := authPlugin.InitAuth(context.Background(), authData, auth)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = mc.writeHandshakeResponsePacket(authResp, plugin)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// check written auth response
+	authRespStart := 4 + 4 + 4 + 1 + 23 + len(mc.cfg.User) + 1
+	authRespEnd := authRespStart + 1 + len(authResp)
+	writtenAuthRespLen := conn.written[authRespStart]
+	writtenAuthResp := conn.written[authRespStart+1 : authRespEnd]
+	expectedAuthResp := []byte{53, 177, 140, 159, 251, 189, 127, 53, 109, 252,
+		172, 50, 211, 192, 240, 164, 26, 48, 207, 45}
+	if writtenAuthRespLen != 20 || !bytes.Equal(writtenAuthResp, expectedAuthResp) {
+		t.Fatalf("unexpected written auth response (%d bytes): %v", writtenAuthRespLen, writtenAuthResp)
+	}
+	conn.written = nil
+
+	// auth response
+	conn.data = []byte{
+		7, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, // OK
+	}
+	conn.maxReads = 1
+
+	if err = mc.handleAuthResult(context.Background(), authData, authPlugin, auth); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+}
+
+func TestAuthFastNativePasswordEmpty(t *testing.T) {
+	conn, mc := newRWMockConn(1)
+	mc.cfg.User = "root"
+	mc.cfg.Passwd = ""
+
+	authData := []byte{70, 114, 92, 94, 1, 38, 11, 116, 63, 114, 23, 101, 126,
+		103, 26, 95, 81, 17, 24, 21}
+	plugin := "mysql_native_password"
+
+	// Send Client Authentication Packet
+	auth := newAuthContext(mc.cfg, mc.cfg.Passwd, false)
+	authPlugin, _ := globalPluginRegistry.GetPlugin(plugin)
+	authResp, err := authPlugin.InitAuth(context.Background(), authData, auth)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = mc.writeHandshakeResponsePacket(authResp, plugin)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// check written auth response
+	authRespStart := 4 + 4 + 4 + 1 + 23 + len(mc.cfg.User) + 1
+	authRespEnd := authRespStart + 1 + len(authResp)
+	writtenAuthRespLen := conn.written[authRespStart]
+	writtenAuthResp := conn.written[authRespStart+1 : authRespEnd]
+	if writtenAuthRespLen != 0 {
+		t.Fatalf("unexpected written auth response (%d bytes): %v",
+			writtenAuthRespLen, writtenAuthResp)
+	}
+	conn.written = nil
+
+	// auth response
+	conn.data = []byte{
+		7, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, // OK
+	}
+	conn.maxReads = 1
+
+	if err = mc.handleAuthResult(context.Background(), authData, authPlugin, auth); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+}
+
+func TestAuthFastSHA256PasswordEmpty(t *testing.T) {
+	conn, mc := newRWMockConn(1)
+	mc.cfg.User = "root"
+	mc.cfg.Passwd = ""
+
+	authData := []byte{6, 81, 96, 114, 14, 42, 50, 30, 76, 47, 1, 95, 126, 81,
+		62, 94, 83, 80, 52, 85}
+	plugin := "sha256_password"
+
+	// Send Client Authentication Packet
+	auth := newAuthContext(mc.cfg, mc.cfg.Passwd, false)
+	authPlugin, _ := globalPluginRegistry.GetPlugin(plugin)
+	authResp, err := authPlugin.InitAuth(context.Background(), authData, auth)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = mc.writeHandshakeResponsePacket(authResp, plugin)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// check written auth response
+	authRespStart := 4 + 4 + 4 + 1 + 23 + len(mc.cfg.User) + 1
+	authRespEnd := authRespStart + 1 + len(authResp)
+	writtenAuthRespLen := conn.written[authRespStart]
+	writtenAuthResp := conn.written[authRespStart+1 : authRespEnd]
+	expectedAuthResp := []byte{0}
+	if writtenAuthRespLen != 1 || !bytes.Equal(writtenAuthResp, expectedAuthResp) {
+		t.Fatalf("unexpected written auth response (%d bytes): %v", writtenAuthRespLen, writtenAuthResp)
+	}
+	conn.written = nil
+
+	// An empty password does not request a public key. The server sends OK
+	// without another password exchange.
+	conn.data = makePacket(2, []byte{0, 0, 0, 2, 0, 0, 0})
+	conn.maxReads = 1
+
+	// Handle response to auth packet
+	if err = mc.handleAuthResult(context.Background(), authData, authPlugin, auth); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+
+	if len(conn.written) != 0 {
+		t.Errorf("unexpected written data: %v", conn.written)
+	}
+}
+
+func TestAuthFastSHA256PasswordRSA(t *testing.T) {
+	conn, mc := newRWMockConn(1)
+	mc.cfg.User = "root"
+	mc.cfg.Passwd = "secret"
+
+	authData := []byte{6, 81, 96, 114, 14, 42, 50, 30, 76, 47, 1, 95, 126, 81,
+		62, 94, 83, 80, 52, 85}
+	plugin := "sha256_password"
+
+	// Send Client Authentication Packet
+	auth := newAuthContext(mc.cfg, mc.cfg.Passwd, false)
+	authPlugin, _ := globalPluginRegistry.GetPlugin(plugin)
+	authResp, err := authPlugin.InitAuth(context.Background(), authData, auth)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = mc.writeHandshakeResponsePacket(authResp, plugin)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// check written auth response
+	authRespStart := 4 + 4 + 4 + 1 + 23 + len(mc.cfg.User) + 1
+	authRespEnd := authRespStart + 1 + len(authResp)
+	writtenAuthRespLen := conn.written[authRespStart]
+	writtenAuthResp := conn.written[authRespStart+1 : authRespEnd]
+	expectedAuthResp := []byte{1}
+	if writtenAuthRespLen != 1 || !bytes.Equal(writtenAuthResp, expectedAuthResp) {
+		t.Fatalf("unexpected written auth response (%d bytes): %v", writtenAuthRespLen, writtenAuthResp)
+	}
+	conn.written = nil
+
+	// auth response (pub key response)
+	conn.data = append([]byte{byte(1 + len(testPubKey)), 1, 0, 2, 1}, testPubKey...)
+	conn.queuedReplies = [][]byte{
+		// OK
+		{7, 0, 0, 4, 0, 0, 0, 2, 0, 0, 0},
+	}
+	conn.maxReads = 2
+
+	// Handle response to auth packet
+	if err := mc.handleAuthResult(context.Background(), authData, authPlugin, auth); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+
+	if !bytes.HasPrefix(conn.written, []byte{0, 1, 0, 3}) {
+		t.Errorf("unexpected written data: %v", conn.written)
+	}
+}
+
+func TestAuthFastSHA256PasswordRSAWithKey(t *testing.T) {
+	conn, mc := newRWMockConn(1)
+	mc.cfg.User = "root"
+	mc.cfg.Passwd = "secret"
+	mc.cfg.pubKey = testPubKeyRSA
+
+	authData := []byte{6, 81, 96, 114, 14, 42, 50, 30, 76, 47, 1, 95, 126, 81,
+		62, 94, 83, 80, 52, 85}
+	plugin := "sha256_password"
+
+	// Send Client Authentication Packet
+	auth := newAuthContext(mc.cfg, mc.cfg.Passwd, false)
+	authPlugin, _ := globalPluginRegistry.GetPlugin(plugin)
+	authResp, err := authPlugin.InitAuth(context.Background(), authData, auth)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = mc.writeHandshakeResponsePacket(authResp, plugin)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// auth response (OK)
+	conn.data = []byte{7, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0}
+	conn.maxReads = 1
+
+	// Handle response to auth packet
+	if err := mc.handleAuthResult(context.Background(), authData, authPlugin, auth); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+}
+
+func TestAuthFastSHA256PasswordSecure(t *testing.T) {
+	conn, mc := newRWMockConn(1)
+	mc.cfg.User = "root"
+	mc.cfg.Passwd = "secret"
+
+	authData := []byte{6, 81, 96, 114, 14, 42, 50, 30, 76, 47, 1, 95, 126, 81,
+		62, 94, 83, 80, 52, 85}
+	plugin := "sha256_password"
+
+	// send Client Authentication Packet
+	auth := newAuthContext(mc.cfg, mc.cfg.Passwd, true)
+	authPlugin, _ := globalPluginRegistry.GetPlugin(plugin)
+	authResp, err := authPlugin.InitAuth(context.Background(), authData, auth)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	err = mc.writeHandshakeResponsePacket(authResp, plugin)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// check written auth response
+	authRespStart := 4 + 4 + 4 + 1 + 23 + len(mc.cfg.User) + 1
+	authRespEnd := authRespStart + 1 + len(authResp)
+	writtenAuthRespLen := conn.written[authRespStart]
+	writtenAuthResp := conn.written[authRespStart+1 : authRespEnd]
+	expectedAuthResp := []byte{115, 101, 99, 114, 101, 116, 0}
+	if writtenAuthRespLen != 7 || !bytes.Equal(writtenAuthResp, expectedAuthResp) {
+		t.Fatalf("unexpected written auth response (%d bytes): %v", writtenAuthRespLen, writtenAuthResp)
+	}
+	conn.written = nil
+
+	// auth response (OK)
+	conn.data = []byte{7, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0}
+	conn.maxReads = 1
+
+	if err := mc.handleAuthResult(context.Background(), authData, authPlugin, auth); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+
+	if !bytes.Equal(conn.written, []byte{}) {
+		t.Errorf("unexpected written data: %v", conn.written)
+	}
+}
+
+func TestAuthSwitchCachingSHA256PasswordCached(t *testing.T) {
+	conn, mc := newRWMockConn(2)
+	mc.cfg.Passwd = "secret"
+
+	// auth switch request
+	conn.data = []byte{44, 0, 0, 2, 254, 99, 97, 99, 104, 105, 110, 103, 95,
+		115, 104, 97, 50, 95, 112, 97, 115, 115, 119, 111, 114, 100, 0, 101,
+		11, 26, 18, 94, 97, 22, 72, 2, 46, 70, 106, 29, 55, 45, 94, 76, 90, 84,
+		50, 0}
+
+	// auth response
+	conn.queuedReplies = [][]byte{
+		{7, 0, 0, 4, 0, 0, 0, 2, 0, 0, 0}, // OK
+	}
+	conn.maxReads = 3
+
+	authData := []byte{123, 87, 15, 84, 20, 58, 37, 121, 91, 117, 51, 24, 19,
+		47, 43, 9, 41, 112, 67, 110}
+	if err := mc.handleAuthResult(context.Background(), authData, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, false)); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+
+	expectedReply := []byte{
+		// 1. Packet: Hash
+		32, 0, 0, 3, 219, 72, 64, 97, 56, 197, 167, 203, 64, 236, 168, 80, 223,
+		56, 103, 217, 196, 176, 124, 60, 253, 41, 195, 10, 205, 190, 177, 206, 63,
+		118, 211, 69,
+	}
+	if !bytes.Equal(conn.written, expectedReply) {
+		t.Errorf("got unexpected data: %v", conn.written)
+	}
+}
+
+func TestAuthSwitchCachingSHA256PasswordEmpty(t *testing.T) {
+	conn, mc := newRWMockConn(2)
+	mc.cfg.Passwd = ""
+
+	// auth switch request
+	conn.data = []byte{44, 0, 0, 2, 254, 99, 97, 99, 104, 105, 110, 103, 95,
+		115, 104, 97, 50, 95, 112, 97, 115, 115, 119, 111, 114, 100, 0, 101,
+		11, 26, 18, 94, 97, 22, 72, 2, 46, 70, 106, 29, 55, 45, 94, 76, 90, 84,
+		50, 0}
+
+	// auth response
+	conn.queuedReplies = [][]byte{{7, 0, 0, 4, 0, 0, 0, 2, 0, 0, 0}}
+	conn.maxReads = 2
+
+	authData := []byte{123, 87, 15, 84, 20, 58, 37, 121, 91, 117, 51, 24, 19,
+		47, 43, 9, 41, 112, 67, 110}
+	if err := mc.handleAuthResult(context.Background(), authData, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, false)); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+
+	expectedReply := []byte{0, 0, 0, 3}
+	if !bytes.Equal(conn.written, expectedReply) {
+		t.Errorf("got unexpected data: %v", conn.written)
+	}
+}
+
+func TestAuthSwitchCachingSHA256PasswordFullRSA(t *testing.T) {
+	conn, mc := newRWMockConn(2)
+	mc.cfg.Passwd = "secret"
+
+	// auth switch request
+	conn.data = []byte{44, 0, 0, 2, 254, 99, 97, 99, 104, 105, 110, 103, 95,
+		115, 104, 97, 50, 95, 112, 97, 115, 115, 119, 111, 114, 100, 0, 101,
+		11, 26, 18, 94, 97, 22, 72, 2, 46, 70, 106, 29, 55, 45, 94, 76, 90, 84,
+		50, 0}
+
+	conn.queuedReplies = [][]byte{
+		// Perform Full Authentication
+		{2, 0, 0, 4, 1, 4},
+
+		// Pub Key Response
+		append([]byte{byte(1 + len(testPubKey)), 1, 0, 6, 1}, testPubKey...),
+
+		// OK
+		{7, 0, 0, 8, 0, 0, 0, 2, 0, 0, 0},
+	}
+	conn.maxReads = 4
+
+	authData := []byte{123, 87, 15, 84, 20, 58, 37, 121, 91, 117, 51, 24, 19,
+		47, 43, 9, 41, 112, 67, 110}
+	if err := mc.handleAuthResult(context.Background(), authData, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, false)); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+	expectedReplyPrefix := []byte{
+		// 1. Packet: Hash
+		32, 0, 0, 3, 219, 72, 64, 97, 56, 197, 167, 203, 64, 236, 168, 80, 223,
+		56, 103, 217, 196, 176, 124, 60, 253, 41, 195, 10, 205, 190, 177, 206, 63,
+		118, 211, 69,
+
+		// 2. Packet: Pub Key Request
+		1, 0, 0, 5, 2,
+
+		// 3. Packet: Encrypted Password
+		0, 1, 0, 7, // [changing bytes]
+	}
+	if !bytes.HasPrefix(conn.written, expectedReplyPrefix) {
+		t.Errorf("got unexpected data: %v", conn.written)
+	}
+}
+
+func TestAuthSwitchCachingSHA256PasswordFullRSAWithKey(t *testing.T) {
+	conn, mc := newRWMockConn(2)
+	mc.cfg.Passwd = "secret"
+	mc.cfg.pubKey = testPubKeyRSA
+
+	// auth switch request
+	conn.data = []byte{44, 0, 0, 2, 254, 99, 97, 99, 104, 105, 110, 103, 95,
+		115, 104, 97, 50, 95, 112, 97, 115, 115, 119, 111, 114, 100, 0, 101,
+		11, 26, 18, 94, 97, 22, 72, 2, 46, 70, 106, 29, 55, 45, 94, 76, 90, 84,
+		50, 0}
+
+	conn.queuedReplies = [][]byte{
+		// Perform Full Authentication
+		{2, 0, 0, 4, 1, 4},
+
+		// OK
+		{7, 0, 0, 6, 0, 0, 0, 2, 0, 0, 0},
+	}
+	conn.maxReads = 3
+
+	authData := []byte{123, 87, 15, 84, 20, 58, 37, 121, 91, 117, 51, 24, 19,
+		47, 43, 9, 41, 112, 67, 110}
+	if err := mc.handleAuthResult(context.Background(), authData, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, false)); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+	expectedReplyPrefix := []byte{
+		// 1. Packet: Hash
+		32, 0, 0, 3, 219, 72, 64, 97, 56, 197, 167, 203, 64, 236, 168, 80, 223,
+		56, 103, 217, 196, 176, 124, 60, 253, 41, 195, 10, 205, 190, 177, 206, 63,
+		118, 211, 69,
+
+		// 2. Packet: Encrypted Password
+		0, 1, 0, 5, // [changing bytes]
+	}
+	if !bytes.HasPrefix(conn.written, expectedReplyPrefix) {
+		t.Errorf("got unexpected data: %v", conn.written)
+	}
+}
+
+func TestAuthSwitchCachingSHA256PasswordFullSecure(t *testing.T) {
+	conn, mc := newRWMockConn(2)
+	mc.cfg.Passwd = "secret"
+
+	// auth switch request
+	conn.data = []byte{44, 0, 0, 2, 254, 99, 97, 99, 104, 105, 110, 103, 95,
+		115, 104, 97, 50, 95, 112, 97, 115, 115, 119, 111, 114, 100, 0, 101,
+		11, 26, 18, 94, 97, 22, 72, 2, 46, 70, 106, 29, 55, 45, 94, 76, 90, 84,
+		50, 0}
+
+	// auth response
+	conn.queuedReplies = [][]byte{
+		{2, 0, 0, 4, 1, 4},                // Perform Full Authentication
+		{7, 0, 0, 6, 0, 0, 0, 2, 0, 0, 0}, // OK
+	}
+	conn.maxReads = 3
+
+	authData := []byte{123, 87, 15, 84, 20, 58, 37, 121, 91, 117, 51, 24, 19,
+		47, 43, 9, 41, 112, 67, 110}
+	if err := mc.handleAuthResult(context.Background(), authData, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, true)); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+	expectedReply := []byte{
+		// 1. Packet: Hash
+		32, 0, 0, 3, 219, 72, 64, 97, 56, 197, 167, 203, 64, 236, 168, 80, 223,
+		56, 103, 217, 196, 176, 124, 60, 253, 41, 195, 10, 205, 190, 177, 206, 63,
+		118, 211, 69,
+
+		// 2. Packet: Cleartext password
+		7, 0, 0, 5, 115, 101, 99, 114, 101, 116, 0,
+	}
+	if !bytes.Equal(conn.written, expectedReply) {
+		t.Errorf("got unexpected data: %v", conn.written)
+	}
+}
+
+func TestAuthSwitchCleartextPasswordNotAllowed(t *testing.T) {
+	conn, mc := newRWMockConn(2)
+
+	conn.data = []byte{22, 0, 0, 2, 254, 109, 121, 115, 113, 108, 95, 99, 108,
+		101, 97, 114, 95, 112, 97, 115, 115, 119, 111, 114, 100, 0}
+	conn.maxReads = 1
+	authData := []byte{123, 87, 15, 84, 20, 58, 37, 121, 91, 117, 51, 24, 19,
+		47, 43, 9, 41, 112, 67, 110}
+	err := mc.handleAuthResult(context.Background(), authData, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, false))
+	if err != ErrCleartextPassword {
+		t.Errorf("expected ErrCleartextPassword, got %v", err)
+	}
+}
+
+func TestAuthSwitchCleartextPassword(t *testing.T) {
+	conn, mc := newRWMockConn(2)
+	mc.cfg.AllowCleartextPasswords = true
+	mc.cfg.Passwd = "secret"
+
+	// auth switch request
+	conn.data = []byte{22, 0, 0, 2, 254, 109, 121, 115, 113, 108, 95, 99, 108,
+		101, 97, 114, 95, 112, 97, 115, 115, 119, 111, 114, 100, 0}
+
+	// auth response
+	conn.queuedReplies = [][]byte{{7, 0, 0, 4, 0, 0, 0, 2, 0, 0, 0}}
+	conn.maxReads = 2
+
+	authData := []byte{123, 87, 15, 84, 20, 58, 37, 121, 91, 117, 51, 24, 19,
+		47, 43, 9, 41, 112, 67, 110}
+	if err := mc.handleAuthResult(context.Background(), authData, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, false)); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+	expectedReply := []byte{7, 0, 0, 3, 115, 101, 99, 114, 101, 116, 0}
+	if !bytes.Equal(conn.written, expectedReply) {
+		t.Errorf("got unexpected data: %v", conn.written)
+	}
+}
+
+func TestAuthSwitchCleartextPasswordEmpty(t *testing.T) {
+	conn, mc := newRWMockConn(2)
+	mc.cfg.AllowCleartextPasswords = true
+	mc.cfg.Passwd = ""
+
+	// auth switch request
+	conn.data = []byte{22, 0, 0, 2, 254, 109, 121, 115, 113, 108, 95, 99, 108,
+		101, 97, 114, 95, 112, 97, 115, 115, 119, 111, 114, 100, 0}
+
+	// auth response
+	conn.queuedReplies = [][]byte{{7, 0, 0, 4, 0, 0, 0, 2, 0, 0, 0}}
+	conn.maxReads = 2
+
+	authData := []byte{123, 87, 15, 84, 20, 58, 37, 121, 91, 117, 51, 24, 19,
+		47, 43, 9, 41, 112, 67, 110}
+	if err := mc.handleAuthResult(context.Background(), authData, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, false)); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+	expectedReply := []byte{1, 0, 0, 3, 0}
+	if !bytes.Equal(conn.written, expectedReply) {
+		t.Errorf("got unexpected data: %v", conn.written)
+	}
+}
+
+func TestAuthSwitchNativePasswordNotAllowed(t *testing.T) {
+	conn, mc := newRWMockConn(2)
+	mc.cfg.AllowNativePasswords = false
+
+	conn.data = []byte{44, 0, 0, 2, 254, 109, 121, 115, 113, 108, 95, 110, 97,
+		116, 105, 118, 101, 95, 112, 97, 115, 115, 119, 111, 114, 100, 0, 96,
+		71, 63, 8, 1, 58, 75, 12, 69, 95, 66, 60, 117, 31, 48, 31, 89, 39, 55,
+		31, 0}
+	conn.maxReads = 1
+	authData := []byte{96, 71, 63, 8, 1, 58, 75, 12, 69, 95, 66, 60, 117, 31,
+		48, 31, 89, 39, 55, 31}
+	err := mc.handleAuthResult(context.Background(), authData, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, false))
+	if err != ErrNativePassword {
+		t.Errorf("expected ErrNativePassword, got %v", err)
+	}
+}
+
+func TestAuthSwitchNativePassword(t *testing.T) {
+	conn, mc := newRWMockConn(2)
+	mc.cfg.AllowNativePasswords = true
+	mc.cfg.Passwd = "secret"
+
+	// auth switch request
+	conn.data = []byte{44, 0, 0, 2, 254, 109, 121, 115, 113, 108, 95, 110, 97,
+		116, 105, 118, 101, 95, 112, 97, 115, 115, 119, 111, 114, 100, 0, 96,
+		71, 63, 8, 1, 58, 75, 12, 69, 95, 66, 60, 117, 31, 48, 31, 89, 39, 55,
+		31, 0}
+
+	// auth response
+	conn.queuedReplies = [][]byte{{7, 0, 0, 4, 0, 0, 0, 2, 0, 0, 0}}
+	conn.maxReads = 2
+
+	authData := []byte{96, 71, 63, 8, 1, 58, 75, 12, 69, 95, 66, 60, 117, 31,
+		48, 31, 89, 39, 55, 31}
+	if err := mc.handleAuthResult(context.Background(), authData, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, false)); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+
+	expectedReply := []byte{20, 0, 0, 3, 202, 41, 195, 164, 34, 226, 49, 103,
+		21, 211, 167, 199, 227, 116, 8, 48, 57, 71, 149, 146}
+	if !bytes.Equal(conn.written, expectedReply) {
+		t.Errorf("got unexpected data: %v", conn.written)
+	}
+}
+
+func TestAuthSwitchNativePasswordEmpty(t *testing.T) {
+	conn, mc := newRWMockConn(2)
+	mc.cfg.AllowNativePasswords = true
+	mc.cfg.Passwd = ""
+
+	// auth switch request
+	conn.data = []byte{44, 0, 0, 2, 254, 109, 121, 115, 113, 108, 95, 110, 97,
+		116, 105, 118, 101, 95, 112, 97, 115, 115, 119, 111, 114, 100, 0, 96,
+		71, 63, 8, 1, 58, 75, 12, 69, 95, 66, 60, 117, 31, 48, 31, 89, 39, 55,
+		31, 0}
+
+	// auth response
+	conn.queuedReplies = [][]byte{{7, 0, 0, 4, 0, 0, 0, 2, 0, 0, 0}}
+	conn.maxReads = 2
+
+	authData := []byte{96, 71, 63, 8, 1, 58, 75, 12, 69, 95, 66, 60, 117, 31,
+		48, 31, 89, 39, 55, 31}
+	if err := mc.handleAuthResult(context.Background(), authData, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, false)); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+	expectedReply := []byte{0, 0, 0, 3}
+	if !bytes.Equal(conn.written, expectedReply) {
+		t.Errorf("got unexpected data: %v", conn.written)
+	}
+}
+
+// TestAuthSwitchExceedsMaximum verifies that handleAuthResult gives up with an
+// error once the server requests more than authMaximumSwitch plugin switches,
+// rather than switching forever.
+func TestAuthSwitchExceedsMaximum(t *testing.T) {
+	const authMaximumSwitch = 5
+	conn, mc := newRWMockConn(2)
+	mc.cfg.AllowNativePasswords = true
+	mc.cfg.Passwd = "secret"
+
+	authData := []byte{96, 71, 63, 8, 1, 58, 75, 12, 69, 95, 66, 60, 117, 31,
+		48, 31, 89, 39, 55, 31}
+
+	// Build a mysql_native_password auth switch request with the given sequence
+	// number. The server replies to every switch response with another switch
+	// request, forcing the driver to switch plugins again and again.
+	switchReq := func(seq byte) []byte {
+		payload := []byte{iEOF}
+		payload = append(payload, "mysql_native_password"...)
+		payload = append(payload, 0)
+		payload = append(payload, authData...)
+		payload = append(payload, 0)
+		return append([]byte{byte(len(payload)), 0, 0, seq}, payload...)
+	}
+
+	// The first request is read directly; each later one is delivered as the
+	// reply to the driver's switch response. authMaximumSwitch+1 requests are
+	// needed to trip the limit. A read and a write advance the sequence number
+	// by two per switch round. Generate from the constant so the test keeps
+	// working if the limit changes.
+	conn.data = switchReq(2)
+	for i := uint(0); i < authMaximumSwitch; i++ {
+		conn.queuedReplies = append(conn.queuedReplies, switchReq(byte(4+2*i)))
+	}
+	conn.maxReads = int(authMaximumSwitch) + 5
+
+	err := mc.handleAuthResult(context.Background(), authData, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, false))
+	if err == nil {
+		t.Fatal("expected an error once the auth switch limit is exceeded, got nil")
+	}
+	expected := fmt.Sprintf("maximum of %d authentication switch reached", authMaximumSwitch)
+	if err.Error() != expected {
+		t.Errorf("expected error %q, got %q", expected, err)
+	}
+}
+
+func TestAuthSwitchOldPasswordNotAllowed(t *testing.T) {
+	conn, mc := newRWMockConn(2)
+
+	conn.data = []byte{41, 0, 0, 2, 254, 109, 121, 115, 113, 108, 95, 111, 108,
+		100, 95, 112, 97, 115, 115, 119, 111, 114, 100, 0, 95, 84, 103, 43, 61,
+		49, 123, 61, 91, 50, 40, 113, 35, 84, 96, 101, 92, 123, 121, 107, 0}
+	conn.maxReads = 1
+	authData := []byte{95, 84, 103, 43, 61, 49, 123, 61, 91, 50, 40, 113, 35,
+		84, 96, 101, 92, 123, 121, 107}
+	err := mc.handleAuthResult(context.Background(), authData, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, false))
+	if err != ErrOldPassword {
+		t.Errorf("expected ErrOldPassword, got %v", err)
+	}
+}
+
+// Same to TestAuthSwitchOldPasswordNotAllowed, but use OldAuthSwitch request.
+func TestOldAuthSwitchNotAllowed(t *testing.T) {
+	conn, mc := newRWMockConn(2)
+
+	// OldAuthSwitch request
+	conn.data = []byte{1, 0, 0, 2, 0xfe}
+	conn.maxReads = 1
+	authData := []byte{95, 84, 103, 43, 61, 49, 123, 61, 91, 50, 40, 113, 35,
+		84, 96, 101, 92, 123, 121, 107}
+	err := mc.handleAuthResult(context.Background(), authData, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, false))
+	if err != ErrOldPassword {
+		t.Errorf("expected ErrOldPassword, got %v", err)
+	}
+}
+
+func TestAuthSwitchOldPassword(t *testing.T) {
+	conn, mc := newRWMockConn(2)
+	mc.cfg.AllowOldPasswords = true
+	mc.cfg.Passwd = "secret"
+
+	// auth switch request
+	conn.data = []byte{41, 0, 0, 2, 254, 109, 121, 115, 113, 108, 95, 111, 108,
+		100, 95, 112, 97, 115, 115, 119, 111, 114, 100, 0, 95, 84, 103, 43, 61,
+		49, 123, 61, 91, 50, 40, 113, 35, 84, 96, 101, 92, 123, 121, 107, 0}
+
+	// auth response
+	conn.queuedReplies = [][]byte{{8, 0, 0, 4, 0, 0, 0, 2, 0, 0, 0, 0}}
+	conn.maxReads = 2
+
+	authData := []byte{95, 84, 103, 43, 61, 49, 123, 61, 91, 50, 40, 113, 35,
+		84, 96, 101, 92, 123, 121, 107}
+	if err := mc.handleAuthResult(context.Background(), authData, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, false)); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+
+	expectedReply := []byte{9, 0, 0, 3, 86, 83, 83, 79, 74, 78, 65, 66, 0}
+	if !bytes.Equal(conn.written, expectedReply) {
+		t.Errorf("got unexpected data: %v", conn.written)
+	}
+}
+
+// Same to TestAuthSwitchOldPassword, but use OldAuthSwitch request.
+func TestOldAuthSwitch(t *testing.T) {
+	conn, mc := newRWMockConn(2)
+	mc.cfg.AllowOldPasswords = true
+	mc.cfg.Passwd = "secret"
+
+	// OldAuthSwitch request
+	conn.data = []byte{1, 0, 0, 2, 0xfe}
+
+	// auth response
+	conn.queuedReplies = [][]byte{{8, 0, 0, 4, 0, 0, 0, 2, 0, 0, 0, 0}}
+	conn.maxReads = 2
+
+	authData := []byte{95, 84, 103, 43, 61, 49, 123, 61, 91, 50, 40, 113, 35,
+		84, 96, 101, 92, 123, 121, 107}
+	if err := mc.handleAuthResult(context.Background(), authData, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, false)); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+
+	expectedReply := []byte{9, 0, 0, 3, 86, 83, 83, 79, 74, 78, 65, 66, 0}
+	if !bytes.Equal(conn.written, expectedReply) {
+		t.Errorf("got unexpected data: %v", conn.written)
+	}
+}
+func TestAuthSwitchOldPasswordEmpty(t *testing.T) {
+	conn, mc := newRWMockConn(2)
+	mc.cfg.AllowOldPasswords = true
+	mc.cfg.Passwd = ""
+
+	// auth switch request
+	conn.data = []byte{41, 0, 0, 2, 254, 109, 121, 115, 113, 108, 95, 111, 108,
+		100, 95, 112, 97, 115, 115, 119, 111, 114, 100, 0, 95, 84, 103, 43, 61,
+		49, 123, 61, 91, 50, 40, 113, 35, 84, 96, 101, 92, 123, 121, 107, 0}
+
+	// auth response
+	conn.queuedReplies = [][]byte{{8, 0, 0, 4, 0, 0, 0, 2, 0, 0, 0, 0}}
+	conn.maxReads = 2
+
+	if err := mc.handleAuthResult(context.Background(), []byte{}, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, false)); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+
+	expectedReply := []byte{0, 0, 0, 3}
+	if !bytes.Equal(conn.written, expectedReply) {
+		t.Errorf("got unexpected data: %v", conn.written)
+	}
+}
+
+// Same to TestAuthSwitchOldPasswordEmpty, but use OldAuthSwitch request.
+func TestOldAuthSwitchPasswordEmpty(t *testing.T) {
+	conn, mc := newRWMockConn(2)
+	mc.cfg.AllowOldPasswords = true
+	mc.cfg.Passwd = ""
+
+	// OldAuthSwitch request.
+	conn.data = []byte{1, 0, 0, 2, 0xfe}
+
+	// auth response
+	conn.queuedReplies = [][]byte{{8, 0, 0, 4, 0, 0, 0, 2, 0, 0, 0, 0}}
+	conn.maxReads = 2
+
+	if err := mc.handleAuthResult(context.Background(), []byte{}, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, false)); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+
+	expectedReply := []byte{0, 0, 0, 3}
+	if !bytes.Equal(conn.written, expectedReply) {
+		t.Errorf("got unexpected data: %v", conn.written)
+	}
+}
+
+func TestAuthSwitchSHA256PasswordEmpty(t *testing.T) {
+	conn, mc := newRWMockConn(2)
+	mc.cfg.Passwd = ""
+
+	// auth switch request
+	conn.data = []byte{38, 0, 0, 2, 254, 115, 104, 97, 50, 53, 54, 95, 112, 97,
+		115, 115, 119, 111, 114, 100, 0, 78, 82, 62, 40, 100, 1, 59, 31, 44, 69,
+		33, 112, 8, 81, 51, 96, 65, 82, 16, 114, 0}
+
+	conn.queuedReplies = [][]byte{
+		// OK
+		{7, 0, 0, 4, 0, 0, 0, 2, 0, 0, 0},
+	}
+	conn.maxReads = 3
+
+	if err := mc.handleAuthResult(context.Background(), []byte{}, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, false)); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+
+	expectedReplyPrefix := []byte{
+		// 1. Packet: Empty Password
+		1, 0, 0, 3, 0,
+	}
+	if !bytes.HasPrefix(conn.written, expectedReplyPrefix) {
+		t.Errorf("got unexpected data: %v", conn.written)
+	}
+}
+
+func TestAuthSwitchSHA256PasswordRSA(t *testing.T) {
+	conn, mc := newRWMockConn(2)
+	mc.cfg.Passwd = "secret"
+
+	// auth switch request
+	conn.data = []byte{38, 0, 0, 2, 254, 115, 104, 97, 50, 53, 54, 95, 112, 97,
+		115, 115, 119, 111, 114, 100, 0, 78, 82, 62, 40, 100, 1, 59, 31, 44, 69,
+		33, 112, 8, 81, 51, 96, 65, 82, 16, 114, 0}
+
+	conn.queuedReplies = [][]byte{
+		// Pub Key Response
+		append([]byte{byte(1 + len(testPubKey)), 1, 0, 4, 1}, testPubKey...),
+
+		// OK
+		{7, 0, 0, 6, 0, 0, 0, 2, 0, 0, 0},
+	}
+	conn.maxReads = 3
+
+	if err := mc.handleAuthResult(context.Background(), []byte{}, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, false)); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+
+	expectedReplyPrefix := []byte{
+		// 1. Packet: Pub Key Request
+		1, 0, 0, 3, 1,
+
+		// 2. Packet: Encrypted Password
+		0, 1, 0, 5, // [changing bytes]
+	}
+	if !bytes.HasPrefix(conn.written, expectedReplyPrefix) {
+		t.Errorf("got unexpected data: %v", conn.written)
+	}
+}
+
+func TestAuthSwitchSHA256PasswordRSAWithKey(t *testing.T) {
+	conn, mc := newRWMockConn(2)
+	mc.cfg.Passwd = "secret"
+	mc.cfg.pubKey = testPubKeyRSA
+
+	// auth switch request
+	conn.data = []byte{38, 0, 0, 2, 254, 115, 104, 97, 50, 53, 54, 95, 112, 97,
+		115, 115, 119, 111, 114, 100, 0, 78, 82, 62, 40, 100, 1, 59, 31, 44, 69,
+		33, 112, 8, 81, 51, 96, 65, 82, 16, 114, 0}
+
+	conn.queuedReplies = [][]byte{
+		// OK
+		{7, 0, 0, 4, 0, 0, 0, 2, 0, 0, 0},
+	}
+	conn.maxReads = 2
+
+	if err := mc.handleAuthResult(context.Background(), []byte{}, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, false)); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+
+	expectedReplyPrefix := []byte{
+		// 1. Packet: Encrypted Password
+		0, 1, 0, 3, // [changing bytes]
+	}
+	if !bytes.HasPrefix(conn.written, expectedReplyPrefix) {
+		t.Errorf("got unexpected data: %v", conn.written)
+	}
+}
+
+func TestAuthSwitchSHA256PasswordSecure(t *testing.T) {
+	conn, mc := newRWMockConn(2)
+	mc.cfg.Passwd = "secret"
+
+	// auth switch request
+	conn.data = []byte{38, 0, 0, 2, 254, 115, 104, 97, 50, 53, 54, 95, 112, 97,
+		115, 115, 119, 111, 114, 100, 0, 78, 82, 62, 40, 100, 1, 59, 31, 44, 69,
+		33, 112, 8, 81, 51, 96, 65, 82, 16, 114, 0}
+
+	conn.queuedReplies = [][]byte{
+		// OK
+		{7, 0, 0, 4, 0, 0, 0, 2, 0, 0, 0},
+	}
+	conn.maxReads = 2
+
+	if err := mc.handleAuthResult(context.Background(), []byte{}, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, true)); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+
+	expectedReplyPrefix := []byte{
+		// 1. Packet: Cleartext Password
+		7, 0, 0, 3, 115, 101, 99, 114, 101, 116, 0,
+	}
+	if !bytes.Equal(conn.written, expectedReplyPrefix) {
+		t.Errorf("got unexpected data: %v", conn.written)
+	}
+}
+
+// Derived from https://github.com/MariaDB/server/blob/6b2287fff23fbdc362499501c562f01d0d2db52e/plugin/auth_ed25519/ed25519-t.c
+func TestEd25519Auth(t *testing.T) {
+	conn, mc := newRWMockConn(1)
+	mc.cfg.User = "root"
+	mc.cfg.Passwd = "foobar"
+
+	authData := []byte("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+	plugin := "client_ed25519"
+
+	// Send Client Authentication Packet
+	auth := newAuthContext(mc.cfg, mc.cfg.Passwd, false)
+	authPlugin, _ := globalPluginRegistry.GetPlugin(plugin)
+	authResp, err := authPlugin.InitAuth(context.Background(), authData, auth)
+	if err != nil {
+		t.Fatal(err)
+	}
+	err = mc.writeHandshakeResponsePacket(authResp, plugin)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	expectedAuthResp := []byte{
+		232, 61, 201, 63, 67, 63, 51, 53, 86, 73, 238, 35, 170, 117, 146,
+		214, 26, 17, 35, 9, 8, 132, 245, 141, 48, 99, 66, 58, 36, 228, 48,
+		84, 115, 254, 187, 168, 88, 162, 249, 57, 35, 85, 79, 238, 167, 106,
+		68, 117, 56, 135, 171, 47, 20, 14, 133, 79, 15, 229, 124, 160, 176,
+		100, 138, 14,
+	}
+	if len(authResp) != 64 {
+		t.Fatalf("expected 64 bytes from client, got %d", len(authResp))
+	}
+	if !bytes.Equal(authResp, expectedAuthResp) {
+		t.Fatalf("auth response did not match expected value:\n%v\n%v", authResp, expectedAuthResp)
+	}
+	conn.written = nil
+
+	// auth response
+	conn.data = []byte{
+		7, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, // OK
+	}
+	conn.maxReads = 1
+
+	// Handle response to auth packet
+	if err = mc.handleAuthResult(context.Background(), []byte{}, authPlugin, auth); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+}
+
+// test 2 authentication switch
+func TestMultiAuthSimpleSwitch(t *testing.T) {
+	conn, mc := newRWMockConn(2)
+	mc.cfg.Passwd = "secret"
+	mc.cfg.AllowCleartextPasswords = true
+	mc.cfg.pubKey = testPubKeyRSA
+	mc.cfg.Net = "unix"
+
+	// auth switch request: sha256_password
+	conn.data = []byte{38, 0, 0, 2, 254, 115, 104, 97, 50, 53, 54, 95, 112, 97,
+		115, 115, 119, 111, 114, 100, 0, 78, 82, 62, 40, 100, 1, 59, 31, 44, 69,
+		33, 112, 8, 81, 51, 96, 65, 82, 16, 114, 0}
+
+	conn.queuedReplies = [][]byte{
+		// auth switch request: mysql_clear_password
+		{22, 0, 0, 4, 254, 109, 121, 115, 113, 108, 95, 99, 108,
+			101, 97, 114, 95, 112, 97, 115, 115, 119, 111, 114, 100, 0},
+
+		// OK
+		{7, 0, 0, 6, 0, 0, 0, 2, 0, 0, 0},
+	}
+	conn.maxReads = 5
+
+	if err := mc.handleAuthResult(context.Background(), []byte{}, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, false)); err != nil {
+		t.Errorf("got error: %v", err)
+	}
+
+	if !bytes.HasPrefix(conn.written, []byte{0, 1, 0, 3}) {
+		t.Errorf("got unexpected data: %v", conn.written)
+	}
+	// Packet: cleartext password "secret\x00", sequence ID 5.
+	if !bytes.HasSuffix(conn.written, []byte{7, 0, 0, 5, 115, 101, 99, 114, 101, 116, 0}) {
+		t.Errorf("got unexpected data: %v", conn.written)
+	}
+}
+
+// Test an unknown plugin during a sequence of authentication switches.
+func TestMultiAuthSwitch(t *testing.T) {
+	conn, mc := newRWMockConn(2)
+	mc.cfg.Passwd = "secret"
+	mc.cfg.AllowCleartextPasswords = true
+
+	// auth switch request: sha256_password
+	conn.data = []byte{38, 0, 0, 2, 254, 115, 104, 97, 50, 53, 54, 95, 112, 97,
+		115, 115, 119, 111, 114, 100, 0, 78, 82, 62, 40, 100, 1, 59, 31, 44, 69,
+		33, 112, 8, 81, 51, 96, 65, 82, 16, 114, 0}
+
+	conn.queuedReplies = [][]byte{
+		// Pub Key Response
+		append([]byte{byte(1 + len(testPubKey)), 1, 0, 4, 1}, testPubKey...),
+
+		// auth switch request: unknown_auth_plugin
+		append([]byte{21, 0, 0, 6, iEOF}, "unknown_auth_plugin\x00"...),
+
+		// auth switch request: mysql_clear_password
+		{22, 0, 0, 8, 254, 109, 121, 115, 113, 108, 95, 99, 108,
+			101, 97, 114, 95, 112, 97, 115, 115, 119, 111, 114, 100, 0},
+
+		// OK
+		{7, 0, 0, 10, 0, 0, 0, 2, 0, 0, 0},
+	}
+	conn.maxReads = 5
+
+	err := mc.handleAuthResult(context.Background(), []byte{}, &nativePasswordPlugin{}, newAuthContext(mc.cfg, mc.cfg.Passwd, false))
+	if !errors.Is(err, ErrUnknownPlugin) {
+		t.Fatalf("got error %v, want ErrUnknownPlugin", err)
+	}
+
+	expectedReplyPrefix := []byte{
+		// 1. Packet: Pub Key Request
+		1, 0, 0, 3, 1,
+
+		// 2. Packet: Encrypted Password
+		0, 1, 0, 5, // [changing bytes]
+	}
+	if !bytes.HasPrefix(conn.written, expectedReplyPrefix) {
+		t.Errorf("got unexpected data: %v", conn.written)
+	}
+	if conn.writes != 2 {
+		t.Errorf("got %d writes, want 2 before rejecting unknown plugin", conn.writes)
+	}
+}

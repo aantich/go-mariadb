@@ -1,0 +1,9 @@
+{
+  "input_fingerprint": "a16c00cf01a35b193ab251edbadb1a04ece062906b8a3f12bffbabd6cee449f1",
+  "leaf_counts": {
+    "pass": 1637,
+    "skip": 8
+  },
+  "prior_passes_lost": [],
+  "performance_measured": false
+}

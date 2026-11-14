@@ -1,0 +1,3 @@
+unchanged {'exit_code': 0, 'leaf_counts': {'pass': 3, 'fail': 0, 'skip': 0}, 'expected_outcome_confirmed': True}
+missing-client {'exit_code': 1, 'leaf_counts': {'pass': 0, 'fail': 3, 'skip': 0}, 'expected_outcome_confirmed': True}
+hidden-methods {'exit_code': 1, 'leaf_counts': {'pass': 0, 'fail': 8, 'skip': 0}, 'expected_outcome_confirmed': True}

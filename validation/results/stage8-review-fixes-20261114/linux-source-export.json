@@ -1,0 +1,8 @@
+{
+  "archive_sha256": "cf044a2b297716f7a45cfc4d71514271a14ff9d67ceaeb6bdfc264091ac6fb17",
+  "input_fingerprint": "c2468c56caf4c77b64c30f1e3458759f45167759e9f2953cc8cc2feb9bd7608b",
+  "method": "COPYFILE_DISABLE=1 tar --no-xattrs; omit .git, validation/.local and current Linux output directory",
+  "source_copied_to_container_native_filesystem": true,
+  "container_removed": true,
+  "performance_measured": false
+}

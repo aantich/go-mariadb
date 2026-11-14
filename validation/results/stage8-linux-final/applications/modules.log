@@ -1,0 +1,195 @@
+{
+	"Path": "github.com/aantich/go-mariadb/validation/apps",
+	"Main": true,
+	"Dir": "/work/validation/apps",
+	"GoMod": "/work/validation/apps/go.mod",
+	"GoVersion": "1.25.0"
+}
+{
+	"Path": "filippo.io/edwards25519",
+	"Version": "v1.2.0",
+	"Time": "2026-02-17T17:23:26Z",
+	"Indirect": true,
+	"Dir": "/go/pkg/mod/filippo.io/edwards25519@v1.2.0",
+	"GoMod": "/go/pkg/mod/cache/download/filippo.io/edwards25519/@v/v1.2.0.mod",
+	"GoVersion": "1.24.0",
+	"Sum": "h1:crnVqOiS4jqYleHd9vaKZ+HKtHfllngJIiOpNpoJsjo=",
+	"GoModSum": "h1:xzAOLCNug/yB62zG1bQ8uziwrIqIuxhctzJT18Q77mc="
+}
+{
+	"Path": "github.com/aantich/go-mariadb",
+	"Version": "v0.0.0",
+	"Replace": {
+		"Path": "../..",
+		"Dir": "/work",
+		"GoMod": "/work/go.mod",
+		"GoVersion": "1.25.0"
+	},
+	"Dir": "/work",
+	"GoMod": "/work/go.mod",
+	"GoVersion": "1.25.0"
+}
+{
+	"Path": "github.com/aantich/go-mariadb/integrations/gorm",
+	"Version": "v0.0.0",
+	"Replace": {
+		"Path": "../../integrations/gorm",
+		"Dir": "/work/integrations/gorm",
+		"GoMod": "/work/integrations/gorm/go.mod",
+		"GoVersion": "1.25.0"
+	},
+	"Dir": "/work/integrations/gorm",
+	"GoMod": "/work/integrations/gorm/go.mod",
+	"GoVersion": "1.25.0"
+}
+{
+	"Path": "github.com/go-sql-driver/mysql",
+	"Version": "v1.8.1",
+	"Time": "2024-03-26T14:34:07Z",
+	"Indirect": true,
+	"Dir": "/go/pkg/mod/github.com/go-sql-driver/mysql@v1.8.1",
+	"GoMod": "/go/pkg/mod/cache/download/github.com/go-sql-driver/mysql/@v/v1.8.1.mod",
+	"GoVersion": "1.18",
+	"Sum": "h1:LedoTUt/eveggdHS9qUFC1EFSa8bU2+1pZjSRpvNJ1Y=",
+	"GoModSum": "h1:wEBSXgmK//2ZFJyE+qWnIsVGmvmEKlqwuVSjsCm7DZg="
+}
+{
+	"Path": "github.com/jinzhu/inflection",
+	"Version": "v1.0.0",
+	"Time": "2019-06-03T04:28:36Z",
+	"Indirect": true,
+	"Dir": "/go/pkg/mod/github.com/jinzhu/inflection@v1.0.0",
+	"GoMod": "/go/pkg/mod/cache/download/github.com/jinzhu/inflection/@v/v1.0.0.mod",
+	"Sum": "h1:K317FqzuhWc8YvSVlFMCCUb36O/S9MCKRDI7QkRKD/E=",
+	"GoModSum": "h1:h+uFLlag+Qp1Va5pdKtLDYj+kHp5pxUVkryuEj+Srlc="
+}
+{
+	"Path": "github.com/jinzhu/now",
+	"Version": "v1.1.5",
+	"Time": "2022-03-17T06:16:25Z",
+	"Indirect": true,
+	"Dir": "/go/pkg/mod/github.com/jinzhu/now@v1.1.5",
+	"GoMod": "/go/pkg/mod/cache/download/github.com/jinzhu/now/@v/v1.1.5.mod",
+	"GoVersion": "1.12",
+	"Sum": "h1:/o9tlHleP7gOFmsnYNz3RGnqzefHA47wQpKrrdTIwXQ=",
+	"GoModSum": "h1:d3SSVoowX0Lcu0IBviAWJpolVfI5UJVZZ7cO71lE/z8="
+}
+{
+	"Path": "github.com/jmoiron/sqlx",
+	"Version": "v1.4.0",
+	"Time": "2024-04-15T12:21:02Z",
+	"Dir": "/go/pkg/mod/github.com/jmoiron/sqlx@v1.4.0",
+	"GoMod": "/go/pkg/mod/cache/download/github.com/jmoiron/sqlx/@v/v1.4.0.mod",
+	"GoVersion": "1.10",
+	"Sum": "h1:1PLqN7S1UYp5t4SrVVnt4nUVNemrDAtxlulVe+Qgm3o=",
+	"GoModSum": "h1:ZrZ7UsYB/weZdl2Bxg6jCRO9c3YHl8r3ahlKmRT4JLY="
+}
+{
+	"Path": "github.com/klauspost/compress",
+	"Version": "v1.19.2",
+	"Time": "2026-08-05T15:56:51Z",
+	"Indirect": true,
+	"Dir": "/go/pkg/mod/github.com/klauspost/compress@v1.19.2",
+	"GoMod": "/go/pkg/mod/cache/download/github.com/klauspost/compress/@v/v1.19.2.mod",
+	"GoVersion": "1.24",
+	"Sum": "h1:hMRETovs/pu/dVWN7zIT1PGG8t509MwT6bO7XSi26R8=",
+	"GoModSum": "h1:cwPg85FWrGar70rWktvGQj8/hthj3wpl0PGDogxkrSQ="
+}
+{
+	"Path": "github.com/lib/pq",
+	"Version": "v1.10.9",
+	"Time": "2023-04-26T04:34:24Z",
+	"Indirect": true,
+	"Dir": "/go/pkg/mod/github.com/lib/pq@v1.10.9",
+	"GoMod": "/go/pkg/mod/cache/download/github.com/lib/pq/@v/v1.10.9.mod",
+	"GoVersion": "1.13",
+	"Sum": "h1:YXG7RB+JIjhP29X+OtkiDnYaXQwpS4JEWq7dtCCRUEw=",
+	"GoModSum": "h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o="
+}
+{
+	"Path": "github.com/mattn/go-sqlite3",
+	"Version": "v1.14.22",
+	"Time": "2024-02-02T17:00:28Z",
+	"Indirect": true,
+	"Dir": "/go/pkg/mod/github.com/mattn/go-sqlite3@v1.14.22",
+	"GoMod": "/go/pkg/mod/cache/download/github.com/mattn/go-sqlite3/@v/v1.14.22.mod",
+	"GoVersion": "1.19",
+	"Sum": "h1:2gZY6PC6kBnID23Tichd1K+Z0oS6nE/XwU+Vz/5o4kU=",
+	"GoModSum": "h1:Uh1q+B4BYcTPb+yiD3kU8Ct7aC0hY9fxUwlHK0RXw+Y="
+}
+{
+	"Path": "golang.org/x/mod",
+	"Version": "v0.17.0",
+	"Time": "2024-03-15T15:59:16Z",
+	"Indirect": true,
+	"Dir": "/go/pkg/mod/golang.org/x/mod@v0.17.0",
+	"GoMod": "/go/pkg/mod/cache/download/golang.org/x/mod/@v/v0.17.0.mod",
+	"GoVersion": "1.18",
+	"Sum": "h1:zY54UmvipHiNd+pm+m0x9KhZ9hl1/7QNMyxXbc6ICqA=",
+	"GoModSum": "h1:hTbmBsO62+eylJbnUtE2MGJUyE7QWk4xUqPFrRgJ+7c="
+}
+{
+	"Path": "golang.org/x/sync",
+	"Version": "v0.9.0",
+	"Time": "2024-11-01T00:46:18Z",
+	"Indirect": true,
+	"Dir": "/go/pkg/mod/golang.org/x/sync@v0.9.0",
+	"GoMod": "/go/pkg/mod/cache/download/golang.org/x/sync/@v/v0.9.0.mod",
+	"GoVersion": "1.18",
+	"Sum": "h1:fEo0HyrW1GIgZdpbhCRO0PkJajUS5H9IFUztCgEo2jQ=",
+	"GoModSum": "h1:Czt+wKu1gCyEFDUtn0jG5QVvpJ6rzVqr5aXyt9drQfk="
+}
+{
+	"Path": "golang.org/x/text",
+	"Version": "v0.20.0",
+	"Time": "2024-11-07T21:27:58Z",
+	"Indirect": true,
+	"Dir": "/go/pkg/mod/golang.org/x/text@v0.20.0",
+	"GoMod": "/go/pkg/mod/cache/download/golang.org/x/text/@v/v0.20.0.mod",
+	"GoVersion": "1.18",
+	"Sum": "h1:gK/Kv2otX8gz+wn7Rmb3vT96ZwuoxnQlY+HlJVj7Qug=",
+	"GoModSum": "h1:D4IsuqiFMhST5bX19pQ9ikHC2GsaKyk/oF+pn3ducp4="
+}
+{
+	"Path": "golang.org/x/tools",
+	"Version": "v0.21.1-0.20240508182429-e35e4ccd0d2d",
+	"Time": "2024-05-08T18:24:29Z",
+	"Indirect": true,
+	"Dir": "/go/pkg/mod/golang.org/x/tools@v0.21.1-0.20240508182429-e35e4ccd0d2d",
+	"GoMod": "/go/pkg/mod/cache/download/golang.org/x/tools/@v/v0.21.1-0.20240508182429-e35e4ccd0d2d.mod",
+	"GoVersion": "1.19",
+	"Sum": "h1:vU5i/LfpvrRCpgM/VPfJLg5KjxD3E+hfT1SH+d9zLwg=",
+	"GoModSum": "h1:aiJjzUbINMkxbQROHiO6hDPo2LHcIPhhQsa9DLh0yGk="
+}
+{
+	"Path": "gorm.io/driver/mysql",
+	"Version": "v1.6.0",
+	"Time": "2025-06-04T07:33:30Z",
+	"Indirect": true,
+	"Dir": "/go/pkg/mod/gorm.io/driver/mysql@v1.6.0",
+	"GoMod": "/go/pkg/mod/cache/download/gorm.io/driver/mysql/@v/v1.6.0.mod",
+	"GoVersion": "1.18",
+	"Sum": "h1:eNbLmNTpPpTOVZi8MMxCi2aaIm0ZpInbORNXDwyLGvg=",
+	"GoModSum": "h1:D/oCC2GWK3M/dqoLxnOlaNKmXz8WNTfcS9y5ovaSqKo="
+}
+{
+	"Path": "gorm.io/driver/sqlite",
+	"Version": "v1.6.0",
+	"Time": "2025-06-04T07:51:08Z",
+	"Indirect": true,
+	"Dir": "/go/pkg/mod/gorm.io/driver/sqlite@v1.6.0",
+	"GoMod": "/go/pkg/mod/cache/download/gorm.io/driver/sqlite/@v/v1.6.0.mod",
+	"GoVersion": "1.20",
+	"Sum": "h1:WHRRrIiulaPiPFmDcod6prc4l2VGVWHz80KspNsxSfQ=",
+	"GoModSum": "h1:AO9V1qIQddBESngQUKWL9yoH93HIeA1X6V633rBwyT8="
+}
+{
+	"Path": "gorm.io/gorm",
+	"Version": "v1.31.2",
+	"Time": "2026-06-22T03:37:04Z",
+	"Dir": "/go/pkg/mod/gorm.io/gorm@v1.31.2",
+	"GoMod": "/go/pkg/mod/cache/download/gorm.io/gorm/@v/v1.31.2.mod",
+	"GoVersion": "1.18",
+	"Sum": "h1:3o8FXNo9v9S858gil+3LlZA1LkCOzgb4g5BL64FgaCo=",
+	"GoModSum": "h1:XyQVbO2k6YkOis7C2437jSit3SsDK72s7n7rsSHd+Gs="
+}

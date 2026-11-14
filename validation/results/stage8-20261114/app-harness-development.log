@@ -1,0 +1,14 @@
+.....F..
+======================================================================
+FAIL: test_prior_passing_leaf_cannot_be_lost_or_omitted (test_applications.ApplicationEvidenceTests.test_prior_passing_leaf_cannot_be_lost_or_omitted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_applications.py", line 145, in test_prior_passing_leaf_cannot_be_lost_or_omitted
+    with self.assertRaisesRegex(ValueError,'passes lost'):apps.validate(current,directory)
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 8 tests in 1.338s
+
+FAILED (failures=1)

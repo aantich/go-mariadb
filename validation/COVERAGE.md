@@ -1,5 +1,30 @@
 # MariaDB Go coverage map
 
+**Stage 8 review corrections:** Added GORM default/custom-clock checks and live
+automatic timestamp, savepoint and nested rollback cases across all four
+TLS/compression modes. Expiry warms/reuses actual sql/sqlx handles and GORM cache
+entries. Harness regressions protect native Linux pass history, partial timeout
+output, preflight diagnostics and Mac/Linux/mixed-client report scope. See
+[correction evidence](../docs/STAGE8_REVIEW_FIXES.md).
+
+**Stage 8 applications:** Pinned GORM 1.31.2/shared dialect 1.6.0 and sqlx 1.4.0
+use the dedicated driver. Four server lines and both Go scanning paths cover
+schema migration, CRUD/batch/upsert/RETURNING, exact values, original/translated
+errors, rollback, cached statements, pool cancellation, early Rows.Close,
+expiry, concurrent updates, clean sessions and restart recovery. Native Linux
+adds the same required workflows on a private socket server. Independent
+CGO-free consumers and exact dependency/source locks are mandatory. Cases,
+markers, lock graphs, log hashes, history, cleanup and cohort tampering have
+permanent harness regressions. See [application evidence](APPLICATIONS.md).
+
+**Stage 7 review corrections:** Versioned historical command/inventory checks,
+history across arbitrary result-directory names, mandatory earlier passing leaves,
+corrupted predecessor rejection, complete twelve-cell cohort verification and
+publication, raw/hash/identity/count corroboration, path/symlink containment and
+safe setup/timeout/preflight diagnostics have permanent harness regressions.
+The standard freshness verifier also requires current compatibility evidence.
+See the [corrections and checks](../docs/STAGE7_REVIEW_FIXES.md).
+
 **Stage 7 compatibility and recovery:** A twelve-cell server/compiler matrix
 adds text/prepared/zlib/verified-TLS values, native bulk/stream/reuse/cursor/reset/
 progress/metadata policies, expected bulk-unit/PARSEC/VECTOR differences, lock

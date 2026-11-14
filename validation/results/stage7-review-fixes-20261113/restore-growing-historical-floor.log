@@ -1,0 +1,26 @@
+test_inventory_growth_preserves_older_passes_and_commands (test_compatibility.CompatibilityEvidenceTests.test_inventory_growth_preserves_older_passes_and_commands) ... ERROR
+
+======================================================================
+ERROR: test_inventory_growth_preserves_older_passes_and_commands (test_compatibility.CompatibilityEvidenceTests.test_inventory_growth_preserves_older_passes_and_commands)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/compatibility.py", line 220, in prior_profile
+    validate(old,path.parent,current=False)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<reviewed original validate>", line 141, in validate
+ValueError: Incomplete required matrix test inventory.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_compatibility.py", line 160, in test_inventory_growth_preserves_older_passes_and_commands
+    after['prior_profile']=matrix.prior_profile(after)
+                           ~~~~~~~~~~~~~~~~~~~~^^^^^^^
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/compatibility.py", line 222, in prior_profile
+    raise EvidenceFailure('Invalid earlier compatibility profile: '+str(path)) from error
+compatibility.EvidenceFailure: Invalid earlier compatibility profile: /private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmprgt0h4bn/results/any-name/older/capture.json
+
+----------------------------------------------------------------------
+Ran 1 test in 0.164s
+
+FAILED (errors=1)

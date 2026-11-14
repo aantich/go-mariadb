@@ -1,0 +1,97 @@
+"""Seal current review fixes, corroborated receipts and preserved parent evidence."""
+import ast
+import json
+from pathlib import Path
+import subprocess
+import sys
+
+sys.path.insert(0,'validation')
+import compatibility
+import compatibility_cohort
+import correctness
+import record
+
+out=Path('validation/results/stage7-review-fixes-20261113')
+parent='2a5fe58e5b15f52db7a375e301c2c09fd6e20e34'
+source=json.loads((out/'source.json').read_text())
+assert source['inputs']==record.inputs()
+assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()==parent
+assert subprocess.check_output(['git','branch','--show-current'],text=True).strip()=='master'
+cohort=compatibility_cohort.verify_current()
+profiles={}
+for name,count,skips in (('mac',1637,8),('linux',1640,5)):
+    directory=Path('validation/results')/f'stage7-review-fixes-{name}-final-2'
+    capture=json.loads((directory/'capture.json').read_text())
+    summary=correctness.summarize(capture,directory)
+    assert summary['leaf_counts'].get('pass')==count and summary['leaf_counts'].get('skip')==skips
+    assert not summary['leaf_counts'].get('fail',0)
+    assert 'Ran 113 tests' in (directory/'recorder.log').read_text()
+    before=json.loads(Path(f'validation/results/stage7-{name}-final-3/capture.json').read_text())
+    previous={k for k,v in correctness.leaves(before['stages']['correctness']['cases']).items() if v.get('status')=='pass'}
+    current={k for k,v in correctness.leaves(capture['stages']['correctness']['cases']).items() if v.get('status')=='pass'}
+    assert not previous-current
+    profiles[name]={'directory':str(directory),'leaf_counts':summary['leaf_counts'],
+                    'verified_checks':summary['verified_checks'],'harness_tests':113,
+                    'previous_stage7_passes_lost':[],'input_fingerprint':summary['input_fingerprint']}
+
+old=json.loads(Path('validation/results/stage7-confirmation.json').read_text())
+for path,expected in old['artifacts'].items():
+    raw=subprocess.check_output(['git','show',parent+':'+path])
+    assert record.digest(raw)==expected,path
+assert old['inputs']['driver']==source['inputs']['driver']
+go_tests=lambda values:{p:h for p,h in values.items() if p.endswith('.go')}
+assert go_tests(old['inputs']['workload'])==go_tests(source['inputs']['workload'])
+changes={kind:sorted(p for p in set(old['inputs'][kind])|set(source['inputs'][kind])
+                     if old['inputs'][kind].get(p)!=source['inputs'][kind].get(p)) for kind in source['inputs']}
+subprocess.run(['git','diff','--exit-code','HEAD','--','validation/baselines','validation/results/current.json'],check=True,stdout=subprocess.DEVNULL)
+subprocess.run(['git','diff','--check'],check=True)
+subprocess.run(['/private/tmp/gomdb-review-tools/actionlint'],check=True)
+for path in Path('validation').glob('*.py'):ast.parse(path.read_text(),filename=str(path))
+files=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','--','*.go'],text=True).splitlines()
+assert not subprocess.check_output(['gofmt','-l',*[p for p in files if not p.startswith('validation/results/')]],text=True)
+assert record.digest(Path('validation/results/current.json').read_bytes())==old['timing_pointer_sha256']
+gate=json.loads((out/'verifier-gate-control.json').read_text())
+assert all(value['fixed']['blocked_bad_matrix'] and not value['restored_original']['blocked_bad_matrix'] for value in gate.values())
+controls=json.loads((out/'negative-controls.json').read_text())
+assert all(value['restored_defect_rejected'] for value in controls.values())
+
+paths=[]
+for directory in Path('validation/results').glob('stage7-review-fixes*'):
+    if directory.is_dir():paths.extend(p for p in directory.rglob('*') if p.is_file())
+paths += [Path(p) for p in ('AGENTS.md','README.md','docs/ROADMAP.md','docs/STAGE7_COMPATIBILITY.md',
+                           'docs/STAGE7_REVIEW_FIXES.md','validation/README.md','validation/COVERAGE.md',
+                           'validation/RESULTS.md','validation/COMPATIBILITY.md',
+                           'validation/results/correctness-current.json','validation/results/compatibility-current.json')]
+# The caller streams this script's output into this log after sealing. It is
+# transport output, not an immutable input to its own confirmation.
+paths=[path for path in paths if path!=out/'confirmation.log']
+secret=json.loads(Path('validation/.local/config.json').read_text())['password'].encode()
+for path in paths:assert secret not in path.read_bytes(),'Private fixture credential in '+str(path)
+assert record.inputs()==source['inputs']
+result={
+    'date':'2026-11-13','parent_commit':parent,'branch':'master',
+    'status':'All three Stage 7 review findings corrected and checked; corrections remain uncommitted.',
+    **source,'profiles':profiles,'compatibility':cohort,
+    'findings_fixed':['historical inventory/directory-independent pass protection',
+                      'mandatory complete current compatibility cohort verification',
+                      'safe retained setup/preflight/timeout diagnostics'],
+    'workload_differences_from_reviewed_stage7':changes,
+    'driver_and_Go_test_inputs_unchanged':True,
+    'negative_controls':controls,'standard_verifier_controls':gate,
+    'original_stage7_artifacts_preserved_in_parent':len(old['artifacts']),
+    'immutable_references_unchanged':True,'timing_pointer_sha256':old['timing_pointer_sha256'],
+    'static_checks':{'actionlint':'pass','git_diff_check':'pass','gofmt':'pass','python_ast':'pass'},
+    'configured_secret_absent_from_public_fix_artifacts':True,
+    'cleanup':{'owned_containers_and_volumes_removed':True,'owned_servers_and_children_reaped':True,
+               'temporary_toolchains_and_run_directories_removed':True,'prior_caches_preserved':True},
+    'benchmarks_executed':False,'benchmark_smoke_executed':False,'profiling_executed':False,
+    'fuzz_campaigns_rerun':False,'remote_CI_executed':False,'new_commit_made':False,'new_push_made':False,
+    'limits':['Alpha; application/production-topology pilots remain outstanding',
+              'Matrix macOS arm64 clients/Linux arm64 Docker servers; full current Linux profile separate',
+              'No measured performance claim or new package release'],
+    'artifacts':{str(path):record.digest(path.read_bytes()) for path in sorted(set(paths))},
+}
+Path('validation/results/stage7-review-fixes-confirmation.json').write_text(json.dumps(result,indent=2)+'\n')
+print(json.dumps({'input_fingerprint':result['input_fingerprint'],'profile_counts':{k:v['leaf_counts'] for k,v in profiles.items()},
+                  'matrix_profiles':cohort['profile_count'],'harness_tests':113,'sealed_artifacts':len(result['artifacts']),
+                  'original_parent_artifacts_verified':len(old['artifacts']),'uncommitted':True},indent=2))

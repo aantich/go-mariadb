@@ -1,0 +1,24 @@
+[
+  {
+    "control": "unchanged",
+    "exit_code": 0,
+    "failing_cases": []
+  },
+  {
+    "control": "missing_error_translation",
+    "exit_code": 1,
+    "failing_cases": [
+      "github.com/aantich/go-mariadb/integrations/gorm/TestTranslationIdentity",
+      "github.com/aantich/go-mariadb/integrations/gorm/TestTranslationIdentity/1062",
+      "github.com/aantich/go-mariadb/integrations/gorm/TestTranslationIdentity/1451",
+      "github.com/aantich/go-mariadb/integrations/gorm/TestTranslationIdentity/1452"
+    ]
+  },
+  {
+    "control": "foreign_pool_guard_removed",
+    "exit_code": 1,
+    "failing_cases": [
+      "github.com/aantich/go-mariadb/integrations/gorm/TestDedicatedPoolRequired"
+    ]
+  }
+]

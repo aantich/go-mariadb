@@ -1,0 +1,154 @@
+correctness: raw exit=0; unexpected issues=0
+recorder: raw exit=1; unexpected issues=1
+recorder failed.
+Compatibility profile failed; inspect /private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmpq30p6m8h/results/missing-compiler/failure.log.
+Compatibility profile failed; inspect /private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmpq30p6m8h/results/missing-client/failure.log.
+Compatibility profile failed; inspect /private/var/folders/w4/0_95kdj51l35cqyg07_w5v5r0000gn/T/tmpyd_gwfjx/results/arbitrary-output-name/failure.log.
+......................................FFFFFFFFF..........................................................................
+======================================================================
+FAIL: test_check_commands_environment_and_stages_cannot_be_weakened (test_full_capture.FullCaptureTests.test_check_commands_environment_and_stages_cannot_be_weakened) (stage='upstream')
+----------------------------------------------------------------------
+ValueError: Full capture failed, incomplete or stale.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_full_capture.py", line 122, in test_check_commands_environment_and_stages_cannot_be_weakened
+    with self.subTest(stage=name), self.assertRaisesRegex(ValueError,'command differs'):
+                                   ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "command differs" does not match "Full capture failed, incomplete or stale."
+
+======================================================================
+FAIL: test_check_commands_environment_and_stages_cannot_be_weakened (test_full_capture.FullCaptureTests.test_check_commands_environment_and_stages_cannot_be_weakened) (stage='protocol')
+----------------------------------------------------------------------
+ValueError: Full capture failed, incomplete or stale.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_full_capture.py", line 122, in test_check_commands_environment_and_stages_cannot_be_weakened
+    with self.subTest(stage=name), self.assertRaisesRegex(ValueError,'command differs'):
+                                   ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "command differs" does not match "Full capture failed, incomplete or stale."
+
+======================================================================
+FAIL: test_check_commands_environment_and_stages_cannot_be_weakened (test_full_capture.FullCaptureTests.test_check_commands_environment_and_stages_cannot_be_weakened) (stage='mariadb')
+----------------------------------------------------------------------
+ValueError: Full capture failed, incomplete or stale.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_full_capture.py", line 122, in test_check_commands_environment_and_stages_cannot_be_weakened
+    with self.subTest(stage=name), self.assertRaisesRegex(ValueError,'command differs'):
+                                   ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "command differs" does not match "Full capture failed, incomplete or stale."
+
+======================================================================
+FAIL: test_check_commands_environment_and_stages_cannot_be_weakened (test_full_capture.FullCaptureTests.test_check_commands_environment_and_stages_cannot_be_weakened) (stage='race')
+----------------------------------------------------------------------
+ValueError: Full capture failed, incomplete or stale.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_full_capture.py", line 122, in test_check_commands_environment_and_stages_cannot_be_weakened
+    with self.subTest(stage=name), self.assertRaisesRegex(ValueError,'command differs'):
+                                   ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "command differs" does not match "Full capture failed, incomplete or stale."
+
+======================================================================
+FAIL: test_check_commands_environment_and_stages_cannot_be_weakened (test_full_capture.FullCaptureTests.test_check_commands_environment_and_stages_cannot_be_weakened) (stage='vet')
+----------------------------------------------------------------------
+ValueError: Full capture failed, incomplete or stale.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_full_capture.py", line 122, in test_check_commands_environment_and_stages_cannot_be_weakened
+    with self.subTest(stage=name), self.assertRaisesRegex(ValueError,'command differs'):
+                                   ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "command differs" does not match "Full capture failed, incomplete or stale."
+
+======================================================================
+FAIL: test_check_commands_environment_and_stages_cannot_be_weakened (test_full_capture.FullCaptureTests.test_check_commands_environment_and_stages_cannot_be_weakened) (stage='recorder')
+----------------------------------------------------------------------
+ValueError: Full capture failed, incomplete or stale.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_full_capture.py", line 122, in test_check_commands_environment_and_stages_cannot_be_weakened
+    with self.subTest(stage=name), self.assertRaisesRegex(ValueError,'command differs'):
+                                   ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "command differs" does not match "Full capture failed, incomplete or stale."
+
+======================================================================
+FAIL: test_check_commands_environment_and_stages_cannot_be_weakened (test_full_capture.FullCaptureTests.test_check_commands_environment_and_stages_cannot_be_weakened) (stage='fuzz')
+----------------------------------------------------------------------
+ValueError: Full capture failed, incomplete or stale.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_full_capture.py", line 122, in test_check_commands_environment_and_stages_cannot_be_weakened
+    with self.subTest(stage=name), self.assertRaisesRegex(ValueError,'command differs'):
+                                   ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "command differs" does not match "Full capture failed, incomplete or stale."
+
+======================================================================
+FAIL: test_check_commands_environment_and_stages_cannot_be_weakened (test_full_capture.FullCaptureTests.test_check_commands_environment_and_stages_cannot_be_weakened) (stage='fuzz-terminator')
+----------------------------------------------------------------------
+ValueError: Full capture failed, incomplete or stale.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_full_capture.py", line 122, in test_check_commands_environment_and_stages_cannot_be_weakened
+    with self.subTest(stage=name), self.assertRaisesRegex(ValueError,'command differs'):
+                                   ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "command differs" does not match "Full capture failed, incomplete or stale."
+
+======================================================================
+FAIL: test_check_commands_environment_and_stages_cannot_be_weakened (test_full_capture.FullCaptureTests.test_check_commands_environment_and_stages_cannot_be_weakened)
+----------------------------------------------------------------------
+ValueError: Full capture failed, incomplete or stale.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/aantich/dev/mariadbnew/projects/go-mariadb/validation/test_full_capture.py", line 126, in test_check_commands_environment_and_stages_cannot_be_weakened
+    with self.assertRaisesRegex(ValueError,'environment'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "environment" does not match "Full capture failed, incomplete or stale."
+
+----------------------------------------------------------------------
+Ran 113 tests in 31.872s
+
+FAILED (failures=9)
+
+vet: raw exit=0; unexpected issues=0
+Initializing database '/fixture/principal' for realm 'GO-MARIADB.TEST',
+master key name 'K/M@GO-MARIADB.TEST'
+No policy specified for mariadb/localhost@GO-MARIADB.TEST; defaulting to no policy
+Authenticating as principal root/admin@GO-MARIADB.TEST with password.
+Principal "mariadb/localhost@GO-MARIADB.TEST" created.
+No policy specified for driver@GO-MARIADB.TEST; defaulting to no policy
+Authenticating as principal root/admin@GO-MARIADB.TEST with password.
+Principal "driver@GO-MARIADB.TEST" created.
+No policy specified for other@GO-MARIADB.TEST; defaulting to no policy
+Authenticating as principal root/admin@GO-MARIADB.TEST with password.
+Principal "other@GO-MARIADB.TEST" created.
+Authenticating as principal root/admin@GO-MARIADB.TEST with password.
+Entry for principal mariadb/localhost@GO-MARIADB.TEST with kvno 2, encryption type aes256-cts-hmac-sha1-96 added to keytab WRFILE:/fixture/server.keytab.
+Entry for principal mariadb/localhost@GO-MARIADB.TEST with kvno 2, encryption type aes128-cts-hmac-sha1-96 added to keytab WRFILE:/fixture/server.keytab.
+Authenticating as principal root/admin@GO-MARIADB.TEST with password.
+Entry for principal driver@GO-MARIADB.TEST with kvno 2, encryption type aes256-cts-hmac-sha1-96 added to keytab WRFILE:/fixture/driver.keytab.
+Entry for principal driver@GO-MARIADB.TEST with kvno 2, encryption type aes128-cts-hmac-sha1-96 added to keytab WRFILE:/fixture/driver.keytab.
+Authenticating as principal root/admin@GO-MARIADB.TEST with password.
+Entry for principal other@GO-MARIADB.TEST with kvno 2, encryption type aes256-cts-hmac-sha1-96 added to keytab WRFILE:/fixture/other.keytab.
+Entry for principal other@GO-MARIADB.TEST with kvno 2, encryption type aes128-cts-hmac-sha1-96 added to keytab WRFILE:/fixture/other.keytab.
+2026-11-13 14:35:22 0 [Warning] mariadbd: io_uring_queue_init() failed with EPERM: sysctl kernel.io_uring_disabled has the value 2, or 1 and the user of the process is not a member of sysctl kernel.io_uring_group. (see man 2 io_uring_setup).
+create_uring failed: falling back to libaio
+mariadb/localhost@GO-MARIADB.TEST: kvno = 2
+mariadb/localhost@GO-MARIADB.TEST: kvno = 2

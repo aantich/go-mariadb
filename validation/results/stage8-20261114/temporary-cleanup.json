@@ -1,0 +1,11 @@
+{
+  "temporary_toolchains_removed": true,
+  "linux_exports_removed": true,
+  "existing_go_caches_retained": true,
+  "removed_archive_sha256": {
+    "go1.25.14.darwin-arm64.tar.gz": "5b26c0b6f308240fca2614fb02f622cfcc8c0cc3b69c78bba4845489a4590259",
+    "go1.26.11.darwin-arm64.tar.gz": "e3a42e67a7a8acf450ebada2b074c7ca863000ca514907b7185b45e8f5cdff57",
+    "source.tar": "79a8bafa68102bbebf23a15de5236a63ce57b7be0dd1e1f886f0f908c6b28142",
+    "source-clean.tar": "9ef5f720f169ded4aa410e3db157b649f9b055cc6b5f22d01704aeed55b129d4"
+  }
+}
